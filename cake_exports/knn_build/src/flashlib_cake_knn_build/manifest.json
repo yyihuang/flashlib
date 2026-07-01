@@ -1,0 +1,99 @@
+{
+  "format_version": 1,
+  "generated_at_utc": "2026-07-01T07:06:22.160199+00:00",
+  "generator": "loom.export.kernel_repo",
+  "kernels": [
+    {
+      "attr": "stage1_ir",
+      "cluster_dims": [
+        2,
+        1,
+        1
+      ],
+      "ir_name": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree",
+      "launch_mode": "cluster",
+      "module": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2",
+      "name": "knn_build_stage1",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "query_sq"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "database_sq"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_dists"
+        },
+        {
+          "ctype": "int32_t*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "const void*",
+          "kind": "pointer",
+          "name": "tmap_query"
+        },
+        {
+          "ctype": "const void*",
+          "kind": "pointer",
+          "name": "tmap_database"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tile_pairs"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "db_tiles_per_split"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_count"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_work"
+        }
+      ],
+      "shared_mem_bytes": 50432,
+      "source": "cuda/kernels.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree",
+      "threads": 192
+    }
+  ],
+  "package": "flashlib_cake_knn_build",
+  "source_commit": "21b036e2be7cdf77a3dc345e4fc8e4a5b489b143",
+  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
+}
