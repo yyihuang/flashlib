@@ -53,7 +53,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld1_stage1':
         return rowld1._stage1_rowld1_ir()
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_q16rows4_abee_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_q16rows4_abee_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 @lru_cache(maxsize=None)
 def _compiled_rows4_warp_merge(split_count: int):

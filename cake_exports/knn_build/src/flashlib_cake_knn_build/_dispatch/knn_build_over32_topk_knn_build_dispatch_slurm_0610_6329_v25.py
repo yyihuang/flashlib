@@ -30,10 +30,10 @@ SUPPORTED_OVER32_K = (48, 64)
 def _ir_with_top_k_max(ir_obj: Any, *, top_k_max: int, suffix: str) -> Any:
     constants = tuple(((name, top_k_max if name == 'TOP_K_MAX' else value) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-stage1_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:stage1_k48_over32_ir"}'))
-stage1_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:stage1_k64_over32_ir"}'))
-merge_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:merge_k48_over32_ir"}'))
-merge_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:merge_k64_over32_ir"}'))
+stage1_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:stage1_k48_over32_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:stage1_k64_over32_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:merge_k48_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:merge_k64_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _stage1_ir_for_over32_k(top_k: int) -> Any:
     if top_k == 48:
@@ -58,7 +58,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k64':
         return merge_k64_over32_ir
     return stage1_k48_over32_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over32_topk_knn_build_dispatch_slurm_0610_6329_v25:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=2)
 def _compiled_stage1_over32(top_k: int):

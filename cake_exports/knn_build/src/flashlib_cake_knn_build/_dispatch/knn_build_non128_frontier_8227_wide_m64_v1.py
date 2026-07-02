@@ -22,13 +22,13 @@ ROUTE_PREFIX = 'knn_build_non128_frontier_8227_wide_m64_v1'
 D768_SHAPE = m64rag.D768_SHAPE
 TARGET_SHAPES = widecombine.TARGET_SHAPES
 TARGET_SHAPE_SET = set(TARGET_SHAPES)
-SHAPE_SPECS = _decode_capture(_json_loads('{"build_dim_sweep_b1_q1024_m1024_d96_k10": {"B": 1, "D": 96, "K": 10, "M": 1024, "Q": 1024, "build": true, "feature_chunks": 1, "split_count": 8}, "build_dim_sweep_b1_q2048_m2048_d192_k10": {"B": 1, "D": 192, "K": 10, "M": 2048, "Q": 2048, "build": true, "feature_chunks": 2, "split_count": 8}, "build_highd_b1_q1024_m1024_d320_k10": {"B": 1, "D": 320, "K": 10, "M": 1024, "Q": 1024, "build": true, "feature_chunks": 3, "split_count": 8}, "rag_microbatch_highd_b1_q16_m50000_d768_k10": {"B": 1, "D": 768, "K": 10, "M": 50000, "Q": 16, "build": false, "feature_chunks": 6, "split_count": 72}, "search_rect_highd_b1_q512_m12000_d320_k10": {"B": 1, "D": 320, "K": 10, "M": 12000, "Q": 512, "build": false, "feature_chunks": 3, "split_count": 32}}'))
+SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["build_dim_sweep_b1_q1024_m1024_d96_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 96], ["K", 10], ["build", true], ["feature_chunks", 1], ["split_count", 8]]}], ["build_dim_sweep_b1_q2048_m2048_d192_k10", {"__dict_items__": [["B", 1], ["Q", 2048], ["M", 2048], ["D", 192], ["K", 10], ["build", true], ["feature_chunks", 2], ["split_count", 8]]}], ["build_highd_b1_q1024_m1024_d320_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 320], ["K", 10], ["build", true], ["feature_chunks", 3], ["split_count", 8]]}], ["search_rect_highd_b1_q512_m12000_d320_k10", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 12000], ["D", 320], ["K", 10], ["build", false], ["feature_chunks", 3], ["split_count", 32]]}], ["rag_microbatch_highd_b1_q16_m50000_d768_k10", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 50000], ["D", 768], ["K", 10], ["build", false], ["feature_chunks", 6], ["split_count", 72]]}]]}'))
 SHAPE_SPECS[D768_SHAPE]['split_count'] = m64rag._split_count_for_label(D768_SHAPE)
-stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_d256_ir"}'))
-stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_d384_ir"}'))
-stage1_m64_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_m64_d768_ir"}'))
-pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:pad_bf16_rows_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:merge_ir"}'))
+stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_d256_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_d384_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 148736, "cta_group": 1, "threads": 192}'))
+stage1_m64_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:stage1_m64_d768_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
+pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:pad_bf16_rows_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_NON128_FRONTIER_8227_WIDE_M64_VERIFY_KERNEL')
@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return merge_ir
     return stage1_m64_d768_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8227_wide_m64_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
 
 def _target_label_for_inputs(inputs: dict[str, Any]) -> str | None:
     return widecombine._target_label_for_inputs(inputs)

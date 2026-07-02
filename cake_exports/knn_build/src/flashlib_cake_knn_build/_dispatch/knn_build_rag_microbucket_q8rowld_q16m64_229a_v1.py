@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_fused_merge':
         return q16m64_seed.parent_q32rowld.compact_seed.q16_tailinf._fused_merge_ir(split_count, group_count)
     return q8rowld_seed.stage1_q8_k32_rowld_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q8rowld_q16m64_229a_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q8rowld_q16m64_229a_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _label_can_hit(inputs: dict[str, Any], labels: set[str]) -> bool:
     label = inputs.get('label')

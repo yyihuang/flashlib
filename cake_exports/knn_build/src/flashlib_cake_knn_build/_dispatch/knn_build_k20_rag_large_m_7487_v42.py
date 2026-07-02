@@ -30,10 +30,10 @@ RAG_LARGE_M_M = 250000
 RAG_K20_SPLITS_DEFAULT = 16
 SUPPORTED_RAG_K20_SPLITS = (8, 16)
 TARGET_SHAPE = 'rag_offline_large_m_b1_q8192_m250000_d128_k20'
-stage1_k20_rag_large_m_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:stage1_k20_rag_large_m_ir"}'))
-knn_build_k20_merge_sN_unordered_warp_select = _ir_proxy('loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:knn_build_k20_merge_sN_unordered_warp_select', 256)
-merge_k20_s8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:merge_k20_s8_warp_select_ir"}'))
-merge_k20_s16_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:merge_k20_s16_warp_select_ir"}'))
+stage1_k20_rag_large_m_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:stage1_k20_rag_large_m_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_k20_merge_sN_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:knn_build_k20_merge_sN_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k20_s8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:merge_k20_s8_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k20_s16_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:merge_k20_s16_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _rag_k20_split_count() -> int:
     raw = os.environ.get('LOOM_KNN_K20_RAG_SPLITS')
@@ -60,7 +60,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_s16':
         return merge_k20_s16_warp_select_ir
     return stage1_k20_rag_large_m_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_rag_large_m_7487_v42:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k20_rag():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0102"}'))

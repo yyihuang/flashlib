@@ -45,18 +45,18 @@ def _ir_with_top_k_max(ir_obj: Any, *, top_k_max: int, suffix: str) -> Any:
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-stage1_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k48_over32_ir"}'))
-stage1_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k64_over32_ir"}'))
-knn_build_k64_stage1_tailinf = _ir_proxy('loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_stage1_tailinf', 256)
-stage1_k64_tailinf_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k64_tailinf_over32_ir"}'))
-merge_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k48_over32_ir"}'))
-merge_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_over32_ir"}'))
-knn_build_k64_merge_sN_unordered_chunkprefill = _ir_proxy('loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_merge_sN_unordered_chunkprefill', 256)
-merge_k64_s8_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s8_chunkprefill_over32_ir"}'))
-merge_k64_s12_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s12_chunkprefill_over32_ir"}'))
-merge_k64_s16_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s16_chunkprefill_over32_ir"}'))
-knn_build_k64_merge_s8_unordered_warp_select = _ir_proxy('loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_merge_s8_unordered_warp_select', 256)
-merge_k64_s8_warp_select_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s8_warp_select_over32_ir"}'))
+stage1_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k48_over32_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k64_over32_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_k64_stage1_tailinf = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_stage1_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k64_tailinf_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:stage1_k64_tailinf_over32_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k48_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k48_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k64_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_k64_merge_sN_unordered_chunkprefill = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_merge_sN_unordered_chunkprefill", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k64_s8_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s8_chunkprefill_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k64_s12_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s12_chunkprefill_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k64_s16_chunkprefill_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s16_chunkprefill_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_k64_merge_s8_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:knn_build_k64_merge_s8_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k64_s8_warp_select_over32_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:merge_k64_s8_warp_select_over32_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _stage1_ir_for_over32_k(top_k: int) -> Any:
     if top_k == 48:
@@ -113,7 +113,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k64_s16_chunkprefill':
         return merge_k64_s16_chunkprefill_over32_ir
     return stage1_k48_over32_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k64stage1_splitgrid_tailinf_knn_build_dispatch_slurm_0610_6329_v40:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1_over32(top_k: int, split_count: int):

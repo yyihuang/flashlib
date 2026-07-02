@@ -64,8 +64,8 @@ BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_candidate_build_lowfloor_2c1c_v3'
 PRODUCTION_ROUTE_MODULES = {SEED_ID: ROUTE_ENTRYPOINT, SEED_Q512_ID: ROUTE_Q512_S4, SEED_Q1024_ID: ROUTE_Q1024_K16, SEED_MIDK_Q2048_ID: ROUTE_MIDK, SEED_MIDK_Q4096_ID: ROUTE_Q4096_K13_UNORDERED, SEED_D64_ID: ROUTE_D64_Q4096, PARENT_SELECTED_ID: ROUTE_PARENT_SELECTED}
 SOURCE_TASKS = {SEED_ID: 'weave-evolve-knn-build-2c1c / build low-floor Q4096 K13 unordered repair wrapper', SEED_Q512_ID: 'weave/generalize f8c3 low-K Q512 split4 route', SEED_Q1024_ID: 'weave/generalize f8c3 low-K Q1024 K16 split16 route', SEED_MIDK_Q2048_ID: 'weave-evolve-knn-build-e080 / exact Q2048 K11/K12/K13 split8 route', SEED_MIDK_Q4096_ID: 'weave-evolve-knn-build-2c1c / exact Q4096 K13 unordered split4 route', SEED_D64_ID: 'weave-evolve-knn-build-6a35 / c271 D64 Q4096 split4 unordered route', PARENT_SELECTED_ID: 'generalize-auto-tuning 8fdf/9a17 selected full90 parent'}
 eval_mod = selected_parent.eval_mod
-stage1_q4096_k13_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:stage1_q4096_k13_unordered_ir"}'))
-merge_q4096_k13_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:merge_q4096_k13_unordered_ir"}'))
+stage1_q4096_k13_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:stage1_q4096_k13_unordered_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_q4096_k13_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:merge_q4096_k13_unordered_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compiled_stage1_q4096_k13_unordered():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0049"}'))
@@ -106,7 +106,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'd64_merge_s4':
         return seed_d64.merge_k10_s4_ir
     return seed_lowk.stage1_q512_lowk_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_2c1c_v3:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return selected_parent._select_contract_shapes(shape_labels)

@@ -43,7 +43,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k10_merge_s4_cache':
         return fixedbuild_k10.parent.parent_cached64.merge_k10_s4_cache_ir
     return parent.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_k10_lowfloor_4757_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_k10_lowfloor_4757_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _select_contract_shapes(shape_labels):
     return parent._select_contract_shapes(shape_labels)

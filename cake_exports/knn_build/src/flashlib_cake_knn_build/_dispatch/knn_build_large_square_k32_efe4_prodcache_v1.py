@@ -37,10 +37,10 @@ SPLIT_COUNT = 2
 TOP_K_K32 = 32
 ROUTE_Q8192_K32_PRODCACHE = 'loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:q8192_k32_s2_prodcache'
 ROUTE_PARENT_A989 = 'loom.examples.weave.knn_build_large_square_k20k32_a989_v1'
-knn_build_large_square_k32_stage1_chunkworst = _ir_proxy('loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:knn_build_large_square_k32_stage1_chunkworst', 256)
-knn_build_large_square_k32_s2_warp8_merge = _ir_proxy('loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:knn_build_large_square_k32_s2_warp8_merge', 256)
-stage1_k32_prodcache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:stage1_k32_prodcache_ir"}'))
-merge_k32_s2_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:merge_k32_s2_warp8_ir"}'))
+knn_build_large_square_k32_stage1_chunkworst = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:knn_build_large_square_k32_stage1_chunkworst", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_large_square_k32_s2_warp8_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:knn_build_large_square_k32_s2_warp8_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+stage1_k32_prodcache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:stage1_k32_prodcache_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k32_s2_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:merge_k32_s2_warp8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_LARGE_SQUARE_K32_EFE4_PRODCACHE_VERIFY_KERNEL')
@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'parent_stage1_k32':
         return parent_v20.stage1_k32_unordered_ir
     return stage1_k32_prodcache_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_efe4_prodcache_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k32_prodcache():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0067"}'))

@@ -29,7 +29,7 @@ D768_FUSED_MERGE_THREADS = _decode_capture(_json_loads('32'))
 D768_FUSED_MERGE_SLOTS = 128
 TARGET_SHAPES = d96exact.TARGET_SHAPES
 TARGET_SHAPE_SET = set(TARGET_SHAPES)
-SHAPE_SPECS = _decode_capture(_json_loads('{"build_dim_sweep_b1_q1024_m1024_d96_k10": {"B": 1, "D": 96, "K": 10, "M": 1024, "Q": 1024, "build": true, "feature_chunks": 1, "split_count": 8}, "build_dim_sweep_b1_q2048_m2048_d192_k10": {"B": 1, "D": 192, "K": 10, "M": 2048, "Q": 2048, "build": true, "feature_chunks": 2, "split_count": 8}, "build_highd_b1_q1024_m1024_d320_k10": {"B": 1, "D": 320, "K": 10, "M": 1024, "Q": 1024, "build": true, "feature_chunks": 3, "split_count": 8}, "rag_microbatch_highd_b1_q16_m50000_d768_k10": {"B": 1, "D": 768, "K": 10, "M": 50000, "Q": 16, "build": false, "feature_chunks": 6, "split_count": 72}, "search_rect_highd_b1_q512_m12000_d320_k10": {"B": 1, "D": 320, "K": 10, "M": 12000, "Q": 512, "build": false, "feature_chunks": 3, "split_count": 32}}'))
+SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["build_dim_sweep_b1_q1024_m1024_d96_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 96], ["K", 10], ["build", true], ["feature_chunks", 1], ["split_count", 8]]}], ["build_dim_sweep_b1_q2048_m2048_d192_k10", {"__dict_items__": [["B", 1], ["Q", 2048], ["M", 2048], ["D", 192], ["K", 10], ["build", true], ["feature_chunks", 2], ["split_count", 8]]}], ["build_highd_b1_q1024_m1024_d320_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 320], ["K", 10], ["build", true], ["feature_chunks", 3], ["split_count", 8]]}], ["search_rect_highd_b1_q512_m12000_d320_k10", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 12000], ["D", 320], ["K", 10], ["build", false], ["feature_chunks", 3], ["split_count", 32]]}], ["rag_microbatch_highd_b1_q16_m50000_d768_k10", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 50000], ["D", 768], ["K", 10], ["build", false], ["feature_chunks", 6], ["split_count", 72]]}]]}'))
 SHAPE_SPECS[D768_SHAPE]['split_count'] = D768_SPLIT_COUNT
 M64_BLOCK_Q = m64rag.M64_BLOCK_Q
 M64_BLOCK_M = m64rag.M64_BLOCK_M
@@ -39,13 +39,13 @@ K_TILE = m64rag.K_TILE
 TOP_K_MAX = m64rag.TOP_K_MAX
 MERGE_THREADS = m64rag.MERGE_THREADS
 GRID_DIM_DEFAULT = m64rag.GRID_DIM_DEFAULT
-stage1_d96exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d96exact_ir"}'))
-stage1_d320tail_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d320tail_ir"}'))
-stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d256_ir"}'))
-stage1_m64_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_m64_d768_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:merge_ir"}'))
-knn_build_non128_frontier_4be7_d768fused_merge = _ir_proxy('loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:knn_build_non128_frontier_4be7_d768fused_merge', 256)
-fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:fused_merge_ir"}'))
+stage1_d96exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d96exact_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 38144, "cta_group": 1, "threads": 192}'))
+stage1_d320tail_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d320tail_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 124160, "cta_group": 1, "threads": 192}'))
+stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_d256_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+stage1_m64_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:stage1_m64_d768_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_non128_frontier_4be7_d768fused_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:knn_build_non128_frontier_4be7_d768fused_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:fused_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -78,7 +78,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_d256':
         return stage1_d256_ir
     return _fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_4be7_d768fused_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=None)
 def _compiled_fused_merge(split_count: int, group_count: int):

@@ -45,7 +45,7 @@ def _verify_export_ir() -> Any:
         os.environ.setdefault('LOOM_KNN_LARGE_TAIL_6A73_SPLIT_COUNT', '4')
         return large_tail._verify_export_ir()
     return base_dispatch.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_7399_d15e_df2f_large_tail_a4f6_full55_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_7399_d15e_df2f_large_tail_a4f6_full55_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _label_can_hit(inputs: dict[str, Any], target_labels: set[str]) -> bool:
     label = inputs.get('label')

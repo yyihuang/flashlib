@@ -26,7 +26,7 @@ GUARD_ID = '573e_exact_bf16_build_b1_q512_m512_d128_k1'
 TARGET_SHAPE = seed_s2.TARGET_SHAPE
 TARGET_SHAPES = (TARGET_SHAPE,)
 SPEEDUP_FLOOR = prior.SPEEDUP_FLOOR
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_q1m524_v5_k1_s2_consumption_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_q1m524_v5_k1_s2_consumption_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _contract_metric_schema(payload: dict[str, Any]) -> dict[str, Any]:
     """Attach the contract-owned TFLOPS metric to an existing timing payload.

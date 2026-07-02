@@ -37,7 +37,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_fused_merge':
         return direct_seed._fused_merge_ir(K32_SPLIT_COUNT, K32_GROUP_COUNT)
     return direct_seed.stage1_k32_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_ad64_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_ad64_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_q128_m100000(inputs: dict[str, Any]) -> bool:
     return direct_seed._eligible_k32_rag_frontier(inputs) and int(inputs.get('B', -1)) == 1 and (int(inputs.get('Q', -1)) == 128) and (int(inputs.get('M', -1)) == 100000) and (int(inputs.get('D', -1)) == 128) and (int(inputs.get('K', -1)) == 32)

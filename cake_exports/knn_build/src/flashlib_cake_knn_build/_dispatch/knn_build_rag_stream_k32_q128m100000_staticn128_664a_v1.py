@@ -46,8 +46,8 @@ WEAVE_SMEM_SYSTEM_BYTES = 1024
 S128_STAGE_SMEM_BYTES = S128_SMEM_POOL_BYTES + WEAVE_SMEM_SYSTEM_BYTES
 GRID_DIM_DEFAULT = direct_seed.GRID_DIM_DEFAULT
 TOP_K_MAX = S128_K
-knn_build_rag_stream_k32_q128m100000_staticn128_664a_stage1 = _ir_proxy('loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:knn_build_rag_stream_k32_q128m100000_staticn128_664a_stage1', 256)
-stage1_staticn128_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:stage1_staticn128_ir"}'))
+knn_build_rag_stream_k32_q128m100000_staticn128_664a_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:knn_build_rag_stream_k32_q128m100000_staticn128_664a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 181504, "cta_group": 1, "threads": 256}'))
+stage1_staticn128_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:stage1_staticn128_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 181504, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_STATICN128_664A_VERIFY_KERNEL')
@@ -56,7 +56,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return direct_seed._fused_merge_ir(split_count, group_count)
     return stage1_staticn128_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 181504, "cta_group": 1, "threads": 256}'))
 
 def _compiled_stage1_staticn128():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0196"}'))

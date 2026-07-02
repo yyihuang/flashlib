@@ -35,11 +35,11 @@ TARGET_SHAPE_SET = set(TARGET_SHAPES)
 ROUTE_PREFIX = 'knn_build_non128_frontier_7231_v1'
 ROUTE_FALLBACK = 'loom.examples.weave.knn_build_dispatch_e3de_9138_bcb3_4247_v1:launch_from_contract_inputs'
 SHAPE_SPECS: dict[str, dict[str, Any]] = {'build_dim_sweep_b1_q1024_m1024_d96_k10': {'B': 1, 'Q': 1024, 'M': 1024, 'D': 96, 'K': 10, 'build': True, 'feature_chunks': 1, 'split_count': 2}, 'build_dim_sweep_b1_q2048_m2048_d192_k10': {'B': 1, 'Q': 2048, 'M': 2048, 'D': 192, 'K': 10, 'build': True, 'feature_chunks': 2, 'split_count': 4}, 'build_highd_b1_q1024_m1024_d320_k10': {'B': 1, 'Q': 1024, 'M': 1024, 'D': 320, 'K': 10, 'build': True, 'feature_chunks': 3, 'split_count': 4}, 'search_rect_highd_b1_q512_m12000_d320_k10': {'B': 1, 'Q': 512, 'M': 12000, 'D': 320, 'K': 10, 'build': False, 'feature_chunks': 3, 'split_count': 16}, 'rag_microbatch_highd_b1_q16_m50000_d768_k10': {'B': 1, 'Q': 16, 'M': 50000, 'D': 768, 'K': 10, 'build': False, 'feature_chunks': 6, 'split_count': 64}}
-knn_build_non128_frontier_7231_stage1 = _ir_proxy('loom.examples.weave.knn_build_non128_frontier_7231_v1:knn_build_non128_frontier_7231_stage1', 256)
-knn_build_non128_frontier_7231_pad_bf16_rows = _ir_proxy('loom.examples.weave.knn_build_non128_frontier_7231_v1:knn_build_non128_frontier_7231_pad_bf16_rows', 256)
-stage1_base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_base_ir"}'))
-pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:pad_bf16_rows_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:merge_ir"}'))
+knn_build_non128_frontier_7231_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:knn_build_non128_frontier_7231_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_non128_frontier_7231_pad_bf16_rows = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:knn_build_non128_frontier_7231_pad_bf16_rows", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+stage1_base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_base_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:pad_bf16_rows_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 @lru_cache(maxsize=4)
 def _pad_ir(d_pad: int) -> Any:
@@ -49,10 +49,10 @@ def _pad_ir(d_pad: int) -> Any:
 def _stage1_ir(feature_chunks: int) -> Any:
     constants = tuple(((name, int(feature_chunks) if name == 'FEATURE_CHUNKS' else value) for name, value in stage1_base_ir.constants))
     return replace(stage1_base_ir, name=f'{stage1_base_ir.name}_d{feature_chunks * K_TILE}', constants=constants)
-stage1_d128_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d128_ir"}'))
-stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d256_ir"}'))
-stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d384_ir"}'))
-stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d768_ir"}'))
+stage1_d128_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d128_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d256_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d384_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:stage1_d768_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_NON128_FRONTIER_7231_VERIFY_KERNEL')
@@ -71,7 +71,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return merge_ir
     return stage1_d384_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_7231_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

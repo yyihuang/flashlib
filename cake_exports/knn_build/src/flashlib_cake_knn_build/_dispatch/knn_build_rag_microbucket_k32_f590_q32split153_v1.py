@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q32_rows4_merge':
         return f590.rows4._warp_merge_ir(split_count)
     return f590.rowld1._stage1_rowld2_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_f590_q32split153_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_f590_q32split153_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _eligible_q32_split153(inputs: dict[str, Any]) -> bool:
     return f590._eligible_q32_rowld2_rows4(inputs)

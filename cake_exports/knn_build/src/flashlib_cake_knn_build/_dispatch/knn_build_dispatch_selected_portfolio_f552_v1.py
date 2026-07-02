@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_RECT_INTERMEDIATE_4452_VERIFY_KERNEL'] = 'merge_s8'
         return rect_4452._verify_export_ir()
     return dispatch_k32_d64.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_selected_portfolio_f552_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_selected_portfolio_f552_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _label_can_hit(inputs: dict[str, Any], target_labels: set[str]) -> bool:
     label = inputs.get('label')

@@ -38,7 +38,7 @@ TOP_K_MAX = highd_parent.TOP_K_MAX
 GRID_DIM_DEFAULT = highd_parent.GRID_DIM_DEFAULT
 DEFAULT_RAG_SPLIT = _decode_capture(_json_loads('144'))
 DEFAULT_RAG_GROUPS = _decode_capture(_json_loads('12'))
-SHAPE_SPECS = _decode_capture(_json_loads('{"rag_microbatch_common_d1024_b1_q4_m100000_k10": {"B": 1, "D": 1024, "K": 10, "M": 100000, "Q": 4, "build": false, "feature_chunks": 8, "group_count": 12, "split_count": 144}, "rag_microbatch_common_d768_b1_q8_m100000_k10": {"B": 1, "D": 768, "K": 10, "M": 100000, "Q": 8, "build": false, "feature_chunks": 6, "group_count": 12, "split_count": 144}, "rag_online_common_d4096_b1_q1_m65536_k10": {"B": 1, "D": 4096, "K": 10, "M": 65536, "Q": 1, "build": false, "feature_chunks": 32, "group_count": 8, "split_count": 128}}'))
+SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["rag_microbatch_common_d768_b1_q8_m100000_k10", {"__dict_items__": [["B", 1], ["Q", 8], ["M", 100000], ["D", 768], ["K", 10], ["build", false], ["feature_chunks", 6], ["split_count", 144], ["group_count", 12]]}], ["rag_microbatch_common_d1024_b1_q4_m100000_k10", {"__dict_items__": [["B", 1], ["Q", 4], ["M", 100000], ["D", 1024], ["K", 10], ["build", false], ["feature_chunks", 8], ["split_count", 144], ["group_count", 12]]}], ["rag_online_common_d4096_b1_q1_m65536_k10", {"__dict_items__": [["B", 1], ["Q", 1], ["M", 65536], ["D", 4096], ["K", 10], ["build", false], ["feature_chunks", 32], ["split_count", 128], ["group_count", 8]]}]]}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_V12_HIGHD_22E9_VERIFY_KERNEL')
@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_d4096':
         return highd_parent._stage1_ir(32)
     return highd_parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_highd_rag_22e9_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_highd_rag_22e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 def _dtype_name(inputs: dict[str, Any], tensor_name: str='query') -> str:
     tensor = inputs.get(tensor_name)

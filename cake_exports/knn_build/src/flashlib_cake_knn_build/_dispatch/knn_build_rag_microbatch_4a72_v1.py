@@ -33,8 +33,8 @@ TOP_K_MAX = parent_k10.TOP_K_MAX
 STAGE1_THREADS = parent_k10.STAGE1_THREADS
 GRID_DIM_DEFAULT = parent_k10.GRID_DIM_DEFAULT
 CTA_GROUP = parent_k10.CTA_GROUP
-knn_build_rag_microbatch_4a72_k10_fused_group_final_merge = _ir_proxy('loom.examples.weave.knn_build_rag_microbatch_4a72_v1:knn_build_rag_microbatch_4a72_k10_fused_group_final_merge', 256)
-fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_4a72_v1:fused_merge_ir"}'))
+knn_build_rag_microbatch_4a72_k10_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_4a72_v1:knn_build_rag_microbatch_4a72_k10_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_4a72_v1:fused_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -61,7 +61,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1':
         return parent_k10.stage1_ir
     return _fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_4a72_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_4a72_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

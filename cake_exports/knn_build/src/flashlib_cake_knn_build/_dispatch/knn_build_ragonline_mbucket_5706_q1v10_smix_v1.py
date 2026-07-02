@@ -31,7 +31,7 @@ Q1_S128_SPLIT = base_f30c.Q1_HALF_SPLIT
 Q1_SMALL_GROUPS = 12
 Q1_F30C_GROUPS = base_f30c.Q1_HALF_GROUPS
 TOPOLOGY_BY_M = {100000: (Q1_S144_SPLIT, Q1_SMALL_GROUPS), 65536: (Q1_S144_SPLIT, Q1_SMALL_GROUPS), 131071: (Q1_S144_SPLIT, Q1_SMALL_GROUPS), 250000: (Q1_S144_SPLIT, Q1_SMALL_GROUPS), 262143: (Q1_S144_SPLIT, Q1_SMALL_GROUPS), 524287: (Q1_S144_SPLIT, Q1_SMALL_GROUPS)}
-SPLIT_BY_M = _decode_capture(_json_loads('{"100000": 144, "131071": 144, "250000": 144, "262143": 144, "524287": 144, "65536": 144}'))
+SPLIT_BY_M = _decode_capture(_json_loads('{"__dict_items__": [[100000, 144], [131071, 144], [250000, 144], [262143, 144], [65536, 144], [524287, 144]]}'))
 GROUP_BY_M = {}
 for _m_value, (_split_count, _group_count) in TOPOLOGY_BY_M.items():
     SPLIT_BY_M[_m_value] = _split_count
@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return base_f30c.parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return base_f30c.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_5706_q1v10_smix_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_5706_q1v10_smix_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     dtype = str(getattr(inputs.get('query'), 'dtype', inputs.get('dtype', '')))

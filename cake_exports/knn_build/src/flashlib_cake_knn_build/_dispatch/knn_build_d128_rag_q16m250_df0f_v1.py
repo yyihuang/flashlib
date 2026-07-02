@@ -39,7 +39,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1':
         return seed_q16.seed._stage1_rowld1_2warp_ir()
     return seed_q16.seed._warp_merge_ir(Q16_M250_SPLIT_COUNT)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d128_rag_q16m250_df0f_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d128_rag_q16m250_df0f_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _select_contract_shapes(shape_labels) -> list[dict[str, Any]]:
     return parent_v11._select_contract_shapes(shape_labels)

@@ -27,12 +27,12 @@ ROUTE_K11_EXACT = f'{MODULE}:k11_exact'
 ROUTE_K12_EXACT = f'{MODULE}:k12_exact'
 ROUTE_K13_EXACT = f'{MODULE}:k13_exact'
 ROUTE_BASELINE_FULL82 = f'{baseline_full82.MODULE}:launch_from_contract_inputs'
-stage1_k11_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:stage1_k11_exact_ir"}'))
-stage1_k13_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:stage1_k13_exact_ir"}'))
-merge_k11_s4_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k11_s4_exact_ir"}'))
-merge_k13_s4_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k13_s4_exact_ir"}'))
-merge_k11_s8_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k11_s8_exact_ir"}'))
-merge_k13_s8_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k13_s8_exact_ir"}'))
+stage1_k11_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:stage1_k11_exact_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k13_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:stage1_k13_exact_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k11_s4_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k11_s4_exact_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k13_s4_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k13_s4_exact_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k11_s8_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k11_s8_exact_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k13_s8_exact_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:merge_k13_s8_exact_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_MIDK_K11K13_E080_VERIFY_KERNEL')
@@ -53,7 +53,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k13_s8':
         return merge_k13_s8_exact_ir
     return stage1_k13_exact_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_midk_k11k13_e080_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k11_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0034"}'))

@@ -37,7 +37,7 @@ TOP_K_MAX = m64_parent.TOP_K_MAX
 GRID_DIM_DEFAULT = m64_parent.GRID_DIM_DEFAULT
 DEFAULT_SPLIT_COUNT = _decode_capture(_json_loads('144'))
 DEFAULT_GROUP_COUNT = _decode_capture(_json_loads('12'))
-SHAPE_SPECS = _decode_capture(_json_loads('{"rag_microbatch_common_d1024_b1_q8_m50000_k10": {"B": 1, "D": 1024, "K": 10, "M": 50000, "Q": 8, "build": false, "feature_chunks": 8, "group_count": 12, "split_count": 144}, "rag_microbatch_common_d4096_b1_q4_m32768_k10": {"B": 1, "D": 4096, "K": 10, "M": 32768, "Q": 4, "build": false, "feature_chunks": 32, "group_count": 8, "split_count": 128}}'))
+SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["rag_microbatch_common_d1024_b1_q8_m50000_k10", {"__dict_items__": [["B", 1], ["Q", 8], ["M", 50000], ["D", 1024], ["K", 10], ["build", false], ["feature_chunks", 8], ["split_count", 144], ["group_count", 12]]}], ["rag_microbatch_common_d4096_b1_q4_m32768_k10", {"__dict_items__": [["B", 1], ["Q", 4], ["M", 32768], ["D", 4096], ["K", 10], ["build", false], ["feature_chunks", 32], ["split_count", 128], ["group_count", 8]]}]]}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -56,7 +56,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_d4096':
         return _stage1_ir(32)
     return fused_merge_parent._fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_5e7f_rag_highd_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_5e7f_rag_highd_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1(feature_chunks: int):

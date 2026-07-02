@@ -29,7 +29,7 @@ SUPPORTED_SPLIT_COUNTS = (2, 3, 4, 6, 8)
 
 def _make_merge_ir(split_count: int) -> Any:
     return a2f8._ir_with_constants(a2f8.knn_build_k96_merge_s8_unordered_chunkprefill, TOP_K_MAX=OVER64_TOP_K, SPLIT_COUNT=split_count, suffix=f'k96over64s{split_count}chunkprefill_f9d1')
-MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"2": {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.2"}, "3": {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.3"}, "4": {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.4"}, "6": {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.6"}, "8": {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.8"}}'))
+MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"__dict_items__": [[2, {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [3, {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.3", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [4, {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [6, {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.6", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [8, {"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:MERGE_IR_BY_SPLIT.8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}]]}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_OVER64_K96_F9D1_VERIFY_KERNEL')
@@ -39,7 +39,7 @@ def _verify_export_ir() -> Any:
         split_count = int(verify_kernel.removeprefix('merge_s'))
         return MERGE_IR_BY_SPLIT[split_count]
     return a2f8.stage1_k96_sort4_chunked_over64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_f9d1_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k96():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0137"}'))

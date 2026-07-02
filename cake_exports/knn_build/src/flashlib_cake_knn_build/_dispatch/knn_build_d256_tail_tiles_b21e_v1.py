@@ -25,7 +25,7 @@ TARGET_SHAPE = 'rag_stream_largek_common_d256_b1_q128_m100000_k32'
 TARGET_SHAPES = (TARGET_SHAPE,)
 TILE_SHAPE = _decode_capture(_json_loads('{"__tuple__": [128, 128, 256]}'))
 SPLIT_COUNT = _decode_capture(_json_loads('64'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d256_tail_tiles_b21e_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d256_tail_tiles_b21e_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _eligible(inputs: dict[str, Any]) -> bool:
     return parent._target_label_for_inputs(inputs) == TARGET_SHAPE

@@ -44,8 +44,8 @@ Q8_M64_TOP_K_MAX = 32
 ROUTE_Q4_K10 = 'rag_microbucket_3505_v9_inherit_v7_q4_k10_m64_s128_g8'
 ROUTE_Q64_K10 = 'rag_microbucket_3505_v9_inherit_v7_q64_k10_m64_s128_g8'
 ROUTE_BASE_4247 = parent_3505.ROUTE_BASE_4247
-knn_build_rag_microbucket_3505_v9_stage1_q8_k32_m64 = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_3505_v9:knn_build_rag_microbucket_3505_v9_stage1_q8_k32_m64', 256)
-stage1_q8_k32_m64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v9:stage1_q8_k32_m64_ir"}'))
+knn_build_rag_microbucket_3505_v9_stage1_q8_k32_m64 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v9:knn_build_rag_microbucket_3505_v9_stage1_q8_k32_m64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
+stage1_q8_k32_m64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v9:stage1_q8_k32_m64_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RAG_MICROBUCKET_3505_V9_VERIFY_KERNEL')
@@ -60,7 +60,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel in {'k32_fused_merge', 'q16_k32_fused_merge'}:
         return compact_seed.q16_tailinf._fused_merge_ir(split_count, group_count)
     return stage1_q8_k32_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v9:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v9:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

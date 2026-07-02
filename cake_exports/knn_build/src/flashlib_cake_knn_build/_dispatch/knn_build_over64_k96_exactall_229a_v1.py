@@ -27,7 +27,7 @@ OVER64_TOP_K = q1024exact.OVER64_TOP_K
 SUPPORTED_QM = (1024, 2048, 4096)
 DEFAULT_SPLITS_BY_QM = {1024: 2, 2048: 2, 4096: 4}
 TARGET_SHAPES = ('build_over64_stress_qm1024_k96', 'build_over64_stress_qm2048_k96', 'build_over64_stress_qm4096_k96')
-MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"1": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.1"}, "2": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.2"}, "3": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.3"}, "4": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.4"}, "6": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.6"}, "8": {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.8"}}'))
+MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"__dict_items__": [[1, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [2, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [3, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.3", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [4, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [6, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.6", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [8, {"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:MERGE_IR_BY_SPLIT.8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}]]}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_OVER64_K96_EXACTALL_229A_VERIFY_KERNEL')
@@ -37,7 +37,7 @@ def _verify_export_ir() -> Any:
         split_count = int(verify_kernel.removeprefix('merge_s'))
         return MERGE_IR_BY_SPLIT[split_count]
     return q1024exact.stage1_k96_exact_prefill_q1024_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_exactall_229a_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k96_exact_prefill():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0072"}'))

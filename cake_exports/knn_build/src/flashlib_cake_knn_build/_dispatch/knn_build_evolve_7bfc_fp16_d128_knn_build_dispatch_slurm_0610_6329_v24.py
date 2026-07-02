@@ -22,11 +22,11 @@ GRID_DIM_DEFAULT = base_v1.GRID_DIM_DEFAULT
 FP16_QUERY_BYTES = BLOCK_Q * FEAT_D * 2
 FP16_DATABASE_BYTES = BLOCK_M * FEAT_D * 2
 _FP16_TMAP_CACHE: dict[tuple[int, int, int, int, int, int], Any] = {}
-knn_build_evolve_7bfc_fp16_d128_base = _ir_proxy('loom.examples.weave.knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24:knn_build_evolve_7bfc_fp16_d128_base', 256)
+knn_build_evolve_7bfc_fp16_d128_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24:knn_build_evolve_7bfc_fp16_d128_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     return knn_build_evolve_7bfc_fp16_d128_base
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "cta_group": 1, "threads": 192}'))
 
 def _compiled_fp16_kernel():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0098"}'))

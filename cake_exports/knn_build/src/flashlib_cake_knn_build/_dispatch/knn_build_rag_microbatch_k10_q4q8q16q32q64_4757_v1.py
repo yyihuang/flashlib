@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q16_merge_s136':
         return q8q16_parent.rag_m64.parent_micro._fused_merge_ir(q8q16_parent.Q16_SPLIT_COUNT, q8q16_parent.GROUP_COUNT)
     return q8q16_parent.rag_m64.stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4q8q16q32q64_4757_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4q8q16q32q64_4757_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _select_contract_shapes(shape_labels):
     return q8q16_parent._select_contract_shapes(shape_labels)

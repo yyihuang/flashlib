@@ -53,7 +53,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k96_merge_s2':
         return k96_seed.MERGE_IR_BY_SPLIT[2]
     return d64_seed.stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_k96_d64_c13e_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_k96_d64_c13e_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return selected_parent._select_contract_shapes(shape_labels)

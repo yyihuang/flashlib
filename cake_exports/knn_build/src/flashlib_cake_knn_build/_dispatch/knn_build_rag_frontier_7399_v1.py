@@ -35,8 +35,8 @@ STAGE1_THREADS = v5.STAGE1_THREADS
 GRID_DIM_DEFAULT = v5.GRID_DIM_DEFAULT
 CTA_GROUP = v5.CTA_GROUP
 TOP_K_MAX = v5.TOP_K_MAX
-knn_build_rag_frontier_7399_k32_fused_group_final_merge = _ir_proxy('loom.examples.weave.knn_build_rag_frontier_7399_v1:knn_build_rag_frontier_7399_k32_fused_group_final_merge', 256)
-fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_7399_v1:fused_merge_ir"}'))
+knn_build_rag_frontier_7399_k32_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_7399_v1:knn_build_rag_frontier_7399_k32_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 2048, "cta_group": 1, "threads": 32}'))
+fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_7399_v1:fused_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 2048, "cta_group": 1, "threads": 32}'))
 
 def _validate_group_shape(split_count: int, group_count: int) -> None:
     v5._validate_group_shape(split_count, group_count)
@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
         _validate_group_shape(split_count, group_count)
         return fused_merge_ir
     return fused_merge_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_7399_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_7399_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 2048, "cta_group": 1, "threads": 32}'))
 
 def _compiled_stage1_sort4earlystop():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0109"}'))

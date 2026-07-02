@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld2_stage1':
         return _stage1_q32_rowld2_ir()
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_q32rowld2_f653_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_q32rowld2_f653_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q32_rowld2():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0158"}'))

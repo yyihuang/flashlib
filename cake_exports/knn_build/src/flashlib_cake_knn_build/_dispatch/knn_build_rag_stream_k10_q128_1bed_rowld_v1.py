@@ -48,8 +48,8 @@ BASELINE_ENTRYPOINT = parent_34da.BENCHMARK_ENTRYPOINT
 parent_split = df0f.parent_split
 base_v1 = df0f.base_v1
 _insert_sorted_pair_k10 = _ir_proxy('loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:_insert_sorted_pair_k10', 256)
-knn_build_rag_stream_k10_q128_1bed_rowld_stage1 = _ir_proxy('loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:knn_build_rag_stream_k10_q128_1bed_rowld_stage1', 256)
-stage1_rowld_k10_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:stage1_rowld_k10_ir"}'))
+knn_build_rag_stream_k10_q128_1bed_rowld_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:knn_build_rag_stream_k10_q128_1bed_rowld_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54528, "cta_group": 1, "threads": 192}'))
+stage1_rowld_k10_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:stage1_rowld_k10_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54528, "cta_group": 1, "threads": 192}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -79,7 +79,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _merge_ir(_split_count())
     return stage1_rowld_k10_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k10_q128_1bed_rowld_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54528, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0075"}'))

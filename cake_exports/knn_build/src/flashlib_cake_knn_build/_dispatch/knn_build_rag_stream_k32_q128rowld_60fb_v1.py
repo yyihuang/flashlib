@@ -52,7 +52,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld_stage1':
         return _stage1_q128_rowld_ir()
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128rowld_60fb_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128rowld_60fb_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q128_rowld():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0163"}'))

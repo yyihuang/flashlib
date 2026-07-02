@@ -35,11 +35,11 @@ RECT_MERGE_THREADS = 8
 ROUTE_RECT_D64 = 'loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:rect_d64_split_unordered'
 ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 ROUTE_CURRENT_8700 = 'loom.examples.weave.knn_build_dispatch_rag_seed_portfolio_8700_v1:launch_from_contract_inputs'
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:merge_generic_ir"}'))
-knn_build_rect_d64_23be_unordered_stage1 = _ir_proxy('loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:knn_build_rect_d64_23be_unordered_stage1', 256)
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:stage1_d64_split_ir"}'))
-knn_build_rect_d64_23be_s16_cached_merge = _ir_proxy('loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:knn_build_rect_d64_23be_s16_cached_merge', 256)
-merge_s16_cached_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:merge_s16_cached_ir"}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:merge_generic_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_rect_d64_23be_unordered_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:knn_build_rect_d64_23be_unordered_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:stage1_d64_split_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+knn_build_rect_d64_23be_s16_cached_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:knn_build_rect_d64_23be_s16_cached_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 8}'))
+merge_s16_cached_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:merge_s16_cached_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 8}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RECT_D64_23BE_VERIFY_KERNEL')
@@ -48,7 +48,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
 
 def _compiled_d64_unordered_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0164"}'))

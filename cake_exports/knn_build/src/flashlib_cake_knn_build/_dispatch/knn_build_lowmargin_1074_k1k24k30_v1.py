@@ -40,9 +40,9 @@ BASELINE_6998_ENTRYPOINT = 'loom.examples.weave.knn_build_dispatch_6998_residual
 K24_TOP_K = 24
 K24_SPLIT_COUNT = v20.MEDIUM_SPLITS
 Q512_SPLIT_COUNT = lowk_seed.DEFAULT_Q512_SPLITS
-stage1_k24_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:stage1_k24_unordered_ir"}'))
-knn_build_1074_k24_q4096_merge_s4_unordered_warp_select = _ir_proxy('loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:knn_build_1074_k24_q4096_merge_s4_unordered_warp_select', 256)
-merge_k24_q4096_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:merge_k24_q4096_warp_select_ir"}'))
+stage1_k24_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:stage1_k24_unordered_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_1074_k24_q4096_merge_s4_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:knn_build_1074_k24_q4096_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k24_q4096_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:merge_k24_q4096_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_LOWMARGIN_1074_VERIFY_KERNEL')
@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k30_merge_warp_select':
         return k30_warp.merge_k30_q4096_warp_select_ir
     return stage1_k24_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_lowmargin_1074_k1k24k30_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 PRODUCTION_ROUTE_MODULES = {SEED_ID: ROUTE_ENTRYPOINT, SEED_K1_ID: ROUTE_K1_ENTRYPOINT, SEED_K24_ID: ROUTE_K24_ENTRYPOINT, SEED_K30_ID: ROUTE_K30_ENTRYPOINT, 'baseline_6998': BASELINE_6998_ENTRYPOINT}
 
 def _compiled_stage1_k24_unordered():

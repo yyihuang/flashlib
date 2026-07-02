@@ -28,7 +28,7 @@ Q1_BASE_GROUPS = base_f30c.Q1_HALF_GROUPS
 Q1_LARGE_SPLIT = 144
 Q1_LARGE_GROUPS = 8
 TOPOLOGY_BY_M = {100000: (Q1_BASE_SPLIT, Q1_BASE_GROUPS), 131071: (Q1_BASE_SPLIT, Q1_BASE_GROUPS), 250000: (Q1_LARGE_SPLIT, Q1_LARGE_GROUPS), 262143: (Q1_LARGE_SPLIT, Q1_LARGE_GROUPS)}
-SPLIT_BY_M = _decode_capture(_json_loads('{"100000": 128, "131071": 128, "250000": 144, "262143": 144}'))
+SPLIT_BY_M = _decode_capture(_json_loads('{"__dict_items__": [[100000, 128], [131071, 128], [250000, 144], [262143, 144]]}'))
 for _m_value, (_split_count, _group_count) in TOPOLOGY_BY_M.items():
     SPLIT_BY_M[_m_value] = _split_count
 
@@ -41,7 +41,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return base_f30c.parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return base_f30c.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_99fd_q1m250m262_s144_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_99fd_q1m250m262_s144_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _eligible_q1_topology(inputs: dict[str, Any]) -> bool:
     return base_f30c._eligible_q1_large_halfrow(inputs) and int(inputs.get('M', -1)) in TOPOLOGY_BY_M

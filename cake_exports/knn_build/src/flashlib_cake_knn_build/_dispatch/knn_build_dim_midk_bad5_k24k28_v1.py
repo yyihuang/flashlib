@@ -40,12 +40,12 @@ ROUTE_K24_Q2048 = 'loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:k24_q20
 ROUTE_K28_Q2048 = 'loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:k28_q2048_s8_exact'
 ROUTE_K28_Q4096 = 'loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:k28_q4096_s4_unordered_exact'
 ROUTE_PARENT = parent_bad5.ROUTE_PARENT
-stage1_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k24_s8_ir"}'))
-stage1_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k28_s8_ir"}'))
-stage1_k28_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k28_unordered_ir"}'))
-merge_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k24_s8_ir"}'))
-merge_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k28_s8_ir"}'))
-merge_k28_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k28_unordered_ir"}'))
+stage1_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k24_s8_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k28_s8_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k28_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:stage1_k28_unordered_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k24_s8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k28_s8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k28_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:merge_k28_unordered_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_DIMMIDK_BAD5_K24K28_VERIFY_KERNEL')
@@ -68,7 +68,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return parent_bad5.merge_generic_ir
     return stage1_k24_s8_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k24_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0125"}'))

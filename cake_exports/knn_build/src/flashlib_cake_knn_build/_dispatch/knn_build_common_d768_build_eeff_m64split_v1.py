@@ -44,8 +44,8 @@ M64_DATABASE_BYTES = M64_BLOCK_M * K_TILE * 2
 M64_DB_SQ_BYTES = M64_BLOCK_M * 4
 M64_SMEM_POOL_BYTES = M64_QUERY_BYTES + M64_DATABASE_BYTES + M64_DB_SQ_BYTES
 _insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:_insert_sorted_pair', 256)
-knn_build_common_d768_build_eeff_m64split_stage1 = _ir_proxy('loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:knn_build_common_d768_build_eeff_m64split_stage1', 256)
-stage1_m64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:stage1_m64_ir"}'))
+knn_build_common_d768_build_eeff_m64split_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:knn_build_common_d768_build_eeff_m64split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_m64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:stage1_m64_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _check_split_count(split_count: int) -> int:
     split_count = int(split_count)
@@ -73,7 +73,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _merge_ir(split_count, group_count)
     return stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d768_build_eeff_m64split_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_m64():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0026"}'))

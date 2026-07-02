@@ -34,7 +34,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'online_merge_generic_s14':
         return online_route.v20.parent_lowk.generic_merge_ir
     return online_route.v20.parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_pair_exact_weave_evolve_knn_build_ee5e_v44:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_pair_exact_weave_evolve_knn_build_ee5e_v44:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_rag_pair_exact(inputs: dict[str, Any]) -> bool:
     return stream_route._eligible_rag_stream_exact(inputs) or online_route._eligible_rag_online_exact(inputs)

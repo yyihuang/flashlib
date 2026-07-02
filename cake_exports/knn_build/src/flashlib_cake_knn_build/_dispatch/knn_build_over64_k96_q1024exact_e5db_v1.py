@@ -27,9 +27,9 @@ GRID_DIM_DEFAULT = f9d1.GRID_DIM_DEFAULT
 CTA_GROUP = f9d1.CTA_GROUP
 OVER64_TOP_K = f9d1.OVER64_TOP_K
 Q1024_SPLIT_COUNT = 2
-MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"1": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.1"}, "2": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.2"}, "3": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.3"}, "4": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.4"}, "6": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.6"}, "8": {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.8"}}'))
-knn_build_k96_stage1_exact_prefill_q1024 = _ir_proxy('loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:knn_build_k96_stage1_exact_prefill_q1024', 256)
-stage1_k96_exact_prefill_q1024_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:stage1_k96_exact_prefill_q1024_ir"}'))
+MERGE_IR_BY_SPLIT = _decode_capture(_json_loads('{"__dict_items__": [[1, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [2, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [3, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.3", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [4, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [6, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.6", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}], [8, {"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:MERGE_IR_BY_SPLIT.8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}]]}'))
+knn_build_k96_stage1_exact_prefill_q1024 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:knn_build_k96_stage1_exact_prefill_q1024", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k96_exact_prefill_q1024_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:stage1_k96_exact_prefill_q1024_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_OVER64_K96_E5DB_VERIFY_KERNEL')
@@ -38,7 +38,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_s2':
         return MERGE_IR_BY_SPLIT[Q1024_SPLIT_COUNT]
     return stage1_k96_exact_prefill_q1024_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_q1024exact_e5db_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k96_q1024_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0072"}'))

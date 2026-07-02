@@ -35,7 +35,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_raglargek':
         return parent_v21.merge_k20_unordered_warp_select_splitmajor_ir
     return parent_v21.merge_k20_unordered_warp_select_splitmajor_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20raglargek_4ebb_v43:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20raglargek_4ebb_v43:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _eligible_k20_raglargek(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('build', False)) and str(inputs['query'].dtype) == 'torch.bfloat16' and (str(inputs['database'].dtype) == 'torch.bfloat16') and (int(inputs['B']) == 1) and (int(inputs['Q']) == 4096) and (int(inputs['M']) == 100000) and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) == TOP_K_K20)

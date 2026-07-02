@@ -33,7 +33,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k10_s72_cache':
         return split72.merge_k10_s72_cache_ir
     return parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     dtype = str(getattr(inputs.get('query'), 'dtype', inputs.get('dtype', '')))

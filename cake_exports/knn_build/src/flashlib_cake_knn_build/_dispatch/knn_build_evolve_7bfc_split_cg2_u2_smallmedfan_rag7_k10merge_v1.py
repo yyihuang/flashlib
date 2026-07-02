@@ -27,14 +27,14 @@ SMALL_SPLITS = 4
 MEDIUM_SPLITS = parent_split.MEDIUM_SPLITS
 RAG_SPLITS = 7
 SMALL_SHAPE_MAX = 512
-stage1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:stage1_ir"}'))
-generic_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:generic_merge_ir"}'))
-knn_build_evolve_7bfc_k10_merge_s4 = _ir_proxy('loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:knn_build_evolve_7bfc_k10_merge_s4', 256)
-knn_build_evolve_7bfc_k10_merge_s7 = _ir_proxy('loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:knn_build_evolve_7bfc_k10_merge_s7', 256)
-merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_k10_s4_ir"}'))
-merge_k10_s7_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_k10_s7_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:ir"}'))
+stage1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:stage1_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+generic_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:generic_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_evolve_7bfc_k10_merge_s4 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:knn_build_evolve_7bfc_k10_merge_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_evolve_7bfc_k10_merge_s7 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:knn_build_evolve_7bfc_k10_merge_s7", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_k10_s4_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k10_s7_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_k10_s7_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _eligible_bf16_contract_shape(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16' and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) <= TOP_K_MAX)

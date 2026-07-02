@@ -48,10 +48,10 @@ ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 ROUTE_PARENT_V11 = dispatch_v11.ROUTE_ENTRYPOINT
 BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_knn_build_rag_microbucket_q32_lowk_c3d2_v1'
 _insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:_insert_sorted_pair', 256)
-knn_build_rag_microbucket_q32_lowk_c3d2_v1_stage1 = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:knn_build_rag_microbucket_q32_lowk_c3d2_v1_stage1', 256)
-stage1_ir_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:stage1_ir_base"}'))
-knn_build_rag_microbucket_q32_lowk_c3d2_v1_merge = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:knn_build_rag_microbucket_q32_lowk_c3d2_v1_merge', 256)
-merge_ir_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:merge_ir_base"}'))
+knn_build_rag_microbucket_q32_lowk_c3d2_v1_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:knn_build_rag_microbucket_q32_lowk_c3d2_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 97536, "cta_group": 1, "threads": 192}'))
+stage1_ir_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:stage1_ir_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 97536, "cta_group": 1, "threads": 192}'))
+knn_build_rag_microbucket_q32_lowk_c3d2_v1_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:knn_build_rag_microbucket_q32_lowk_c3d2_v1_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_ir_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:merge_ir_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -79,7 +79,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _merge_ir(top_k, split_count)
     return _stage1_ir(top_k)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_lowk_c3d2_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 97536, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=None)
 def _compiled_stage1_q32_lowk(top_k: int):

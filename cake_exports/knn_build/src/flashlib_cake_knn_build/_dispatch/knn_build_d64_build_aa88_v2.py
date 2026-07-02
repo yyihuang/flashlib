@@ -26,16 +26,16 @@ TARGET_SHAPES = D64_BUILD_TARGET_LABELS
 ROUTE_D64_BUCKET_S4_FAST = 'loom.examples.weave.knn_build_d64_build_aa88_v2:d64_split_s4_k10_cached_merge'
 ROUTE_D64_BUCKET_S8_FAST = 'loom.examples.weave.knn_build_d64_build_aa88_v2:d64_split_s8_k10_cached_merge'
 ROUTE_PARENT_AA88 = 'loom.examples.weave.knn_build_d64_build_aa88_v1'
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:stage1_d64_split_ir"}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_generic_ir"}'))
-knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache = _ir_proxy('loom.examples.weave.knn_build_d64_build_aa88_v2:knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache', 256)
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:stage1_d64_split_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_generic_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_k10_s8_ir"}'))
-merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_k10_s4_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_ir"}'))
+merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_k10_s8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_k10_s4_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_D64_AA88_V2_VERIFY_KERNEL')
@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_build_aa88_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
 
 def _eligible_d64_build_bucket(inputs: dict[str, Any]) -> bool:
     return parent_aa88._eligible_d64_build_bucket(inputs)

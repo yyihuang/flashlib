@@ -33,7 +33,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rag_split72_merge':
         return rag_split72.merge_k10_s72_cache_ir
     return base_6998.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_6998_ragk10_direct_split72_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_6998_ragk10_direct_split72_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

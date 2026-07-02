@@ -36,8 +36,8 @@ SEED_SPLIT_COUNT = parent_v20.MEDIUM_SPLITS
 TOP_K_K20 = 20
 EXACT_SHAPE_LABELS = ('search_rect_b1_q4096_m65536_d128_k20', 'rag_offline_largek_b1_q4096_m100000_d128_k20', 'rag_offline_large_m_b1_q8192_m250000_d128_k20')
 EXACT_SHAPE_DIMS = {(4096, 65536), (4096, 100000), (8192, 250000)}
-knn_build_k20_large_lowfanout_s2_warp_select = _ir_proxy('loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:knn_build_k20_large_lowfanout_s2_warp_select', 256)
-merge_k20_s2_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:merge_k20_s2_warp_select_ir"}'))
+knn_build_k20_large_lowfanout_s2_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:knn_build_k20_large_lowfanout_s2_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k20_s2_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:merge_k20_s2_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K20_LOWFANOUT_VERIFY_KERNEL')
@@ -48,7 +48,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_large_lowfanout_s8':
         return parent_v20.merge_k20_s8_ir
     return parent_v20.stage1_k20_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_lowfanout_de1a_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _forced_split_count() -> int | None:
     split_text = os.environ.get('LOOM_KNN_K20_LOWFANOUT_SPLITS')

@@ -19,7 +19,7 @@ def _verify_export_ir() -> Any:
     if 'LOOM_KNN_K20_SEARCH_RECT_VERIFY_KERNEL' in os.environ:
         return k20_search_rect.ir
     return v40.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatchscore_tailinf_knn_build_dispatch_slurm_0610_6329_v41:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatchscore_tailinf_knn_build_dispatch_slurm_0610_6329_v41:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 candidate = k20_search_rect.candidate
 launch_from_contract_inputs = k20_search_rect.launch_from_contract_inputs
 evaluate_contract = k20_search_rect.evaluate_contract

@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q32_rows4_merge':
         return rows4._warp_merge_ir(split_count)
     return rowld1._stage1_rowld2_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_f590_q32rowld2rows4_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_f590_q32rowld2rows4_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _eligible_q32_rowld2_rows4(inputs: dict[str, Any]) -> bool:
     return parent.parent._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 32 and (int(inputs.get('M', -1)) == 100000) and (int(inputs.get('K', -1)) == 32)

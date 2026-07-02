@@ -36,7 +36,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'm64_merge_s128_g8':
         return seed_3505.faeb.rag_m64.parent_micro._fused_merge_ir(seed_3505.faeb.M64_SPLIT_COUNT, seed_3505.faeb.M64_GROUP_COUNT)
     return seed_3505.faeb.rag_m64.stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4q64_d555_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4q64_d555_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _dtype_name(inputs: dict[str, Any], key: str) -> str:
     tensor = inputs.get(key)

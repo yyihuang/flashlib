@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q16_k32_fused_merge':
         return q16_tailinf._fused_merge_ir(split_count, group_count)
     return q16_tailinf.stage1_k32_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_q4_k10(inputs: dict[str, Any]) -> bool:
     return faeb._eligible_q4_k10(inputs)

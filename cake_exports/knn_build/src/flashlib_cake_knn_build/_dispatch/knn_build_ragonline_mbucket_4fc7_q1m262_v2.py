@@ -29,7 +29,7 @@ SPLIT_COUNT_M250 = parent.SPLIT_COUNT_M250
 SPLIT_COUNT_M262_PARENT = parent.SPLIT_COUNT_M262
 SPLIT_COUNT_M262_HALF = _decode_capture(_json_loads('128'))
 GROUP_COUNT_M262_HALF = _decode_capture(_json_loads('8'))
-SPLIT_BY_M = _decode_capture(_json_loads('{"100000": 72, "131071": 72, "250000": 74, "262143": 128}'))
+SPLIT_BY_M = _decode_capture(_json_loads('{"__dict_items__": [[100000, 72], [131071, 72], [250000, 74], [262143, 128]]}'))
 SPLIT_BY_M[262143] = SPLIT_COUNT_M262_HALF
 Q1_HALF_STAGE1_THREADS = q8half_parent.Q8_HALF_STAGE1_THREADS
 Q1_HALF_BLOCK_Q = 64
@@ -45,8 +45,8 @@ Q1_HALF_LOCAL_D_OFFSET = Q1_HALF_SMEM_BASE_BYTES
 Q1_HALF_LOCAL_I_OFFSET = Q1_HALF_LOCAL_D_OFFSET + Q1_HALF_LOCAL_ELEMS * 4
 Q1_HALF_SMEM_POOL_BYTES = Q1_HALF_LOCAL_I_OFFSET + Q1_HALF_LOCAL_ELEMS * 4
 _insert_sorted_pair_k10 = _ir_proxy('loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:_insert_sorted_pair_k10', 256)
-knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow = _ir_proxy('loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow', 256)
-stage1_q1_k10_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:stage1_q1_k10_m64_halfrow_ir"}'))
+knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+stage1_q1_k10_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:stage1_q1_k10_m64_halfrow_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_Q1M262_V2_VERIFY_KERNEL')
@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return fused_merge_parent._fused_merge_ir(split_count, group_count)
     return stage1_q1_k10_m64_halfrow_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_q1_k10_m64_halfrow():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0169"}'))

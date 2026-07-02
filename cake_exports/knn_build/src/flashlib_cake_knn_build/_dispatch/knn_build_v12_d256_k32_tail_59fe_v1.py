@@ -42,9 +42,9 @@ D256_LOCAL_I_OFFSET = rowld_seed.Q32_M64_LOCAL_I_OFFSET
 D256_SMEM_POOL_BYTES = rowld_seed.Q32_M64_SMEM_POOL_BYTES
 D256_WARP_MERGE_THREADS = k32merge.K32_WARP_MERGE_THREADS
 D256_WARP_MERGE_ROWS_PER_CTA = k32merge.K32_WARP_MERGE_ROWS_PER_CTA
-SHAPE_SPECS = _decode_capture(_json_loads('{"rag_microbatch_largek_common_d256_b1_q8_m100000_k32": {"B": 1, "D": 256, "K": 32, "M": 100000, "Q": 8, "build": false, "split_count": 144}, "rag_stream_largek_common_d256_b1_q128_m100000_k32": {"B": 1, "D": 256, "K": 32, "M": 100000, "Q": 128, "build": false, "split_count": 144}}'))
-knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld = _ir_proxy('loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld', 256)
-stage1_d256_k32_rowld_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:stage1_d256_k32_rowld_ir"}'))
+SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["rag_microbatch_largek_common_d256_b1_q8_m100000_k32", {"__dict_items__": [["B", 1], ["Q", 8], ["M", 100000], ["D", 256], ["K", 32], ["build", false], ["split_count", 144]]}], ["rag_stream_largek_common_d256_b1_q128_m100000_k32", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 100000], ["D", 256], ["K", 32], ["build", false], ["split_count", 144]]}]]}'))
+knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+stage1_d256_k32_rowld_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:stage1_d256_k32_rowld_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_V12_D256_K32_TAIL_59FE_VERIFY_KERNEL')
@@ -52,7 +52,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return k32merge._warp_merge_ir(split_count)
     return stage1_d256_k32_rowld_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k32_tail_59fe_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_d256_k32_rowld():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0166"}'))

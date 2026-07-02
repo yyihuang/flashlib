@@ -29,7 +29,7 @@ ROUTE_Q4_M64S144 = 'rag_microbatch_k10_q4_m64_s144_g12_17b8_v1'
 ROUTE_NAME = f'{MODULE}:m64_s144_g12'
 ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 BASELINE_ENTRYPOINT = f'{base_q4q64.MODULE}:launch_from_contract_inputs'
-SOURCE_TASKS = _decode_capture(_json_loads('{"m64_parent_seed": "loom.examples.weave.knn_build_rag_microbatch_m64_d4f7_v1:_launch_rag_microbatch_m64", "rag_microbatch_k10_q4_m64_s144_g12_17b8_v1": "weave-evolve-knn-build-17b8 / design_doc/active/generalize_auto_tuning_knn_build_round_116_17b8.md", "rag_microbatch_k10_q4q64_m64_3505_d555_v1": "generalize-auto-tuning-knn-build-d555 / design_doc/active/generalize_auto_tuning_knn_build_round_115_d555.md"}'))
+SOURCE_TASKS = _decode_capture(_json_loads('{"__dict_items__": [["rag_microbatch_k10_q4_m64_s144_g12_17b8_v1", "weave-evolve-knn-build-17b8 / design_doc/active/generalize_auto_tuning_knn_build_round_116_17b8.md"], ["m64_parent_seed", "loom.examples.weave.knn_build_rag_microbatch_m64_d4f7_v1:_launch_rag_microbatch_m64"], ["rag_microbatch_k10_q4q64_m64_3505_d555_v1", "generalize-auto-tuning-knn-build-d555 / design_doc/active/generalize_auto_tuning_knn_build_round_115_d555.md"]]}'))
 eval_mod = base_q4q64.eval_mod
 
 def _verify_export_ir() -> Any:
@@ -37,7 +37,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return rag_m64.parent_micro._fused_merge_ir(SPLIT_COUNT, GROUP_COUNT)
     return rag_m64.stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4_m64s144_17b8_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4_m64s144_17b8_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _dtype_name(inputs: dict[str, Any], key: str) -> str:
     tensor = inputs.get(key)

@@ -21,11 +21,11 @@ GRID_DIM_DEFAULT = base_v1.GRID_DIM_DEFAULT
 D256_FEAT_D = 256
 D256_QUERY_BYTES = BLOCK_Q * D256_FEAT_D * 2
 D256_DATABASE_BYTES = BLOCK_M * D256_FEAT_D * 2
-knn_build_evolve_7bfc_d256_twomma_base = _ir_proxy('loom.examples.weave.knn_build_evolve_7bfc_d256_twomma_knn_build_dispatch_slurm_0610_6329_v23:knn_build_evolve_7bfc_d256_twomma_base', 256)
+knn_build_evolve_7bfc_d256_twomma_base = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_d256_twomma_knn_build_dispatch_slurm_0610_6329_v23:knn_build_evolve_7bfc_d256_twomma_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99328, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     return knn_build_evolve_7bfc_d256_twomma_base
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_d256_twomma_knn_build_dispatch_slurm_0610_6329_v23:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_d256_twomma_knn_build_dispatch_slurm_0610_6329_v23:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99328, "cta_group": 1, "threads": 192}'))
 
 def _compiled_d256_kernel():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0099"}'))

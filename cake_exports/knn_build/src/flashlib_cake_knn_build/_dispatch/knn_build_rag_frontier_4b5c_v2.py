@@ -56,7 +56,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel and verify_kernel.startswith('k32_merge_s'):
         return _merge_k32_cache_ir(int(verify_kernel.removeprefix('k32_merge_s')))
     return _merge_k32_cache_ir(K32_SPLIT_COUNT)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4b5c_v2:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4b5c_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=None)
 def _compiled_merge_k32_cache(split_count: int):

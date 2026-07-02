@@ -29,9 +29,9 @@ MERGE_THREADS = parent_lowk.parent_cached.RAG_MERGE_THREADS
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k10_s8_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s8_cache_ir"}'))
-merge_k10_s16_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s16_cache_ir"}'))
-merge_k10_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s32_cache_ir"}'))
+merge_k10_s8_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s8_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s16_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s16_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s32_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RECT_D15E_VERIFY_KERNEL')
@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_s32':
         return merge_k10_s32_cache_ir
     return parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

@@ -25,7 +25,7 @@ MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32_5317_q32tail143low_v
 EXPANDED_Q32_TAIL_LOW_SHAPE = parent.EXPANDED_Q32_TAIL_LOW_SHAPE
 TARGET_SHAPES = (EXPANDED_Q32_TAIL_LOW_SHAPE,)
 EXPANDED_SHAPES = (parent.EXPANDED_SHAPES_BY_LABEL[EXPANDED_Q32_TAIL_LOW_SHAPE],)
-EXPANDED_SHAPES_BY_LABEL = _decode_capture(_json_loads('{"expanded_tail_q32_m99999_d128_k32": {"label": "expanded_tail_q32_m99999_d128_k32", "params": {"B": 1, "D": 128, "K": 32, "M": 99999, "Q": 32, "benchmark": true, "build": false, "check_correctness": true, "correctness_query_sample": 32, "dtype": "bfloat16", "recall_min": 0.999, "seed": 626999, "time_flashlib": true}}}'))
+EXPANDED_SHAPES_BY_LABEL = _decode_capture(_json_loads('{"__dict_items__": [["expanded_tail_q32_m99999_d128_k32", {"__dict_items__": [["label", "expanded_tail_q32_m99999_d128_k32"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 99999], ["D", 128], ["K", 32], ["dtype", "bfloat16"], ["seed", 626999], ["build", false], ["check_correctness", true], ["correctness_query_sample", 32], ["recall_min", 0.999], ["benchmark", true], ["time_flashlib", true]]}]]}]]}'))
 K32_Q32TAIL143_LOW_SPLIT_COUNT = 143
 ROUTE_Q32TAIL143_LOW_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 ROUTE_HIGH143_ENTRYPOINT = f'{high143.MODULE}:launch_from_contract_inputs'
@@ -38,7 +38,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q32tail143low_merge':
         return q32exact.rows4._warp_merge_ir(K32_Q32TAIL143_LOW_SPLIT_COUNT)
     return q32exact._stage1_q32_exact_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_5317_q32tail143low_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_5317_q32tail143low_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _eligible_q32tail143low(inputs: dict[str, Any]) -> bool:
     return parent.uneven.base._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 32 and (int(inputs.get('M', -1)) == 99999) and (int(inputs.get('K', -1)) == q32exact.K32_TOP_K_MAX)

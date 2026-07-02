@@ -19,7 +19,7 @@ from . import knn_build_lowk_f8c3_q512_q1024_v1 as seed
 TARGET_SHAPE = 'build_k_sweep_qm512_k1'
 Q512_SPLIT_COUNT = 2
 ROUTE_PREFIX = 'loom.examples.weave.knn_build_k1_q512_group2_root_v1'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k1_q512_group2_root_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k1_q512_group2_root_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible(inputs: dict[str, Any]) -> bool:
     return str(inputs.get('label', TARGET_SHAPE)) == TARGET_SHAPE and seed._is_bf16_build(inputs, q=512, k=1)

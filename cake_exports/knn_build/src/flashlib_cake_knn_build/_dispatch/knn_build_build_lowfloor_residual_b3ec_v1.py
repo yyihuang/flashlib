@@ -65,7 +65,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'tail_k20_merge_s4':
         return v20.merge_k20_ir
     return baseline_1877.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_residual_b3ec_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_build_lowfloor_residual_b3ec_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _select_contract_shapes(shape_labels):
     return baseline_1877._select_contract_shapes(shape_labels)

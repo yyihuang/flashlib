@@ -23,14 +23,14 @@ MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2'
 EXPANDED_Q31_SHAPE = parent.EXPANDED_Q31_SHAPE
 TARGET_SHAPES = (EXPANDED_Q31_SHAPE,)
 EXPANDED_SHAPES = (parent.EXPANDED_SHAPES_BY_LABEL[EXPANDED_Q31_SHAPE],)
-EXPANDED_SHAPES_BY_LABEL = _decode_capture(_json_loads('{"expanded_guard_boundary_q31_m100000_d128_k32": {"label": "expanded_guard_boundary_q31_m100000_d128_k32", "params": {"B": 1, "D": 128, "K": 32, "M": 100000, "Q": 31, "benchmark": true, "build": false, "check_correctness": true, "correctness_query_sample": 31, "dtype": "bfloat16", "recall_min": 0.999, "seed": 626331, "time_flashlib": true}}}'))
+EXPANDED_SHAPES_BY_LABEL = _decode_capture(_json_loads('{"__dict_items__": [["expanded_guard_boundary_q31_m100000_d128_k32", {"__dict_items__": [["label", "expanded_guard_boundary_q31_m100000_d128_k32"], ["params", {"__dict_items__": [["B", 1], ["Q", 31], ["M", 100000], ["D", 128], ["K", 32], ["dtype", "bfloat16"], ["seed", 626331], ["build", false], ["check_correctness", true], ["correctness_query_sample", 31], ["recall_min", 0.999], ["benchmark", true], ["time_flashlib", true]]}]]}]]}'))
 K32_Q31_EXACT_SPLIT_COUNT = _decode_capture(_json_loads('153'))
 K32_Q31_ACTIVE_ROWS = 31
 ROUTE_Q31TAIL_V2_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 ROUTE_Q31TAIL_V1_ENTRYPOINT = f'{parent.MODULE}:launch_from_contract_inputs'
 ROUTE_DISPATCH_V11_ENTRYPOINT = f'{dispatch_v11.MODULE}:launch_from_contract_inputs'
 SEED_K32_0CB5_Q31TAIL_V2_ID = 'rag_microbucket_k32_0cb5_q31tail_v2'
-knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1 = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2:knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1', 256)
+knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2:knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _stage1_q31_exact_ir() -> Any:
     return q32exact._ir_with_constants(knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1, suffix='q31exact_0cb5_v2', BLOCK_Q=q32exact.rowld1.Q16_ROWLD1_BLOCK_Q, BLOCK_M=q32exact.rowld1.Q16_ROWLD1_BLOCK_M, FEAT_D=q32exact.rowld1.Q16_ROWLD1_FEAT_D, TOP_K_MAX=q32exact.K32_TOP_K_MAX, ROWS_COVERED=K32_Q31_ACTIVE_ROWS)
@@ -41,7 +41,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel in {'q31_exact_merge', 'q31_balanced_merge'}:
         return q32exact.rows4._warp_merge_ir(split_count)
     return _stage1_q31_exact_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q31_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0162"}'))

@@ -41,7 +41,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k20_08ec_merge_s2_warp8':
         return k20_08ec.merge_k20_s2_warp8_ir
     return previous_main.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_3d97_08ec_0a10_v47:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_3d97_08ec_0a10_v47:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _label_can_hit(inputs: dict[str, Any], target_labels: set[str]) -> bool:
     label = inputs.get('label')

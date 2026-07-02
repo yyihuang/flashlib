@@ -17,8 +17,8 @@ from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_all_validated_weave_evolve_knn_build_0192_v1 as parent_0192
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_v1 as k5_route
 TARGET_SHAPE = 'flashml_correctness_b1_q256_m256_d128_k5'
-stage1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:stage1_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:merge_ir"}'))
+stage1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:stage1_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_FLASHML_K5_BD4A_VERIFY_KERNEL')
@@ -27,7 +27,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return merge_ir
     return stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_is_bf16(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16'

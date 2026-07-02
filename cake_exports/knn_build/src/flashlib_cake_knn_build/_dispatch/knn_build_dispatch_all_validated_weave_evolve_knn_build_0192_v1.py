@@ -53,7 +53,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'search_rect_merge':
         return k20_search_rect.parent_v20.merge_k20_unordered_warp_select_ir
     return v41.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_all_validated_weave_evolve_knn_build_0192_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_all_validated_weave_evolve_knn_build_0192_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_is_bf16(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16'

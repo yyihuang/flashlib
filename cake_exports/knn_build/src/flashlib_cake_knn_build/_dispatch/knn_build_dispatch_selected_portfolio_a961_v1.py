@@ -39,7 +39,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_DIMMIDK_BAD5_K64S8_VERIFY_KERNEL'] = 'merge_k64_s8_warp_select'
         return k64_seed._verify_export_ir()
     return base_e51c.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_selected_portfolio_a961_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_selected_portfolio_a961_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_k64_q2048(inputs: dict[str, Any]) -> bool:
     return k64_seed._eligible_k64_q2048(inputs)
