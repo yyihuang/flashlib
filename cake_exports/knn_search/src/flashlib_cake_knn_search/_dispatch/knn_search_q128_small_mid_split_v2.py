@@ -17,7 +17,7 @@ BLOCK_Q = _incumbent.BLOCK_Q
 BLOCK_M = _incumbent.BLOCK_M
 D_STATIC = _incumbent.D_STATIC
 K_MAX = _incumbent.K_MAX
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_small_mid_split_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 HELDOUT_SHAPES: list[dict[str, Any]] = [{'label': 'dispatch_q128_m16384_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 16384, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610202, 'self_search': False, 'min_recall': 0.999}}, {'label': 'ksweep_q128_m131072_d128_k1', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 1, 'dtype': 'bfloat16', 'seed': 610301, 'self_search': False, 'min_recall': 1.0}}, {'label': 'ksweep_q128_m131072_d128_k2', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 2, 'dtype': 'bfloat16', 'seed': 610302, 'self_search': False, 'min_recall': 1.0}}, {'label': 'ksweep_q128_m131072_d128_k5', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 5, 'dtype': 'bfloat16', 'seed': 610303, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_q128_split_dispatch(inputs: dict[str, Any]) -> bool:

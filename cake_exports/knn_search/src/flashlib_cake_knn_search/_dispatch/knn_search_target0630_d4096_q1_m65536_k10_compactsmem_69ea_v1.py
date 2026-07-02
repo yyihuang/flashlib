@@ -45,10 +45,10 @@ SMEM_POOL_BYTES = SMEM_LOCAL_I_OFFSET + SMEM_LOCAL_I_BYTES + 256
 SMEM_BYTES = SMEM_POOL_BYTES + parent.p.mma.WEAVE_SMEM_SYSTEM_BYTES
 _KERNELS: dict[str, Any] = {}
 _accumulate_q0_norm_compact = _ir_proxy('loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_compactsmem_69ea_v1:_accumulate_q0_norm_compact', 256)
-knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_compactsmem_69ea_v1:knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_compactsmem_69ea_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_compactsmem_69ea_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_compactsmem_69ea_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
+knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54656, "cta_group": 1, "threads": 512}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return parent._matches(inputs)

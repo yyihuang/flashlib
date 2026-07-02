@@ -43,11 +43,11 @@ Q4096_K64_TOTAL_M_TILES = parent.Q4096_K64_TOTAL_M_TILES
 K64_Q4096_LOCALPREFIX_SHAPES: list[dict[str, Any]] = [{'label': 'ksweep_q128_m131072_d128_k64', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610312, 'self_search': False, 'min_recall': 0.999}}, {'label': 'ksweep_q4096_m20000_d128_k64', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610313, 'self_search': False, 'min_recall': 0.999}}]
 _KNN_SEARCH_K64_Q4096_LOCALPREFIX_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q4096_LOCALPREFIX_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_0614_r36_edd7_v1:knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_0614_r36_edd7_v1:knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_0614_r36_edd7_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_0614_r36_edd7_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_0614_r36_edd7_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 def _scratch_prefix(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

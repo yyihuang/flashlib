@@ -14,7 +14,7 @@ ENTRYPOINT = 'loom.examples.weave.knn_search_dispatch0701_8ae1_q4096_exported_ve
 CONSUMED_SEED = 'weave-evolve-knn-search-8ae1'
 GUARD_ID = 'r279_q4096_m20000_d128_k10_8ae1_independent_vertical_slice'
 GUARD = 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 10 and not self_search and arch in {sm_100a,sm_103a}'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch0701_8ae1_q4096_exported_vertical_slice_consumption_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 _ENTRY = {'shape_key': 'rag_q4096_m20000_d128_k10', 'route': 'r279_8ae1_independent_real72_pairlocal72_exported', 'entrypoint': seed.ENTRYPOINT, 'selected_seed': CONSUMED_SEED, 'guard': GUARD}
 SHAPE_DISPATCH_REGISTRY = (_ENTRY,)
 _SEED_BLOCK_M = 128

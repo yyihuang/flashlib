@@ -20,7 +20,7 @@ TARGET_ROUTE = 'rag_q4096_m20000_d128_k10_tcgen05_col4_real_scratch_pairlocal72_
 FORCED_FALLBACK_ROUTE = f'{TARGET_ROUTE}_forced'
 PRODUCER_ABI = capture.PRODUCER_ABI
 CONSUMER_ABI = 'q4096_pairlocal_topk_72_lists_three_per_active_lane'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_rag_q4096_m20000_d128_k10_repair_q4096_seed3_real_scratch_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _is_target(inputs: dict[str, Any]) -> bool:
     return (int(inputs.get('B', 1)), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K'])) == TARGET_KEY and (not bool(inputs.get('self_search', False))) and mma._tcgen05_capable_arch()

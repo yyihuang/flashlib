@@ -44,10 +44,10 @@ _DIRECT_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, 
 _knn_accumulate_q_norm_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:_knn_accumulate_q_norm_highd_direct_d', 256)
 _knn_stage_q_pass_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:_knn_stage_q_pass_highd_direct_d', 256)
 _knn_stage_database_pass_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:_knn_stage_database_pass_highd_direct_d', 256)
-knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_high_directstride_tcgen05_partial_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
 ROUTE_HIGH_DYNAMIC_D_TCGEN05 = 'ccef_dynamic_d_high_q128_directstride_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-ccef-highd-directstride'
 HIGH_DYNAMIC_D_LABELS: tuple[str, ...] = ('blind_dyn_d129_q128_m65536_k10', 'blind_dyn_d257_q128_m65536_k10', 'blind_dyn_d511_q128_m65536_k10')

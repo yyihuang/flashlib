@@ -33,9 +33,9 @@ MERGE_GROUP_IDX_BYTES = MERGE_WARPS * K_MAX * 4
 MERGE_SMEM_BYTES = MERGE_GROUP_DIST_BYTES + MERGE_GROUP_IDX_BYTES
 _KERNELS: dict[str, Any] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_tile_reduce_dispatch0610_r8_blockm512_v1:knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
-knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_tile_reduce_dispatch0610_r8_blockm512_v1:knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_tile_reduce_dispatch0610_r8_blockm512_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
+knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
+knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0215"}, "partial": {"__kernel__": "dispatch_kernel_0214"}}'))

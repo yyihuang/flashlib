@@ -12,7 +12,7 @@ from typing import Any
 from . import knn_search_mma_split_v1 as mma
 from . import knn_search_q4096_split4_0611_r14_4e2c_v1 as q4096_split4
 from . import knn_search_registered_q4096split4_tiestable_0612_r16_4e2c_v1 as parent
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_registered_q4096split4_mrange_0612_r17_4e2c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 Q4096_ROWS = 4096
 Q4096_SPLIT4_M_MIN = 16384
 Q4096_SPLIT4_M_MAX = 65536

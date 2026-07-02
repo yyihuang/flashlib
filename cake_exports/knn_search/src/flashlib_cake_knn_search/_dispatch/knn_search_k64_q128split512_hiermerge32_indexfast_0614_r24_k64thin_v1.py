@@ -32,13 +32,13 @@ MERGE_THREADS = q128_parent.MERGE_THREADS
 MMA_POST_MMA_COL_COHORTS = q128_parent.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = q128_parent.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = q128_parent.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K64_Q128_INDEXFAST_KERNELS: dict[str, Any] = {}
-knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_indexfast_0614_r24_k64thin_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = q128_parent.K64_Q128_SPLIT512_HIERMERGE_SHAPES
 
 def _compile_q128_split512_indexfast_kernels() -> dict[str, Any]:

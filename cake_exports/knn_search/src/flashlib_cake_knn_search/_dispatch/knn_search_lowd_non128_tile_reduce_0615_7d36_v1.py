@@ -32,9 +32,9 @@ LOWD_NON128_LABELS: tuple[str, ...] = ('blind_d64_q128_m65536_k10', 'blind_d96_q
 LOWD_NON128_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_d64_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 64], ["K", 10], ["dtype", "bfloat16"], ["seed", 610508], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d96_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 96], ["K", 10], ["dtype", "bfloat16"], ["seed", 610520], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d192_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 192], ["K", 10], ["dtype", "bfloat16"], ["seed", 610521], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d320_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 320], ["K", 10], ["dtype", "bfloat16"], ["seed", 610509], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE_LOWD_NON128_TILE_REDUCE = 'round20_7d36_lowd_non128_tile_reduce'
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'round20_7d36_lowd_non128_q128_m65536_k10', 'guard': 'B == 1 and Q == 128 and M == 65536 and D in {64,96,192,320} and K == 10', 'route': ROUTE_LOWD_NON128_TILE_REDUCE},)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
 _LOWD_KERNELS: dict[int, dict[str, Any]] = {}
 _LOWD_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
@@ -50,11 +50,11 @@ def _config_for_d(d: int) -> dict[str, int]:
     subwarps_per_warp = 32 // subwarp_width
     num_row_workers = NUM_WARPS * subwarps_per_warp
     return {'D': d, 'SUBWARP_WIDTH': subwarp_width, 'SUBWARPS_PER_WARP': subwarps_per_warp, 'NUM_ROW_WORKERS': num_row_workers, 'BLOCK_M': num_row_workers * LOCAL_LIST_CAP, 'CHUNKS': math.ceil(d / (subwarp_width * 8))}
-knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels(d: int) -> dict[str, Any]:
     from .._dispatch_runtime import generate_kernel

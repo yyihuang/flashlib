@@ -34,11 +34,11 @@ _KNN_SEARCH_K64_Q4096_PREFIXCERT_FUSED_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_FUSED_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_FUSED_FLAGS: dict[int, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_FUSED_STATS: dict[str, int | bool | None] = {'attempts': 0, 'certified_count': 0, 'fallback_count': 0, 'last_overflow': None}
-knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:certflag_init_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 def _scratch_prefixcert_fused(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

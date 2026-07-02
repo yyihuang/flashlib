@@ -22,9 +22,9 @@ TARGET_LABELS: tuple[str, ...] = ('expanded_guard_miss_d6_q128_m65536_k10', 'exp
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': 'expanded_guard_miss_d6_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 6, 'K': 10, 'dtype': 'bfloat16', 'seed': 714509, 'self_search': False, 'min_recall': 0.999}}, {'label': 'expanded_random_legal_d7_q96_m98304_k10', 'params': {'B': 1, 'Q': 96, 'M': 98304, 'D': 7, 'K': 10, 'dtype': 'bfloat16', 'seed': 714510, 'self_search': False, 'min_recall': 0.999}}]
 ROUTE_LOWD_D6D7_TCGEN05 = 'round151_025e_expanded_lowd_d6d7_no_pack_tcgen05'
 CONSUMED_LOWD_D6D7_SEED = 'weave-evolve-knn-search-eacf'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_expanded_lowd_d6d7_tcgen05_0624_025e_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_expanded_lowd_d6d7_tcgen05_0624_025e_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_expanded_lowd_d6d7_tcgen05_0624_025e_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
 
 def __getattr__(name: str) -> Any:
     return getattr(parent, name)

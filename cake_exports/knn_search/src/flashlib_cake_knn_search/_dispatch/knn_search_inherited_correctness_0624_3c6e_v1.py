@@ -19,11 +19,11 @@ from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
 THREADS = scalar_capacity.THREADS
 BLOCK_M = scalar_capacity.BLOCK_M
 K_CAP_MAX = scalar_capacity.K_CAP_MAX
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_inherited_correctness_0624_3c6e_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_inherited_correctness_0624_3c6e_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_inherited_correctness_0624_3c6e_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 131072, "cta_group": 1, "threads": 256}'))
-direct_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_inherited_correctness_0624_3c6e_v1:direct_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 256}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_inherited_correctness_0624_3c6e_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 131072, "cta_group": 1, "threads": 256}'))
+direct_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 256}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 ROUTE_INHERITED_CORRECTNESS_SCALAR = 'round148_3c6e_inherited_correctness_tie_stable_scalar'
 CONSUMED_SCALAR_REPAIR_SEED = 'weave-evolve-knn-search-3c6e-inherited-correctness'
 REPAIRED_LABELS: tuple[str, ...] = ('blind_dyn_d3_q128_m65536_k10', 'blind_dyn_self_q2048_m2048_d3_k10', 'blind_ext_dyn_d1_q128_m65536_k10', 'blind_ext_dyn_d5_q128_m65536_k10', 'blind_k32_q4096_m32768_d128_k32', 'blind_k64_q4096_m32768_d128_k64')

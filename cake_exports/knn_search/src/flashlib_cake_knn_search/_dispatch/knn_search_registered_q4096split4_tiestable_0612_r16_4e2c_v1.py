@@ -11,7 +11,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 from typing import Any
 from . import knn_search_k20k30_mma_q128register_0611_r20_4e96_v1 as parent
 from . import knn_search_q4096_split4_tiestable_0612_r15_4e2c_v1 as q4096_split4
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_registered_q4096split4_tiestable_0612_r16_4e2c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 Q4096_SPLIT4_REGISTERED_SHAPES: list[dict[str, Any]] = q4096_split4.Q4096_SPLIT4_TIESTABLE_SHAPES
 
 def _use_registered_q4096_split4(inputs: dict[str, Any]) -> bool:

@@ -29,8 +29,8 @@ TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "bli
 ROUTE_D3_SELF_Q2048_DIRECT = 'r124_c16f_d3_self_q2048_k10_direct'
 CONSUMED_SEED = 'weave-evolve-knn-search-r124-c16f-d3-self-q2048-direct'
 _KERNELS: dict[str, Any] = {}
-knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1:knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10368, "cta_group": 1, "threads": 128}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10368, "cta_group": 1, "threads": 128}'))
+knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10368, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10368, "cta_group": 1, "threads": 128}'))
 
 def _shape_guard(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == 2048 and (int(inputs['M']) == 2048) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K_MAX) and bool(inputs.get('self_search', False)) and (not bool(inputs.get('force_fallback', False)))

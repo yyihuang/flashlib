@@ -16,7 +16,7 @@ PARTIAL_LIST_COUNT = 72
 PRODUCER_ABI = 'tcgen05_col4_partial_topk'
 CONSUMER_ABI = 'q4096_pairlocal_topk_72_lists'
 DEFAULT_ROWS = (0, 2048, 4095)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _is_target(inputs: dict[str, Any]) -> bool:
     return (int(inputs.get('B', 1)), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K'])) == TARGET_KEY and (not bool(inputs.get('self_search', False))) and mma._tcgen05_capable_arch()

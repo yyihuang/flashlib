@@ -49,16 +49,16 @@ CONSUMED_CCEF_K64_SEED = 'weave-evolve-knn-search-ccef-dynamic-d257-q64-k64-v2'
 CONSUMED_SEED = 'weave-evolve-knn-search-9d5c-dynamic-lowd-k64-r117'
 TARGET_LABELS: tuple[str, ...] = ('blind_ext_dbscan_self_q4096_m4096_d3_k32', 'blind_ext_dyn_d130_k64_q64_m65536', 'blind_ext_dyn_d512_k64_q32_m32768')
 TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dbscan_self_q4096_m4096_d3_k32"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 4096], ["D", 3], ["K", 32], ["dtype", "bfloat16"], ["seed", 610932], ["self_search", true], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_ext_dyn_d130_k64_q64_m65536"], ["params", {"__dict_items__": [["B", 1], ["Q", 64], ["M", 65536], ["D", 130], ["K", 64], ["dtype", "bfloat16"], ["seed", 610929], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_ext_dyn_d512_k64_q32_m32768"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 32768], ["D", 512], ["K", 64], ["dtype", "bfloat16"], ["seed", 610930], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
-pack_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:pack_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-k64_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:k64_partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 151296, "cta_group": 1, "threads": 256}'))
-k64_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:k64_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:scalar_capacity_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+pack_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+k64_partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 151296, "cta_group": 1, "threads": 256}'))
+k64_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 _D3_DIRECT_KERNEL: dict[str, Any] = {}
 _PACK_KERNELS: dict[int, Any] = {}
 _PADDED_INPUTS: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _K64_PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_k64_capacity_9d5c_r117_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
+knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
 
 def _tcgen05_capable_arch() -> bool:
     return bool(k64_parent.d256_k64._tcgen05_capable_arch())

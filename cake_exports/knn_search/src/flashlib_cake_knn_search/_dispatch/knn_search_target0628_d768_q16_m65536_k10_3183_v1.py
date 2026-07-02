@@ -22,9 +22,9 @@ K_STATIC = 10
 ROUTE_TARGET_D768_Q16_K10 = 'target0628_d768_q16_m65536_k10_3183_directstride_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-3183-d768-q16-directstride'
 REPLACED_SEED = 'afe6_dynamic_d_scalar_capacity'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d768_q16_m65536_k10_3183_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 106240, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d768_q16_m65536_k10_3183_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d768_q16_m65536_k10_3183_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 106240, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d768_q64_m65536_k10_partial_0623_e35f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 106240, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d768_q64_m65536_k10_partial_0623_e35f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 106240, "cta_group": 1, "threads": 512}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'target0627_d768_q16_m65536_k10', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 16 and M == 65536 and D == 768 and K == 10 and not self_search and not force_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_TARGET_D768_Q16_K10, 'entrypoint': 'loom.examples.weave.knn_search_target0628_d768_q16_m65536_k10_3183_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'coverage_class': 'target_dimension_frontier_d768_q16_m65536_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _use_target_d768_q16(inputs: dict[str, Any]) -> bool:

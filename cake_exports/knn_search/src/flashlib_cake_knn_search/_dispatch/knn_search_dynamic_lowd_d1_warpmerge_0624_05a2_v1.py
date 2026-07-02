@@ -37,8 +37,8 @@ TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "bli
 ROUTE_D1_WARPMERGE = 'round150_358b_dynamic_lowd_d1_warpmerge'
 CONSUMED_D1_WARPMERGE_SEED = 'weave-evolve-knn-search-358b'
 _KERNELS: dict[str, Any] = {}
-knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1:knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
+knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
 
 def __getattr__(name: str) -> Any:
     return getattr(parent, name)

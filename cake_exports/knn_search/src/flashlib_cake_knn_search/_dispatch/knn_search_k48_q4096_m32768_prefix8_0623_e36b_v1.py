@@ -47,11 +47,11 @@ TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "bli
 K48_Q4096_M32768_PREFIX8_SHAPES = TARGET_SHAPES
 _KNN_SEARCH_Q4096_M32768_K48_PREFIX8_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_Q4096_M32768_K48_PREFIX8_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'round147_e36b_q4096_m32768_d128_k48_prefix8', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 48 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_K48_PREFIX8, 'entrypoint': 'loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-e36b', 'selected_seed': 'weave-evolve-knn-search-e36b-k48-prefix8'}, *k48_parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_prefix8_kernels() -> dict[str, Any]:

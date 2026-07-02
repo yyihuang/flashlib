@@ -26,11 +26,11 @@ Q128_BOUNDARY_M = 32767
 Q128_K1_SPLIT_M = k1_seed.Q128_K1_SPLIT_M
 ROUTE_Q128_M32767_K1_SPLIT148 = 'c0f1_q128_m32767_k1_split148_top1'
 CONSUMED_Q128_M32767_K1_SEED = 'weave-evolve-knn-search-c0f1-q128-m32767-k1'
-partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:partial_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
-merge_q128_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:merge_q128_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_q128_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_q128_split148_merge_0622_4201_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_q128_split148_merge_0622_4201_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 TARGET_LABELS: tuple[str, ...] = ('exp_cov_guard_boundary_q128_m32767_d128_k1',)
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': 'exp_cov_guard_boundary_q128_m32767_d128_k1', 'params': {'B': 1, 'Q': Q128_ROWS, 'M': Q128_BOUNDARY_M, 'D': D_STATIC, 'K': 1, 'dtype': 'bfloat16', 'seed': 620101, 'self_search': False, 'min_recall': 1.0}}]
 _Q128_M32767_K1_ENTRY: dict[str, Any] = {'shape_key': ROUTE_Q128_M32767_K1_SPLIT148, 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 128 and M == 32767 and D == 128 and K == 1 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q128_M32767_K1_SPLIT148, 'entrypoint': 'loom.examples.weave.knn_search_q128_m32767_k1_0623_c0f1_v1:launch_for_eval', 'source_entrypoint': 'loom.examples.weave.knn_search_k1_overlap_forced_0622_4201_v1:_launch_q128_overlap_top1', 'selected_seed': CONSUMED_Q128_M32767_K1_SEED, 'source_task': 'weave-evolve-knn-search-c0f1-q128-m32767-k1', 'coverage_class': 'performance_route_q128_m32767_k1_split148_top1', 'route_source': 'shape-specific-seed'}

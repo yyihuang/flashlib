@@ -12,9 +12,9 @@ from . import knn_search_q8_blockm256_8d4fe4ead6cd_v2 as _parent
 ENTRYPOINT = 'loom.examples.weave.knn_search_q8_d1024_repair_q8_d1024_seed_v1:launch_for_eval'
 TARGET_LABEL = _parent.TARGET_LABEL
 TARGET_ROUTE = 'q8_d1024_exact_tcgen05_seed_repair_v1'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q8_d1024_repair_q8_d1024_seed_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q8_d1024_repair_q8_d1024_seed_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q8_d1024_repair_q8_d1024_seed_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "cta_group": 1, "threads": 640}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == _parent.TARGET_Q and (int(inputs['M']) == _parent.TARGET_M) and (int(inputs['D']) == _parent.HIGH_D_MAX) and (int(inputs['K']) == _parent.K_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and _parent.mma._tcgen05_capable_arch()

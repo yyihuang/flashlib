@@ -25,10 +25,10 @@ Q128_SPLIT_M = base.Q128_SPLIT_M
 Q128_SLOT4_LANES = base.Q128_SLOT4_LANES
 MMA_SMEM_BYTES = base.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k32_guardedmerge_dispatch0610_r60_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K32_GUARDED_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K32_GUARDED_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k32_q128_split148_guarded_merge_r60_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k32_guardedmerge_dispatch0610_r60_v1:knn_search_k32_q128_split148_guarded_merge_r60_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_k32_q128_split148_guarded_merge_r60_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k32_q128_split148_guarded_merge_r60_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compile_k32_guarded_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0231"}, "partial": {"__kernel__": "dispatch_kernel_0230"}}'))

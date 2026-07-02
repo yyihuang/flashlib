@@ -16,7 +16,7 @@ from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k32_registered_dispatch0610_r66_8386_v1 as parent
 from .knn_search_k32_guardedmerge_dispatch0610_r60_v1 import BLOCK_M, BLOCK_Q, D_STATIC, MERGE_SMEM_BYTES, MERGE_THREADS, MMA_SMEM_BYTES, Q128_SPLIT_M, THREADS, knn_search_k32_q128_split148_guarded_merge_r60_v1
 K31_MAX = 31
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k31_capacity_dispatch0610_r67_8386_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 K31_REGISTERED_SHAPES: list[dict[str, Any]] = [{'label': 'ksweep_q128_m131072_d128_k31', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 31, 'dtype': 'bfloat16', 'seed': 610314, 'self_search': False, 'min_recall': 0.999}}, {'label': 'ksweep_q128_m131072_d128_k32', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 32, 'dtype': 'bfloat16', 'seed': 610315, 'self_search': False, 'min_recall': 0.999}}]
 _KNN_SEARCH_K31_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K31_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}

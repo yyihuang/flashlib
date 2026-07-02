@@ -31,10 +31,10 @@ ROUTE = 'target0627_d256_q128_m262144_k64_top64tailgate_1ccc_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:launch_for_eval'
 _KERNELS: dict[str, Any] = {}
 _knn_insert_sorted_pair_batch_tailgate = _ir_proxy('loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:_knn_insert_sorted_pair_batch_tailgate', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_top64tailgate_1ccc_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_groupmerge64_ownerless_7ce6_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0364"}, "group": {"__kernel__": "dispatch_kernel_0363"}, "partial": {"__kernel__": "dispatch_kernel_0362"}}'))

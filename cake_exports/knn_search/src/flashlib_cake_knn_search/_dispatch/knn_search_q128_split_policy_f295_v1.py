@@ -20,7 +20,7 @@ K_MAX = _incumbent.K_MAX
 Q128_SMALL_M_SPLIT_CAP = 128
 Q128_LARGE_M_SPLIT_CAP = _incumbent.Q128_SPLIT_M
 Q128_LARGE_M_THRESHOLD = 131072
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_split_policy_f295_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 POLICY_SHAPES: list[dict[str, Any]] = [{'label': 'dispatch_q128_m8192_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 8192, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610201, 'self_search': False, 'min_recall': 0.999}}, {'label': 'dispatch_q128_m16384_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 16384, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610202, 'self_search': False, 'min_recall': 0.999}}, {'label': 'dispatch_q128_m32768_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 32768, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610203, 'self_search': False, 'min_recall': 0.999}}, {'label': 'dispatch_q128_m65536_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610204, 'self_search': False, 'min_recall': 0.999}}, {'label': 'rag_q128_m131072_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 2, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_q128_split_dispatch(inputs: dict[str, Any]) -> bool:

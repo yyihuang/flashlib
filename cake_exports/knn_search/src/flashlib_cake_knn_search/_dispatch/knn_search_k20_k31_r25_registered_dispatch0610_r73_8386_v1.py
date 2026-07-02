@@ -13,13 +13,13 @@ from typing import Any
 from . import knn_search_k20k30_lateidx_dispatch0610_r70_8386_v1 as k20_lateidx
 from . import knn_search_k31k32_staticmerge_dispatch0610_r68_8386_v1 as k31_staticmerge
 from . import knn_search_k64_q4096split80_twotile_registered_0612_r25_4e2c_v1 as parent
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-k20_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:k20_partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-k20_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:k20_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-k31_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:k31_partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-k31_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1:k31_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+k20_partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+k20_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k20k30_q128_split148_lateidx_merge_r70_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+k31_partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+k31_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k31k32_q128_split148_static_lateidx_merge_r68_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 K20_K31_R25_REGISTERED_SHAPES: list[dict[str, Any]] = [{'label': 'r73_q128_k20_lateidx', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 20, 'dtype': 'bfloat16', 'seed': 610308, 'self_search': False, 'min_recall': 0.999}}, {'label': 'r73_q128_k31_staticmerge', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 31, 'dtype': 'bfloat16', 'seed': 610314, 'self_search': False, 'min_recall': 0.999}}, {'label': 'r73_q128_k32_staticmerge', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 32, 'dtype': 'bfloat16', 'seed': 610315, 'self_search': False, 'min_recall': 0.999}}, {'label': 'r73_q4096_k64_twotile', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610313, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_k13_k20_lateidx(inputs: dict[str, Any]) -> bool:

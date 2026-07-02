@@ -16,8 +16,8 @@ ROUTE_D1_WARPMERGE_358B = d1_warpmerge.ROUTE_D1_WARPMERGE
 CONSUMED_D1_WARPMERGE_358B = 'weave-evolve-knn-search-358b'
 TARGET_LABELS = parent.TARGET_LABELS
 TARGET_SHAPES = parent.TARGET_SHAPES
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch0624_full133_d1_warpmerge_e580_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch0624_full133_d1_warpmerge_e580_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q4096_m32768_k64_prefix8_merge_tie_3c6e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q4096_m32768_k64_prefix8_merge_tie_3c6e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 _D1_WARPMERGE_ENTRY: dict[str, Any] = {**d1_warpmerge._D1_ENTRY, 'shape_key': f'round150_358b_{d1_warpmerge.TARGET_LABEL}', 'route': ROUTE_D1_WARPMERGE_358B, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1:launch_for_eval', 'selected_seed': CONSUMED_D1_WARPMERGE_358B, 'source_task': CONSUMED_D1_WARPMERGE_358B, 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_150_05a2_d1_warpmerge.md', 'guard': '358b D1 low-D row with B == 1, Q in {64,127,128,129,256}, M == 65536, D == 1, K == 10, self_search == false, and force_fallback == false'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = (_D1_WARPMERGE_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 

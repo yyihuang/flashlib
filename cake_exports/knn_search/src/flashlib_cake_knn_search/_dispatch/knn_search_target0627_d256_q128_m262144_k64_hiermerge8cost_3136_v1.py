@@ -31,12 +31,12 @@ TARGET_LABELS = ('target0627_d256_q128_m262144_k64',)
 TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d256_q128_m262144_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 262144], ["D", 256], ["K", 64], ["dtype", "bfloat16"], ["seed", 612106], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE = 'target0627_d256_q128_m262144_k64_split256_hiermerge8cost_3136_tcgen05_rows8'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:launch_for_eval'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] = {}
-knn_search_d256_split256_groupmerge64_warp3136_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:knn_search_d256_split256_groupmerge64_warp3136_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_hiermerge8cost_3136_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_d256_split256_groupmerge64_warp3136_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_groupmerge64_warp3136_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_groupmerge64_warp3136_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0376"}, "group": {"__kernel__": "dispatch_kernel_0375"}, "partial": {"__kernel__": "dispatch_kernel_0374"}}'))

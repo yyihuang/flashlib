@@ -14,7 +14,7 @@ from . import knn_search_k20k30_mma_capacity_0611_r15_4e96_v1 as parent
 from . import knn_search_q128_split_policy_f295_v1 as q128_policy
 Q128_MIDM_MIN = 8192
 Q128_MIDM_EXCLUSIVE_MAX = q128_policy.Q128_LARGE_M_THRESHOLD
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k20k30_q128midm_0611_r16_4e96_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _use_q128_midm_split_policy(inputs: dict[str, Any]) -> bool:
     return int(inputs['Q']) == q128_policy.BLOCK_Q and Q128_MIDM_MIN <= int(inputs['M']) < Q128_MIDM_EXCLUSIVE_MAX and (int(inputs['D']) == q128_policy.D_STATIC) and (int(inputs['K']) <= q128_policy.K_MAX) and q128_policy._incumbent._tcgen05_capable_arch()

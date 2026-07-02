@@ -36,13 +36,13 @@ SHAPE_DISPATCH_REGISTRY = _decode_capture(_json_loads('{"__tuple__": [{"__dict_i
 _KERNELS: dict[int, dict[str, Any]] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _GROUP_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 133632, "cta_group": 1, "threads": 256}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_partial_26d2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 133632, "cta_group": 1, "threads": 256}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _shape_key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int, bool]:
     return parent_seed._shape_key(inputs)
