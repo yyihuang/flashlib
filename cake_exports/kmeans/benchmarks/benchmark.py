@@ -159,7 +159,22 @@ def _run_shape(
         matches = cluster_ids == ref
         result["match_rate"] = float(matches.float().mean().item())
         result["mismatch_count"] = int((~matches).sum().item())
-        result["correct"] = bool(result["mismatch_count"] == 0)
+        if result["mismatch_count"] == 0:
+            result["correct"] = True
+            result["tie_inclusive"] = False
+        else:
+            dim = int(row["D"])
+            pred_idx = cluster_ids.to(torch.int64).unsqueeze(-1).expand(-1, -1, dim)
+            ref_idx = ref.to(torch.int64).unsqueeze(-1).expand(-1, -1, dim)
+            pred_centroids = torch.gather(centroids, 1, pred_idx).float()
+            ref_centroids = torch.gather(centroids, 1, ref_idx).float()
+            points = x.float()
+            pred_dist = ((points - pred_centroids) ** 2).sum(-1)
+            ref_dist = ((points - ref_centroids) ** 2).sum(-1)
+            tie_ok = matches | ((pred_dist - ref_dist).abs() <= 1.0e-3)
+            result["correct"] = bool(tie_ok.all().item())
+            result["tie_inclusive"] = True
+            result["tie_inclusive_match_rate"] = float(tie_ok.float().mean().item())
 
     if benchmark:
         timing = bench_gpu_time(

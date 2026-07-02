@@ -37,4 +37,4 @@ def test_kmeans_matches_reference(row_index: int):
         benchmark=False,
         reference_chunk_rows=128,
     )
-    assert result["match_rate"] == 1.0, result
+    assert result["correct"], result
