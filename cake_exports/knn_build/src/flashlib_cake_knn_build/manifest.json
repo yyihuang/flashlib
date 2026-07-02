@@ -1,5 +1,10 @@
 {
   "export_plan": {
+    "entrypoints": {
+      "correctness_test": "tests/test_correctness.py",
+      "performance_benchmark": "benchmarks/benchmark.py",
+      "python_interface": "src/flashlib_cake_knn_build/interface.py"
+    },
     "file": "plan.json",
     "kernel_count": 117,
     "metadata": {
@@ -9,12 +14,12 @@
     },
     "name": "knn_build-production-suite",
     "package_exports": {
-      "knn_build": ".semantic:knn_build"
+      "knn_build": ".interface:knn_build"
     },
-    "sha256": "9ac9b1784e2c5841a39a44c98f10c0931f152a9fadb4e66bb3afd84fd6281f9f"
+    "sha256": "87b8e48b81db523c9ef99efb848a4952f3777965fc1cf83ac3511c2e25d76a05"
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-02T05:32:18.941646+00:00",
+  "generated_at_utc": "2026-07-02T06:14:45.955440+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -7782,6 +7787,6 @@
     }
   ],
   "package": "flashlib_cake_knn_build",
-  "source_commit": "d78c3d18b69b9c48962ba2acc7e84d2e5deb4b37",
+  "source_commit": "6e540dc8631ed512d874199c16aa8de5b9cfa2bf",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
 }

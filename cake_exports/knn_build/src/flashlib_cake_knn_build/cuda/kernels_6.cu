@@ -629,9 +629,9 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32(float* 
     asm volatile("barrier.cluster.arrive.release.aligned;");
     asm volatile("barrier.cluster.wait.acquire.aligned;");
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
     }
 }
 

@@ -479,5 +479,5 @@ __all__ = [
 ]
 
 # Semantic exports generated from export_plan.package_exports.
-from .semantic import knn_build as knn_build
+from .interface import knn_build as knn_build
 __all__ = [*globals().get('__all__', []), 'knn_build']
