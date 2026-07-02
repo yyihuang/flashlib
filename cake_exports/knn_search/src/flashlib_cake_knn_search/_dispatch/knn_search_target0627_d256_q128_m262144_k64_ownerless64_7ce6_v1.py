@@ -39,7 +39,7 @@ knn_search_d256_split256_groupmerge64_ownerless_7ce6_v1 = _decode_capture(_json_
 group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_groupmerge64_ownerless_7ce6_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0367"}, "group": {"__kernel__": "dispatch_kernel_0366"}, "partial": {"__kernel__": "dispatch_kernel_0365"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0368"}, "group": {"__kernel__": "dispatch_kernel_0367"}, "partial": {"__kernel__": "dispatch_kernel_0366"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

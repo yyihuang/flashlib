@@ -57,7 +57,7 @@ K32_Q4096_EVAL_SHAPES = [*K32_Q4096_SPLIT128_M32768_SHAPES]
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': '80a5_k32_q4096_m32768_d128_k32_split128_k34scratch', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 32 and tcgen05', 'route': 'round80a5_k32_q4096_m32768_split128_k34scratch', 'entrypoint': 'loom.examples.weave.knn_search_80a5_blocker_k32_q4096_m32768_split128_k34scratch_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-4024', 'selected_seed': 'weave-evolve-knn-search-4024', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_12_80a5_k32_split128_k34scratch.md'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_k32_q4096_split128_k34scratch_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0347"}, "partial": {"__kernel__": "dispatch_kernel_0346"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0348"}, "partial": {"__kernel__": "dispatch_kernel_0347"}}'))
 
 def _use_k32_q4096_split128_k34scratch(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q4096_ROWS and (int(inputs['M']) == Q4096_M32768_ROWS) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K32_TARGET) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and base._tcgen05_capable_arch()

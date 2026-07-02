@@ -37,7 +37,7 @@ typedef short int          int16_t;
 #define SMEM_TOTAL 165120
 #define THREADS 512
 #define K_MAX_ 64
-#define K_STORE_ 7
+#define K_STORE_ 64
 
 #include <math_constants.h>
 #define LOOM_INF CUDART_INF_F
@@ -282,7 +282,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M)
+kernel_knn_search_ext_k64_q4096_m49152_split192_partial_0618_28ec_v2(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -5797,9 +5797,18 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
     unsigned long long partial_col_base = (unsigned long long)(((q_tile * 768 + partial_split_id) * 128 + q_local) * K_STORE_);
     {
         #pragma unroll
-        for (int kk = 0; kk < K_STORE_; kk++) {
-            partial_distances[partial_col_base + kk] = best_d[kk];
-            partial_indices[partial_col_base + kk] = best_i[kk];
+        for (int kk = 0; kk < K_STORE_; kk += 2) {
+            {
+                float2 _v2 = make_float2(best_d[kk + 0], best_d[kk + 1]);
+                *reinterpret_cast<float2*>(partial_distances + partial_col_base + kk) = _v2;
+            }
+        }
+        #pragma unroll
+        for (int kk = 0; kk < K_STORE_; kk += 2) {
+            {
+                int2 _iv2 = make_int2(best_i[kk + 0], best_i[kk + 1]);
+                *reinterpret_cast<int2*>(partial_indices + partial_col_base + kk) = _iv2;
+            }
         }
     }
 

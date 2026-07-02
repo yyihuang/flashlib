@@ -39,7 +39,7 @@ _KNN_SEARCH_K3_K5PARTIAL_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K3_K5PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k3_k5partial_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0417"}, "partial": {"__kernel__": "dispatch_kernel_0416"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0418"}, "partial": {"__kernel__": "dispatch_kernel_0417"}}'))
 
 def _scratch_k3_k5partial(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

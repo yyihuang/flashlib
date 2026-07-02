@@ -39,7 +39,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q4096_m32769_k32_tailin
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'round132_67a5_q4096_m32769_d128_k32_prefix8_tailinsert', 'label': 'exp_tail_q4096_m32769_d128_k32', 'guard': 'B == 1 and Q == 4096 and M == 32769 and D == 128 and K == 32 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_M32769_K32_TAILINSERT, 'entrypoint': 'loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:launch_for_eval', 'selected_seed': CONSUMED_TAILINSERT_SEED, 'producer_seed': CONSUMED_MAIN_SEED, 'source_task': 'weave-evolve-knn-search-132-67a5', 'coverage_class': 'performance_route_q4096_m32769_d128_k32_prefix8_tailinsert', 'route_source': 'shape-specific-seed'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_tailinsert_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"tailinsert": {"__kernel__": "dispatch_kernel_0435"}}'))
+    return _decode_capture(_json_loads('{"tailinsert": {"__kernel__": "dispatch_kernel_0436"}}'))
 
 def _ensure_tailinsert_kernel() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_M32769_K32_TAILINSERT_KERNELS:

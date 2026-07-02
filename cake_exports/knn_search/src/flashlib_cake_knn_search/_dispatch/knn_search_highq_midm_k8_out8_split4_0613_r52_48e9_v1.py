@@ -52,7 +52,7 @@ def _k8_split_m(total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_k8_split4_merge_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k8": {"__kernel__": "dispatch_kernel_0293"}}'))
+    return _decode_capture(_json_loads('{"merge_k8": {"__kernel__": "dispatch_kernel_0294"}}'))
 
 def _launch_q4096_k8_split4(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

@@ -71,7 +71,7 @@ partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_q4096_m
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_STORE_", 7]], "cta_group": 1, "threads": 512}'))
 
 def _compile_ext_k_capacity_v2_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"certflag_init": {"__kernel__": "dispatch_kernel_0425"}, "full_partial": {"__kernel__": "dispatch_kernel_0421"}, "merge": {"__kernel__": "dispatch_kernel_0423"}, "prefix_merge": {"__kernel__": "dispatch_kernel_0424"}, "prefix_partial": {"__kernel__": "dispatch_kernel_0422"}}'))
+    return _decode_capture(_json_loads('{"certflag_init": {"__kernel__": "dispatch_kernel_0426"}, "full_partial": {"__kernel__": "dispatch_kernel_0422"}, "merge": {"__kernel__": "dispatch_kernel_0424"}, "prefix_merge": {"__kernel__": "dispatch_kernel_0425"}, "prefix_partial": {"__kernel__": "dispatch_kernel_0423"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_EXT_K_CAPACITY_28EC_V2_KERNELS:

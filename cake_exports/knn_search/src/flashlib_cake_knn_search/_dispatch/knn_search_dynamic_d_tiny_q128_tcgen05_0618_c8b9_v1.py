@@ -73,7 +73,7 @@ def _compile_padded_mma_kernels(padded_d: int) -> dict[str, Any]:
     return lowd._compile_non_d128_mma_kernels(int(padded_d))
 
 def _compile_d3_tile_reduce_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0257"}, "partial": {"__kernel__": "dispatch_kernel_0256"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0258"}, "partial": {"__kernel__": "dispatch_kernel_0257"}}'))
 
 def _padded_buffers(inputs: dict[str, Any], padded_d: int) -> tuple[Any, Any]:
     import torch

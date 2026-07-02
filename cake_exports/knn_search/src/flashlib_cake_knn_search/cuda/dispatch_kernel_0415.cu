@@ -15,35 +15,28 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define NUM_MAIN_STAGES 1
-#define SMEM_LOCAL_DIST_OFF 0
-#define SMEM_LOCAL_DIST_STAGE_BYTES 16384
-#define SMEM_LOCAL_DIST_STRIDE 16384
-#define SMEM_LOCAL_IDX_OFF 16384
-#define SMEM_LOCAL_IDX_STAGE_BYTES 16384
-#define SMEM_LOCAL_IDX_STRIDE 16384
-#define SMEM_WARP_DIST_OFF 32768
-#define SMEM_WARP_DIST_STAGE_BYTES 32
-#define SMEM_WARP_DIST_STRIDE 32
-#define SMEM_WARP_IDX_OFF 32800
-#define SMEM_WARP_IDX_STAGE_BYTES 32
-#define SMEM_WARP_IDX_STRIDE 32
-#define SMEM_WARP_THREAD_OFF 32832
-#define SMEM_WARP_THREAD_STAGE_BYTES 32
-#define SMEM_WARP_THREAD_STRIDE 32
-#define SMEM_TOTAL 32896
-#define THREADS 256
-#define D_ 3
-#define K_MAX_ 32
-#define LOCAL_LIST_CAP_ 16
-#define NUM_WARPS_ 8
+#define SMEM_WARP_DIST_OFF 0
+#define SMEM_WARP_DIST_STAGE_BYTES 16
+#define SMEM_WARP_DIST_STRIDE 16
+#define SMEM_WARP_IDX_OFF 16
+#define SMEM_WARP_IDX_STAGE_BYTES 16
+#define SMEM_WARP_IDX_STRIDE 16
+#define SMEM_WARP_THREAD_OFF 32
+#define SMEM_WARP_THREAD_STAGE_BYTES 16
+#define SMEM_WARP_THREAD_STRIDE 16
+#define SMEM_TOTAL 128
+#define THREADS 128
+#define D_ 64
+#define K_MAX_ 20
+#define NUM_WARPS_ 4
 
 #include <math_constants.h>
 #define LOOM_INF CUDART_INF_F
 
 extern "C" {
 
-__global__ __launch_bounds__(256) void
-kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int M, int K)
+__global__ __launch_bounds__(128) void
+kernel_knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int M, int K)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -52,103 +45,74 @@ kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restr
     extern __shared__ __align__(1024) char smem_raw[];
     int smem;
     smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
-    const int smem_local_dist = smem + 0;
-    const int smem_local_idx = smem + 16384;
-    const int smem_warp_dist = smem + 32768;
-    const int smem_warp_idx = smem + 32800;
-    const int smem_warp_thread = smem + 32832;
+    const int smem_warp_dist = smem + 0;
+    const int smem_warp_idx = smem + 16;
+    const int smem_warp_thread = smem + 32;
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
 
     const int warp_id = warp;
     const int lane_id = lane;
-    float* local_dist = (float*)(smem_raw + 0);
-    #define local_dist_addr (smem + 0)
-    int* local_idx = (int*)(smem_raw + 16384);
-    #define local_idx_addr (smem + 16384)
-    float* warp_dist = (float*)(smem_raw + 32768);
-    #define warp_dist_addr (smem + 32768)
-    int* warp_idx = (int*)(smem_raw + 32800);
-    #define warp_idx_addr (smem + 32800)
-    int* warp_thread = (int*)(smem_raw + 32832);
-    #define warp_thread_addr (smem + 32832)
+    float* warp_dist = (float*)(smem_raw + 0);
+    #define warp_dist_addr (smem + 0)
+    int* warp_idx = (int*)(smem_raw + 16);
+    #define warp_idx_addr (smem + 16)
+    int* warp_thread = (int*)(smem_raw + 32);
+    #define warp_thread_addr (smem + 32)
 
     // === Task calls (dependency order) ===
     int work_id = bid;
     int batch_id = work_id / Q;
     int q_row = work_id - batch_id * Q;
-    float best_d[16];
-    int best_i[16];
-    #pragma unroll
-    for (int kk = 0; kk < LOCAL_LIST_CAP_; kk++) {
-        best_d[kk] = LOOM_INF;
-        best_i[kk] = -1;
-    }
+    int m_row = tid;
+    float head_d = LOOM_INF;
+    int head_i = -1;
     if (batch_id < B) {
-        unsigned long long q_base = (unsigned long long)((batch_id * Q + q_row) * D_);
-        float q_cache[3];
-        #pragma unroll
-        for (int d_col = 0; d_col < D_; d_col++) {
-            float q_val[1];
-            {
-                __nv_bfloat16 _bf16_0 = *reinterpret_cast<const __nv_bfloat16*>(queries + q_base + d_col + 0);
-                q_val[0] = __bfloat162float(_bf16_0);
-            }
-            q_cache[d_col] = q_val[0];
-        }
-        #pragma unroll
-        for (int local_slot = 0; local_slot < LOCAL_LIST_CAP_; local_slot++) {
-            int m_row = tid + local_slot * 256;
+        if (q_row < Q) {
             if (m_row < M) {
+                unsigned long long q_base = (unsigned long long)((batch_id * Q + q_row) * D_);
                 unsigned long long db_base = (unsigned long long)((batch_id * M + m_row) * D_);
                 float dist = 0.0f;
                 #pragma unroll
-                for (int d_col = 0; d_col < D_; d_col++) {
-                    float db_val[1];
+                for (int d_vec = 0; d_vec < D_; d_vec += 8) {
+                    float q_val[8];
                     {
-                        __nv_bfloat16 _bf16_1 = *reinterpret_cast<const __nv_bfloat16*>(database + db_base + d_col + 0);
-                        db_val[0] = __bfloat162float(_bf16_1);
-                    }
-                    float diff = q_cache[d_col] - db_val[0];
-                    dist += diff * diff;
-                }
-                if (dist < best_d[LOCAL_LIST_CAP_ - 1]) {
-                    float carry_d = dist;
-                    int carry_i = m_row;
-                    #pragma unroll
-                    for (int kk = 0; kk < LOCAL_LIST_CAP_; kk++) {
-                        float old_d = best_d[kk];
-                        int old_i = best_i[kk];
-                        int take = ((carry_d < old_d) ? 1 : 0);
-                        if (carry_d == old_d) {
-                            if (carry_i >= 0) {
-                                if (old_i < 0) {
-                                    take = 1;
-                                } else if (carry_i < old_i) {
-                                    take = 1;
-                                }
-                            }
+                        const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + q_base + d_vec);
+                        uint4 _vld_0[1];
+                        #pragma unroll
+                        for (int _blk = 0; _blk < 1; _blk++) {
+                            _vld_0[_blk] = _vptr_0[_blk];
+                            __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
+                            #pragma unroll
+                            for (int _j = 0; _j < 8; _j++)
+                                q_val[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
                         }
-                        best_d[kk] = ((take != 0) ? carry_d : old_d);
-                        best_i[kk] = ((take != 0) ? carry_i : old_i);
-                        carry_d = ((take != 0) ? old_d : carry_d);
-                        carry_i = ((take != 0) ? old_i : carry_i);
+                    }
+                    float db_val[8];
+                    {
+                        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(database + db_base + d_vec);
+                        uint4 _vld_1[1];
+                        #pragma unroll
+                        for (int _blk = 0; _blk < 1; _blk++) {
+                            _vld_1[_blk] = _vptr_1[_blk];
+                            __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
+                            #pragma unroll
+                            for (int _j = 0; _j < 8; _j++)
+                                db_val[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
+                        }
+                    }
+                    #pragma unroll
+                    for (int jj = 0; jj < 8; jj++) {
+                        float diff = q_val[jj] - db_val[jj];
+                        dist += diff * diff;
                     }
                 }
+                head_d = dist;
+                head_i = m_row;
             }
         }
     }
-    int local_base = tid * LOCAL_LIST_CAP_;
-    #pragma unroll
-    for (int kk = 0; kk < LOCAL_LIST_CAP_; kk++) {
-        local_dist[local_base + kk] = best_d[kk];
-        local_idx[local_base + kk] = best_i[kk];
-    }
-    __syncthreads();
-    int head = 0;
-    float head_d = local_dist[local_base];
-    int head_i = local_idx[local_base];
     unsigned long long out_base = (unsigned long long)((batch_id * Q + q_row) * K);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
@@ -266,11 +230,11 @@ kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restr
                     block_winner_i = warp_idx[lane];
                     block_winner_tid = warp_thread[lane];
                 }
-                float _shfl_xor_15 = __shfl_xor_sync(0xFFFFFFFF, block_winner_d, 4);
+                float _shfl_xor_15 = __shfl_xor_sync(0xFFFFFFFF, block_winner_d, 2);
                 float peer_d2 = _shfl_xor_15;
-                int _shfl_xor_16 = __shfl_xor_sync(0xFFFFFFFF, block_winner_i, 4);
+                int _shfl_xor_16 = __shfl_xor_sync(0xFFFFFFFF, block_winner_i, 2);
                 int peer_i2 = _shfl_xor_16;
-                int _shfl_xor_17 = __shfl_xor_sync(0xFFFFFFFF, block_winner_tid, 4);
+                int _shfl_xor_17 = __shfl_xor_sync(0xFFFFFFFF, block_winner_tid, 2);
                 int peer_tid2 = _shfl_xor_17;
                 int take_peer2 = ((peer_d2 < block_winner_d) ? 1 : 0);
                 if (peer_d2 == block_winner_d) {
@@ -285,11 +249,11 @@ kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restr
                 block_winner_d = ((take_peer2 != 0) ? peer_d2 : block_winner_d);
                 block_winner_i = ((take_peer2 != 0) ? peer_i2 : block_winner_i);
                 block_winner_tid = ((take_peer2 != 0) ? peer_tid2 : block_winner_tid);
-                float _shfl_xor_18 = __shfl_xor_sync(0xFFFFFFFF, block_winner_d, 2);
+                float _shfl_xor_18 = __shfl_xor_sync(0xFFFFFFFF, block_winner_d, 1);
                 float peer_d2_0 = _shfl_xor_18;
-                int _shfl_xor_19 = __shfl_xor_sync(0xFFFFFFFF, block_winner_i, 2);
+                int _shfl_xor_19 = __shfl_xor_sync(0xFFFFFFFF, block_winner_i, 1);
                 int peer_i2_1 = _shfl_xor_19;
-                int _shfl_xor_20 = __shfl_xor_sync(0xFFFFFFFF, block_winner_tid, 2);
+                int _shfl_xor_20 = __shfl_xor_sync(0xFFFFFFFF, block_winner_tid, 1);
                 int peer_tid2_2 = _shfl_xor_20;
                 int take_peer2_3 = ((peer_d2_0 < block_winner_d) ? 1 : 0);
                 if (peer_d2_0 == block_winner_d) {
@@ -304,25 +268,6 @@ kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restr
                 block_winner_d = ((take_peer2_3 != 0) ? peer_d2_0 : block_winner_d);
                 block_winner_i = ((take_peer2_3 != 0) ? peer_i2_1 : block_winner_i);
                 block_winner_tid = ((take_peer2_3 != 0) ? peer_tid2_2 : block_winner_tid);
-                float _shfl_xor_21 = __shfl_xor_sync(0xFFFFFFFF, block_winner_d, 1);
-                float peer_d2_4 = _shfl_xor_21;
-                int _shfl_xor_22 = __shfl_xor_sync(0xFFFFFFFF, block_winner_i, 1);
-                int peer_i2_5 = _shfl_xor_22;
-                int _shfl_xor_23 = __shfl_xor_sync(0xFFFFFFFF, block_winner_tid, 1);
-                int peer_tid2_6 = _shfl_xor_23;
-                int take_peer2_7 = ((peer_d2_4 < block_winner_d) ? 1 : 0);
-                if (peer_d2_4 == block_winner_d) {
-                    if (peer_i2_5 >= 0) {
-                        if (block_winner_i < 0) {
-                            take_peer2_7 = 1;
-                        } else if (peer_i2_5 < block_winner_i) {
-                            take_peer2_7 = 1;
-                        }
-                    }
-                }
-                block_winner_d = ((take_peer2_7 != 0) ? peer_d2_4 : block_winner_d);
-                block_winner_i = ((take_peer2_7 != 0) ? peer_i2_5 : block_winner_i);
-                block_winner_tid = ((take_peer2_7 != 0) ? peer_tid2_6 : block_winner_tid);
                 if (lane == 0) {
                     warp_dist[0] = block_winner_d;
                     warp_idx[0] = block_winner_i;
@@ -333,13 +278,8 @@ kernel_knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1(__nv_bfloat16* __restr
             }
             __syncthreads();
             if (tid == warp_thread[0]) {
-                head += 1;
                 head_d = LOOM_INF;
                 head_i = -1;
-                if (head < LOCAL_LIST_CAP_) {
-                    head_d = local_dist[local_base + head];
-                    head_i = local_idx[local_base + head];
-                }
             }
             __syncthreads();
         }

@@ -16,14 +16,16 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define K_OUT_ 32
-#define D_ 128
-#define M_MAIN_ 32768
+#define K_MAX_ 64
+#define K_PREFIX_ 8
+
+#include <math_constants.h>
+#define LOOM_INF CUDART_INF_F
 
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int32_t* __restrict__ out_indices)
+kernel_knn_search_floor13_k64_q384_prefix8_merge_0622_f3ce_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -38,142 +40,137 @@ kernel_knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1(__nv_bfloat16* __restr
 
     // === Task calls (dependency order) ===
     int q_global = bid;
-    unsigned long long q_base = (unsigned long long)(q_global * D_);
-    unsigned long long db_base = (unsigned long long)(M_MAIN_ * D_);
-    float tail_dist = 0.0f;
-    if (lane < 16) {
-        float q_vec[8];
-        {
-            const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + q_base + (unsigned long long)(lane * 8));
-            uint4 _vld_0[1];
-            #pragma unroll
-            for (int _blk = 0; _blk < 1; _blk++) {
-                _vld_0[_blk] = _vptr_0[_blk];
-                __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    q_vec[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
-            }
-        }
-        float db_vec[8];
-        {
-            const uint4* _vptr_1 = reinterpret_cast<const uint4*>(database + db_base + (unsigned long long)(lane * 8));
-            uint4 _vld_1[1];
-            #pragma unroll
-            for (int _blk = 0; _blk < 1; _blk++) {
-                _vld_1[_blk] = _vptr_1[_blk];
-                __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    db_vec[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
-            }
-        }
+    int q_tile = q_global / 128;
+    int q_local = q_global - q_tile * 128;
+    float head_d[48];
+    int head_i[48];
+    int head_k[48];
+    #pragma unroll
+    for (int slot = 0; slot < 48; slot++) {
+        int split_id = lane + slot * 32;
+        head_k[slot] = 0;
+        unsigned long long partial_base = (unsigned long long)(((q_tile * 1536 + split_id) * 128 + q_local) * K_PREFIX_);
+        head_d[slot] = partial_distances[partial_base];
+        head_i[slot] = partial_indices[partial_base];
+    }
+    unsigned long long out_base = (unsigned long long)(q_global * K_MAX_);
+    #pragma unroll
+    for (int out_k = 0; out_k < K_MAX_; out_k++) {
+        float local_best_d = head_d[0];
+        int local_best_i = head_i[0];
+        int local_best_slot = 0;
         #pragma unroll
-        for (int j = 0; j < 8; j++) {
-            float diff = q_vec[j] - db_vec[j];
-            tail_dist += diff * diff;
+        for (int slot = 1; slot < 48; slot++) {
+            float cand_d = head_d[slot];
+            int cand_i = head_i[slot];
+            int take = ((cand_d < local_best_d) ? 1 : 0);
+            if (cand_d == local_best_d) {
+                if (cand_i < local_best_i) {
+                    take = 1;
+                }
+            }
+            local_best_d = ((take != 0) ? cand_d : local_best_d);
+            local_best_i = ((take != 0) ? cand_i : local_best_i);
+            local_best_slot = ((take != 0) ? slot : local_best_slot);
         }
-    }
-    float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, tail_dist, 16);
-    tail_dist += _shfl_xor_0;
-    float _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, tail_dist, 8);
-    tail_dist += _shfl_xor_1;
-    float _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, tail_dist, 4);
-    tail_dist += _shfl_xor_2;
-    float _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, tail_dist, 2);
-    tail_dist += _shfl_xor_3;
-    float _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, tail_dist, 1);
-    tail_dist += _shfl_xor_4;
-    unsigned long long out_base = (unsigned long long)(q_global * K_OUT_);
-    float worst_d = out_distances[out_base + lane];
-    int worst_i = out_indices[out_base + lane];
-    int worst_slot = lane;
-    float _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, worst_d, 16);
-    float peer_d = _shfl_xor_5;
-    int _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, worst_i, 16);
-    int peer_i = _shfl_xor_6;
-    int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, worst_slot, 16);
-    int peer_slot = _shfl_xor_7;
-    int take_peer = ((peer_d > worst_d) ? 1 : 0);
-    if (peer_d == worst_d) {
-        if (peer_i > worst_i) {
-            take_peer = 1;
-        }
-    }
-    worst_d = ((take_peer != 0) ? peer_d : worst_d);
-    worst_i = ((take_peer != 0) ? peer_i : worst_i);
-    worst_slot = ((take_peer != 0) ? peer_slot : worst_slot);
-    float _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, worst_d, 8);
-    float peer_d_0 = _shfl_xor_8;
-    int _shfl_xor_9 = __shfl_xor_sync(0xFFFFFFFF, worst_i, 8);
-    int peer_i_1 = _shfl_xor_9;
-    int _shfl_xor_10 = __shfl_xor_sync(0xFFFFFFFF, worst_slot, 8);
-    int peer_slot_2 = _shfl_xor_10;
-    int take_peer_3 = ((peer_d_0 > worst_d) ? 1 : 0);
-    if (peer_d_0 == worst_d) {
-        if (peer_i_1 > worst_i) {
-            take_peer_3 = 1;
-        }
-    }
-    worst_d = ((take_peer_3 != 0) ? peer_d_0 : worst_d);
-    worst_i = ((take_peer_3 != 0) ? peer_i_1 : worst_i);
-    worst_slot = ((take_peer_3 != 0) ? peer_slot_2 : worst_slot);
-    float _shfl_xor_11 = __shfl_xor_sync(0xFFFFFFFF, worst_d, 4);
-    float peer_d_4 = _shfl_xor_11;
-    int _shfl_xor_12 = __shfl_xor_sync(0xFFFFFFFF, worst_i, 4);
-    int peer_i_5 = _shfl_xor_12;
-    int _shfl_xor_13 = __shfl_xor_sync(0xFFFFFFFF, worst_slot, 4);
-    int peer_slot_6 = _shfl_xor_13;
-    int take_peer_7 = ((peer_d_4 > worst_d) ? 1 : 0);
-    if (peer_d_4 == worst_d) {
-        if (peer_i_5 > worst_i) {
-            take_peer_7 = 1;
-        }
-    }
-    worst_d = ((take_peer_7 != 0) ? peer_d_4 : worst_d);
-    worst_i = ((take_peer_7 != 0) ? peer_i_5 : worst_i);
-    worst_slot = ((take_peer_7 != 0) ? peer_slot_6 : worst_slot);
-    float _shfl_xor_14 = __shfl_xor_sync(0xFFFFFFFF, worst_d, 2);
-    float peer_d_8 = _shfl_xor_14;
-    int _shfl_xor_15 = __shfl_xor_sync(0xFFFFFFFF, worst_i, 2);
-    int peer_i_9 = _shfl_xor_15;
-    int _shfl_xor_16 = __shfl_xor_sync(0xFFFFFFFF, worst_slot, 2);
-    int peer_slot_10 = _shfl_xor_16;
-    int take_peer_11 = ((peer_d_8 > worst_d) ? 1 : 0);
-    if (peer_d_8 == worst_d) {
-        if (peer_i_9 > worst_i) {
-            take_peer_11 = 1;
-        }
-    }
-    worst_d = ((take_peer_11 != 0) ? peer_d_8 : worst_d);
-    worst_i = ((take_peer_11 != 0) ? peer_i_9 : worst_i);
-    worst_slot = ((take_peer_11 != 0) ? peer_slot_10 : worst_slot);
-    float _shfl_xor_17 = __shfl_xor_sync(0xFFFFFFFF, worst_d, 1);
-    float peer_d_12 = _shfl_xor_17;
-    int _shfl_xor_18 = __shfl_xor_sync(0xFFFFFFFF, worst_i, 1);
-    int peer_i_13 = _shfl_xor_18;
-    int _shfl_xor_19 = __shfl_xor_sync(0xFFFFFFFF, worst_slot, 1);
-    int peer_slot_14 = _shfl_xor_19;
-    int take_peer_15 = ((peer_d_12 > worst_d) ? 1 : 0);
-    if (peer_d_12 == worst_d) {
-        if (peer_i_13 > worst_i) {
-            take_peer_15 = 1;
-        }
-    }
-    worst_d = ((take_peer_15 != 0) ? peer_d_12 : worst_d);
-    worst_i = ((take_peer_15 != 0) ? peer_i_13 : worst_i);
-    worst_slot = ((take_peer_15 != 0) ? peer_slot_14 : worst_slot);
-    if (lane == 0) {
-        int tail_i = M_MAIN_;
-        int take_tail = ((tail_dist < worst_d) ? 1 : 0);
-        if (tail_dist == worst_d) {
-            if (tail_i < worst_i) {
-                take_tail = 1;
+        float winner_d = local_best_d;
+        int winner_i = local_best_i;
+        int winner_lane = lane;
+        float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 16);
+        float peer_d = _shfl_xor_0;
+        int _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 16);
+        int peer_i = _shfl_xor_1;
+        int _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 16);
+        int peer_lane = _shfl_xor_2;
+        int take_peer = ((peer_d < winner_d) ? 1 : 0);
+        if (peer_d == winner_d) {
+            if (peer_i < winner_i) {
+                take_peer = 1;
             }
         }
-        if (take_tail != 0) {
-            out_distances[out_base + worst_slot] = tail_dist;
-            out_indices[out_base + worst_slot] = tail_i;
+        winner_d = ((take_peer != 0) ? peer_d : winner_d);
+        winner_i = ((take_peer != 0) ? peer_i : winner_i);
+        winner_lane = ((take_peer != 0) ? peer_lane : winner_lane);
+        float _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 8);
+        float peer_d_0 = _shfl_xor_3;
+        int _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 8);
+        int peer_i_1 = _shfl_xor_4;
+        int _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 8);
+        int peer_lane_2 = _shfl_xor_5;
+        int take_peer_3 = ((peer_d_0 < winner_d) ? 1 : 0);
+        if (peer_d_0 == winner_d) {
+            if (peer_i_1 < winner_i) {
+                take_peer_3 = 1;
+            }
+        }
+        winner_d = ((take_peer_3 != 0) ? peer_d_0 : winner_d);
+        winner_i = ((take_peer_3 != 0) ? peer_i_1 : winner_i);
+        winner_lane = ((take_peer_3 != 0) ? peer_lane_2 : winner_lane);
+        float _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
+        float peer_d_4 = _shfl_xor_6;
+        int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
+        int peer_i_5 = _shfl_xor_7;
+        int _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 4);
+        int peer_lane_6 = _shfl_xor_8;
+        int take_peer_7 = ((peer_d_4 < winner_d) ? 1 : 0);
+        if (peer_d_4 == winner_d) {
+            if (peer_i_5 < winner_i) {
+                take_peer_7 = 1;
+            }
+        }
+        winner_d = ((take_peer_7 != 0) ? peer_d_4 : winner_d);
+        winner_i = ((take_peer_7 != 0) ? peer_i_5 : winner_i);
+        winner_lane = ((take_peer_7 != 0) ? peer_lane_6 : winner_lane);
+        float _shfl_xor_9 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
+        float peer_d_8 = _shfl_xor_9;
+        int _shfl_xor_10 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
+        int peer_i_9 = _shfl_xor_10;
+        int _shfl_xor_11 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 2);
+        int peer_lane_10 = _shfl_xor_11;
+        int take_peer_11 = ((peer_d_8 < winner_d) ? 1 : 0);
+        if (peer_d_8 == winner_d) {
+            if (peer_i_9 < winner_i) {
+                take_peer_11 = 1;
+            }
+        }
+        winner_d = ((take_peer_11 != 0) ? peer_d_8 : winner_d);
+        winner_i = ((take_peer_11 != 0) ? peer_i_9 : winner_i);
+        winner_lane = ((take_peer_11 != 0) ? peer_lane_10 : winner_lane);
+        float _shfl_xor_12 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
+        float peer_d_12 = _shfl_xor_12;
+        int _shfl_xor_13 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
+        int peer_i_13 = _shfl_xor_13;
+        int _shfl_xor_14 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 1);
+        int peer_lane_14 = _shfl_xor_14;
+        int take_peer_15 = ((peer_d_12 < winner_d) ? 1 : 0);
+        if (peer_d_12 == winner_d) {
+            if (peer_i_13 < winner_i) {
+                take_peer_15 = 1;
+            }
+        }
+        winner_d = ((take_peer_15 != 0) ? peer_d_12 : winner_d);
+        winner_i = ((take_peer_15 != 0) ? peer_i_13 : winner_i);
+        winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
+        if (lane == 0) {
+            out_distances[out_base + out_k] = winner_d;
+            out_indices[out_base + out_k] = winner_i;
+        }
+        if (lane == winner_lane) {
+            #pragma unroll
+            for (int slot = 0; slot < 48; slot++) {
+                if (local_best_slot == slot) {
+                    int next_head = head_k[slot] + 1;
+                    int split_id = lane + slot * 32;
+                    head_k[slot] = next_head;
+                    head_d[slot] = LOOM_INF;
+                    head_i[slot] = -1;
+                    if (next_head < K_PREFIX_) {
+                        unsigned long long partial_base = (unsigned long long)(((q_tile * 1536 + split_id) * 128 + q_local) * K_PREFIX_ + next_head);
+                        head_d[slot] = partial_distances[partial_base];
+                        head_i[slot] = partial_indices[partial_base];
+                    }
+                }
+            }
         }
     }
 }

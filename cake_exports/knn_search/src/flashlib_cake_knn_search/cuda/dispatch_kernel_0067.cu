@@ -15,15 +15,10 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define NUM_MAIN_STAGES 1
-#define SMEM_SMEM_DIST_OFF 0
-#define SMEM_SMEM_DIST_STAGE_BYTES 65536
-#define SMEM_SMEM_DIST_STRIDE 65536
-#define SMEM_SMEM_IDX_OFF 65536
-#define SMEM_SMEM_IDX_STAGE_BYTES 65536
-#define SMEM_SMEM_IDX_STRIDE 65536
-#define SMEM_TOTAL 131072
 #define THREADS 256
+#define D_ 96
 #define K_CAP_ 10
+#define BLOCK_M_ 512
 #define NUM_WARPS_ 8
 
 #include <math_constants.h>
@@ -32,132 +27,114 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(256) void
-kernel_knn_search_scalar_capacity_merge_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int num_m_tiles)
+kernel_knn_search_scalar_capacity_partial_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M, int num_m_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
     const int lane = tid % 32;
 
-    extern __shared__ __align__(1024) char smem_raw[];
-    int smem;
-    smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
-    const int smem_smem_dist = smem + 0;
-    const int smem_smem_idx = smem + 65536;
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
 
     const int warp_id = warp;
     const int lane_id = lane;
-    float* smem_dist = (float*)(smem_raw + 0);
-    #define smem_dist_addr (smem + 0)
-    int* smem_idx = (int*)(smem_raw + 65536);
-    #define smem_idx_addr (smem + 65536)
 
     // === Task calls (dependency order) ===
     int work_id = bid;
-    int batch_id = work_id / Q;
-    int q_row = work_id - batch_id * Q;
+    int m_tile = work_id % num_m_tiles;
+    int q_linear = work_id / num_m_tiles;
+    int batch_id = q_linear / Q;
+    int q_row = q_linear - batch_id * Q;
     if (batch_id < B) {
-        float local_d[64];
-        int local_i[64];
+        unsigned long long q_base = (unsigned long long)((batch_id * Q + q_row) * D_);
+        int m_start = m_tile * BLOCK_M_;
+        int m_stop_raw = m_start + BLOCK_M_;
+        int m_stop = ((m_stop_raw < M) ? m_stop_raw : M);
+        float best_d[64];
+        int best_i[64];
         #pragma unroll
         for (int kk = 0; kk < K_CAP_; kk++) {
-            local_d[kk] = LOOM_INF;
-            local_i[kk] = -1;
+            best_d[kk] = LOOM_INF;
+            best_i[kk] = -1;
         }
-        int total_partials = num_m_tiles * NUM_WARPS_ * K_CAP_;
-        unsigned long long partial_query_base = (unsigned long long)((batch_id * Q + q_row) * total_partials);
         #pragma unroll 1
-        for (int entry = tid; entry < total_partials; entry += 256) {
-            int cand_i = partial_indices[partial_query_base + (unsigned long long)entry];
-            if (cand_i >= 0) {
-                float cand_d = partial_distances[partial_query_base + (unsigned long long)entry];
-                int accept_tail = ((cand_d < local_d[K_CAP_ - 1]) ? 1 : 0);
-                if (cand_d == local_d[K_CAP_ - 1]) {
-                    if (cand_i < local_i[K_CAP_ - 1]) {
+        for (int m_row = m_start + warp; m_row < m_stop; m_row += NUM_WARPS_) {
+            unsigned long long db_base = (unsigned long long)((batch_id * M + m_row) * D_);
+            float dist = 0.0f;
+            #pragma unroll 1
+            for (int d_vec = lane * 8; d_vec < D_; d_vec += 256) {
+                if (d_vec < D_) {
+                    float q_val[8];
+                    {
+                        const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + q_base + (unsigned long long)d_vec);
+                        uint4 _vld_0[1];
+                        #pragma unroll
+                        for (int _blk = 0; _blk < 1; _blk++) {
+                            _vld_0[_blk] = _vptr_0[_blk];
+                            __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
+                            #pragma unroll
+                            for (int _j = 0; _j < 8; _j++)
+                                q_val[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
+                        }
+                    }
+                    float db_val[8];
+                    {
+                        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(database + db_base + (unsigned long long)d_vec);
+                        uint4 _vld_1[1];
+                        #pragma unroll
+                        for (int _blk = 0; _blk < 1; _blk++) {
+                            _vld_1[_blk] = _vptr_1[_blk];
+                            __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
+                            #pragma unroll
+                            for (int _j = 0; _j < 8; _j++)
+                                db_val[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
+                        }
+                    }
+                    #pragma unroll
+                    for (int jj = 0; jj < 8; jj++) {
+                        float diff = q_val[jj] - db_val[jj];
+                        dist += diff * diff;
+                    }
+                }
+            }
+            #pragma unroll
+            for (int offset = 16; offset > 0; offset >>= 1)
+                dist += __shfl_xor_sync(0xFFFFFFFF, dist, offset);
+            if (lane == 0) {
+                int accept_tail = ((dist < best_d[K_CAP_ - 1]) ? 1 : 0);
+                if (dist == best_d[K_CAP_ - 1]) {
+                    if (m_row < best_i[K_CAP_ - 1]) {
                         accept_tail = 1;
                     }
                 }
                 if (accept_tail != 0) {
-                    float carry_d = cand_d;
-                    int carry_i = cand_i;
+                    float carry_d = dist;
+                    int carry_i = m_row;
                     #pragma unroll
                     for (int kk = 0; kk < K_CAP_; kk++) {
-                        float old_d = local_d[kk];
-                        int old_i = local_i[kk];
+                        float old_d = best_d[kk];
+                        int old_i = best_i[kk];
                         int take = ((carry_d < old_d) ? 1 : 0);
                         if (carry_d == old_d) {
                             if (carry_i < old_i) {
                                 take = 1;
                             }
                         }
-                        local_d[kk] = ((take != 0) ? carry_d : old_d);
-                        local_i[kk] = ((take != 0) ? carry_i : old_i);
+                        best_d[kk] = ((take != 0) ? carry_d : old_d);
+                        best_i[kk] = ((take != 0) ? carry_i : old_i);
                         carry_d = ((take != 0) ? old_d : carry_d);
                         carry_i = ((take != 0) ? old_i : carry_i);
                     }
                 }
             }
         }
-        #pragma unroll
-        for (int kk = 0; kk < K_CAP_; kk++) {
-            int smem_off = tid * K_CAP_ + kk;
-            smem_dist[smem_off] = local_d[kk];
-            smem_idx[smem_off] = local_i[kk];
-        }
-        __syncthreads();
-        if (tid == 0) {
-            float final_d[64];
-            int final_i[64];
+        if (lane == 0) {
+            unsigned long long partial_base = (unsigned long long)((((batch_id * Q + q_row) * num_m_tiles + m_tile) * NUM_WARPS_ + warp) * K_CAP_);
             #pragma unroll
             for (int kk = 0; kk < K_CAP_; kk++) {
-                final_d[kk] = LOOM_INF;
-                final_i[kk] = -1;
-            }
-            #pragma unroll 1
-            for (int src_thread = 0; src_thread < 256; src_thread++) {
-                #pragma unroll
-                for (int src_k = 0; src_k < K_CAP_; src_k++) {
-                    int smem_off = src_thread * K_CAP_ + src_k;
-                    int cand_i = smem_idx[smem_off];
-                    if (cand_i >= 0) {
-                        float cand_d = smem_dist[smem_off];
-                        int accept_tail = ((cand_d < final_d[K_CAP_ - 1]) ? 1 : 0);
-                        if (cand_d == final_d[K_CAP_ - 1]) {
-                            if (cand_i < final_i[K_CAP_ - 1]) {
-                                accept_tail = 1;
-                            }
-                        }
-                        if (accept_tail != 0) {
-                            float carry_d = cand_d;
-                            int carry_i = cand_i;
-                            #pragma unroll
-                            for (int kk = 0; kk < K_CAP_; kk++) {
-                                float old_d = final_d[kk];
-                                int old_i = final_i[kk];
-                                int take = ((carry_d < old_d) ? 1 : 0);
-                                if (carry_d == old_d) {
-                                    if (carry_i < old_i) {
-                                        take = 1;
-                                    }
-                                }
-                                final_d[kk] = ((take != 0) ? carry_d : old_d);
-                                final_i[kk] = ((take != 0) ? carry_i : old_i);
-                                carry_d = ((take != 0) ? old_d : carry_d);
-                                carry_i = ((take != 0) ? old_i : carry_i);
-                            }
-                        }
-                    }
-                }
-            }
-            unsigned long long out_base = (unsigned long long)((batch_id * Q + q_row) * K);
-            #pragma unroll
-            for (int kk = 0; kk < K_CAP_; kk++) {
-                if (kk < K) {
-                    out_distances[out_base + kk] = final_d[kk];
-                    out_indices[out_base + kk] = final_i[kk];
-                }
+                partial_distances[partial_base + kk] = best_d[kk];
+                partial_indices[partial_base + kk] = best_i[kk];
             }
         }
     }

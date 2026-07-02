@@ -60,7 +60,7 @@ def route_trace_entry(label: str, inputs: dict[str, Any]) -> dict[str, Any]:
     return {'label': label, 'shape_key': label, 'B': int(inputs['B']), 'Q': int(inputs['Q']), 'M': int(inputs['M']), 'D': int(inputs['D']), 'K': int(inputs['K']), 'self_search': bool(inputs.get('self_search', False)), **route_info(inputs)}
 
 def _compile_k1_merge16_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0402"}, "partial_k1": {"__kernel__": "dispatch_kernel_0401"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0403"}, "partial_k1": {"__kernel__": "dispatch_kernel_0402"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

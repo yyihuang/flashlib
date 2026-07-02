@@ -76,7 +76,7 @@ def _use_padded_k64(inputs: dict[str, Any]) -> bool:
     return _use_dynamic_d130_k64(inputs) or _use_dynamic_d512_k64(inputs)
 
 def _compile_d3_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0415"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0416"}'))
 
 def _ensure_d3_kernel():
     kernel = _D3_DIRECT_KERNEL.get('direct')

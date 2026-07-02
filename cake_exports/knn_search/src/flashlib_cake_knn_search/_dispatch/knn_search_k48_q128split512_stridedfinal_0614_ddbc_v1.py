@@ -44,7 +44,7 @@ K48_Q128_EVAL_SHAPES = [*K48_Q128_SPLIT512_STRIDEDFINAL_SHAPES, *K48_Q128_PRESER
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'ddbc_q128_m131072_d128_k48_split512_strided_final', 'guard': 'B == 1 and Q == 128 and M == 131072 and D == 128 and K == 48 and tcgen05', 'route': 'round_ddbc_q128_k48_split512_strided_final'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_q128_k48_stridedfinal_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0315"}, "group_merge": {"__kernel__": "dispatch_kernel_0314"}, "partial": {"__kernel__": "dispatch_kernel_0313"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0316"}, "group_merge": {"__kernel__": "dispatch_kernel_0315"}, "partial": {"__kernel__": "dispatch_kernel_0314"}}'))
 
 def _use_q128_k48_split512_stridedfinal(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q128_ROWS and (int(inputs['M']) == Q128_M_ROWS) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K48_TARGET) and base._tcgen05_capable_arch()

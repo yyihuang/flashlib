@@ -24,7 +24,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__ group_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K)
+kernel_group_merge_ir(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ group_distances, int32_t* __restrict__ group_indices, int B, int Q, int partial_list_count, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -38,18 +38,25 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
     const int lane_id = lane;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid;
+    int linear = bid;
+    int group_id = linear - linear / 8 * 8;
+    int q_linear = linear / 8;
     int batch_id = q_linear / Q;
     int q_global = q_linear - batch_id * Q;
-    int head_k = 0;
+    int q_tile = q_global / 64;
+    int q_local = q_global - q_tile * 64;
+    int group_begin = group_id * partial_list_count / 8;
+    int group_end = (group_id + 1) * partial_list_count / 8;
     float head_d = LOOM_INF;
     int head_i = -1;
-    if (lane < 8) {
-        unsigned long long base = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_);
-        head_d = group_distances[base];
-        head_i = group_indices[base];
+    int head_k = 0;
+    int split_id = group_begin + lane;
+    if (split_id < group_end) {
+        unsigned long long base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id) * 64 + q_local) * K_MAX_);
+        head_d = partial_distances[base];
+        head_i = partial_indices[base];
     }
-    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    unsigned long long out_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + group_id) * K_MAX_);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
         float winner_d = head_d;
@@ -63,8 +70,10 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
         int peer_lane = _shfl_xor_2;
         int take = ((peer_d < winner_d) ? 1 : 0);
         if (peer_d == winner_d) {
-            if (winner_i < 0 || peer_i < winner_i || peer_i == winner_i && peer_lane < winner_lane) {
-                take = 1;
+            if (peer_i >= 0) {
+                if (winner_i < 0 || peer_i < winner_i || peer_i == winner_i && peer_lane < winner_lane) {
+                    take = 1;
+                }
             }
         }
         winner_d = ((take != 0) ? peer_d : winner_d);
@@ -78,8 +87,10 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
         int peer_lane_2 = _shfl_xor_5;
         int take_3 = ((peer_d_0 < winner_d) ? 1 : 0);
         if (peer_d_0 == winner_d) {
-            if (winner_i < 0 || peer_i_1 < winner_i || peer_i_1 == winner_i && peer_lane_2 < winner_lane) {
-                take_3 = 1;
+            if (peer_i_1 >= 0) {
+                if (winner_i < 0 || peer_i_1 < winner_i || peer_i_1 == winner_i && peer_lane_2 < winner_lane) {
+                    take_3 = 1;
+                }
             }
         }
         winner_d = ((take_3 != 0) ? peer_d_0 : winner_d);
@@ -93,8 +104,10 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
         int peer_lane_6 = _shfl_xor_8;
         int take_7 = ((peer_d_4 < winner_d) ? 1 : 0);
         if (peer_d_4 == winner_d) {
-            if (winner_i < 0 || peer_i_5 < winner_i || peer_i_5 == winner_i && peer_lane_6 < winner_lane) {
-                take_7 = 1;
+            if (peer_i_5 >= 0) {
+                if (winner_i < 0 || peer_i_5 < winner_i || peer_i_5 == winner_i && peer_lane_6 < winner_lane) {
+                    take_7 = 1;
+                }
             }
         }
         winner_d = ((take_7 != 0) ? peer_d_4 : winner_d);
@@ -108,8 +121,10 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
         int peer_lane_10 = _shfl_xor_11;
         int take_11 = ((peer_d_8 < winner_d) ? 1 : 0);
         if (peer_d_8 == winner_d) {
-            if (winner_i < 0 || peer_i_9 < winner_i || peer_i_9 == winner_i && peer_lane_10 < winner_lane) {
-                take_11 = 1;
+            if (peer_i_9 >= 0) {
+                if (winner_i < 0 || peer_i_9 < winner_i || peer_i_9 == winner_i && peer_lane_10 < winner_lane) {
+                    take_11 = 1;
+                }
             }
         }
         winner_d = ((take_11 != 0) ? peer_d_8 : winner_d);
@@ -123,25 +138,27 @@ kernel_final_merge_ir(float* __restrict__ group_distances, int32_t* __restrict__
         int peer_lane_14 = _shfl_xor_14;
         int take_15 = ((peer_d_12 < winner_d) ? 1 : 0);
         if (peer_d_12 == winner_d) {
-            if (winner_i < 0 || peer_i_13 < winner_i || peer_i_13 == winner_i && peer_lane_14 < winner_lane) {
-                take_15 = 1;
+            if (peer_i_13 >= 0) {
+                if (winner_i < 0 || peer_i_13 < winner_i || peer_i_13 == winner_i && peer_lane_14 < winner_lane) {
+                    take_15 = 1;
+                }
             }
         }
         winner_d = ((take_15 != 0) ? peer_d_12 : winner_d);
         winner_i = ((take_15 != 0) ? peer_i_13 : winner_i);
         winner_lane = ((take_15 != 0) ? peer_lane_14 : winner_lane);
-        if (lane == 0 && out_k < K) {
-            out_distances[out_base + out_k] = winner_d;
-            out_indices[out_base + out_k] = winner_i;
+        if (lane == 0) {
+            group_distances[out_base + out_k] = winner_d;
+            group_indices[out_base + out_k] = winner_i;
         }
         if (lane == winner_lane) {
             head_k += 1;
             head_d = LOOM_INF;
             head_i = -1;
-            if (head_k < K_MAX_ && lane < 8) {
-                unsigned long long next_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_ + head_k);
-                head_d = group_distances[next_base];
-                head_i = group_indices[next_base];
+            if (split_id < group_end && head_k < K_MAX_) {
+                unsigned long long next_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id) * 64 + q_local) * K_MAX_ + head_k);
+                head_d = partial_distances[next_base];
+                head_i = partial_indices[next_base];
             }
         }
     }

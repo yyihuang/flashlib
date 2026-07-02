@@ -52,7 +52,7 @@ def _k2_split_m(total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_k2_split9_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k2": {"__kernel__": "dispatch_kernel_0283"}, "partial_k2": {"__kernel__": "dispatch_kernel_0282"}}'))
+    return _decode_capture(_json_loads('{"merge_k2": {"__kernel__": "dispatch_kernel_0284"}, "partial_k2": {"__kernel__": "dispatch_kernel_0283"}}'))
 
 def _scratch_k2(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

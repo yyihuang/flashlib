@@ -55,7 +55,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_twotil
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = parent.K64_THIN_MARGIN_SHAPES
 
 def _compile_q128_split512_twotile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0215"}, "group_merge": {"__kernel__": "dispatch_kernel_0214"}, "partial": {"__kernel__": "dispatch_kernel_0213"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0216"}, "group_merge": {"__kernel__": "dispatch_kernel_0215"}, "partial": {"__kernel__": "dispatch_kernel_0214"}}'))
 
 def _use_q128_k64_split512_twotile(inputs: dict[str, Any]) -> bool:
     return parent._use_q128_k64_split512_indexfast(inputs)

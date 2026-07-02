@@ -35,7 +35,6 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define D_ 3
 #define K_MAX_ 10
 #define LOCAL_LIST_CAP_ 10
-#define ROWS_PER_THREAD_ 16
 #define NUM_WARPS_ 4
 
 #include <math_constants.h>
@@ -44,7 +43,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(128) void
-kernel_knn_search_dynamic_d3_self_q2048_r123_7d2a_direct_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int M, int K)
+kernel_knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int M, int K)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -107,7 +106,7 @@ kernel_knn_search_dynamic_d3_self_q2048_r123_7d2a_direct_v1(__nv_bfloat16* __res
         float q1 = q1_v[0];
         float q2 = q2_v[0];
         #pragma unroll
-        for (int local_slot = 0; local_slot < ROWS_PER_THREAD_; local_slot++) {
+        for (int local_slot = 0; local_slot < 16; local_slot++) {
             int m_row = tid + local_slot * 128;
             if (m_row < M) {
                 unsigned long long db_base = (unsigned long long)((batch_id * M + m_row) * D_);
@@ -130,28 +129,26 @@ kernel_knn_search_dynamic_d3_self_q2048_r123_7d2a_direct_v1(__nv_bfloat16* __res
                 float diff1 = q1 - db1_v[0];
                 float diff2 = q2 - db2_v[0];
                 float dist = diff0 * diff0 + diff1 * diff1 + diff2 * diff2;
-                if (dist < best_d[LOCAL_LIST_CAP_ - 1]) {
-                    float carry_d = dist;
-                    int carry_i = m_row;
-                    #pragma unroll
-                    for (int rank = 0; rank < LOCAL_LIST_CAP_; rank++) {
-                        float old_d = best_d[rank];
-                        int old_i = best_i[rank];
-                        int take = ((carry_d < old_d) ? 1 : 0);
-                        if (carry_d == old_d) {
-                            if (carry_i >= 0) {
-                                if (old_i < 0) {
-                                    take = 1;
-                                } else if (carry_i < old_i) {
-                                    take = 1;
-                                }
+                float carry_d = dist;
+                int carry_i = m_row;
+                #pragma unroll
+                for (int rank = 0; rank < LOCAL_LIST_CAP_; rank++) {
+                    float old_d = best_d[rank];
+                    int old_i = best_i[rank];
+                    int take = ((carry_d < old_d) ? 1 : 0);
+                    if (carry_d == old_d) {
+                        if (carry_i >= 0) {
+                            if (old_i < 0) {
+                                take = 1;
+                            } else if (carry_i < old_i) {
+                                take = 1;
                             }
                         }
-                        best_d[rank] = ((take != 0) ? carry_d : old_d);
-                        best_i[rank] = ((take != 0) ? carry_i : old_i);
-                        carry_d = ((take != 0) ? old_d : carry_d);
-                        carry_i = ((take != 0) ? old_i : carry_i);
                     }
+                    best_d[rank] = ((take != 0) ? carry_d : old_d);
+                    best_i[rank] = ((take != 0) ? carry_i : old_i);
+                    carry_d = ((take != 0) ? old_d : carry_d);
+                    carry_i = ((take != 0) ? old_i : carry_i);
                 }
             }
         }

@@ -48,7 +48,7 @@ def __getattr__(name: str) -> Any:
     return getattr(parent, name)
 
 def _compile_repaired_prefix_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"k32_merge": {"__kernel__": "dispatch_kernel_0455"}, "k64_merge": {"__kernel__": "dispatch_kernel_0456"}, "partial": {"__kernel__": "dispatch_kernel_0454"}}'))
+    return _decode_capture(_json_loads('{"k32_merge": {"__kernel__": "dispatch_kernel_0456"}, "k64_merge": {"__kernel__": "dispatch_kernel_0457"}, "partial": {"__kernel__": "dispatch_kernel_0455"}}'))
 
 def _ensure_repaired_prefix_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_M32768_PREFIX_TIE_KERNELS:

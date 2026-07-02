@@ -214,7 +214,7 @@
     },
     {
       "label": "blind_d320_q128_m65536_k10",
-      "selected_route": "round99_blind_lowd_non_d128_padded_tcgen05"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_highq_q4096_m65536_d128_k10",

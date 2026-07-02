@@ -38,7 +38,7 @@ knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1 = _decode_capture
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "constants": [["D_", 128], ["K_MAX_", 10], ["BLOCK_M_", 512], ["NUM_ROW_WORKERS_", 64], ["SUBWARP_WIDTH_", 4], ["SUBWARPS_PER_WARP_", 8], ["LOCAL_LIST_CAP_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0197"}, "partial": {"__kernel__": "dispatch_kernel_0196"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0198"}, "partial": {"__kernel__": "dispatch_kernel_0197"}}'))
 
 def _scratch(inputs: dict[str, Any], num_m_tiles: int) -> tuple[Any, Any]:
     import torch

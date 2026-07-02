@@ -15,7 +15,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define NUM_MAIN_STAGES 1
-#define THREADS 256
+#define THREADS 32
 #define K_MAX_ 64
 
 #include <math_constants.h>
@@ -23,8 +23,8 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 extern "C" {
 
-__global__ __launch_bounds__(256) void
-kernel_knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1(float* __restrict__ group_distances, int32_t* __restrict__ group_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K)
+__global__ __launch_bounds__(32) void
+kernel_knn_search_d256_split256_groupmerge64_warp3136_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ group_distances, int32_t* __restrict__ group_indices, int B, int Q, int K, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -38,22 +38,41 @@ kernel_knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1(float* __restrict_
     const int lane_id = lane;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid * 8 + warp;
+    int q_group_linear = bid;
+    int group_id = q_group_linear - q_group_linear / 8 * 8;
+    int q_linear = q_group_linear / 8;
     int batch_id = q_linear / Q;
     int q_global = q_linear - batch_id * Q;
-    int head_k = 0;
-    float head_d = LOOM_INF;
-    int head_i = -1;
-    if (lane < 8) {
-        unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_);
-        head_d = group_distances[group_base];
-        head_i = group_indices[group_base];
+    int q_tile = q_global / 128;
+    int q_local = q_global - q_tile * 128;
+    int list_group_base = group_id * 64;
+    float head_d[2];
+    int head_i[2];
+    int head_k[2];
+    #pragma unroll
+    for (int slot = 0; slot < 2; slot++) {
+        int partial_id = list_group_base + lane + slot * 32;
+        unsigned long long partial_base = (((batch_id * num_q_tiles + q_tile) * 512 + partial_id) * 128 + q_local) * K_MAX_;
+        head_k[slot] = 0;
+        head_d[slot] = partial_distances[partial_base];
+        head_i[slot] = partial_indices[partial_base];
     }
-    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + group_id) * K_MAX_);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
-        float winner_d = head_d;
-        int winner_i = head_i;
+        float local_best_d = head_d[0];
+        int local_best_i = head_i[0];
+        int local_best_slot = 0;
+        #pragma unroll
+        for (int slot = 1; slot < 2; slot++) {
+            float cand_d = head_d[slot];
+            int take = ((cand_d < local_best_d) ? 1 : 0);
+            local_best_d = ((take != 0) ? cand_d : local_best_d);
+            local_best_i = ((take != 0) ? head_i[slot] : local_best_i);
+            local_best_slot = ((take != 0) ? slot : local_best_slot);
+        }
+        float winner_d = local_best_d;
+        int winner_i = local_best_i;
         int winner_lane = lane;
         float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 16);
         float peer_d = _shfl_xor_0;
@@ -107,20 +126,24 @@ kernel_knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1(float* __restrict_
         winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
         if (lane == 0) {
             if (out_k < K) {
-                out_distances[out_base + out_k] = winner_d;
-                out_indices[out_base + out_k] = winner_i;
+                group_distances[group_base + out_k] = winner_d;
+                group_indices[group_base + out_k] = winner_i;
             }
         }
         if (lane == winner_lane) {
-            int next_head = head_k + 1;
-            head_k = next_head;
-            head_d = LOOM_INF;
-            head_i = -1;
-            if (lane < 8) {
-                if (next_head < K_MAX_) {
-                    unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_ + next_head);
-                    head_d = group_distances[group_base];
-                    head_i = group_indices[group_base];
+            #pragma unroll
+            for (int slot = 0; slot < 2; slot++) {
+                if (local_best_slot == slot) {
+                    int next_head = head_k[slot] + 1;
+                    int partial_id = list_group_base + lane + slot * 32;
+                    head_k[slot] = next_head;
+                    head_d[slot] = LOOM_INF;
+                    head_i[slot] = -1;
+                    if (next_head < K_MAX_) {
+                        unsigned long long partial_base = (((batch_id * num_q_tiles + q_tile) * 512 + partial_id) * 128 + q_local) * K_MAX_ + next_head;
+                        head_d[slot] = partial_distances[partial_base];
+                        head_i[slot] = partial_indices[partial_base];
+                    }
                 }
             }
         }

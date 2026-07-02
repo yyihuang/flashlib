@@ -69,7 +69,7 @@ TARGET0628_D64_Q512_M65536_K64_SHAPE: dict[str, Any] = {'label': 'target0627_d64
 TARGET_SHAPES = [TARGET0628_D64_Q512_M65536_K64_SHAPE]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0495"}, "group_merge": {"__kernel__": "dispatch_kernel_0494"}, "partial": {"__kernel__": "dispatch_kernel_0493"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0496"}, "group_merge": {"__kernel__": "dispatch_kernel_0495"}, "partial": {"__kernel__": "dispatch_kernel_0494"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -60,7 +60,7 @@ def _row_flags(inputs: dict[str, Any], row_count: int):
     return flags
 
 def _compile_k64_q4096_prefix5_rowflag_fusedcert_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0334"}, "partial": {"__kernel__": "dispatch_kernel_0333"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0335"}, "partial": {"__kernel__": "dispatch_kernel_0334"}}'))
 
 def _use_q4096_k64_prefix5_rowflag_fusedcert(inputs: dict[str, Any]) -> bool:
     return e4cb_parent._use_q4096_k64_rowflag_fusedcert(inputs)

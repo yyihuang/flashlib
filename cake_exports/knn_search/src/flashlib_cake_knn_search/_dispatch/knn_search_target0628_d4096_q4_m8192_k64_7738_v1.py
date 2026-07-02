@@ -56,7 +56,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return merge_seed.route_info(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0484"}, "group_merge": {"__kernel__": "dispatch_kernel_0483"}, "partial": {"__kernel__": "dispatch_kernel_0482"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0485"}, "group_merge": {"__kernel__": "dispatch_kernel_0484"}, "partial": {"__kernel__": "dispatch_kernel_0483"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

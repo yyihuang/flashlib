@@ -16,7 +16,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define K_STRIDE_ 10
+#define K_STRIDE_ 5
 #define K_OUT_MAX_ 5
 
 #include <math_constants.h>
@@ -25,7 +25,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
+kernel_knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);

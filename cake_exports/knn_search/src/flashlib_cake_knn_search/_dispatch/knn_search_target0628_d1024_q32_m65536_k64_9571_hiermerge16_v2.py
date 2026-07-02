@@ -45,7 +45,7 @@ def _use_target(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIGINAL) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and _tcgen05_capable_arch()
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0487"}, "group_merge": {"__kernel__": "dispatch_kernel_0486"}, "partial": {"__kernel__": "dispatch_kernel_0485"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0488"}, "group_merge": {"__kernel__": "dispatch_kernel_0487"}, "partial": {"__kernel__": "dispatch_kernel_0486"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

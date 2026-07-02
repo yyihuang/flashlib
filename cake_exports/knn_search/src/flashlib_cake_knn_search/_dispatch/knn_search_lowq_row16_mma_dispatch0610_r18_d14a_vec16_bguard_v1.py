@@ -51,7 +51,7 @@ knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1 = _decod
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0295"}, "partial": {"__kernel__": "dispatch_kernel_0294"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0296"}, "partial": {"__kernel__": "dispatch_kernel_0295"}}'))
 
 def _tcgen05_capable_arch() -> bool:
     from .._dispatch_runtime import detect_gpu_arch

@@ -42,7 +42,7 @@ def _matches(inputs: dict[str, Any]) -> bool:
     return base._matches(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0462"}, "partial": {"__kernel__": "dispatch_kernel_0461"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0463"}, "partial": {"__kernel__": "dispatch_kernel_0462"}}'))
 
 def selected_route(inputs: dict[str, Any]) -> str:
     return ROUTE if _matches(inputs) else 'unsupported_shape'

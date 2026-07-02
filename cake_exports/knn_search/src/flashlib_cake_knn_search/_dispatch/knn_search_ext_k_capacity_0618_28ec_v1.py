@@ -60,7 +60,7 @@ q4096_m49152_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k_capacity_truncate64_to_k_0618_28ec_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _compile_truncate_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"q4096_m49152_merge": {"__kernel__": "dispatch_kernel_0211"}, "q4096_m49152_partial": {"__kernel__": "dispatch_kernel_0212"}, "truncate": {"__kernel__": "dispatch_kernel_0210"}}'))
+    return _decode_capture(_json_loads('{"q4096_m49152_merge": {"__kernel__": "dispatch_kernel_0212"}, "q4096_m49152_partial": {"__kernel__": "dispatch_kernel_0213"}, "truncate": {"__kernel__": "dispatch_kernel_0211"}}'))
 
 def _ensure_truncate_kernel() -> dict[str, Any]:
     if not _TRUNCATE_KERNELS:

@@ -52,7 +52,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return parent.route_info(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0481"}, "group_merge": {"__kernel__": "dispatch_kernel_0480"}, "partial": {"__kernel__": "dispatch_kernel_0479"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0482"}, "group_merge": {"__kernel__": "dispatch_kernel_0481"}, "partial": {"__kernel__": "dispatch_kernel_0480"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

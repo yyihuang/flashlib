@@ -63,7 +63,7 @@ partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcge
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 640}'))
 
 def _compile_d384_exact_mma_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0270"}, "partial": {"__kernel__": "dispatch_kernel_0269"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0271"}, "partial": {"__kernel__": "dispatch_kernel_0270"}}'))
 
 def _d384_exact_mma_scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     import torch

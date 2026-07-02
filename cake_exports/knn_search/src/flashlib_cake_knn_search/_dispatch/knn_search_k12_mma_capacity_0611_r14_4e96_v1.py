@@ -18,7 +18,7 @@ _KNN_SEARCH_K12_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K12_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k12_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0209"}, "partial": {"__kernel__": "dispatch_kernel_0208"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0210"}, "partial": {"__kernel__": "dispatch_kernel_0209"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int, k_stride: int) -> tuple[Any, Any]:
     import torch

@@ -54,7 +54,7 @@ def route_trace_entry(label: str, inputs: dict[str, Any], profile: str | None=No
     return {'label': label, 'shape_key': label, 'B': int(inputs['B']), 'Q': int(inputs['Q']), 'M': int(inputs['M']), 'D': int(inputs['D']), 'K': int(inputs['K']), 'self_search': bool(inputs.get('self_search', False)), **route_info(inputs)}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0336"}, "partial": {"__kernel__": "dispatch_kernel_0335"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0337"}, "partial": {"__kernel__": "dispatch_kernel_0336"}}'))
 
 def _scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     import torch

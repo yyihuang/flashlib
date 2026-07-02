@@ -73,7 +73,7 @@ def _use_d768_q64_tcgen05(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == 64 and (int(inputs['M']) == 65536) and (int(inputs['D']) == D_ORIG) and (int(inputs['K']) == K_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and _tcgen05_capable_arch()
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0389"}, "partial": {"__kernel__": "dispatch_kernel_0388"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0390"}, "partial": {"__kernel__": "dispatch_kernel_0389"}}'))
 
 def selected_route(inputs: dict[str, Any]) -> str:
     if _use_d768_q64_tcgen05(inputs):

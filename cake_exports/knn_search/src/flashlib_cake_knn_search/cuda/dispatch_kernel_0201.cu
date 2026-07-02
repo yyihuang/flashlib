@@ -43,7 +43,7 @@ typedef short int          int16_t;
 #define SMEM_TOTAL 108800
 #define THREADS 640
 #define K_MAX_ 10
-#define EXPOSE_COL_COHORTS 1
+#define EXPOSE_COL_COHORTS 0
 #define FULL_M_TILES 0
 
 #include <math_constants.h>
@@ -1044,57 +1044,282 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     }
     int scratch_base = q_local * K_MAX_;
     {
-        int partial_split_m = split_m * 4;
-        int partial_split_id = split_id * 4 + col_chunk;
-        unsigned long long partial_col_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_split_m + partial_split_id) * 128 + q_local) * K_MAX_);
         if (col_chunk < 4) {
             if (q_local < 128) {
+                const int cohort_scratch_base = col_chunk * 128 * K_MAX_;
+                #pragma unroll
+                for (int kk = 0; kk < K_MAX_; kk++) {
+                    smem_cohort_topk_d[cohort_scratch_base + scratch_base + kk] = best_d[kk];
+                    smem_cohort_topk_i[cohort_scratch_base + scratch_base + kk] = best_i[kk];
+                }
+            }
+        }
+        __syncthreads();
+        unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local) * K_MAX_);
+        int pair_scratch_base = q_local * K_MAX_;
+        if (col_chunk == 0) {
+            if (q_local < 128) {
                 if (q_global < Q) {
-                    {
-                        float2 _v2 = make_float2(best_d[0 + 0], best_d[0 + 1]);
-                        *reinterpret_cast<float2*>(partial_distances + partial_col_base + 0) = _v2;
+                    const int cohort0_base = 0;
+                    const int cohort1_base = 1280;
+                    int head0_k = 0;
+                    int head1_k = 0;
+                    float head0_d = smem_cohort_topk_d[cohort0_base + scratch_base];
+                    float head1_d = smem_cohort_topk_d[cohort1_base + scratch_base];
+                    int head0_i = smem_cohort_topk_i[cohort0_base + scratch_base];
+                    int head1_i = smem_cohort_topk_i[cohort1_base + scratch_base];
+                    #pragma unroll
+                    for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                        int take1 = ((head1_d < head0_d) ? 1 : 0);
+                        best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
+                        best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
+                        if (take1 == 0) {
+                            head0_k += 1;
+                            head0_d = LOOM_INF;
+                            head0_i = -1;
+                            if (head0_k < K_MAX_) {
+                                int head0_next = cohort0_base + scratch_base + head0_k;
+                                head0_d = smem_cohort_topk_d[head0_next];
+                                head0_i = smem_cohort_topk_i[head0_next];
+                            }
+                        }
+                        if (take1 != 0) {
+                            head1_k += 1;
+                            head1_d = LOOM_INF;
+                            head1_i = -1;
+                            if (head1_k < K_MAX_) {
+                                int head1_next = cohort1_base + scratch_base + head1_k;
+                                head1_d = smem_cohort_topk_d[head1_next];
+                                head1_i = smem_cohort_topk_i[head1_next];
+                            }
+                        }
                     }
-                    {
-                        float2 _v2 = make_float2(best_d[2 + 0], best_d[2 + 1]);
-                        *reinterpret_cast<float2*>(partial_distances + partial_col_base + 2) = _v2;
-                    }
-                    {
-                        float2 _v2 = make_float2(best_d[4 + 0], best_d[4 + 1]);
-                        *reinterpret_cast<float2*>(partial_distances + partial_col_base + 4) = _v2;
-                    }
-                    {
-                        float2 _v2 = make_float2(best_d[6 + 0], best_d[6 + 1]);
-                        *reinterpret_cast<float2*>(partial_distances + partial_col_base + 6) = _v2;
-                    }
-                    {
-                        float2 _v2 = make_float2(best_d[8 + 0], best_d[8 + 1]);
-                        *reinterpret_cast<float2*>(partial_distances + partial_col_base + 8) = _v2;
-                    }
-                    {
-                        int2 _iv2 = make_int2(best_i[0 + 0], best_i[0 + 1]);
-                        *reinterpret_cast<int2*>(partial_indices + partial_col_base + 0) = _iv2;
-                    }
-                    {
-                        int2 _iv2 = make_int2(best_i[2 + 0], best_i[2 + 1]);
-                        *reinterpret_cast<int2*>(partial_indices + partial_col_base + 2) = _iv2;
-                    }
-                    {
-                        int2 _iv2 = make_int2(best_i[4 + 0], best_i[4 + 1]);
-                        *reinterpret_cast<int2*>(partial_indices + partial_col_base + 4) = _iv2;
-                    }
-                    {
-                        int2 _iv2 = make_int2(best_i[6 + 0], best_i[6 + 1]);
-                        *reinterpret_cast<int2*>(partial_indices + partial_col_base + 6) = _iv2;
-                    }
-                    {
-                        int2 _iv2 = make_int2(best_i[8 + 0], best_i[8 + 1]);
-                        *reinterpret_cast<int2*>(partial_indices + partial_col_base + 8) = _iv2;
-                    }
-                } else {
                     #pragma unroll
                     for (int kk = 0; kk < K_MAX_; kk++) {
-                        partial_distances[partial_col_base + kk] = LOOM_INF;
-                        partial_indices[partial_col_base + kk] = -1;
+                        smem_cohort_topk_d[cohort0_base + pair_scratch_base + kk] = best_d[kk];
+                        smem_cohort_topk_i[cohort0_base + pair_scratch_base + kk] = best_i[kk];
+                    }
+                }
+            }
+        }
+        if (col_chunk == 2) {
+            if (q_local < 128) {
+                if (q_global < Q) {
+                    const int cohort2_base = 2560;
+                    const int cohort3_base = 3840;
+                    int head0_k = 0;
+                    int head1_k = 0;
+                    float head0_d = smem_cohort_topk_d[cohort2_base + scratch_base];
+                    float head1_d = smem_cohort_topk_d[cohort3_base + scratch_base];
+                    int head0_i = smem_cohort_topk_i[cohort2_base + scratch_base];
+                    int head1_i = smem_cohort_topk_i[cohort3_base + scratch_base];
+                    #pragma unroll
+                    for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                        int take1 = ((head1_d < head0_d) ? 1 : 0);
+                        best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
+                        best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
+                        if (take1 == 0) {
+                            head0_k += 1;
+                            head0_d = LOOM_INF;
+                            head0_i = -1;
+                            if (head0_k < K_MAX_) {
+                                int head0_next = cohort2_base + scratch_base + head0_k;
+                                head0_d = smem_cohort_topk_d[head0_next];
+                                head0_i = smem_cohort_topk_i[head0_next];
+                            }
+                        }
+                        if (take1 != 0) {
+                            head1_k += 1;
+                            head1_d = LOOM_INF;
+                            head1_i = -1;
+                            if (head1_k < K_MAX_) {
+                                int head1_next = cohort3_base + scratch_base + head1_k;
+                                head1_d = smem_cohort_topk_d[head1_next];
+                                head1_i = smem_cohort_topk_i[head1_next];
+                            }
+                        }
+                    }
+                    #pragma unroll
+                    for (int kk = 0; kk < K_MAX_; kk++) {
+                        smem_cohort_topk_d[cohort2_base + pair_scratch_base + kk] = best_d[kk];
+                        smem_cohort_topk_i[cohort2_base + pair_scratch_base + kk] = best_i[kk];
+                    }
+                }
+            }
+        }
+        __syncthreads();
+        if (col_chunk == 0) {
+            if (q_local < 128) {
+                if (q_local < 64) {
+                    if (q_global < Q) {
+                        const int pair01_base = 0;
+                        const int pair23_base = 2560;
+                        int head0_k = 0;
+                        int head1_k = 0;
+                        float head0_d = smem_cohort_topk_d[pair01_base + pair_scratch_base];
+                        float head1_d = smem_cohort_topk_d[pair23_base + pair_scratch_base];
+                        int head0_i = smem_cohort_topk_i[pair01_base + pair_scratch_base];
+                        int head1_i = smem_cohort_topk_i[pair23_base + pair_scratch_base];
+                        #pragma unroll
+                        for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                            int take1 = ((head1_d < head0_d) ? 1 : 0);
+                            best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
+                            best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
+                            if (take1 == 0) {
+                                head0_k += 1;
+                                head0_d = LOOM_INF;
+                                head0_i = -1;
+                                if (head0_k < K_MAX_) {
+                                    int head0_next = pair01_base + pair_scratch_base + head0_k;
+                                    head0_d = smem_cohort_topk_d[head0_next];
+                                    head0_i = smem_cohort_topk_i[head0_next];
+                                }
+                            }
+                            if (take1 != 0) {
+                                head1_k += 1;
+                                head1_d = LOOM_INF;
+                                head1_i = -1;
+                                if (head1_k < K_MAX_) {
+                                    int head1_next = pair23_base + pair_scratch_base + head1_k;
+                                    head1_d = smem_cohort_topk_d[head1_next];
+                                    head1_i = smem_cohort_topk_i[head1_next];
+                                }
+                            }
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[0 + 0], best_d[0 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 0) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[2 + 0], best_d[2 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 2) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[4 + 0], best_d[4 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 4) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[6 + 0], best_d[6 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 6) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[8 + 0], best_d[8 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 8) = _v2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[0 + 0], best_i[0 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 0) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[2 + 0], best_i[2 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 2) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[4 + 0], best_i[4 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 4) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[6 + 0], best_i[6 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 6) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[8 + 0], best_i[8 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 8) = _iv2;
+                        }
+                    } else {
+                        #pragma unroll
+                        for (int kk = 0; kk < K_MAX_; kk++) {
+                            partial_distances[partial_base + kk] = LOOM_INF;
+                            partial_indices[partial_base + kk] = -1;
+                        }
+                    }
+                }
+            }
+        }
+        if (col_chunk == 2) {
+            if (q_local < 128) {
+                if (q_local >= 64) {
+                    if (q_global < Q) {
+                        const int pair01_base = 0;
+                        const int pair23_base = 2560;
+                        int head0_k = 0;
+                        int head1_k = 0;
+                        float head0_d = smem_cohort_topk_d[pair01_base + pair_scratch_base];
+                        float head1_d = smem_cohort_topk_d[pair23_base + pair_scratch_base];
+                        int head0_i = smem_cohort_topk_i[pair01_base + pair_scratch_base];
+                        int head1_i = smem_cohort_topk_i[pair23_base + pair_scratch_base];
+                        #pragma unroll
+                        for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                            int take1 = ((head1_d < head0_d) ? 1 : 0);
+                            best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
+                            best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
+                            if (take1 == 0) {
+                                head0_k += 1;
+                                head0_d = LOOM_INF;
+                                head0_i = -1;
+                                if (head0_k < K_MAX_) {
+                                    int head0_next = pair01_base + pair_scratch_base + head0_k;
+                                    head0_d = smem_cohort_topk_d[head0_next];
+                                    head0_i = smem_cohort_topk_i[head0_next];
+                                }
+                            }
+                            if (take1 != 0) {
+                                head1_k += 1;
+                                head1_d = LOOM_INF;
+                                head1_i = -1;
+                                if (head1_k < K_MAX_) {
+                                    int head1_next = pair23_base + pair_scratch_base + head1_k;
+                                    head1_d = smem_cohort_topk_d[head1_next];
+                                    head1_i = smem_cohort_topk_i[head1_next];
+                                }
+                            }
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[0 + 0], best_d[0 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 0) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[2 + 0], best_d[2 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 2) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[4 + 0], best_d[4 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 4) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[6 + 0], best_d[6 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 6) = _v2;
+                        }
+                        {
+                            float2 _v2 = make_float2(best_d[8 + 0], best_d[8 + 1]);
+                            *reinterpret_cast<float2*>(partial_distances + partial_base + 8) = _v2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[0 + 0], best_i[0 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 0) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[2 + 0], best_i[2 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 2) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[4 + 0], best_i[4 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 4) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[6 + 0], best_i[6 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 6) = _iv2;
+                        }
+                        {
+                            int2 _iv2 = make_int2(best_i[8 + 0], best_i[8 + 1]);
+                            *reinterpret_cast<int2*>(partial_indices + partial_base + 8) = _iv2;
+                        }
+                    } else {
+                        #pragma unroll
+                        for (int kk = 0; kk < K_MAX_; kk++) {
+                            partial_distances[partial_base + kk] = LOOM_INF;
+                            partial_indices[partial_base + kk] = -1;
+                        }
                     }
                 }
             }

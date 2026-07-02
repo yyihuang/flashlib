@@ -17,7 +17,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
 #define K_STRIDE_ 2
-#define K_OUT_MAX_ 2
+#define K_OUT_MAX_ 1
 
 #include <math_constants.h>
 #define LOOM_INF CUDART_INF_F

@@ -56,7 +56,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_floor13_k64_q384_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_PREFIX_", 8]], "cta_group": 1, "threads": 512}'))
 
 def _compile_prefix8_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0434"}, "partial": {"__kernel__": "dispatch_kernel_0433"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0435"}, "partial": {"__kernel__": "dispatch_kernel_0434"}}'))
 
 def _ensure_prefix8_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_FLOOR13_Q384_PREFIX8_KERNELS:

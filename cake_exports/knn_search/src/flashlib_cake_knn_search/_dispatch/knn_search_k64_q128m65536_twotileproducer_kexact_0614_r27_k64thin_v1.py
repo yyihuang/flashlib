@@ -45,7 +45,7 @@ K64_M65536_TWOTILE_SHAPE: dict[str, Any] = {'label': 'blind_k64_q128_m65536_d128
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = parent.K64_THIN_MARGIN_SHAPES + [K64_M65536_TWOTILE_SHAPE]
 
 def _compile_q128_m65536_twotile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0249"}, "group_merge": {"__kernel__": "dispatch_kernel_0248"}, "partial": {"__kernel__": "dispatch_kernel_0247"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0250"}, "group_merge": {"__kernel__": "dispatch_kernel_0249"}, "partial": {"__kernel__": "dispatch_kernel_0248"}}'))
 
 def _use_q128_m65536_k64_twotile(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q128_ROWS and (int(inputs['M']) == Q128_M65536_ROWS) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K64_MAX) and base._tcgen05_capable_arch()

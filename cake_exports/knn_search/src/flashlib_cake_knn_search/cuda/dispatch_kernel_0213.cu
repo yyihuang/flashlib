@@ -38,6 +38,9 @@ typedef short int          int16_t;
 #define THREADS 512
 #define K_MAX_ 64
 
+#include <math_constants.h>
+#define LOOM_INF CUDART_INF_F
+
 __device__ __forceinline__ uint32_t elect_sync() {
     uint32_t pred = 0;
     asm volatile(
@@ -278,7 +281,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
+kernel_knn_search_ext_k_capacity_q4096_m49152_partial_0618_28ec_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -353,14 +356,21 @@ kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1(__nv_bflo
     int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
     int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
     int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
-    int split_id = bid;
-    int q_start = 0;
+    int work_id = bid;
+    int split_id = work_id - work_id / 192 * 192;
+    int q_tile = work_id / 192;
+    int q_start = q_tile * 128;
     const int col_chunk = warp / 4;
     const int row_base_tmem = warp % 4 * 32;
     int q_local = row_base_tmem + lane;
     float q_norm = 0.0f;
     float best_d[K_MAX_];
     int best_i[K_MAX_];
+    #pragma unroll
+    for (int kk = 0; kk < K_MAX_; kk++) {
+        best_d[kk] = LOOM_INF;
+        best_i[kk] = -1;
+    }
     int first_q_vec = tid;
     int second_q_vec = tid + 512;
     int q_elem = first_q_vec * 16;
@@ -437,8 +447,7 @@ kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1(__nv_bflo
     for (int part = 0; part < 8; part++) {
         q_norm += smem_q_norm_part[q_local * 8 + part];
     }
-    int tile_begin = split_id * 2;
-    int first_m_start = tile_begin * 128;
+    int first_m_start = split_id * 256;
     int second_m_start = first_m_start + 128;
     int norm_row = tid % 128;
     int norm_part = tid / 128;
@@ -894,7 +903,7 @@ kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1(__nv_bflo
         best_i[32 + j_rel + 7] = m_abs31;
     }
     int partial_split_id = split_id * 4 + col_chunk;
-    unsigned long long partial_col_base = (unsigned long long)((partial_split_id * 128 + q_local) * K_MAX_);
+    unsigned long long partial_col_base = (unsigned long long)(((q_tile * 768 + partial_split_id) * 128 + q_local) * K_MAX_);
     float left_d = best_d[0];
     float right_d = best_d[1];
     int left_i = best_i[0];

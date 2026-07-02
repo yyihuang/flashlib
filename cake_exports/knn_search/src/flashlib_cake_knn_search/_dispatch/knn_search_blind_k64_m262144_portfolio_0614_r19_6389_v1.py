@@ -36,7 +36,7 @@ ROUTE_Q128_M262144_K64 = 'round19_6389_q128_m262144_k64_twotile_hiermerge32'
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'B1_Q128_M262144_D128_K64', 'guard': 'B == 1 and Q == 128 and M == 262144 and D == 128 and K == 64 and tcgen05_capable_arch', 'route': ROUTE_Q128_M262144_K64}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_q128_m262144_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"q128_m262144_group_merge": {"__kernel__": "dispatch_kernel_0317"}}'))
+    return _decode_capture(_json_loads('{"q128_m262144_group_merge": {"__kernel__": "dispatch_kernel_0318"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_K64_M262144_KERNELS:

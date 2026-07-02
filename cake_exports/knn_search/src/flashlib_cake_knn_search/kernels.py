@@ -13103,3 +13103,28 @@ def launch_dispatch_kernel_0518(
         arch=arch,
         options=options,
     )
+
+
+dispatch_kernel_0519 = get_kernel('dispatch_kernel_0519')
+
+
+def launch_dispatch_kernel_0519(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0519.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )

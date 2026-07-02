@@ -45,7 +45,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return k1_375f.selected_route(inputs)
 
 def _compile_k1_margin_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0324"}, "partial_k1": {"__kernel__": "dispatch_kernel_0323"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0325"}, "partial_k1": {"__kernel__": "dispatch_kernel_0324"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -54,7 +54,7 @@ def _matches(inputs: dict[str, Any]) -> bool:
     return parent._matches(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0466"}, "partial": {"__kernel__": "dispatch_kernel_0465"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0467"}, "partial": {"__kernel__": "dispatch_kernel_0466"}}'))
 
 def selected_route(inputs: dict[str, Any]) -> str:
     return ROUTE if _matches(inputs) else 'unsupported_shape'

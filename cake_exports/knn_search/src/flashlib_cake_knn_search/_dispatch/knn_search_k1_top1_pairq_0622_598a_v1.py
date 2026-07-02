@@ -85,7 +85,7 @@ def _split_m_for_target(total_m_tiles: int) -> int:
     return min(TARGET_SPLIT_M, int(total_m_tiles))
 
 def _compile_k1_pairq_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0400"}, "partial_k1": {"__kernel__": "dispatch_kernel_0399"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0401"}, "partial_k1": {"__kernel__": "dispatch_kernel_0400"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch
