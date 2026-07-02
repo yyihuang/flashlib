@@ -181,6 +181,9 @@ def _run_shape(
         result["speedup_vs_evolution_flashlib_ms"] = (
             row["evolution_flashlib_ms"] / timing.median_ms
         )
+        result["baseline_name"] = "Cake-recorded FlashLib baseline"
+        result["baseline_ms"] = row["evolution_flashlib_ms"]
+        result["speedup_vs_baseline"] = result["speedup_vs_evolution_flashlib_ms"]
 
     return result
 
@@ -238,6 +241,7 @@ def main() -> int:
     rows = _selected_rows(args)
     payload: dict[str, Any] = {
         "api": "flashlib_cake_kmeans.flash_kmeans_assign",
+        "baseline_name": "Cake-recorded FlashLib baseline",
         "artifact": FLASH_KMEANS_EVOLUTION_ARTIFACT,
         "evolution_summary": FLASH_KMEANS_EVOLUTION_SUMMARY,
         "selected_row_count": len(rows),
@@ -248,6 +252,12 @@ def main() -> int:
     if args.metadata_only:
         payload["results"] = []
     else:
+        import torch
+
+        payload["hardware"] = {
+            "device": torch.cuda.get_device_name(),
+            "arch": f"sm_{torch.cuda.get_device_capability()[0]}{torch.cuda.get_device_capability()[1]}a",
+        }
         if not args.no_benchmark:
             require_cupti()
         payload["results"] = [

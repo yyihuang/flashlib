@@ -21,13 +21,16 @@ def _benchmark_module():
     return module
 
 
-def test_kmeans_matches_reference_on_smoke_shape():
+BENCHMARK = _benchmark_module()
+
+
+@pytest.mark.parametrize("row_index", range(len(BENCHMARK.FLASH_KMEANS_SHAPES)))
+def test_kmeans_matches_reference(row_index: int):
     torch = pytest.importorskip("torch")
     if not torch.cuda.is_available():
         pytest.skip("CUDA GPU required for exported-kernel correctness")
-    benchmark = _benchmark_module()
-    row = benchmark.FLASH_KMEANS_SHAPES[0]
-    result = benchmark._run_shape(
+    row = BENCHMARK.FLASH_KMEANS_SHAPES[row_index]
+    result = BENCHMARK._run_shape(
         row,
         arch=None,
         correctness=True,
