@@ -8,7 +8,7 @@ guard misses to the current v11 common-D dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -66,7 +66,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_q32_k31_c3d2_v1:ir"}'))
 
 def _compiled_stage1_q32_k31():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0148"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0154"}'))
 
 @lru_cache(maxsize=None)
 def _compiled_warp_merge(split_count: int):

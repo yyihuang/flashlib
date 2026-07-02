@@ -8,7 +8,7 @@ instead of using the inherited K12/K16 capacity buckets.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -59,19 +59,19 @@ def _compiled_stage1_k11_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0034"}'))
 
 def _compiled_stage1_k12_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0181"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0141"}'))
 
 def _compiled_stage1_k13_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0038"}'))
 
 def _compiled_merge_k11_s4_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0182"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0142"}'))
 
 def _compiled_merge_k11_s8_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0035"}'))
 
 def _compiled_merge_k13_s4_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0183"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0143"}'))
 
 def _compiled_merge_k13_s8_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0039"}'))

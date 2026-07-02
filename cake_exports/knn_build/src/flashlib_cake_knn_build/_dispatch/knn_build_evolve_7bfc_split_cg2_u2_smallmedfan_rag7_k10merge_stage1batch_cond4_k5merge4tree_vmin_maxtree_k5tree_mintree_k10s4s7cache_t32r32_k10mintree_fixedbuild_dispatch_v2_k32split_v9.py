@@ -20,7 +20,7 @@ parallelism without changing q4096 K20/K30/K32 unordered routing.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from dataclasses import replace
 from functools import lru_cache
 import os
@@ -147,7 +147,7 @@ def _compiled_stage1_for_bucket(top_k_bucket: int):
     return _compile_ir(_stage1_ir_for_bucket(top_k_bucket))
 
 def _compiled_stage1_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0151"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0144"}'))
 
 @lru_cache(maxsize=3)
 def _compiled_stage1_unordered_for_exact_k(top_k: int):
@@ -158,14 +158,14 @@ def _compiled_merge_for_bucket(top_k_bucket: int):
     return _compile_ir(_merge_ir_for_bucket(top_k_bucket))
 
 def _compiled_merge_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0152"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0145"}'))
 
 @lru_cache(maxsize=3)
 def _compiled_merge_unordered_for_exact_k(top_k: int):
     return _compile_ir(_merge_unordered_ir_for_exact_k(top_k))
 
 def _compiled_merge_k30_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0153"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0146"}'))
 
 def _compiled_merge_k12_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0037"}'))

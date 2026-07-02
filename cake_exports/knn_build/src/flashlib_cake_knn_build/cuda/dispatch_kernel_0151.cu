@@ -31,7 +31,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define BLOCK_Q 128
 #define BLOCK_M 64
 #define FEAT_D 128
-#define TOP_K_MAX 32
+#define TOP_K_MAX 96
 
 __device__ __forceinline__ uint32_t elect_sync() {
     uint32_t pred = 0;
@@ -308,7 +308,7 @@ __device__ __forceinline__ void tcgen05_commit_cg2_multicast(int mbar_addr, uint
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_k96_stage1_sort4_prefill_q1024_k96over64sort4prefillq1024_8c56(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -354,7 +354,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered(float* __restrict
 
     // TMEM alloc (64 columns, 64 used)
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 48);
-    if (warp == 1) {
+    if (warp == 5) {
         int _tmem_hold = smem + 48;
         asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
     }
@@ -380,12 +380,264 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered(float* __restrict
     #define score_empty_addr (mbar_base + 40)
     const int taddr = tmem_addr_storage[0];
 
+    // ---- Role: compute ----
+    if (warp <= 3) {
+        const int warp_id_in_wg = warp % 4;
+        const int my_row = warp_id_in_wg * 32 + lane;
+        const int tmem_row_base_v = (warp_id_in_wg * 32) << 16;
+        const int tmem_cross = taddr + TMEM_CROSS_OFFSET;
+        { // compute_main
+            uint32_t _phase_score_full_0 = 0;
+            #pragma unroll 1
+            for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
+                int split_idx = work_idx % split_count;
+                int query_work = work_idx / split_count;
+                int batch_idx = query_work / num_q_tile_pairs;
+                int q_tile_pair = query_work % num_q_tile_pairs;
+                int q_tile = q_tile_pair * 2 + cta_rank;
+                int off_q = q_tile * BLOCK_Q;
+                int q_idx = off_q + my_row;
+                int valid_q = ((q_idx < Q) ? 1 : 0);
+                float q_sq_val = 0.0f;
+                if (valid_q != 0) {
+                    q_sq_val = (float)query_sq[batch_idx * Q + q_idx];
+                }
+                float best_d[TOP_K_MAX];
+                int best_i[TOP_K_MAX];
+                #pragma unroll
+                for (int kk = 0; kk < TOP_K_MAX; kk++) {
+                    best_d[kk] = 3.4e+38f;
+                    best_i[kk] = -1;
+                }
+                float chunk_worst_d[24];
+                int chunk_worst_pos[24];
+                #pragma unroll
+                for (int chunk = 0; chunk < 24; chunk++) {
+                    int chunk_base = chunk * 4;
+                    chunk_worst_d[chunk] = 3.4e+38f;
+                    chunk_worst_pos[chunk] = chunk_base;
+                }
+                float worst_d = 3.4e+38f;
+                int worst_pos = 0;
+                int worst_chunk = 0;
+                int fill_count = 0;
+                int db_tile_start = split_idx * db_tiles_per_split;
+                #pragma unroll 1
+                for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
+                    int db_tile = db_tile_start + local_db_tile;
+                    int db_start = db_tile * BLOCK_M;
+                    int db_sq_idx = db_start + my_row;
+                    if (my_row < BLOCK_M) {
+                        if (db_sq_idx < M) {
+                            smem_database_sq[my_row] = (float)database_sq[batch_idx * M + db_sq_idx];
+                        } else {
+                            smem_database_sq[my_row] = 0.0f;
+                        }
+                    }
+                    asm volatile("barrier.sync 8, 128;");
+                    mbarrier_wait(score_full_addr, _phase_score_full_0);
+                    _phase_score_full_0 ^= 1;
+                    int cross_addr = taddr + (cta_rank * BLOCK_Q + tmem_row_base_v << 16);
+                    float dots[64];
+                    asm volatile(
+                        "tcgen05.ld.sync.aligned.32x32b.x64.b32"
+                        " {%0, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31, %32, %33, %34, %35, %36, %37, %38, %39, %40, %41, %42, %43, %44, %45, %46, %47, %48, %49, %50, %51, %52, %53, %54, %55, %56, %57, %58, %59, %60, %61, %62, %63}, [%64];"
+                        : "=f"(dots[0]), "=f"(dots[1]), "=f"(dots[2]), "=f"(dots[3]), "=f"(dots[4]), "=f"(dots[5]), "=f"(dots[6]), "=f"(dots[7]), "=f"(dots[8]), "=f"(dots[9]), "=f"(dots[10]), "=f"(dots[11]), "=f"(dots[12]), "=f"(dots[13]), "=f"(dots[14]), "=f"(dots[15]), "=f"(dots[16]), "=f"(dots[17]), "=f"(dots[18]), "=f"(dots[19]), "=f"(dots[20]), "=f"(dots[21]), "=f"(dots[22]), "=f"(dots[23]), "=f"(dots[24]), "=f"(dots[25]), "=f"(dots[26]), "=f"(dots[27]), "=f"(dots[28]), "=f"(dots[29]), "=f"(dots[30]), "=f"(dots[31]), "=f"(dots[32]), "=f"(dots[33]), "=f"(dots[34]), "=f"(dots[35]), "=f"(dots[36]), "=f"(dots[37]), "=f"(dots[38]), "=f"(dots[39]), "=f"(dots[40]), "=f"(dots[41]), "=f"(dots[42]), "=f"(dots[43]), "=f"(dots[44]), "=f"(dots[45]), "=f"(dots[46]), "=f"(dots[47]), "=f"(dots[48]), "=f"(dots[49]), "=f"(dots[50]), "=f"(dots[51]), "=f"(dots[52]), "=f"(dots[53]), "=f"(dots[54]), "=f"(dots[55]), "=f"(dots[56]), "=f"(dots[57]), "=f"(dots[58]), "=f"(dots[59]), "=f"(dots[60]), "=f"(dots[61]), "=f"(dots[62]), "=f"(dots[63])
+                        : "r"(cross_addr)
+                        : "memory");
+                    asm volatile("tcgen05.wait::ld.sync.aligned;" ::: "memory");
+                    asm volatile("barrier.sync 8, 128;");
+                    if (elect_sync()) {
+                        asm volatile(
+                            "mbarrier.arrive.release.cta.shared::cluster.b64 _, [%0];"
+                            :: "r"((score_empty_addr) & 0xFEFFFFFF) : "memory");
+                    }
+                    if (valid_q != 0) {
+                        #pragma unroll 1
+                        for (int col_base = 0; col_base < 64; col_base += 4) {
+                            float dist_vec[4];
+                            dist_vec[0] = dots[col_base];
+                            dist_vec[1] = dots[col_base + 1];
+                            dist_vec[2] = dots[col_base + 2];
+                            dist_vec[3] = dots[col_base + 3];
+                            const float2 _fma_b2_0 = {-2.0f, -2.0f};
+                            const float2 _fma_c2_1 = {q_sq_val, q_sq_val};
+                            #pragma unroll
+                            for (int _lf = 0; _lf < 2; _lf++)
+                                fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_vec)[_lf], _fma_b2_0, _fma_c2_1);
+                            float db_sq_vec[4];
+                            db_sq_vec[0] = smem_database_sq[col_base];
+                            db_sq_vec[1] = smem_database_sq[col_base + 1];
+                            db_sq_vec[2] = smem_database_sq[col_base + 2];
+                            db_sq_vec[3] = smem_database_sq[col_base + 3];
+                            float _t0[4];
+                            #pragma unroll
+                            for (int _la = 0; _la < 2; _la++)
+                                reinterpret_cast<float2*>(_t0)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_vec)[_la], reinterpret_cast<const float2*>(db_sq_vec)[_la]);
+                            float group_min = _t0[0];
+                            if (_t0[1] < group_min) {
+                                group_min = _t0[1];
+                            }
+                            if (_t0[2] < group_min) {
+                                group_min = _t0[2];
+                            }
+                            if (_t0[3] < group_min) {
+                                group_min = _t0[3];
+                            }
+                            if (group_min < worst_d) {
+                                float sort_d0 = _t0[0];
+                                float sort_d1 = _t0[1];
+                                float sort_d2 = _t0[2];
+                                float sort_d3 = _t0[3];
+                                int sort_col0 = 0;
+                                int sort_col1 = 1;
+                                int sort_col2 = 2;
+                                int sort_col3 = 3;
+                                float tmp_d = 0.0f;
+                                int tmp_col = 0;
+                                if (sort_d1 < sort_d0) {
+                                    tmp_d = sort_d0;
+                                    sort_d0 = sort_d1;
+                                    sort_d1 = tmp_d;
+                                    tmp_col = sort_col0;
+                                    sort_col0 = sort_col1;
+                                    sort_col1 = tmp_col;
+                                }
+                                if (sort_d3 < sort_d2) {
+                                    tmp_d = sort_d2;
+                                    sort_d2 = sort_d3;
+                                    sort_d3 = tmp_d;
+                                    tmp_col = sort_col2;
+                                    sort_col2 = sort_col3;
+                                    sort_col3 = tmp_col;
+                                }
+                                if (sort_d2 < sort_d0) {
+                                    tmp_d = sort_d0;
+                                    sort_d0 = sort_d2;
+                                    sort_d2 = tmp_d;
+                                    tmp_col = sort_col0;
+                                    sort_col0 = sort_col2;
+                                    sort_col2 = tmp_col;
+                                }
+                                if (sort_d3 < sort_d1) {
+                                    tmp_d = sort_d1;
+                                    sort_d1 = sort_d3;
+                                    sort_d3 = tmp_d;
+                                    tmp_col = sort_col1;
+                                    sort_col1 = sort_col3;
+                                    sort_col3 = tmp_col;
+                                }
+                                if (sort_d2 < sort_d1) {
+                                    tmp_d = sort_d1;
+                                    sort_d1 = sort_d2;
+                                    sort_d2 = tmp_d;
+                                    tmp_col = sort_col1;
+                                    sort_col1 = sort_col2;
+                                    sort_col2 = tmp_col;
+                                }
+                                #pragma unroll
+                                for (int visit = 0; visit < 4; visit++) {
+                                    int vec_col = sort_col0;
+                                    float dist = sort_d0;
+                                    if (visit == 1) {
+                                        vec_col = sort_col1;
+                                        dist = sort_d1;
+                                    }
+                                    if (visit == 2) {
+                                        vec_col = sort_col2;
+                                        dist = sort_d2;
+                                    }
+                                    if (visit == 3) {
+                                        vec_col = sort_col3;
+                                        dist = sort_d3;
+                                    }
+                                    int db_idx = db_start + col_base + vec_col;
+                                    if (fill_count < TOP_K_MAX) {
+                                        if (db_idx < M) {
+                                            best_d[fill_count] = dist;
+                                            best_i[fill_count] = db_idx;
+                                            fill_count += 1;
+                                            if (fill_count == TOP_K_MAX) {
+                                                #pragma unroll
+                                                for (int chunk = 0; chunk < 24; chunk++) {
+                                                    int chunk_base = chunk * 4;
+                                                    chunk_worst_d[chunk] = best_d[chunk_base];
+                                                    chunk_worst_pos[chunk] = chunk_base;
+                                                    #pragma unroll
+                                                    for (int offset = 1; offset < 4; offset++) {
+                                                        int scan_pos = chunk_base + offset;
+                                                        if (best_d[scan_pos] > chunk_worst_d[chunk]) {
+                                                            chunk_worst_d[chunk] = best_d[scan_pos];
+                                                            chunk_worst_pos[chunk] = scan_pos;
+                                                        }
+                                                    }
+                                                }
+                                                worst_d = chunk_worst_d[0];
+                                                worst_pos = chunk_worst_pos[0];
+                                                worst_chunk = 0;
+                                                #pragma unroll
+                                                for (int chunk = 1; chunk < 24; chunk++) {
+                                                    if (chunk_worst_d[chunk] > worst_d) {
+                                                        worst_d = chunk_worst_d[chunk];
+                                                        worst_pos = chunk_worst_pos[chunk];
+                                                        worst_chunk = chunk;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        if (dist >= worst_d) {
+                                            break;
+                                        }
+                                        if (db_idx < M) {
+                                            best_d[worst_pos] = dist;
+                                            best_i[worst_pos] = db_idx;
+                                            int refresh_base = worst_chunk * 4;
+                                            chunk_worst_d[worst_chunk] = best_d[refresh_base];
+                                            chunk_worst_pos[worst_chunk] = refresh_base;
+                                            #pragma unroll
+                                            for (int offset = 1; offset < 4; offset++) {
+                                                int scan_pos = refresh_base + offset;
+                                                if (best_d[scan_pos] > chunk_worst_d[worst_chunk]) {
+                                                    chunk_worst_d[worst_chunk] = best_d[scan_pos];
+                                                    chunk_worst_pos[worst_chunk] = scan_pos;
+                                                }
+                                            }
+                                            worst_d = chunk_worst_d[0];
+                                            worst_pos = chunk_worst_pos[0];
+                                            worst_chunk = 0;
+                                            #pragma unroll
+                                            for (int chunk = 1; chunk < 24; chunk++) {
+                                                if (chunk_worst_d[chunk] > worst_d) {
+                                                    worst_d = chunk_worst_d[chunk];
+                                                    worst_pos = chunk_worst_pos[chunk];
+                                                    worst_chunk = chunk;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    asm volatile("barrier.sync 8, 128;");
+                }
+                if (valid_q != 0) {
+                    int out_base = ((split_idx * B + batch_idx) * Q + q_idx) * K;
+                    #pragma unroll
+                    for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
+                        *((float*)(partial_dists + out_base + out_k)) = best_d[out_k];
+                        *((int*)(partial_indices + out_base + out_k)) = best_i[out_k];
+                    }
+                }
+            }
+        }
     // ---- Role: load ----
-    if (warp == 0) {
+    } else if (warp == 4) {
         { // load_main
             uint32_t _phase_query_empty_0 = 1;
             uint32_t _phase_database_empty_0 = 1;
-            if (warp_id == 0) {
+            if (warp_id == 4) {
                 if (elect_sync()) {
                     #pragma unroll 1
                     for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
@@ -428,7 +680,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered(float* __restrict
             }
         }
     // ---- Role: mma ----
-    } else if (warp == 1) {
+    } else if (warp == 5) {
         { // mma_main
             uint32_t _phase_query_full_0 = 0;
             uint32_t _phase_score_empty_0 = 1;
@@ -508,143 +760,13 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered(float* __restrict
                 }
             }
         }
-    // ---- Role: compute ----
-    } else if (warp >= 2 && warp <= 5) {
-        const int warp_id_in_wg = warp % 4;
-        const int my_row = warp_id_in_wg * 32 + lane;
-        const int tmem_row_base_v = (warp_id_in_wg * 32) << 16;
-        const int tmem_cross = taddr + TMEM_CROSS_OFFSET;
-        { // compute_main
-            uint32_t _phase_score_full_0 = 0;
-            #pragma unroll 1
-            for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
-                int split_idx = work_idx % split_count;
-                int query_work = work_idx / split_count;
-                int batch_idx = query_work / num_q_tile_pairs;
-                int q_tile_pair = query_work % num_q_tile_pairs;
-                int q_tile = q_tile_pair * 2 + cta_rank;
-                int off_q = q_tile * BLOCK_Q;
-                int q_idx = off_q + my_row;
-                int valid_q = ((q_idx < Q) ? 1 : 0);
-                float q_sq_val = 0.0f;
-                if (valid_q != 0) {
-                    q_sq_val = (float)query_sq[batch_idx * Q + q_idx];
-                }
-                float best_d[TOP_K_MAX];
-                int best_i[TOP_K_MAX];
-                #pragma unroll
-                for (int kk = 0; kk < TOP_K_MAX; kk++) {
-                    best_d[kk] = 3.4e+38f;
-                    best_i[kk] = -1;
-                }
-                float worst_d = 3.4e+38f;
-                int worst_pos = 0;
-                int db_tile_start = split_idx * db_tiles_per_split;
-                #pragma unroll 1
-                for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
-                    int db_tile = db_tile_start + local_db_tile;
-                    int db_start = db_tile * BLOCK_M;
-                    int db_sq_idx = db_start + my_row;
-                    if (my_row < BLOCK_M) {
-                        if (db_sq_idx < M) {
-                            smem_database_sq[my_row] = (float)database_sq[batch_idx * M + db_sq_idx];
-                        } else {
-                            smem_database_sq[my_row] = 0.0f;
-                        }
-                    }
-                    asm volatile("barrier.sync 8, 128;");
-                    mbarrier_wait(score_full_addr, _phase_score_full_0);
-                    _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (cta_rank * BLOCK_Q + tmem_row_base_v << 16);
-                    float dots[64];
-                    asm volatile(
-                        "tcgen05.ld.sync.aligned.32x32b.x64.b32"
-                        " {%0, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31, %32, %33, %34, %35, %36, %37, %38, %39, %40, %41, %42, %43, %44, %45, %46, %47, %48, %49, %50, %51, %52, %53, %54, %55, %56, %57, %58, %59, %60, %61, %62, %63}, [%64];"
-                        : "=f"(dots[0]), "=f"(dots[1]), "=f"(dots[2]), "=f"(dots[3]), "=f"(dots[4]), "=f"(dots[5]), "=f"(dots[6]), "=f"(dots[7]), "=f"(dots[8]), "=f"(dots[9]), "=f"(dots[10]), "=f"(dots[11]), "=f"(dots[12]), "=f"(dots[13]), "=f"(dots[14]), "=f"(dots[15]), "=f"(dots[16]), "=f"(dots[17]), "=f"(dots[18]), "=f"(dots[19]), "=f"(dots[20]), "=f"(dots[21]), "=f"(dots[22]), "=f"(dots[23]), "=f"(dots[24]), "=f"(dots[25]), "=f"(dots[26]), "=f"(dots[27]), "=f"(dots[28]), "=f"(dots[29]), "=f"(dots[30]), "=f"(dots[31]), "=f"(dots[32]), "=f"(dots[33]), "=f"(dots[34]), "=f"(dots[35]), "=f"(dots[36]), "=f"(dots[37]), "=f"(dots[38]), "=f"(dots[39]), "=f"(dots[40]), "=f"(dots[41]), "=f"(dots[42]), "=f"(dots[43]), "=f"(dots[44]), "=f"(dots[45]), "=f"(dots[46]), "=f"(dots[47]), "=f"(dots[48]), "=f"(dots[49]), "=f"(dots[50]), "=f"(dots[51]), "=f"(dots[52]), "=f"(dots[53]), "=f"(dots[54]), "=f"(dots[55]), "=f"(dots[56]), "=f"(dots[57]), "=f"(dots[58]), "=f"(dots[59]), "=f"(dots[60]), "=f"(dots[61]), "=f"(dots[62]), "=f"(dots[63])
-                        : "r"(cross_addr)
-                        : "memory");
-                    asm volatile("tcgen05.wait::ld.sync.aligned;" ::: "memory");
-                    asm volatile("barrier.sync 8, 128;");
-                    if (elect_sync()) {
-                        asm volatile(
-                            "mbarrier.arrive.release.cta.shared::cluster.b64 _, [%0];"
-                            :: "r"((score_empty_addr) & 0xFEFFFFFF) : "memory");
-                    }
-                    if (valid_q != 0) {
-                        #pragma unroll 2
-                        for (int col_base = 0; col_base < 64; col_base += 4) {
-                            float dist_vec[4];
-                            dist_vec[0] = dots[col_base];
-                            dist_vec[1] = dots[col_base + 1];
-                            dist_vec[2] = dots[col_base + 2];
-                            dist_vec[3] = dots[col_base + 3];
-                            const float2 _fma_b2_0 = {-2.0f, -2.0f};
-                            const float2 _fma_c2_1 = {q_sq_val, q_sq_val};
-                            #pragma unroll
-                            for (int _lf = 0; _lf < 2; _lf++)
-                                fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_vec)[_lf], _fma_b2_0, _fma_c2_1);
-                            float db_sq_vec[4];
-                            db_sq_vec[0] = smem_database_sq[col_base];
-                            db_sq_vec[1] = smem_database_sq[col_base + 1];
-                            db_sq_vec[2] = smem_database_sq[col_base + 2];
-                            db_sq_vec[3] = smem_database_sq[col_base + 3];
-                            float _t0[4];
-                            #pragma unroll
-                            for (int _la = 0; _la < 2; _la++)
-                                reinterpret_cast<float2*>(_t0)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_vec)[_la], reinterpret_cast<const float2*>(db_sq_vec)[_la]);
-                            float group_min = _t0[0];
-                            if (_t0[1] < group_min) {
-                                group_min = _t0[1];
-                            }
-                            if (_t0[2] < group_min) {
-                                group_min = _t0[2];
-                            }
-                            if (_t0[3] < group_min) {
-                                group_min = _t0[3];
-                            }
-                            if (group_min < worst_d) {
-                                #pragma unroll
-                                for (int vec_col = 0; vec_col < 4; vec_col++) {
-                                    int db_idx = db_start + col_base + vec_col;
-                                    if (db_idx < M) {
-                                        float dist = _t0[vec_col];
-                                        if (dist < worst_d) {
-                                            best_d[worst_pos] = dist;
-                                            best_i[worst_pos] = db_idx;
-                                            worst_d = best_d[0];
-                                            worst_pos = 0;
-                                            #pragma unroll
-                                            for (int scan_pos = 1; scan_pos < TOP_K_MAX; scan_pos++) {
-                                                if (best_d[scan_pos] > worst_d) {
-                                                    worst_d = best_d[scan_pos];
-                                                    worst_pos = scan_pos;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    asm volatile("barrier.sync 8, 128;");
-                }
-                if (valid_q != 0) {
-                    int out_base = ((split_idx * B + batch_idx) * Q + q_idx) * K;
-                    #pragma unroll
-                    for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-                        *((float*)(partial_dists + out_base + out_k)) = best_d[out_k];
-                        *((int*)(partial_indices + out_base + out_k)) = best_i[out_k];
-                    }
-                }
-            }
-        }
     }
 
     // Cleanup
     asm volatile("barrier.cluster.arrive.release.aligned;");
     asm volatile("barrier.cluster.wait.acquire.aligned;");
 
-    if (warp == 1) {
+    if (warp == 5) {
         asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
         asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
     }

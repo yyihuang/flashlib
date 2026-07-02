@@ -10,7 +10,7 @@ other fixed-build rows use the 4-split cached path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_v1 as parent
 BLOCK_Q = parent.BLOCK_Q

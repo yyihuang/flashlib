@@ -8,7 +8,7 @@ does not change seed schedules; it only tests whether the previously validated
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any, Callable
 from . import knn_build_dispatch_4247_non128_8199_3d5a_2e8e_full82_synth_v1 as base_f30c
 from . import knn_build_dispatch_c142_3505_q32rowld_19b3_v1 as portfolio_19b3

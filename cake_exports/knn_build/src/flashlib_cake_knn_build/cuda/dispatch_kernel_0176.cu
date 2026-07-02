@@ -16,13 +16,13 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define TOP_K_MAX 10
-#define SPLIT_COUNT 5
+#define TOP_K_MAX 8
+#define SPLIT_COUNT 8
 
 extern "C" {
 
 __global__ __launch_bounds__(32, 1) void
-kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5(float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, float* __restrict__ out_dists, int32_t* __restrict__ out_indices, int total_queries)
+kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k8s8(float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, float* __restrict__ out_dists, int32_t* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -42,6 +42,7 @@ kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5(float* __rest
     for (int row = start_row; row < total_queries; row += stride) {
         int base_row = row * TOP_K_MAX;
         int split_stride = total_queries * TOP_K_MAX;
+        int out_base = base_row;
         int split_pos[SPLIT_COUNT];
         int split_base[SPLIT_COUNT];
         float cand_d[SPLIT_COUNT];
@@ -66,8 +67,8 @@ kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5(float* __rest
                     best_split = split_idx;
                 }
             }
-            *((float*)(out_dists + base_row + out_k)) = best_d;
-            *((int*)(out_indices + base_row + out_k)) = best_i;
+            *((float*)(out_dists + out_base + out_k)) = best_d;
+            *((int*)(out_indices + out_base + out_k)) = best_i;
             split_pos[best_split] = split_pos[best_split] + 1;
             if (out_k + 1 < TOP_K_MAX) {
                 int next_pos = split_pos[best_split];

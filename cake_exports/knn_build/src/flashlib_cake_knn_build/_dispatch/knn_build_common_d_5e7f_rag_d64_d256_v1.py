@@ -8,7 +8,7 @@ fall back to the current v11 common-D dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -120,7 +120,7 @@ def _maybe_pad_for_tma(tensor, *, rows: int, dim: int, tma_dim: int):
     return m64_parent.non128_base._pad_bf16_rows(tensor, rows=rows, src_cols=dim, dst_cols=tma_dim)
 
 def _compiled_d64_m64_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0165"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0168"}'))
 
 def _launch_d64_exact_rag(inputs: dict[str, Any], label: str) -> None:
     query = inputs['query']

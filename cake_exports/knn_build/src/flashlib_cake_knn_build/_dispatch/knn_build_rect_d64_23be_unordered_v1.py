@@ -10,7 +10,7 @@ current 8700 Weave dispatcher; no external runtime fallback is introduced.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 import os
 from typing import Any, Callable
@@ -51,10 +51,10 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_23be_unordered_v1:ir"}'))
 
 def _compiled_d64_unordered_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0161"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0164"}'))
 
 def _compiled_s16_cached_merge():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0162"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0165"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

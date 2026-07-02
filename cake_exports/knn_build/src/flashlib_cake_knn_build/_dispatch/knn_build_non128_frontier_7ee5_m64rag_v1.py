@@ -8,7 +8,7 @@ distances and indices through the existing Weave split merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 import os
 from typing import Any, Callable
@@ -61,7 +61,7 @@ def _compile_ir(ir_obj: Any):
     return CUDAKernel(cubin, f'kernel_{ir_obj.name}')
 
 def _compiled_stage1_m64():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0146"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0152"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

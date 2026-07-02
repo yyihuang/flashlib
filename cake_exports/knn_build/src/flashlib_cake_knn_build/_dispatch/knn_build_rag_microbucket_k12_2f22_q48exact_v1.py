@@ -8,7 +8,7 @@ merge. Guard misses delegate to the current v11 common-D dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -61,7 +61,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k12_2f22_q48exact_v1:ir"}'))
 
 def _compiled_stage1_q48_k12():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0150"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0156"}'))
 
 @lru_cache(maxsize=None)
 def _compiled_warp_merge(split_count: int):

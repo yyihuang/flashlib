@@ -9,7 +9,7 @@ fused split merge writes contract-visible distances and indices.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 import os
 from typing import Any, Callable
@@ -60,7 +60,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:ir"}'))
 
 def _compiled_stage1_q1_k10_m64_halfrow():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0166"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0169"}'))
 
 @lru_cache(maxsize=None)
 def _compiled_fused_merge(split_count: int, group_count: int):

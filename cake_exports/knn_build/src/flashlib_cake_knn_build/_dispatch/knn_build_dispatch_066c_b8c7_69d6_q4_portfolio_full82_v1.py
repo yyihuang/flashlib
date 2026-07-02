@@ -9,7 +9,7 @@ Weave seeds: 5a70 M64 split144, f15a S144/G12, and 801e S144/G12.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 from pathlib import Path

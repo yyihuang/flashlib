@@ -9,7 +9,7 @@ the round-102 parent. The production path remains Weave-only.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -67,7 +67,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32q8half_0077_v1:ir"}'))
 
 def _compiled_stage1_q8_k32_m64_halfrow():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0141"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0147"}'))
 
 def _launch_q8_half_warpmerge(inputs: dict[str, Any], *, split_count: int) -> None:
     warpmerge_parent._launch_stage1_then_warp_merge(inputs, split_count=split_count, stage1_kernel_fn=_compiled_stage1_q8_k32_m64_halfrow, stage1_ir=_stage1_q8_half_ir(), stage1_threads=Q8_HALF_STAGE1_THREADS, block_q=Q8_HALF_BLOCK_Q, block_m=Q8_HALF_BLOCK_M)

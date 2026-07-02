@@ -16,12 +16,13 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define TOP_K_MAX 13
+#define TOP_K_MAX 10
+#define SPLIT_COUNT 6
 
 extern "C" {
 
 __global__ __launch_bounds__(32, 1) void
-kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k13s4exact(float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, float* __restrict__ out_dists, int32_t* __restrict__ out_indices, int K, int total_queries)
+kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6(float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, float* __restrict__ out_dists, int32_t* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -39,67 +40,40 @@ kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k13s4exact(float* __
     int stride = num_bids * 32;
     #pragma unroll 1
     for (int row = start_row; row < total_queries; row += stride) {
-        int base_row = row * K;
-        int split_stride = total_queries * K;
-        int out_base = base_row;
-        int split_base0 = base_row;
-        int split_base1 = base_row + split_stride;
-        int split_base2 = split_base1 + split_stride;
-        int split_base3 = split_base2 + split_stride;
-        int pos0 = 0;
-        int pos1 = 0;
-        int pos2 = 0;
-        int pos3 = 0;
-        float cand_d0 = (float)partial_dists[split_base0];
-        int cand_i0 = partial_indices[split_base0];
-        float cand_d1 = (float)partial_dists[split_base1];
-        int cand_i1 = partial_indices[split_base1];
-        float cand_d2 = (float)partial_dists[split_base2];
-        int cand_i2 = partial_indices[split_base2];
-        float cand_d3 = (float)partial_dists[split_base3];
-        int cand_i3 = partial_indices[split_base3];
+        int base_row = row * TOP_K_MAX;
+        int split_stride = total_queries * TOP_K_MAX;
+        int split_pos[SPLIT_COUNT];
+        int split_base[SPLIT_COUNT];
+        float cand_d[SPLIT_COUNT];
+        int cand_i[SPLIT_COUNT];
+        #pragma unroll
+        for (int split_idx = 0; split_idx < SPLIT_COUNT; split_idx++) {
+            split_pos[split_idx] = 0;
+            split_base[split_idx] = base_row + split_idx * split_stride;
+            cand_d[split_idx] = (float)partial_dists[split_base[split_idx]];
+            cand_i[split_idx] = partial_indices[split_base[split_idx]];
+        }
         #pragma unroll
         for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-            if (out_k < K) {
-                int cand01_cmp = ((cand_d1 < cand_d0) ? 1 : 0);
-                float best01_d = ((cand01_cmp != 0) ? cand_d1 : cand_d0);
-                int best01_i = ((cand01_cmp != 0) ? cand_i1 : cand_i0);
-                int best01_split = ((cand01_cmp != 0) ? 1 : 0);
-                int cand23_cmp = ((cand_d3 < cand_d2) ? 1 : 0);
-                float best23_d = ((cand23_cmp != 0) ? cand_d3 : cand_d2);
-                int best23_i = ((cand23_cmp != 0) ? cand_i3 : cand_i2);
-                int best23_split = ((cand23_cmp != 0) ? 3 : 2);
-                int best_cmp = ((best23_d < best01_d) ? 1 : 0);
-                float best_d = ((best_cmp != 0) ? best23_d : best01_d);
-                int best_i = ((best_cmp != 0) ? best23_i : best01_i);
-                int best_split = ((best_cmp != 0) ? best23_split : best01_split);
-                *((float*)(out_dists + out_base + out_k)) = best_d;
-                *((int*)(out_indices + out_base + out_k)) = best_i;
-                if (out_k + 1 < K) {
-                    if (best_split == 0) {
-                        pos0 = pos0 + 1;
-                        int next_addr0 = split_base0 + pos0;
-                        cand_d0 = (float)partial_dists[next_addr0];
-                        cand_i0 = partial_indices[next_addr0];
-                    } else if (best_split == 1) {
-                        pos1 = pos1 + 1;
-                        int next_addr1 = split_base1 + pos1;
-                        cand_d1 = (float)partial_dists[next_addr1];
-                        cand_i1 = partial_indices[next_addr1];
-                    } else {
-                        if (best_split == 2) {
-                            pos2 = pos2 + 1;
-                            int next_addr2 = split_base2 + pos2;
-                            cand_d2 = (float)partial_dists[next_addr2];
-                            cand_i2 = partial_indices[next_addr2];
-                        } else {
-                            pos3 = pos3 + 1;
-                            int next_addr3 = split_base3 + pos3;
-                            cand_d3 = (float)partial_dists[next_addr3];
-                            cand_i3 = partial_indices[next_addr3];
-                        }
-                    }
+            float best_d = cand_d[0];
+            int best_i = cand_i[0];
+            int best_split = 0;
+            #pragma unroll
+            for (int split_idx = 1; split_idx < SPLIT_COUNT; split_idx++) {
+                if (cand_d[split_idx] < best_d) {
+                    best_d = cand_d[split_idx];
+                    best_i = cand_i[split_idx];
+                    best_split = split_idx;
                 }
+            }
+            *((float*)(out_dists + base_row + out_k)) = best_d;
+            *((int*)(out_indices + base_row + out_k)) = best_i;
+            split_pos[best_split] = split_pos[best_split] + 1;
+            if (out_k + 1 < TOP_K_MAX) {
+                int next_pos = split_pos[best_split];
+                int next_addr = split_base[best_split] + next_pos;
+                cand_d[best_split] = (float)partial_dists[next_addr];
+                cand_i[best_split] = partial_indices[next_addr];
             }
         }
     }

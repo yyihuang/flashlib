@@ -8,7 +8,7 @@ dispatcher; no external implementation is on the production route.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 from importlib import import_module
@@ -64,7 +64,7 @@ CANDIDATE_DISPATCHERS = ({'id': BASELINE_ID, 'entrypoint': BASELINE_ENTRYPOINT, 
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_4247_non128_8199_3d5a_2e8e_full82_synth_v1:ir"}'))
 
 def _seed_midk_e080():
-    return import_module('loom.examples.weave.knn_build_midk_k11k13_e080_v1')
+    return _import_dispatch_module('knn_build_midk_k11k13_e080_v1')
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     return matrix_7e5d._dtype_name(inputs)

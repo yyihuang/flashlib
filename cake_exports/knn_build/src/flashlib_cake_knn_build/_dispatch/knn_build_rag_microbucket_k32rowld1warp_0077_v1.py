@@ -10,7 +10,7 @@ path remains Weave-only.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -82,10 +82,10 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:ir"}'))
 
 def _compiled_stage1_q16_k32_m64_rowld1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0142"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0148"}'))
 
 def _compiled_stage1_q32_k32_m64_rowld2():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0143"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0149"}'))
 
 def _launch_rowld1_warpmerge(inputs: dict[str, Any], *, split_count: int) -> None:
     parent._launch_stage1_then_warp_merge(inputs, split_count=split_count, stage1_kernel_fn=_compiled_stage1_q16_k32_m64_rowld1, stage1_ir=_stage1_rowld1_ir(), stage1_threads=Q16_ROWLD1_STAGE1_THREADS, block_q=Q16_ROWLD1_BLOCK_Q, block_m=Q16_ROWLD1_BLOCK_M)

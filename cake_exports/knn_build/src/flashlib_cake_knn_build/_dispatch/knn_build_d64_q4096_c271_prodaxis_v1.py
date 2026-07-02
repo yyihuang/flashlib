@@ -8,7 +8,7 @@ Non-exact shapes delegate to aa88/v2.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from dataclasses import replace
 from functools import lru_cache
 import os
@@ -57,13 +57,13 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d64_q4096_c271_prodaxis_v1:ir"}'))
 
 def _compiled_stage1_syncdrop():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0178"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0181"}'))
 
 def _compiled_merge_k10_s5():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0179"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0182"}'))
 
 def _compiled_merge_k10_s6():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0180"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0183"}'))
 
 def _eligible_exact_q4096_d64(inputs: dict[str, Any]) -> bool:
     n_query = int(inputs['Q'])

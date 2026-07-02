@@ -8,7 +8,7 @@ delegate to the prior c271 producer-axis candidate.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from dataclasses import replace
 from functools import lru_cache
 import os
@@ -75,13 +75,13 @@ def _compiled_stage1_unordered_syncdrop():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0019"}'))
 
 def _compiled_group_reduce_s8g4():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0175"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0178"}'))
 
 def _compiled_merge_k10_s5():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0176"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0179"}'))
 
 def _compiled_merge_k10_s6():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0177"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0180"}'))
 
 def _eligible_exact_q4096_d64(inputs: dict[str, Any]) -> bool:
     n_query = int(inputs['Q'])

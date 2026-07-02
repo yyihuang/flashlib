@@ -11,7 +11,7 @@ FlashLib is used only by the contract harness as a black-box timing peer.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -47,7 +47,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:ir"}'))
 
 def _compiled_stage1_k8_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0174"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0177"}'))
 
 def _compiled_stage1_k8_exact_prefill():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0015"}'))

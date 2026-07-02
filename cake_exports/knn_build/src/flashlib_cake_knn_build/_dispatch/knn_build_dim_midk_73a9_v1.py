@@ -9,7 +9,7 @@ this branch can measure the D64 split fanout without changing shared dispatch.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 import os
 from typing import Any

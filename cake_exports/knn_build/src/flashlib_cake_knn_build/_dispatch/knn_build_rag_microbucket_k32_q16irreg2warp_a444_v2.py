@@ -11,7 +11,7 @@ rows 8-15 without reading an invalid cross-warp TMEM fragment.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -77,7 +77,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2:ir"}'))
 
 def _compiled_stage1_q16_rowld1_2warp():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0158"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0161"}'))
 
 @lru_cache(maxsize=None)
 def _compiled_rows4_warp_merge(split_count: int):

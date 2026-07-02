@@ -8,7 +8,7 @@ D192/D320 eval path while preserving the same Weave-only contract outputs.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 import os
 from typing import Any, Callable
@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_non128_frontier_8199_widestage_v1:ir"}'))
 
 def _compiled_d384_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0147"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0153"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

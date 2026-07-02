@@ -8,7 +8,7 @@ rows4 merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_0cb5_q31tail_v2:ir"}'))
 
 def _compiled_stage1_q31_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0159"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0162"}'))
 
 def _eligible_q31tail_v2(inputs: dict[str, Any]) -> bool:
     return parent.uneven.base._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 31 and (int(inputs.get('M', -1)) == 100000) and (int(inputs.get('K', -1)) == parent.uneven.K32_TOP_K_MAX)

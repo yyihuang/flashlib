@@ -5,7 +5,7 @@
 - Package: `flashlib_cake_knn_build`
 - Source repository: ``
 - Source commit: ``
-- Generated at: `2026-07-02T20:26:13.217935+00:00`
+- Generated at: `2026-07-02T20:35:41.467359+00:00`
 
 ## Latest Recorded Results
 
@@ -178,49 +178,49 @@ CUPTI-backed, cold-L2 timing.
 | `dispatch_kernel_0138` | `kernel_knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s8chunkprefill` | `standard` | 256 | 0 |
 | `dispatch_kernel_0139` | `kernel_knn_build_rag_microbucket_3505_v9_stage1_q8_k32_m64` | `standard` | 256 | 0 |
 | `dispatch_kernel_0140` | `kernel_knn_build_d128_rag_q128_k10_s74_warp_merge` | `standard` | 256 | 0 |
-| `dispatch_kernel_0141` | `kernel_knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow_q8half_0077_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0142` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1_q16rowld1_0077_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0143` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q32rowld2_0077_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0144` | `kernel_knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s2chunkprefill_f9d1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0145` | `kernel_knn_build_k96_stage1_sort4_prefill_q1024_k96over64sort4prefillq1024_8c56` | `standard` | 256 | 0 |
-| `dispatch_kernel_0146` | `kernel_knn_build_non128_frontier_7ee5_m64rag_stage1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0147` | `kernel_knn_build_non128_frontier_8199_d384_stage1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0148` | `kernel_knn_build_rag_microbucket_q32_k31_c3d2_v1_stage1_q32k31_c3d2_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0149` | `kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0150` | `kernel_knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0151` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered` | `standard` | 256 | 0 |
-| `dispatch_kernel_0152` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_unordered` | `standard` | 256 | 0 |
-| `dispatch_kernel_0153` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache` | `standard` | 256 | 0 |
-| `dispatch_kernel_0154` | `kernel_knn_build_rag_microbucket_k32_q32rowld2uneven_f653_v1_stage1_q32rowld2uneven_f653_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0155` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q32rowld2_f653_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0156` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q24rowld2_24dc_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0157` | `kernel_knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp_q16dual2warp_56ed_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0158` | `kernel_knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp_q16irreg2warp_a444_v2` | `standard` | 256 | 0 |
-| `dispatch_kernel_0159` | `kernel_knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1_q31exact_0cb5_v2` | `standard` | 256 | 0 |
-| `dispatch_kernel_0160` | `kernel_knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64_q128rowld_60fb_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0161` | `kernel_knn_build_rect_d64_23be_unordered_stage1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0162` | `kernel_knn_build_rect_d64_23be_s16_cached_merge` | `standard` | 256 | 0 |
-| `dispatch_kernel_0163` | `kernel_knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld` | `standard` | 256 | 0 |
-| `dispatch_kernel_0164` | `kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0165` | `kernel_knn_build_common_d_5e7f_rag_d64_m64_stage1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0166` | `kernel_knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow` | `standard` | 256 | 0 |
-| `dispatch_kernel_0167` | `kernel_knn_build_rag_microbucket_3505_v2_stage1_k32_tailinf_cta1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0168` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered` | `standard` | 256 | 0 |
-| `dispatch_kernel_0169` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_unordered` | `standard` | 256 | 0 |
-| `dispatch_kernel_0170` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache` | `standard` | 256 | 0 |
-| `dispatch_kernel_0171` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k12s8` | `standard` | 256 | 0 |
-| `dispatch_kernel_0172` | `kernel_knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_k8s7` | `standard` | 256 | 0 |
-| `dispatch_kernel_0173` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k8s8` | `standard` | 256 | 0 |
-| `dispatch_kernel_0174` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_fd9b_k8unordered` | `standard` | 256 | 0 |
-| `dispatch_kernel_0175` | `kernel_knn_build_d64_q4096_c271_twostage_group_reduce` | `standard` | 256 | 0 |
-| `dispatch_kernel_0176` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5` | `standard` | 256 | 0 |
-| `dispatch_kernel_0177` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6` | `standard` | 256 | 0 |
-| `dispatch_kernel_0178` | `kernel_knn_build_d64_q4096_c271_stage1_syncdrop` | `standard` | 256 | 0 |
+| `dispatch_kernel_0141` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split` | `standard` | 256 | 0 |
+| `dispatch_kernel_0142` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k11s4exact` | `standard` | 256 | 0 |
+| `dispatch_kernel_0143` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k13s4exact` | `standard` | 256 | 0 |
+| `dispatch_kernel_0144` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered` | `standard` | 256 | 0 |
+| `dispatch_kernel_0145` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_unordered` | `standard` | 256 | 0 |
+| `dispatch_kernel_0146` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache` | `standard` | 256 | 0 |
+| `dispatch_kernel_0147` | `kernel_knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow_q8half_0077_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0148` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1_q16rowld1_0077_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0149` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q32rowld2_0077_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0150` | `kernel_knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s2chunkprefill_f9d1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0151` | `kernel_knn_build_k96_stage1_sort4_prefill_q1024_k96over64sort4prefillq1024_8c56` | `standard` | 256 | 0 |
+| `dispatch_kernel_0152` | `kernel_knn_build_non128_frontier_7ee5_m64rag_stage1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0153` | `kernel_knn_build_non128_frontier_8199_d384_stage1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0154` | `kernel_knn_build_rag_microbucket_q32_k31_c3d2_v1_stage1_q32k31_c3d2_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0155` | `kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0156` | `kernel_knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0157` | `kernel_knn_build_rag_microbucket_k32_q32rowld2uneven_f653_v1_stage1_q32rowld2uneven_f653_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0158` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q32rowld2_f653_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0159` | `kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q24rowld2_24dc_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0160` | `kernel_knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp_q16dual2warp_56ed_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0161` | `kernel_knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp_q16irreg2warp_a444_v2` | `standard` | 256 | 0 |
+| `dispatch_kernel_0162` | `kernel_knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1_q31exact_0cb5_v2` | `standard` | 256 | 0 |
+| `dispatch_kernel_0163` | `kernel_knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64_q128rowld_60fb_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0164` | `kernel_knn_build_rect_d64_23be_unordered_stage1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0165` | `kernel_knn_build_rect_d64_23be_s16_cached_merge` | `standard` | 256 | 0 |
+| `dispatch_kernel_0166` | `kernel_knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld` | `standard` | 256 | 0 |
+| `dispatch_kernel_0167` | `kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0168` | `kernel_knn_build_common_d_5e7f_rag_d64_m64_stage1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0169` | `kernel_knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow` | `standard` | 256 | 0 |
+| `dispatch_kernel_0170` | `kernel_knn_build_rag_microbucket_3505_v2_stage1_k32_tailinf_cta1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0171` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered` | `standard` | 256 | 0 |
+| `dispatch_kernel_0172` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_unordered` | `standard` | 256 | 0 |
+| `dispatch_kernel_0173` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache` | `standard` | 256 | 0 |
+| `dispatch_kernel_0174` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k12s8` | `standard` | 256 | 0 |
+| `dispatch_kernel_0175` | `kernel_knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_k8s7` | `standard` | 256 | 0 |
+| `dispatch_kernel_0176` | `kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k8s8` | `standard` | 256 | 0 |
+| `dispatch_kernel_0177` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_fd9b_k8unordered` | `standard` | 256 | 0 |
+| `dispatch_kernel_0178` | `kernel_knn_build_d64_q4096_c271_twostage_group_reduce` | `standard` | 256 | 0 |
 | `dispatch_kernel_0179` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5` | `standard` | 256 | 0 |
 | `dispatch_kernel_0180` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6` | `standard` | 256 | 0 |
-| `dispatch_kernel_0181` | `kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split` | `standard` | 256 | 0 |
-| `dispatch_kernel_0182` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k11s4exact` | `standard` | 256 | 0 |
-| `dispatch_kernel_0183` | `kernel_knn_build_evolve_7bfc_k32_merge_s4_rowbase_cache_e080k13s4exact` | `standard` | 256 | 0 |
+| `dispatch_kernel_0181` | `kernel_knn_build_d64_q4096_c271_stage1_syncdrop` | `standard` | 256 | 0 |
+| `dispatch_kernel_0182` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5` | `standard` | 256 | 0 |
+| `dispatch_kernel_0183` | `kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6` | `standard` | 256 | 0 |
 | `dispatch_kernel_0184` | `kernel_knn_build_common_d_generic_direct_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0185` | `kernel_knn_build_common_d_generic_direct_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0186` | `kernel_knn_build_v12_d128_q16_k48_dd2b_v1_stage1` | `standard` | 256 | 0 |

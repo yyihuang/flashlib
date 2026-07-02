@@ -228,7 +228,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(128, 1) void
-kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2_q32rowld2_f653_v1(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -307,28 +307,16 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
             #pragma unroll 1
             for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
                 int split_idx = work_idx % split_count;
-                int query_work = work_idx / split_count;
-                int batch_idx = query_work / num_q_tiles;
-                int q_tile = query_work % num_q_tiles;
-                int off_q = q_tile * BLOCK_Q;
                 int tmem_row_origin = warp_id_in_role * 32;
                 int logical_row_origin = warp_id_in_role * 16;
                 int row_top = logical_row_origin + lane / 4;
                 int row_bot = row_top + 8;
                 int lane_col = lane % 4;
                 int slot = lane_col;
-                int q_top = off_q + row_top;
-                int q_bot = off_q + row_bot;
-                int valid_top = ((q_top < Q) ? 1 : 0);
-                int valid_bot = ((q_bot < Q) ? 1 : 0);
-                float q_sq_top = 0.0f;
-                float q_sq_bot = 0.0f;
-                if (valid_top != 0) {
-                    q_sq_top = (float)query_sq[batch_idx * Q + q_top];
-                }
-                if (valid_bot != 0) {
-                    q_sq_bot = (float)query_sq[batch_idx * Q + q_bot];
-                }
+                int q_top = row_top;
+                int q_bot = row_bot;
+                float q_sq_top = (float)query_sq[q_top];
+                float q_sq_bot = (float)query_sq[q_bot];
                 float best_top_d[TOP_K_MAX];
                 float best_bot_d[TOP_K_MAX];
                 int best_top_i[TOP_K_MAX];
@@ -367,11 +355,11 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                         int db_idx1 = db_idx0 + 1;
                         float top_d0 = 3.4e+38f;
                         float top_d1 = 3.4e+38f;
-                        if (valid_top != 0 & db_idx0 < M) {
-                            top_d0 = max_noftz(q_sq_top + (float)database_sq[batch_idx * M + db_idx0] - 2.0f * dots[reg_base], 0.0f);
+                        if (db_idx0 < M) {
+                            top_d0 = max_noftz(q_sq_top + (float)database_sq[db_idx0] - 2.0f * dots[reg_base], 0.0f);
                         }
-                        if (valid_top != 0 & db_idx1 < M) {
-                            top_d1 = max_noftz(q_sq_top + (float)database_sq[batch_idx * M + db_idx1] - 2.0f * dots[reg_base + 1], 0.0f);
+                        if (db_idx1 < M) {
+                            top_d1 = max_noftz(q_sq_top + (float)database_sq[db_idx1] - 2.0f * dots[reg_base + 1], 0.0f);
                         }
                         int top_take1 = ((top_d1 < top_d0) ? 1 : 0);
                         if (((top_take1 != 0) ? top_d1 : top_d0) < best_top_d[31]) {
@@ -408,11 +396,11 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                         }
                         float bot_d0 = 3.4e+38f;
                         float bot_d1 = 3.4e+38f;
-                        if (valid_bot != 0 & db_idx0 < M) {
-                            bot_d0 = max_noftz(q_sq_bot + (float)database_sq[batch_idx * M + db_idx0] - 2.0f * dots[reg_base + 2], 0.0f);
+                        if (db_idx0 < M) {
+                            bot_d0 = max_noftz(q_sq_bot + (float)database_sq[db_idx0] - 2.0f * dots[reg_base + 2], 0.0f);
                         }
-                        if (valid_bot != 0 & db_idx1 < M) {
-                            bot_d1 = max_noftz(q_sq_bot + (float)database_sq[batch_idx * M + db_idx1] - 2.0f * dots[reg_base + 3], 0.0f);
+                        if (db_idx1 < M) {
+                            bot_d1 = max_noftz(q_sq_bot + (float)database_sq[db_idx1] - 2.0f * dots[reg_base + 3], 0.0f);
                         }
                         int bot_take1 = ((bot_d1 < bot_d0) ? 1 : 0);
                         if (((bot_take1 != 0) ? bot_d1 : bot_d0) < best_bot_d[31]) {
@@ -461,7 +449,6 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                 asm volatile("barrier.sync 8, 64;");
                 if (tid < ROWS_COVERED) {
                     int row = tid;
-                    int q_idx = off_q + row;
                     float head_d[4];
                     int head_i[4];
                     int head_k[4];
@@ -472,7 +459,7 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                         head_d[slot_idx] = smem_local_d[local_base];
                         head_i[slot_idx] = smem_local_i[local_base];
                     }
-                    int out_base = ((split_idx * B + batch_idx) * Q + q_idx) * K;
+                    int out_base = (split_idx * ROWS_COVERED + row) * TOP_K_MAX;
                     #pragma unroll
                     for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
                         float winner_d = head_d[0];
@@ -486,10 +473,8 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                             winner_i = ((take != 0) ? head_i[slot_idx] : winner_i);
                             winner_slot = ((take != 0) ? slot_idx : winner_slot);
                         }
-                        if (q_idx < Q & out_k < K) {
-                            *((float*)(partial_dists + out_base + out_k)) = winner_d;
-                            *((int*)(partial_indices + out_base + out_k)) = winner_i;
-                        }
+                        *((float*)(partial_dists + out_base + out_k)) = winner_d;
+                        *((int*)(partial_indices + out_base + out_k)) = winner_i;
                         #pragma unroll
                         for (int slot_idx = 0; slot_idx < 4; slot_idx++) {
                             if (winner_slot == slot_idx) {
@@ -519,25 +504,19 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
                     #pragma unroll 1
                     for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
                         int split_idx = work_idx % split_count;
-                        int query_work = work_idx / split_count;
-                        int batch_idx = query_work / num_q_tiles;
-                        int q_tile = query_work % num_q_tiles;
-                        int off_q = q_tile * BLOCK_Q;
-                        int global_q = batch_idx * Q + off_q;
                         int db_tile_start = split_idx * db_tiles_per_split;
                         mbarrier_wait(query_empty_addr, _phase_query_empty_0);
                         _phase_query_empty_0 ^= 1;
                         mbarrier_arrive_expect_tx(query_full_addr, 16384);
-                        tma_3d_gmem2smem(smem_query_addr, tmap_query, 0, global_q, 0, query_full_addr);
+                        tma_3d_gmem2smem(smem_query_addr, tmap_query, 0, 0, 0, query_full_addr);
                         #pragma unroll 1
                         for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
                             int db_tile = db_tile_start + local_db_tile;
                             int off_m = db_tile * BLOCK_M;
-                            int global_m = batch_idx * M + off_m;
                             mbarrier_wait(database_empty_addr, _phase_database_empty_0);
                             _phase_database_empty_0 ^= 1;
                             mbarrier_arrive_expect_tx(database_full_addr, 16384);
-                            tma_3d_gmem2smem(smem_database_addr, tmap_database, 0, global_m, 0, database_full_addr);
+                            tma_3d_gmem2smem(smem_database_addr, tmap_database, 0, off_m, 0, database_full_addr);
                         }
                     }
                 }
@@ -550,7 +529,7 @@ kernel_knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2
             uint32_t _phase_score_empty_0 = 1;
             uint32_t _phase_database_full_0 = 0;
             #pragma unroll 1
-            for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
+            for (unsigned int _work_idx = bid; _work_idx < total_work; _work_idx += num_bids) {
                 mbarrier_wait(query_full_addr, _phase_query_full_0);
                 _phase_query_full_0 ^= 1;
                 #pragma unroll 1

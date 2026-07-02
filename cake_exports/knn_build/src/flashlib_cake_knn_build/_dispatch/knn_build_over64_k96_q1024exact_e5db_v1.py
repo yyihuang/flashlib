@@ -10,7 +10,7 @@ to the prior q1024parity/f9d1 route unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -44,7 +44,7 @@ def _compiled_stage1_k96_q1024_exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0072"}'))
 
 def _compiled_merge_k96_s2():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0144"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0150"}'))
 
 def _eligible_over64_k96_q1024_build(inputs: dict[str, Any]) -> bool:
     return bool(inputs.get('build', False)) and str(inputs['query'].dtype) == 'torch.bfloat16' and (str(inputs['database'].dtype) == 'torch.bfloat16') and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) == OVER64_TOP_K) and (int(inputs['Q']) == 1024) and (int(inputs['M']) == 1024) and (int(inputs['B']) == 1)

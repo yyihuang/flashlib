@@ -7,31 +7,23 @@ typedef short int          int16_t;
 
 #include <cuda_bf16.h>
 
-__device__ __forceinline__ int make_warp_uniform(int x) {
-    int result;
-    asm volatile("shfl.sync.idx.b32 %0, %1, 0, 0x1F, 0xFFFFFFFF;"
-                 : "=r"(result) : "r"(x));
-    return result;
-}
-
 #define TMEM_NCOLS 64
 #define TMEM_CROSS_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_QUERY_OFF 1024
-#define SMEM_SMEM_QUERY_STAGE_BYTES 32768
-#define SMEM_SMEM_QUERY_STRIDE 32768
-#define SMEM_SMEM_DATABASE_OFF 33792
-#define SMEM_SMEM_DATABASE_STAGE_BYTES 16384
-#define SMEM_SMEM_DATABASE_STRIDE 16384
-#define SMEM_SMEM_DATABASE_SQ_OFF 50176
+#define SMEM_SMEM_QUERY_STAGE_BYTES 16384
+#define SMEM_SMEM_QUERY_STRIDE 16384
+#define SMEM_SMEM_DATABASE_OFF 17408
+#define SMEM_SMEM_DATABASE_STAGE_BYTES 8192
+#define SMEM_SMEM_DATABASE_STRIDE 8192
+#define SMEM_SMEM_DATABASE_SQ_OFF 25600
 #define SMEM_SMEM_DATABASE_SQ_STAGE_BYTES 256
 #define SMEM_SMEM_DATABASE_SQ_STRIDE 256
-#define SMEM_TOTAL 50432
+#define SMEM_TOTAL 25856
 #define THREADS 192
 #define BLOCK_Q 128
 #define BLOCK_M 64
-#define FEAT_D 128
-#define TOP_K_MAX 12
+#define TOP_K_MAX 10
 
 __device__ __forceinline__ uint32_t elect_sync() {
     uint32_t pred = 0;
@@ -89,17 +81,14 @@ __device__ __forceinline__ void mbarrier_wait_token(int mbar_addr, int phase, ui
 }
 
 
-__device__ __forceinline__ void tcgen05_mma_f16_cta2(
+__device__ __forceinline__ void tcgen05_mma_f16(
     int taddr, uint64_t a_desc, uint64_t b_desc,
     uint32_t i_desc, int enable_input_d) {
     asm volatile(
         "{\n\t"
         ".reg .pred p;\n\t"
-        ".reg .b32 m0, m1, m2, m3, m4, m5, m6, m7;\n\t"
         "setp.ne.b32 p, %4, 0;\n\t"
-        "mov.b32 m0, 0; mov.b32 m1, 0; mov.b32 m2, 0; mov.b32 m3, 0;\n\t"
-        "mov.b32 m4, 0; mov.b32 m5, 0; mov.b32 m6, 0; mov.b32 m7, 0;\n\t"
-        "tcgen05.mma.cta_group::2.kind::f16 [%0], %1, %2, %3, {m0, m1, m2, m3, m4, m5, m6, m7}, p;\n\t"
+        "tcgen05.mma.cta_group::1.kind::f16 [%0], %1, %2, %3, p;\n\t"
         "}\n"
         :: "r"(taddr), "l"(a_desc), "l"(b_desc),
            "r"(i_desc), "r"(enable_input_d));
@@ -111,36 +100,33 @@ __device__ __forceinline__ uint64_t desc_encode(uint64_t x) {
 }
 
 
-__device__ __forceinline__ void mma_ss_step_cg2(
+__device__ __forceinline__ void mma_ss_step(
     int a_lo, int b_lo, int taddr, uint32_t i_desc, int enable_d) {
     asm volatile(
         "{\n\t"
         ".reg .pred leader, p;\n\t"
-        ".reg .b32 dhi, m0, m1, m2, m3, m4, m5, m6, m7;\n\t"
+        ".reg .b32 dhi;\n\t"
         ".reg .b64 da, db;\n\t"
         "elect.sync _|leader, 0xFFFFFFFF;\n\t"
         "setp.ne.b32 p, %4, 0;\n\t"
-        "mov.b32 m0, 0; mov.b32 m1, 0; mov.b32 m2, 0; mov.b32 m3, 0;\n\t"
-        "mov.b32 m4, 0; mov.b32 m5, 0; mov.b32 m6, 0; mov.b32 m7, 0;\n\t"
         "mov.b32 dhi, 0x40004040;\n\t"
         "mov.b64 da, {%0, dhi};\n\t"
         "mov.b64 db, {%1, dhi};\n\t"
-        "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, %3, "
-        "{m0, m1, m2, m3, m4, m5, m6, m7}, p;\n\t"
+        "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, %3, p;\n\t"
         "}\n"
         :: "r"(a_lo), "r"(b_lo), "r"(taddr), "r"(i_desc), "r"(enable_d));
 }
 
 
-__device__ __forceinline__ void elect_commit_cg2_multicast(int mbar_addr, uint16_t cta_mask) {
+__device__ __forceinline__ void elect_commit(int mbar_addr) {
     asm volatile(
         "{\n\t"
         ".reg .pred leader;\n\t"
         "elect.sync _|leader, 0xFFFFFFFF;\n\t"
-        "@leader tcgen05.commit.cta_group::2.mbarrier::arrive::one"
-        ".shared::cluster.multicast::cluster.b64 [%0], %1;\n\t"
+        "@leader tcgen05.commit.cta_group::1.mbarrier::arrive::one"
+        ".shared::cluster.b64 [%0];\n\t"
         "}\n"
-        :: "r"(mbar_addr), "h"(cta_mask) : "memory");
+        :: "r"(mbar_addr));
 }
 
 
@@ -171,25 +157,6 @@ __device__ __forceinline__ void tmem_ld_x16(float* dst, int tmem_addr) {
 }
 
 
-__device__ __forceinline__ uint32_t smem_addr(const void* ptr) {
-    uint32_t addr;
-    asm("{\n\t"
-        ".reg .u64 u64addr;\n\t"
-        "cvta.to.shared.u64 u64addr, %1;\n\t"
-        "cvt.u32.u64 %0, u64addr;\n\t"
-        "}\n" : "=r"(addr) : "l"(ptr));
-    return addr;
-}
-
-
-__device__ __forceinline__ uint32_t mapa_to_rank(uint32_t local_addr, uint32_t rank) {
-    uint32_t remote;
-    asm volatile("mapa.shared::cluster.u32 %0, %1, %2;"
-        : "=r"(remote) : "r"(local_addr), "r"(rank));
-    return remote;
-}
-
-
 __device__ __forceinline__ void mbarrier_init_pred(int mbar_addr, uint32_t count, uint32_t pred) {
     asm volatile(
         "{\n\t"
@@ -197,6 +164,13 @@ __device__ __forceinline__ void mbarrier_init_pred(int mbar_addr, uint32_t count
         "setp.ne.b32 p, %2, 0;\n\t"
         "@p mbarrier.init.shared::cta.b64 [%0], %1;\n\t"
         "}\n" :: "r"(mbar_addr), "r"(count), "r"(pred));
+}
+
+
+__device__ __forceinline__ float max_noftz(float a, float b) {
+    float c;
+    asm("max.f32 %0, %1, %2;" : "=f"(c) : "f"(a), "f"(b));
+    return c;
 }
 
 
@@ -283,32 +257,36 @@ __device__ __forceinline__ uint64_t make_smem_desc(int addr) {
 }
 
 
-__device__ __forceinline__ void tma_3d_gmem2smem_cta2(
+__device__ __forceinline__ void tma_3d_gmem2smem(
     int dst, const void *tmap_ptr, int x, int y, int z, int mbar_addr) {
     asm volatile(
-        "cp.async.bulk.tensor.3d.shared::cluster.global"
-        ".mbarrier::complete_tx::bytes.cta_group::2"
+        "cp.async.bulk.tensor.3d.shared::cta.global"
+        ".mbarrier::complete_tx::bytes"
         " [%0], [%1, {%2, %3, %4}], [%5];"
         :: "r"(dst), "l"(tmap_ptr), "r"(x), "r"(y), "r"(z),
            "r"(mbar_addr) : "memory");
 }
 
 
-__device__ __forceinline__ void tcgen05_commit_cg2_multicast(int mbar_addr, uint16_t cta_mask) {
+__device__ __forceinline__ void tcgen05_commit(int mbar_addr) {
     asm volatile(
-        "{\n\t"
-        ".reg .b16 lo, hi;\n\t"
-        "mov.b32 {lo, hi}, %1;\n\t"
-        "tcgen05.commit.cta_group::2.mbarrier::arrive::one"
-        ".shared::cluster.multicast::cluster.b64 [%0], lo;\n\t"
-        "}\n"
-        :: "r"(mbar_addr), "r"((uint32_t)cta_mask) : "memory");
+        "tcgen05.commit.cta_group::1.mbarrier::arrive::one"
+        ".shared::cluster.b64 [%0];"
+        :: "r"(mbar_addr) : "memory");
+}
+
+
+__device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
+    uint32_t result;
+    asm volatile("shfl.sync.idx.b32 %0, %1, 0, 0x1f, 0xffffffff;"
+        : "=r"(result) : "r"(val));
+    return result;
 }
 
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_d64_q4096_c271_stage1_syncdrop(float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int32_t* __restrict__ partial_indices, const void* tmap_query, const void* tmap_database, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -318,35 +296,29 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
     int smem;
     smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
     const int smem_smem_query = smem + 1024;
-    const int smem_smem_database = smem + 33792;
-    const int smem_smem_database_sq = smem + 50176;
+    const int smem_smem_database = smem + 17408;
+    const int smem_smem_database_sq = smem + 25600;
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
-    const unsigned int clusters_x = gridDim.x / 2;
-    const unsigned int cluster_id = ((blockIdx.z * gridDim.y + blockIdx.y) * clusters_x) + blockIdx.x / 2;
-    const unsigned int num_clusters = clusters_x * gridDim.y * gridDim.z;
-
-    int cta_rank;
-    asm volatile("mov.b32 %0, %%cluster_ctarank;" : "=r"(cta_rank));
 
     // Mbarrier init (6 groups, 6 barriers)
     // Mbarriers at smem_raw[0..48)
 
     if (warp == 0) {
         uint32_t leader = elect_sync();
-        // query_full: 1 barriers, init_count=2
-        mbarrier_init_pred(smem + 0, 2, leader);
+        // query_full: 1 barriers, init_count=1
+        mbarrier_init_pred(smem + 0, 1, leader);
         // query_empty: 1 barriers, init_count=1
         mbarrier_init_pred(smem + 8, 1, leader);
-        // database_full: 1 barriers, init_count=2
-        mbarrier_init_pred(smem + 16, 2, leader);
+        // database_full: 1 barriers, init_count=1
+        mbarrier_init_pred(smem + 16, 1, leader);
         // database_empty: 1 barriers, init_count=1
         mbarrier_init_pred(smem + 24, 1, leader);
         // score_full: 1 barriers, init_count=1
         mbarrier_init_pred(smem + 32, 1, leader);
-        // score_empty: 1 barriers, init_count=8
-        mbarrier_init_pred(smem + 40, 8, leader);
+        // score_empty: 1 barriers, init_count=128
+        mbarrier_init_pred(smem + 40, 128, leader);
         asm volatile("fence.mbarrier_init.release.cluster;");
     }
 
@@ -356,21 +328,20 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 48);
     if (warp == 1) {
         int _tmem_hold = smem + 48;
-        asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
+        asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
     }
 
-    asm volatile("barrier.cluster.arrive.release.aligned;");
-    asm volatile("barrier.cluster.wait.acquire.aligned;");
+    __syncthreads();
     asm volatile("tcgen05.fence::after_thread_sync;");
 
     const int warp_id = warp;
     const int lane_id = lane;
     __nv_bfloat16* smem_query = (__nv_bfloat16*)(smem_raw + 1024);
     #define smem_query_addr (smem + 1024)
-    __nv_bfloat16* smem_database = (__nv_bfloat16*)(smem_raw + 33792);
-    #define smem_database_addr (smem + 33792)
-    float* smem_database_sq = (float*)(smem_raw + 50176);
-    #define smem_database_sq_addr (smem + 50176)
+    __nv_bfloat16* smem_database = (__nv_bfloat16*)(smem_raw + 17408);
+    #define smem_database_addr (smem + 17408)
+    float* smem_database_sq = (float*)(smem_raw + 25600);
+    #define smem_database_sq_addr (smem + 25600)
     const int mbar_base = smem;
     #define query_full_addr (mbar_base + 0)
     #define query_empty_addr (mbar_base + 8)
@@ -388,25 +359,18 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
             if (warp_id == 0) {
                 if (elect_sync()) {
                     #pragma unroll 1
-                    for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
+                    for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
                         int split_idx = work_idx % split_count;
                         int query_work = work_idx / split_count;
-                        int batch_idx = query_work / num_q_tile_pairs;
-                        int q_tile_pair = query_work % num_q_tile_pairs;
-                        int q_tile = q_tile_pair * 2 + cta_rank;
+                        int batch_idx = query_work / num_q_tiles;
+                        int q_tile = query_work % num_q_tiles;
                         int off_q = q_tile * BLOCK_Q;
                         int global_q = batch_idx * Q + off_q;
                         int db_tile_start = split_idx * db_tiles_per_split;
                         mbarrier_wait(query_empty_addr, _phase_query_empty_0);
                         _phase_query_empty_0 ^= 1;
-                        asm volatile(
-                            "mbarrier.arrive.expect_tx.release.cta.shared::cluster.b64 _, [%0], %1;"
-                            :: "r"((query_full_addr) & 0xFEFFFFFF), "r"((uint32_t)(32768)) : "memory");
-                        asm volatile(
-                            "cp.async.bulk.tensor.3d.shared::cluster.global.mbarrier::complete_tx::bytes.cta_group::2"
-                            " [%0], [%1, {%2, %3, %4}], [%5];"
-                            :: "r"(smem_query_addr), "l"(tmap_query), "r"(0), "r"(global_q), "r"(0),
-                               "r"(((query_full_addr) & 0xFEFFFFFF)) : "memory");
+                        mbarrier_arrive_expect_tx(query_full_addr, 16384);
+                        tma_3d_gmem2smem(smem_query_addr, tmap_query, 0, global_q, 0, query_full_addr);
                         #pragma unroll 1
                         for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
                             int db_tile = db_tile_start + local_db_tile;
@@ -414,14 +378,8 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
                             int global_m = batch_idx * M + off_m;
                             mbarrier_wait(database_empty_addr, _phase_database_empty_0);
                             _phase_database_empty_0 ^= 1;
-                            asm volatile(
-                                "mbarrier.arrive.expect_tx.release.cta.shared::cluster.b64 _, [%0], %1;"
-                                :: "r"((database_full_addr) & 0xFEFFFFFF), "r"((uint32_t)(16384)) : "memory");
-                            asm volatile(
-                                "cp.async.bulk.tensor.3d.shared::cluster.global.mbarrier::complete_tx::bytes.cta_group::2"
-                                " [%0], [%1, {%2, %3, %4}], [%5];"
-                                :: "r"(smem_database_addr), "l"(tmap_database), "r"(0), "r"(global_m), "r"(0),
-                                   "r"(((database_full_addr) & 0xFEFFFFFF)) : "memory");
+                            mbarrier_arrive_expect_tx(database_full_addr, 8192);
+                            tma_3d_gmem2smem(smem_database_addr, tmap_database, 0, global_m, 0, database_full_addr);
                         }
                     }
                 }
@@ -433,79 +391,57 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
             uint32_t _phase_query_full_0 = 0;
             uint32_t _phase_score_empty_0 = 1;
             uint32_t _phase_database_full_0 = 0;
-            if (cta_rank == 0) {
+            #pragma unroll 1
+            for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
+                mbarrier_wait(query_full_addr, _phase_query_full_0);
+                _phase_query_full_0 ^= 1;
                 #pragma unroll 1
-                for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
-                    mbarrier_wait(query_full_addr, _phase_query_full_0);
-                    _phase_query_full_0 ^= 1;
-                    #pragma unroll 1
-                    for (int _local_db_tile = 0; _local_db_tile < db_tiles_per_split; _local_db_tile++) {
-                        mbarrier_wait(score_empty_addr, _phase_score_empty_0);
-                        _phase_score_empty_0 ^= 1;
-                        mbarrier_wait(database_full_addr, _phase_database_full_0);
-                        _phase_database_full_0 ^= 1;
-                        asm volatile("tcgen05.fence::after_thread_sync;");
-                        int _mma_ss_a_lo_0 = (smem_query_addr >> 4) & 0x3FFF;
-                        int _mma_ss_b_lo_0 = (smem_database_addr >> 4) & 0x3FFF;
-                        asm volatile(
+                for (int _local_db_tile = 0; _local_db_tile < db_tiles_per_split; _local_db_tile++) {
+                    mbarrier_wait(score_empty_addr, _phase_score_empty_0);
+                    _phase_score_empty_0 ^= 1;
+                    mbarrier_wait(database_full_addr, _phase_database_full_0);
+                    _phase_database_full_0 ^= 1;
+                    asm volatile("tcgen05.fence::after_thread_sync;");
+                    int _mma_ss_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
+                    int _mma_ss_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                    asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
-                    ".reg .b32 adhi, bdhi, alo, blo, id, m0, m1, m2, m3, m4, m5, m6, m7;\n\t"
+                    ".reg .b32 adhi, bdhi, alo, blo, id;\n\t"
                     ".reg .b64 da, db;\n\t"
                     "elect.sync _|leader, 0xFFFFFFFF;\n\t"
                     "setp.ne.b32 p0, %3, 0;\n\t"
                     "setp.ne.b32 p1, 1, 0;\n\t"
-                    "mov.b32 m0, 0; mov.b32 m1, 0; mov.b32 m2, 0; mov.b32 m3, 0;\n\tmov.b32 m4, 0; mov.b32 m5, 0; mov.b32 m6, 0; mov.b32 m7, 0;\n\t"
+                    ""
                     "mov.b32 adhi, 0x40004040;\n\t"
                     "mov.b32 bdhi, 0x40004040;\n\t"
-                    "mov.b32 id, 270533776;\n\t"
+                    "mov.b32 id, 135267472;\n\t"
                     "mov.b32 alo, %0;\n\t"
                     "mov.b32 blo, %1;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p0;\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p0;\n\t"
                     "add.u32 alo, alo, 2;\n\t"
                     "add.u32 blo, blo, 2;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "add.u32 alo, alo, 2;\n\t"
                     "add.u32 blo, blo, 2;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "add.u32 alo, alo, 2;\n\t"
                     "add.u32 blo, blo, 2;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
-                    "add.u32 alo, alo, 1018;\n\t"
-                    "add.u32 blo, blo, 506;\n\t"
-                    "mov.b64 da, {alo, adhi};\n\t"
-                    "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
-                    "add.u32 alo, alo, 2;\n\t"
-                    "add.u32 blo, blo, 2;\n\t"
-                    "mov.b64 da, {alo, adhi};\n\t"
-                    "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
-                    "add.u32 alo, alo, 2;\n\t"
-                    "add.u32 blo, blo, 2;\n\t"
-                    "mov.b64 da, {alo, adhi};\n\t"
-                    "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
-                    "add.u32 alo, alo, 2;\n\t"
-                    "add.u32 blo, blo, 2;\n\t"
-                    "mov.b64 da, {alo, adhi};\n\t"
-                    "mov.b64 db, {blo, bdhi};\n\t"
-                    "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
                     :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(0));
-                        elect_commit_cg2_multicast(score_full_addr, (uint16_t)(3));
-                        elect_commit_cg2_multicast(database_empty_addr, (uint16_t)(3));
-                    }
-                    elect_commit_cg2_multicast(query_empty_addr, (uint16_t)(3));
+                    elect_commit(score_full_addr);
+                    elect_commit(database_empty_addr);
                 }
+                elect_commit(query_empty_addr);
             }
         }
     // ---- Role: compute ----
@@ -517,12 +453,11 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
         { // compute_main
             uint32_t _phase_score_full_0 = 0;
             #pragma unroll 1
-            for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
+            for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
                 int split_idx = work_idx % split_count;
                 int query_work = work_idx / split_count;
-                int batch_idx = query_work / num_q_tile_pairs;
-                int q_tile_pair = query_work % num_q_tile_pairs;
-                int q_tile = q_tile_pair * 2 + cta_rank;
+                int batch_idx = query_work / num_q_tiles;
+                int q_tile = query_work % num_q_tiles;
                 int off_q = q_tile * BLOCK_Q;
                 int q_idx = off_q + my_row;
                 int valid_q = ((q_idx < Q) ? 1 : 0);
@@ -553,7 +488,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
                     asm volatile("barrier.sync 8, 128;");
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (cta_rank * BLOCK_Q + tmem_row_base_v << 16);
+                    int cross_addr = taddr + tmem_row_base_v;
                     float dots[64];
                     asm volatile(
                         "tcgen05.ld.sync.aligned.32x32b.x64.b32"
@@ -562,12 +497,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
                         : "r"(cross_addr)
                         : "memory");
                     asm volatile("tcgen05.wait::ld.sync.aligned;" ::: "memory");
-                    asm volatile("barrier.sync 8, 128;");
-                    if (elect_sync()) {
-                        asm volatile(
-                            "mbarrier.arrive.release.cta.shared::cluster.b64 _, [%0];"
-                            :: "r"((score_empty_addr) & 0xFEFFFFFF) : "memory");
-                    }
+                    mbarrier_arrive(score_empty_addr);
                     if (valid_q != 0) {
                         #pragma unroll 2
                         for (int col_base = 0; col_base < 64; col_base += 4) {
@@ -606,6 +536,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
                                     int db_idx = db_start + col_base + vec_col;
                                     if (db_idx < M) {
                                         float dist = _t0[vec_col];
+                                        dist = max_noftz(dist, 0.0f);
                                         if (dist < best_d[TOP_K_MAX - 1]) {
                                             best_d[TOP_K_MAX - 1] = dist;
                                             best_i[TOP_K_MAX - 1] = db_idx;
@@ -643,12 +574,11 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(float* __restrict__ qu
     }
 
     // Cleanup
-    asm volatile("barrier.cluster.arrive.release.aligned;");
-    asm volatile("barrier.cluster.wait.acquire.aligned;");
+    __syncthreads(); // barrier before TMEM dealloc
 
     if (warp == 1) {
-        asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
+        asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
