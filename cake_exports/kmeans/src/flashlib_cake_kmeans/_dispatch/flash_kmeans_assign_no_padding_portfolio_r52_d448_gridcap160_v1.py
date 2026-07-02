@@ -35,7 +35,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'hugek_reduce':
         return _r51._streamdep.reduce_ir
     return _r47.partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_no_padding_portfolio_r52_d448_gridcap160_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_no_padding_portfolio_r52_d448_gridcap160_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz = int(inputs['B'])

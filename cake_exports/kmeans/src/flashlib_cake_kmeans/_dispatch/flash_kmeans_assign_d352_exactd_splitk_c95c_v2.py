@@ -17,7 +17,7 @@ FEAT_D = 352
 MAX_POINT_TILES = _abi.MAX_POINT_TILES
 ROUTE_ID = 'd352_exactd_splitk_c95c_v2'
 SEED_ID = 'd352-exactd-splitk-c95c-v2'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d352_exactd_splitk_c95c_v2:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d352_exactd_splitk_c95c_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz, n, d, k = (int(inputs[x]) for x in ('B', 'N', 'D', 'K'))

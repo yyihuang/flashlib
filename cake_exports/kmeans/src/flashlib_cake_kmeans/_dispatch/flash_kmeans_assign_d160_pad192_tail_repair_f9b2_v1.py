@@ -20,9 +20,9 @@ PACK_THREADS = 256
 PACK_GRID_CAP = 4096
 _SCRATCH_CACHE: dict[tuple[int, int, int, int, int, int, int, int], tuple[Any, Any]] = {}
 _ROUTE_INPUT_CACHE: dict[tuple[int, int, int, int, int, int, int, int, int], dict[str, Any]] = {}
-flash_kmeans_assign_d160_pad192_pack_f9b2_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:flash_kmeans_assign_d160_pad192_pack_f9b2_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:ir"}'))
-pack_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:pack_ir"}'))
+flash_kmeans_assign_d160_pad192_pack_f9b2_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:flash_kmeans_assign_d160_pad192_pack_f9b2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+pack_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d160_pad192_tail_repair_f9b2_v1:pack_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs

@@ -24,7 +24,7 @@ NUM_COMPUTE_WARPS = 4
 X_TILE_BYTES = BLOCK_N * CHUNK_D * 2
 C_TILE_BYTES = BLOCK_K * CHUNK_D * 2
 CSQ_TILE_BYTES = BLOCK_K * 4
-flash_kmeans_assign_d288_exactd_a532_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_d288_exactd_a532_v1:flash_kmeans_assign_d288_exactd_a532_v1', 256)
+flash_kmeans_assign_d288_exactd_a532_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_exactd_a532_v1:flash_kmeans_assign_d288_exactd_a532_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs
@@ -47,7 +47,7 @@ def _make_tmaps(inputs: dict[str, Any]) -> tuple[Any, Any]:
 
 def _compiled_kernel() -> tuple[bytes, str, int, int]:
     return _decode_capture(_json_loads('{"__tuple__": [{"__kernel_source__": "dispatch_kernel_0353"}, "kernel_flash_kmeans_assign_d288_exactd_a532_v1", 26624, 192]}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_exactd_a532_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_exactd_a532_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> Any:
     import torch

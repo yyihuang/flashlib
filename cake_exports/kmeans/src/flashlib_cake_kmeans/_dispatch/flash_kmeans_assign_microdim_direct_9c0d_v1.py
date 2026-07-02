@@ -26,8 +26,8 @@ CSQ_TILE_BYTES = BLOCK_K * 4
 ROUTE_ID = 'microdim_direct_staged_9c0d_v1'
 SEED_ID = 'microdim-direct-staged-9c0d-v1'
 BF16_DTYPE_NAMES = {'bfloat16', 'bf16', 'torch.bfloat16'}
-flash_kmeans_assign_microdim_direct_9c0d_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_microdim_direct_9c0d_v1:flash_kmeans_assign_microdim_direct_9c0d_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_microdim_direct_9c0d_v1:ir"}'))
+flash_kmeans_assign_microdim_direct_9c0d_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_microdim_direct_9c0d_v1:flash_kmeans_assign_microdim_direct_9c0d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_microdim_direct_9c0d_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs

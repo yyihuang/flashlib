@@ -34,11 +34,11 @@ REDUCE_THREADS_R1_D448 = BLOCK_N
 U32_MASK = 4294967295
 ROUTE_ID = 'highd_paired_ownerreduce_r39_v1'
 SEED_ID = 'highd-paired-ownerreduce-r39-v1'
-flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1', 256)
-flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce2_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce2_v1', 256)
-reduce1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce1_ir"}'))
-reduce2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce2_ir"}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce_ir"}'))
+flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce2_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+reduce1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+reduce2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce2_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_FLASH_KMEANS_HIGHD_PAIRED_OWNERREDUCE_R39_VERIFY_KERNEL')
@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'd512_reduce':
         return _r2.reduce_ir
     return _r1.partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_ownerreduce_r39_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=1)
 def _loaded_reduce2_kernel() -> tuple[Any, int, int]:

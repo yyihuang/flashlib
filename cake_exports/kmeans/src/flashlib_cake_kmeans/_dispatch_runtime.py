@@ -1,4 +1,6 @@
 from __future__ import annotations
+_KERNEL_ALIAS_BY_IR_NAME = {'flash_kmeans_assign_lowdim_pack_e50c_v1': 'dispatch_kernel_0000', 'flash_kmeans_assign_lowdim_e50c_v1': 'dispatch_kernel_0001', 'flash_kmeans_assign_cleanroom_tcgen05_v10': 'dispatch_kernel_0002', 'flash_kmeans_assign_d160_pad192_pack_f9b2_v1': 'dispatch_kernel_0004', 'flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1': 'dispatch_kernel_0005', 'flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1': 'dispatch_kernel_0008', 'flash_kmeans_assign_highd_splitd_6fcf_v1': 'dispatch_kernel_0009', 'flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1': 'dispatch_kernel_0011', 'flash_kmeans_assign_highd_splitk_reduce_blockn64_g2r4_b5a6_v1': 'dispatch_kernel_0012', 'flash_kmeans_assign_microdim_pack_6cd2_v1': 'dispatch_kernel_0013', 'flash_kmeans_assign_microdim_6cd2_v1': 'dispatch_kernel_0014', 'flash_kmeans_assign_microdim_direct_9c0d_v1': 'dispatch_kernel_0015', 'flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1': 'dispatch_kernel_0025', 'flash_kmeans_assign_cleanroom_tcgen05_v15': 'dispatch_kernel_0044', 'flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1': 'dispatch_kernel_0055', 'flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1': 'dispatch_kernel_0056', 'flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1': 'dispatch_kernel_0097', 'flash_kmeans_assign_cleanroom_tcgen05_d256_single_v1': 'dispatch_kernel_0105', 'flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1': 'dispatch_kernel_0114', 'flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1': 'dispatch_kernel_0115', 'flash_kmeans_assign_highd_paired_packedpartial_producer_7b3c_v1': 'dispatch_kernel_0117', 'flash_kmeans_assign_highd_paired_packedpartial_reduce_r2_7b3c_v1': 'dispatch_kernel_0118', 'flash_kmeans_assign_gap_pad_pack_v1': 'dispatch_kernel_0128', 'flash_kmeans_assign_d288_exactd_a532_v1': 'dispatch_kernel_0241', 'flash_kmeans_assign_d288_splitk_cta_0438_v1_partial': 'dispatch_kernel_0242', 'flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce': 'dispatch_kernel_0243', 'flash_kmeans_assign_d480_splitk_partial_d32k256_v1': 'dispatch_kernel_0263', 'flash_kmeans_assign_d480_splitk_reduce_d32k256_v1': 'dispatch_kernel_0264', 'flash_kmeans_assign_highd_splitk_partial_8de8_v1': 'dispatch_kernel_0282', 'flash_kmeans_assign_highd_splitk_reduce_8de8_v1': 'dispatch_kernel_0283', 'flash_kmeans_assign_d416_exactd_splitd_a4a579d1_v2': 'dispatch_kernel_0350'}
+_KERNEL_ALIAS_BY_REQUEST = {'{"ir_name":"flash_kmeans_assign_lowdim_pack_e50c_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0000', '{"ir_name":"flash_kmeans_assign_lowdim_e50c_v1","kwargs":{"smem_bytes":100352,"validate":false}}': 'dispatch_kernel_0001', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_v10","kwargs":{"smem_bytes":100352,"validate":false}}': 'dispatch_kernel_0002', '{"ir_name":"flash_kmeans_assign_d160_pad192_pack_f9b2_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0004', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1","kwargs":{"smem_bytes":149504,"validate":false}}': 'dispatch_kernel_0005', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1","kwargs":{"smem_bytes":198656,"validate":false}}': 'dispatch_kernel_0008', '{"ir_name":"flash_kmeans_assign_highd_splitd_6fcf_v1","kwargs":{"smem_bytes":51200,"validate":false}}': 'dispatch_kernel_0009', '{"ir_name":"flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1","kwargs":{"smem_bytes":43008,"validate":false}}': 'dispatch_kernel_0011', '{"ir_name":"flash_kmeans_assign_highd_splitk_reduce_blockn64_g2r4_b5a6_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0012', '{"ir_name":"flash_kmeans_assign_microdim_pack_6cd2_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0013', '{"ir_name":"flash_kmeans_assign_microdim_6cd2_v1","kwargs":{"smem_bytes":51200,"validate":false}}': 'dispatch_kernel_0014', '{"ir_name":"flash_kmeans_assign_microdim_direct_9c0d_v1","kwargs":{"smem_bytes":51200,"validate":false}}': 'dispatch_kernel_0015', '{"ir_name":"flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1","kwargs":{"smem_bytes":51200,"validate":false}}': 'dispatch_kernel_0025', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_v15","kwargs":{"smem_bytes":133120,"validate":false}}': 'dispatch_kernel_0044', '{"ir_name":"flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1","kwargs":{"smem_bytes":43008,"validate":false}}': 'dispatch_kernel_0055', '{"ir_name":"flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0056', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0097', '{"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d256_single_v1","kwargs":{"smem_bytes":198656,"validate":false}}': 'dispatch_kernel_0105', '{"ir_name":"flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1","kwargs":{"smem_bytes":75776,"validate":false}}': 'dispatch_kernel_0114', '{"ir_name":"flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0115', '{"ir_name":"flash_kmeans_assign_highd_paired_packedpartial_producer_7b3c_v1","kwargs":{"smem_bytes":43008,"validate":false}}': 'dispatch_kernel_0117', '{"ir_name":"flash_kmeans_assign_highd_paired_packedpartial_reduce_r2_7b3c_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0118', '{"ir_name":"flash_kmeans_assign_gap_pad_pack_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0128', '{"ir_name":"flash_kmeans_assign_d288_exactd_a532_v1","kwargs":{"smem_bytes":26624,"validate":false}}': 'dispatch_kernel_0241', '{"ir_name":"flash_kmeans_assign_d288_splitk_cta_0438_v1_partial","kwargs":{"smem_bytes":26624,"validate":false}}': 'dispatch_kernel_0242', '{"ir_name":"flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0243', '{"ir_name":"flash_kmeans_assign_d480_splitk_partial_d32k256_v1","kwargs":{"smem_bytes":22528,"validate":false}}': 'dispatch_kernel_0263', '{"ir_name":"flash_kmeans_assign_d480_splitk_reduce_d32k256_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0264', '{"ir_name":"flash_kmeans_assign_highd_splitk_partial_8de8_v1","kwargs":{"smem_bytes":51200,"validate":false}}': 'dispatch_kernel_0282', '{"ir_name":"flash_kmeans_assign_highd_splitk_reduce_8de8_v1","kwargs":{"smem_bytes":0,"validate":false}}': 'dispatch_kernel_0283', '{"ir_name":"flash_kmeans_assign_d416_exactd_splitd_a4a579d1_v2","kwargs":{"smem_bytes":26624,"validate":false}}': 'dispatch_kernel_0350'}
 
 import json
 import ctypes
@@ -14,14 +16,25 @@ def _import_dispatch_module(short_name):
 
 
 def _decode_capture(value):
-    if isinstance(value, dict) and set(value) == {"__ir__"}:
-        return _ir_proxy(value["__ir__"])
+    if isinstance(value, dict) and "__ir__" in value:
+        return _ir_proxy(
+            value["__ir__"],
+            value.get("threads", 256),
+            value.get("computed_smem_bytes", 0),
+            value.get("cluster_dims", (1, 1, 1)),
+            value.get("cta_group", 1),
+        )
     if isinstance(value, dict) and set(value) == {"__kernel__"}:
         return DispatchKernel(value["__kernel__"])
     if isinstance(value, dict) and set(value) == {"__kernel_source__"}:
         return value["__kernel_source__"]
     if isinstance(value, dict) and set(value) == {"__tuple__"}:
         return tuple(_decode_capture(item) for item in value["__tuple__"])
+    if isinstance(value, dict) and set(value) == {"__dict_items__"}:
+        return {
+            _decode_capture(key): _decode_capture(item)
+            for key, item in value["__dict_items__"]
+        }
     if isinstance(value, dict):
         return {key: _decode_capture(item) for key, item in value.items()}
     if isinstance(value, list):
@@ -30,15 +43,15 @@ def _decode_capture(value):
 
 
 class _IRProxy:
-    def __init__(self, name, threads=256):
+    def __init__(self, name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
         self.name = name.rpartition(":")[2]
         self.threads = int(threads)
-        self.computed_smem_bytes = 0
-        self.grid = SimpleNamespace(cluster_dims=(1, 1, 1), cta_group=1)
+        self.computed_smem_bytes = int(computed_smem_bytes)
+        self.grid = SimpleNamespace(cluster_dims=tuple(cluster_dims), cta_group=int(cta_group))
 
 
-def _ir_proxy(name, threads=256):
-    return _IRProxy(name, threads)
+def _ir_proxy(name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
+    return _IRProxy(name, threads, computed_smem_bytes, cluster_dims, cta_group)
 
 
 class DispatchKernel:
@@ -148,7 +161,16 @@ def create_tensor_map_3d_64b(data_ptr, global_height, shared_height, width, bloc
 
 
 def generate_kernel(ir, **kwargs):
-    raise RuntimeError(f"uncaptured dispatcher specialization for {ir.name}")
+    request_key = json.dumps(
+        {"ir_name": ir.name, "kwargs": kwargs},
+        sort_keys=True, separators=(",", ":"), default=repr,
+    )
+    alias = _KERNEL_ALIAS_BY_REQUEST.get(request_key)
+    if alias is None:
+        alias = _KERNEL_ALIAS_BY_IR_NAME.get(ir.name)
+    if alias is None:
+        raise RuntimeError(f"uncaptured dispatcher specialization for {ir.name}")
+    return alias
 
 
 def generate_kernel_bundle(*args, **kwargs):

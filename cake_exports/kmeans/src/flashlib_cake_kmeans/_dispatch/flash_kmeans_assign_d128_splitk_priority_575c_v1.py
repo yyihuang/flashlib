@@ -19,7 +19,7 @@ _g1r4.SUPPORTED_DIMS.add(TARGET_D)
 def _use_d128_priority_splitk(*, dim: int, num_n_tiles: int, k_tiles: int) -> bool:
     return dim == TARGET_D and num_n_tiles <= _g1r4.MAX_POINT_TILES and (k_tiles >= MIN_K_TILES)
 _g1r4._use_blockn64_splitk = _use_d128_priority_splitk
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d128_splitk_priority_575c_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d128_splitk_priority_575c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     """Launch only the exact D128, no-padding priority Split-K schedule."""

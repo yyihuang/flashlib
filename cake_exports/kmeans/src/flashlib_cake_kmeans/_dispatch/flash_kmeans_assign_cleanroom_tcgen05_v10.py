@@ -19,7 +19,7 @@ NUM_COMPUTE_WARPS = 4
 X_TILE_BYTES = BLOCK_N * FEAT_D * 2
 C_TILE_BYTES = BLOCK_K * FEAT_D * 2
 CSQ_TILE_BYTES = BLOCK_K * 4
-flash_kmeans_assign_cleanroom_tcgen05_v10 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_v10:flash_kmeans_assign_cleanroom_tcgen05_v10', 256)
+flash_kmeans_assign_cleanroom_tcgen05_v10 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_v10:flash_kmeans_assign_cleanroom_tcgen05_v10", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 100352, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs

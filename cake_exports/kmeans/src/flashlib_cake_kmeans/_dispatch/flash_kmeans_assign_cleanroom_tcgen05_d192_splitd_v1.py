@@ -25,7 +25,7 @@ X1_OFFSET = X_TILE_BYTES
 C_OFFSET = 2 * X_TILE_BYTES
 CSQ_OFFSET = 2 * X_TILE_BYTES + C_TILE_BYTES
 PAIRED_GRID_CAP = 2516
-flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1:flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1', 256)
+flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1:flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 198656, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs
@@ -48,7 +48,7 @@ def _make_tmaps(inputs: dict[str, Any]) -> tuple[Any, Any]:
 
 def _compiled_kernel() -> tuple[bytes, str, int, int]:
     return _decode_capture(_json_loads('{"__tuple__": [{"__kernel_source__": "dispatch_kernel_0346"}, "kernel_flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1", 198656, 192]}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 198656, "cta_group": 1, "threads": 192}'))
 
 def _use_single_tile_path(*, n_points: int, n_clusters: int) -> bool:
     num_n_tiles = n_points // BLOCK_N

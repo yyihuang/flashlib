@@ -19,8 +19,8 @@ FEAT_D_PAD_VECS = FEAT_D_PAD // 8
 PACK_THREADS = 256
 PACK_GRID_CAP = 4096
 _TMAP_CACHE: dict[tuple[int, int, int, int, int, int], Any] = {}
-flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d160_padded_b23d_v1:flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1', 256)
-pack_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d160_padded_b23d_v1:pack_ir"}'))
+flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d160_padded_b23d_v1:flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+pack_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d160_padded_b23d_v1:pack_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _cuda_include_dirs() -> list[str]:
     return _d192._cuda_include_dirs()

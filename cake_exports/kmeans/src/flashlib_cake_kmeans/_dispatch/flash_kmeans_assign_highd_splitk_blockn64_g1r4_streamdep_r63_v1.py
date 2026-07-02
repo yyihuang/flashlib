@@ -37,16 +37,16 @@ REDUCE_THREADS = BLOCK_N * REDUCE_LANES_PER_ROW
 ROUTE_ID = 'highd_splitk_blockn64_g1r4_streamdep_r63_v1'
 SEED_ID = 'highd-splitk-blockn64-g1r4-streamdep-r63-v1'
 VERIFY_ENV = 'LOOM_FLASH_KMEANS_HIGHD_SPLITK_BLOCKN64_G1R4_STREAMDEP_R63_VERIFY_KERNEL'
-flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1', 256)
-flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1 = _ir_proxy('loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:partial_ir"}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:reduce_ir"}'))
+flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     if os.environ.get(VERIFY_ENV) == 'reduce':
         return reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 def _compiled_partial_kernel() -> tuple[bytes, str, int, int]:
     return _decode_capture(_json_loads('{"__tuple__": [{"__kernel_source__": "dispatch_kernel_0333"}, "kernel_flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1", 43008, 192]}'))
