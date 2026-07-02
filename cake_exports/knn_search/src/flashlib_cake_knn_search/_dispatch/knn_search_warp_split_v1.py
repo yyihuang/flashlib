@@ -23,10 +23,10 @@ DIRECT_IDX_BYTES = NUM_WARPS * K_MAX * 4
 DIRECT_SMEM_BYTES = DIRECT_DIST_BYTES + DIRECT_IDX_BYTES
 _KNN_SEARCH_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_SCRATCH: dict[tuple[int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_warp_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
-knn_search_warp_split_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-knn_search_warp_split_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_search_warp_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "constants": [["D_", 128], ["K_MAX_", 10], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+knn_search_warp_split_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 128], ["K_MAX_", 10], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+knn_search_warp_split_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "constants": [["K_MAX_", 10], ["NUM_WARPS_", 8], ["PARTIAL_ELEMS_PER_TILE_", 80]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 128], ["K_MAX_", 10], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0201"}, "merge": {"__kernel__": "dispatch_kernel_0200"}, "partial": {"__kernel__": "dispatch_kernel_0199"}}'))

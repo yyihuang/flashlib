@@ -24,8 +24,8 @@ WARP_IDX_OFFSET = WARP_DIST_OFFSET + NUM_WARPS * 4
 WARP_THREAD_OFFSET = WARP_IDX_OFFSET + NUM_WARPS * 4
 DIRECT_SMEM_BYTES = WARP_THREAD_OFFSET + NUM_WARPS * 4
 _KNN_LOWD_COOP_KERNELS: dict[str, Any] = {}
-knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_LIST_CAP_", 8], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_LIST_CAP_", 8], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 DBSCAN_D2_SHAPES: list[dict[str, Any]] = parent.DBSCAN_D2_SHAPES
 
 def _compile_lowd_coop_kernels() -> dict[str, Any]:

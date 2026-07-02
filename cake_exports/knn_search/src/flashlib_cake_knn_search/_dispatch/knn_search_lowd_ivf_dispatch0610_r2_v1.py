@@ -18,8 +18,8 @@ DIST_BYTES = M_MAX * 4
 IDX_BYTES = M_MAX * 4
 SMEM_POOL_BYTES = DIST_BYTES + IDX_BYTES
 _KERNELS: dict[str, Any] = {}
-knn_search_lowd_ivf_direct_dispatch0610_r2_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "cta_group": 1, "threads": 32}'))
+knn_search_lowd_ivf_direct_dispatch0610_r2_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "constants": [["K_MAX_", 10], ["M_MAX_", 32]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "constants": [["K_MAX_", 10], ["M_MAX_", 32]], "cta_group": 1, "threads": 32}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0263"}}'))

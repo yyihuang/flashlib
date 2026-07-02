@@ -17,7 +17,7 @@ HIGHQ_MIDM_Q_MIN = 256
 HIGHQ_MIDM_Q_MAX = 2048
 HIGHQ_MIDM_M_MIN = 16384
 HIGHQ_MIDM_M_MAX = 65536
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 
 def _use_highq_midm_qbucket_policy(inputs: dict[str, Any]) -> bool:
     q_rows = int(inputs['Q'])

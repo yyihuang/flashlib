@@ -33,10 +33,10 @@ SMEM_POOL_BYTES = base.SMEM_POOL_BYTES
 SMEM_BYTES = base.SMEM_BYTES
 _KERNELS: dict[str, Any] = {}
 _stage_cached_q_and_database_pass = _ir_proxy('loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_qcache_pipe_69ea_v1:_stage_cached_q_and_database_pass', 256)
-knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "cta_group": 1, "threads": 512}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "cta_group": 1, "threads": 512}'))
+knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10], ["MERGE_SLOTS_", 5]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return base._matches(inputs)

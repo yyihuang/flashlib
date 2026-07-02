@@ -32,12 +32,12 @@ TARGET_SHAPES = [TARGET0628_D64_Q512_M65536_K64_SHAPE]
 _TARGET0628_D64_Q512_K64_KERNELS: dict[str, Any] = {}
 _TARGET0628_D64_Q512_K64_PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _TARGET0628_D64_Q512_K64_GROUP_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 57600, "cta_group": 1, "threads": 512}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 57600, "cta_group": 1, "threads": 512}'))
+knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 57600, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 57600, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0492"}, "group_merge": {"__kernel__": "dispatch_kernel_0491"}, "partial": {"__kernel__": "dispatch_kernel_0490"}}'))

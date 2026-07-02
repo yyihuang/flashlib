@@ -26,9 +26,9 @@ TARGET_SHAPES: list[dict[str, Any]] = [{'label': TARGET_LABEL, 'params': {'B': 1
 _parent_role = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d1024_q8_m65536_k10_floor14_b3fc_v1:_parent_role"}'))
 _work_role = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d1024_q8_m65536_k10_floor14_b3fc_v1:_work_role"}'))
 _warps = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d1024_q8_m65536_k10_floor14_b3fc_v1:_warps"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d1024_q8_tcgen05_partial_16warp_b3fc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d1024_q8_tcgen05_partial_16warp_b3fc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d1024_q8_tcgen05_partial_16warp_b3fc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "constants": [["K_MAX_", 10], ["D_ORIG_", 1024], ["NUM_D_PASSES_", 8], ["Q_NORM_PARTS_", 64]], "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d1024_q8_tcgen05_partial_16warp_b3fc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "constants": [["K_MAX_", 10], ["D_ORIG_", 1024], ["NUM_D_PASSES_", 8], ["Q_NORM_PARTS_", 64]], "cta_group": 1, "threads": 512}'))
 _KERNELS: dict[str, Any] = {}
 
 def selected_route(inputs: dict[str, Any]) -> str:

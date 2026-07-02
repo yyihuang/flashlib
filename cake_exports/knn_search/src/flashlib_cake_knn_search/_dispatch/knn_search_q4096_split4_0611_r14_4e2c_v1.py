@@ -15,7 +15,7 @@ from . import knn_search_q4096_split8_0611_r13_4e2c_v1 as parent
 Q4096_ROWS = 4096
 Q4096_SPLIT4_M_ROWS = frozenset({16384, 20000, 32768, 65536})
 Q4096_SPLIT_M = 4
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 Q4096_SPLIT4_SHAPES: list[dict[str, Any]] = [{'label': 'dispatch_q4096_m16384_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 16384, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610210, 'self_search': False, 'min_recall': 0.999}}, {'label': 'rag_q4096_m20000_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 3, 'self_search': False, 'min_recall': 0.999}}, {'label': 'dispatch_q4096_m32768_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 32768, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610211, 'self_search': False, 'min_recall': 0.999}}, {'label': 'dispatch_q4096_m65536_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 65536, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610213, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_q4096_split4(inputs: dict[str, Any]) -> bool:

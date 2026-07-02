@@ -35,9 +35,9 @@ _KNN_SEARCH_K64_Q4096_PREFIX5_ROWFLAG_FUSEDCERT_9A85_KERNELS: dict[str, Any] = {
 _KNN_SEARCH_K64_Q4096_PREFIX5_ROWFLAG_FUSEDCERT_9A85_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q4096_PREFIX5_ROWFLAG_FUSEDCERT_9A85_FLAGS: dict[tuple[int, int], Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIX5_ROWFLAG_FUSEDCERT_9A85_STATS: dict[str, int | bool | None] = {'attempts': 0, 'certified_count': 0, 'fallback_count': 0, 'last_overflow': None}
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix6_partial_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix5_rowflag_fusedcert_merge_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix6_partial_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix6_partial_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_PREFIX_", 6]], "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix5_rowflag_fusedcert_merge_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64], ["K_PREFIX_READ_", 5], ["K_STRIDE_", 6]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split79_localprefix6_partial_0615_r5_9a85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_PREFIX_", 6]], "cta_group": 1, "threads": 512}'))
 
 def _scratch_prefix5_rowflag_fusedcert(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

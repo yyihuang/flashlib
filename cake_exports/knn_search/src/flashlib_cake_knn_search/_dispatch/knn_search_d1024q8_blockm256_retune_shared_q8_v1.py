@@ -14,7 +14,7 @@ ENTRYPOINT = 'loom.examples.weave.knn_search_d1024q8_blockm256_retune_shared_q8_
 BLOCK_M = 256
 TARGET_LABELS = ('target0627_d1024_q8_m65536_k10', 'coverage_request_d1024_q8_m65536_k10')
 ROUTE = 'd1024_q8_n256_two_stripe_tmem_retune_shared_q8_v1'
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 178432, "constants": [["K_MAX_", 10], ["D_ORIG_", 1024], ["NUM_D_PASSES_", 8], ["Q_NORM_PARTS_", 64]], "cta_group": 1, "threads": 640}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('force_fallback', False)) and parent.selected_route(inputs) == parent.TARGET_ROUTE

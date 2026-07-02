@@ -15,12 +15,12 @@ from . import knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_0612
 from . import knn_search_lowd_dbscan_coopmerge_0612_r23_6e85_v1 as lowd_dbscan
 from . import knn_search_lowd_ivf_dispatch0610_r2_v1 as lowd_ivf
 from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-lowd_dbscan_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "cta_group": 1, "threads": 256}'))
-lowd_ivf_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "cta_group": 1, "threads": 32}'))
-scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+lowd_dbscan_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_LIST_CAP_", 8], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+lowd_ivf_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "constants": [["K_MAX_", 10], ["M_MAX_", 32]], "cta_group": 1, "threads": 32}'))
+scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 8], ["K_CAP_", 64], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 D256_BLOCK_M_K10 = 2048
 D256_BLOCK_M_K64 = 16384
 _D256_SCALAR_KERNELS: dict[tuple[int, int, int], dict[str, Any]] = {}

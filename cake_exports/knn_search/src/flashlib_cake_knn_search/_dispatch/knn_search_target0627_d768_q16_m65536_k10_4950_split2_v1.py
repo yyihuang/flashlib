@@ -18,9 +18,9 @@ PHYSICAL_SPLIT_M = 148
 ACTIVE_SPLIT_M = 128
 TOTAL_M_TILES = 256
 ROUTE = 'target0628_d768_q16_m65536_k10_4950_directstride_n256_split2_tcgen05'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "constants": [["K_MAX_", 10], ["D_ORIG_", 768], ["NUM_D_PASSES_", 8], ["Q_NORM_PARTS_", 48]], "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "constants": [["K_MAX_", 10], ["D_ORIG_", 768], ["NUM_D_PASSES_", 8], ["Q_NORM_PARTS_", 48]], "cta_group": 1, "threads": 640}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return n256.selected_route(inputs) == n256.TARGET_ROUTE

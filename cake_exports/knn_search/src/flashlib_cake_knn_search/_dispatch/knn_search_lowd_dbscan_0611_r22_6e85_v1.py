@@ -18,8 +18,8 @@ PARTIAL_DIST_BYTES = THREADS * LOCAL_CAP * 4
 PARTIAL_IDX_BYTES = THREADS * LOCAL_CAP * 4
 DIRECT_SMEM_BYTES = PARTIAL_DIST_BYTES + PARTIAL_IDX_BYTES
 _KNN_LOWD_KERNELS: dict[str, Any] = {}
-knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16384, "cta_group": 1, "threads": 128}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16384, "cta_group": 1, "threads": 128}'))
+knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16384, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_CAP_", 16]], "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16384, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_CAP_", 16]], "cta_group": 1, "threads": 128}'))
 DBSCAN_D2_SHAPES: list[dict[str, Any]] = [{'label': 'dbscan_lowd_self_q1500_m1500_d2_k32', 'params': {'B': 1, 'Q': 1500, 'M': 1500, 'D': 2, 'K': 32, 'dtype': 'bfloat16', 'seed': 610405, 'self_search': True, 'min_recall': 0.999}}, {'label': 'dbscan_lowd_self_q1500_m1500_d2_k64', 'params': {'B': 1, 'Q': 1500, 'M': 1500, 'D': 2, 'K': 64, 'dtype': 'bfloat16', 'seed': 610407, 'self_search': True, 'min_recall': 0.999}}]
 
 def _compile_lowd_kernels() -> dict[str, Any]:

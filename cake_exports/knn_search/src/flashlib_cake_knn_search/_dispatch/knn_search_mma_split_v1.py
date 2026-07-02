@@ -74,12 +74,12 @@ _knn_insert_sorted_pair_batch_merge = _ir_proxy('loom.examples.weave.knn_search_
 _knn_merge_two_sorted_lists_to_smem = _ir_proxy('loom.examples.weave.knn_search_mma_split_v1:_knn_merge_two_sorted_lists_to_smem', 256)
 _knn_merge_two_sorted_lists_to_regs = _ir_proxy('loom.examples.weave.knn_search_mma_split_v1:_knn_merge_two_sorted_lists_to_regs', 256)
 _knn_store_topk_pairs = _ir_proxy('loom.examples.weave.knn_search_mma_split_v1:_knn_store_topk_pairs', 256)
-knn_search_mma_split_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
-knn_search_mma_split_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_mma_split_merge_stream_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_stream_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_mma_split_merge_q128_const148_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_search_mma_split_merge_q4096_pairlocal_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q4096_pairlocal_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+knn_search_mma_split_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
+knn_search_mma_split_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10], ["MERGE_SLOTS_", 5]], "cta_group": 1, "threads": 32}'))
+knn_search_mma_split_merge_stream_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_stream_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+knn_search_mma_split_merge_q128_const148_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+knn_search_mma_split_merge_q4096_pairlocal_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q4096_pairlocal_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 
 def _select_split_m(q_rows: int, m_rows: int) -> int:
     if LOWQ_MMA_Q_MIN <= q_rows <= LOWQ_MMA_Q_MAX and m_rows >= 131072:

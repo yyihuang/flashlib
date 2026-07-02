@@ -25,8 +25,8 @@ MERGE_THREADS = parent.MERGE_THREADS
 MMA_POST_MMA_COL_COHORTS = parent.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = parent.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = parent.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_stable_merge_0612_r23_4e96_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["EXPOSE_COL_COHORTS", 1]], "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_stable_merge_0612_r23_4e96_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
 K64_Q4096_SPLIT80_SHAPES: list[dict[str, Any]] = [{'label': 'ksweep_q4096_m20000_d128_k64', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610313, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_q4096_k64_split80(inputs: dict[str, Any]) -> bool:

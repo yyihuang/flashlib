@@ -16,7 +16,7 @@ from . import knn_search_k12_mma_capacity_0611_r14_4e96_v1 as k12
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 K20_MAX = 20
 K30_MAX = 30
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 20], ["EXPOSE_COL_COHORTS", 1]], "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_BUCKET_KERNELS: dict[int, dict[str, Any]] = {}
 _KNN_SEARCH_BUCKET_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 

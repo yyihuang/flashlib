@@ -20,13 +20,13 @@ MERGE_SMEM_BYTES = parent.native.MERGE_SMEM_BYTES
 ROUTE = '8048_target0629_d4096_q4_m8192_k64_native_n64_g8_grid132_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_8048_n64_g8_grid132_v1:launch_for_eval'
 TARGET_SHAPES = parent.TARGET_SHAPES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "constants": [["D_ORIG_", 4096], ["NUM_D_PASSES_", 16], ["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "constants": [["D_ORIG_", 4096], ["NUM_D_PASSES_", 16], ["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] | None = None
 _SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
 _GROUP_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
 
 def _active(inputs: dict[str, Any]) -> bool:
     return parent._active(inputs)

@@ -28,10 +28,10 @@ MERGE_IDX_BYTES = THREADS * K_CAP_MAX * 4
 MERGE_SMEM_BYTES = MERGE_DIST_BYTES + MERGE_IDX_BYTES
 _SCALAR_CAPACITY_KERNELS: dict[tuple[int, int], dict[str, Any]] = {}
 _SCALAR_CAPACITY_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_scalar_capacity_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 256}'))
-knn_search_scalar_capacity_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-knn_search_scalar_capacity_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 131072, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_search_scalar_capacity_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "constants": [["D_", 8], ["K_CAP_", 64], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+knn_search_scalar_capacity_partial_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 8], ["K_CAP_", 64], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+knn_search_scalar_capacity_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 131072, "constants": [["K_CAP_", 64], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_scalar_capacity_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 8], ["K_CAP_", 64], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _k_bucket(k: int) -> int:
     if k <= 10:

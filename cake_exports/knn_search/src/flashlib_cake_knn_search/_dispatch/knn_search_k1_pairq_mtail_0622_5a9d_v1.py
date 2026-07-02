@@ -28,10 +28,10 @@ CONSUMED_K1_PAIRQ_SEED = '598a_k1_top1_pairq'
 TARGET_LABELS: tuple[str, ...] = ('exp_k1_guard_boundary_q4096_m19999_d128_k1', 'exp_k1_guard_boundary_q4096_m20001_d128_k1')
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': 'exp_k1_guard_boundary_q4096_m19999_d128_k1', 'params': {'B': 1, 'Q': Q4096_ROWS, 'M': 19999, 'D': D_STATIC, 'K': 1, 'dtype': 'bfloat16', 'self_search': False}}, {'label': 'exp_k1_guard_boundary_q4096_m20001_d128_k1', 'params': {'B': 1, 'Q': Q4096_ROWS, 'M': 20001, 'D': D_STATIC, 'K': 1, 'dtype': 'bfloat16', 'self_search': False}}]
 K1_PAIRQ_MTAIL_SHAPES = TARGET_SHAPES
-partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_pairq_partial_0622_598a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149760, "cta_group": 1, "threads": 640}'))
-merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_merge16_d212_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_pairq_partial_0622_598a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149760, "cta_group": 1, "threads": 640}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_pairq_partial_0622_598a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149760, "constants": [], "cta_group": 1, "threads": 640}'))
+merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_merge16_d212_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k1_top1_pairq_partial_0622_598a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149760, "constants": [], "cta_group": 1, "threads": 640}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'round131_5a9d_k1_pairq_q4096_m19999_m20001', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 4096 and M in {19999,20001} and D == 128 and K == 1 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_K1_PAIRQ_MTAIL_5A9D, 'entrypoint': 'loom.examples.weave.knn_search_k1_pairq_mtail_0622_5a9d_v1:launch_for_eval', 'selected_seed': CONSUMED_K1_PAIRQ_SEED, 'source_task': 'weave-evolve-knn-search-5a9d', 'coverage_class': 'performance_route_k1_pairq_mtail_boundary_5a9d', 'route_source': 'shape-specific-seed'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _tcgen05_capable_arch() -> bool:

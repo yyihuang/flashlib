@@ -32,8 +32,8 @@ TARGET_SHAPES: list[dict[str, Any]] = [{'label': 'expanded_d1_tail_q128_m65535_k
 ROUTE_D1_TAIL_WARPMERGE = 'round151_025e_expanded_d1_tail_warpmerge'
 CONSUMED_D1_TAIL_SEED = 'weave-evolve-knn-search-eacf'
 _KERNELS: dict[str, Any] = {}
-knn_search_expanded_d1_tail_warpmerge_0624_025e_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_expanded_d1_tail_warpmerge_0624_025e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_expanded_d1_tail_warpmerge_0624_025e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "cta_group": 1, "threads": 256}'))
+knn_search_expanded_d1_tail_warpmerge_0624_025e_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_expanded_d1_tail_warpmerge_0624_025e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "constants": [["K_MAX_", 10], ["LOCAL_LIST_CAP_", 10], ["ROWS_PER_THREAD_", 257], ["NUM_GROUPS_", 8], ["GROUP_SIZE_", 32]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_expanded_d1_tail_warpmerge_0624_025e_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 21120, "constants": [["K_MAX_", 10], ["LOCAL_LIST_CAP_", 10], ["ROWS_PER_THREAD_", 257], ["NUM_GROUPS_", 8], ["GROUP_SIZE_", 32]], "cta_group": 1, "threads": 256}'))
 
 def __getattr__(name: str) -> Any:
     return getattr(parent, name)

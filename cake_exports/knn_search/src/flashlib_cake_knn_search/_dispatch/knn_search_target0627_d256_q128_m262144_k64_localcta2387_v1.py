@@ -27,12 +27,12 @@ TARGET_LABELS = ('target0627_d256_q128_m262144_k64',)
 TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d256_q128_m262144_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 262144], ["D", 256], ["K", 64], ["dtype", "bfloat16"], ["seed", 612106], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE = 'target0627_d256_q128_m262144_k64_localcta2387_tcgen05_rows8'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:launch_for_eval'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "constants": [["K_MAX_", 64], ["EXPOSE_COL_COHORTS", 1]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "constants": [["K_MAX_", 64], ["EXPOSE_COL_COHORTS", 1]], "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] = {}
 _SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
-knn_search_d256_localcta_rows8_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_localcta_rows8_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_localcta_rows8_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_search_d256_localcta_rows8_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_localcta_rows8_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_localcta_rows8_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _use_target(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('force_fallback', False)) and base._tcgen05_capable_arch() and (base._shape_key(inputs) == (1, 128, 262144, 256, 64, False))

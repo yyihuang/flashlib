@@ -44,9 +44,9 @@ MERGE_THREADS = mma.MERGE_THREADS
 MERGE_SMEM_BYTES = mma.MERGE_SMEM_BYTES
 NON_D128_SPLIT_M = mma.Q128_SPLIT_M
 SUPPORTED_D = {64, 96, 192, 320}
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
 _NON_D128_MMA_KERNELS: dict[int, dict[str, Any]] = {}
 _NON_D128_MMA_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 BLIND_LOWD_NON_D128_SHAPES: list[dict[str, Any]] = [{'label': 'blind_d64_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 64, 'K': 10, 'dtype': 'bfloat16', 'seed': 610508, 'self_search': False, 'min_recall': 0.999}}, {'label': 'blind_d96_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 96, 'K': 10, 'dtype': 'bfloat16', 'seed': 610520, 'self_search': False, 'min_recall': 0.999}}, {'label': 'blind_d192_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 192, 'K': 10, 'dtype': 'bfloat16', 'seed': 610521, 'self_search': False, 'min_recall': 0.999}}, {'label': 'blind_d320_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 320, 'K': 10, 'dtype': 'bfloat16', 'seed': 610509, 'self_search': False, 'min_recall': 0.999}}]
@@ -55,9 +55,9 @@ _knn_stage_q_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_low
 _knn_stage_database_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_lowd_non_d128_tcgen05_dispatch0610_r99_ec7c_v1:_knn_stage_database_pass_padded_d', 256)
 _knn_accumulate_db_norm_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_lowd_non_d128_tcgen05_dispatch0610_r99_ec7c_v1:_knn_accumulate_db_norm_pass_padded_d', 256)
 _knn_capture_padded_d_distance_tile = _ir_proxy('loom.examples.weave.knn_search_blind_lowd_non_d128_tcgen05_dispatch0610_r99_ec7c_v1:_knn_capture_padded_d_distance_tile', 256)
-knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
+knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_lowd_non_d128_tcgen05_partial_0615_r99_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
 
 def _num_d_passes(dim: int) -> int:
     return math.ceil(dim / D_STAGE)

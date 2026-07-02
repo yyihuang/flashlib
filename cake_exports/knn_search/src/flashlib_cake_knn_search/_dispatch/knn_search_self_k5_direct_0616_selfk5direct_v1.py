@@ -25,8 +25,8 @@ SELF_K5_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "fl
 SELF_K5_DIRECT_ROWS: frozenset[int] = frozenset({256, 512})
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'dispatch0616_self_k5_q256_q512_direct', 'guard': 'B == 1 and self_search and Q == M in {256,512} and D == 128 and K == 5', 'route': ROUTE_SELF_K5_DIRECT, 'entrypoint': 'loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:launch_for_eval'}, *parent.SHAPE_DISPATCH_REGISTRY)
 _KERNELS: dict[str, Any] = {}
-knn_search_self_k5_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_self_k5_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_self_k5_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "cta_group": 1, "threads": 256}'))
+knn_search_self_k5_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_self_k5_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "constants": [["D_", 128], ["K_MAX_", 5], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_self_k5_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "constants": [["D_", 128], ["K_MAX_", 5], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0296"}}'))

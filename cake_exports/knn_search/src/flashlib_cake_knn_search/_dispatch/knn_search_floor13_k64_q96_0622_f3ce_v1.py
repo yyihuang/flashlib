@@ -29,10 +29,10 @@ Q96_TOTAL_M_TILES = Q96_M131072_ROWS // BLOCK_M
 Q96_TILES_PER_SPLIT = Q96_TOTAL_M_TILES // Q96_SPLIT_M
 ROUTE_Q96_K64 = 'round131_f3ce_q96_m131072_k64_twotile_hiermerge32'
 ROUTE_PARENT = dispatcher_parent.selected_route_name
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_twotile_partial_0614_50cc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_twotile_partial_0614_50cc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_twotile_partial_0614_50cc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_twotile_partial_0614_50cc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
 TARGET_LABELS: tuple[str, ...] = ('blind_0622_k64_q96_m131072_d128',)
 TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_0622_k64_q96_m131072_d128"], ["params", {"__dict_items__": [["B", 1], ["Q", 96], ["M", 131072], ["D", 128], ["K", 64], ["dtype", "bfloat16"], ["seed", 611001], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _Q96_K64_ENTRY: dict[str, str] = {'shape_key': 'round131_f3ce_b1_q96_m131072_d128_k64', 'guard': 'B == 1 and Q == 96 and M == 131072 and D == 128 and K == 64 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q96_K64, 'entrypoint': 'loom.examples.weave.knn_search_floor13_k64_q96_0622_f3ce_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-f3ce-floor13-k64-q96', 'selected_seed': 'floor13_k64_q96_twotile_0622_f3ce_v1'}

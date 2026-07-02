@@ -28,7 +28,7 @@ QTAIL_GUARD_ID = 'q4095_m20001_d128_k10_direct_qtail'
 _K11 = (1, 4096, 20000, 128, 11)
 _MTAIL = (1, 4096, 19999, 128, 10)
 _QTAIL = (1, 4095, 20001, 128, 10)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 SHAPE_DISPATCH_REGISTRY = ({'shape_key': K11_GUARD_ID, 'route': 'k64_prefix_to_k11', 'entrypoint': K64_ENTRYPOINT}, {'shape_key': MTAIL_GUARD_ID, 'route': 'split4_k10_mtail', 'entrypoint': MTAIL_ENTRYPOINT}, {'shape_key': QTAIL_GUARD_ID, 'route': 'mma_k10_direct_qtail', 'entrypoint': MMA_ENTRYPOINT}, *base.SHAPE_DISPATCH_REGISTRY)
 
 def _key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int]:

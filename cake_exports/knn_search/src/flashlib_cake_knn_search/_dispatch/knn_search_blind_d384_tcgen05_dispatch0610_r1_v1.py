@@ -44,9 +44,9 @@ MERGE_THREADS = mma.MERGE_THREADS
 MERGE_SMEM_BYTES = mma.MERGE_SMEM_BYTES
 NON_D128_SPLIT_M = mma.Q128_SPLIT_M
 SUPPORTED_D = {384}
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_merge_q128_const148_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
 _D384_MMA_KERNELS: dict[int, dict[str, Any]] = {}
 _D384_MMA_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 BLIND_D384_SHAPES: list[dict[str, Any]] = [{'label': 'blind_d384_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 384, 'K': 10, 'dtype': 'bfloat16', 'seed': 610611, 'self_search': False, 'min_recall': 0.999}}]
@@ -55,9 +55,9 @@ _knn_stage_q_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_d38
 _knn_stage_database_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_d384_tcgen05_dispatch0610_r1_v1:_knn_stage_database_pass_padded_d', 256)
 _knn_accumulate_db_norm_pass_padded_d = _ir_proxy('loom.examples.weave.knn_search_blind_d384_tcgen05_dispatch0610_r1_v1:_knn_accumulate_db_norm_pass_padded_d', 256)
 _knn_capture_padded_d_distance_tile = _ir_proxy('loom.examples.weave.knn_search_blind_d384_tcgen05_dispatch0610_r1_v1:_knn_capture_padded_d_distance_tile', 256)
-knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
+knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "constants": [["K_MAX_", 10], ["D_TOTAL_", 64], ["NUM_D_PASSES_", 1], ["Q_NORM_PARTS_", 4]], "cta_group": 1, "threads": 640}'))
 
 def _num_d_passes(dim: int) -> int:
     return math.ceil(dim / D_STAGE)

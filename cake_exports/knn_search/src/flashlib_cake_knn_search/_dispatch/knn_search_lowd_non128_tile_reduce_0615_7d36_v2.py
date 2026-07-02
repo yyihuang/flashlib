@@ -46,14 +46,14 @@ D320_SUBWARP_WIDTH = 8
 D320_SUBWARPS_PER_WARP = 4
 D320_NUM_ROW_WORKERS = NUM_WARPS * D320_SUBWARPS_PER_WARP
 D320_ROWS_PER_WORKER = _decode_capture(_json_loads('10'))
-knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [["D_", 64], ["BLOCK_M_", 1280], ["SUBWARP_WIDTH_", 2], ["SUBWARPS_PER_WARP_", 16], ["NUM_ROW_WORKERS_", 128], ["ROWS_PER_WORKER_", 10], ["VECS_PER_LANE_", 4], ["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [], "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [], "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [], "cta_group": 1, "threads": 256}'))
+knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [["D_", 64], ["BLOCK_M_", 1280], ["SUBWARP_WIDTH_", 2], ["SUBWARPS_PER_WARP_", 16], ["NUM_ROW_WORKERS_", 128], ["ROWS_PER_WORKER_", 10], ["VECS_PER_LANE_", 4], ["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [["D_", 64], ["BLOCK_M_", 1280], ["SUBWARP_WIDTH_", 2], ["SUBWARPS_PER_WARP_", 16], ["NUM_ROW_WORKERS_", 128], ["ROWS_PER_WORKER_", 10], ["VECS_PER_LANE_", 4], ["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
 
 def _config_for_d(d: int) -> dict[str, int]:
     if d == 64:

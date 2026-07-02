@@ -30,10 +30,10 @@ SMEM_BYTES = p.SMEM_BYTES
 _KERNELS: dict[str, Any] = {}
 _accumulate_q0_norm = _ir_proxy('loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_root_q1stage_v1:_accumulate_q0_norm', 256)
 _stage_q0_pass = _ir_proxy('loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_root_q1stage_v1:_stage_q0_pass', 256)
-knn_search_d4096_q1_m65536_k10_partial_q1stage_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q4q8_m8192m16384_k10_merge_0623_5ff7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
+knn_search_d4096_q1_m65536_k10_partial_q1stage_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q4q8_m8192m16384_k10_merge_0623_5ff7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 512}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == 1 and (int(inputs['M']) == 65536) and (int(inputs['D']) == D_ORIG) and (int(inputs['K']) == K_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and p._tcgen05_capable_arch()

@@ -13,7 +13,7 @@ import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 K12_MAX = 12
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 12], ["EXPOSE_COL_COHORTS", 1]], "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K12_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K12_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 

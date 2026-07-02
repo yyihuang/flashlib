@@ -29,8 +29,8 @@ ROUTE_SCALAR_CAPACITY = 'scalar_capacity_parent'
 CONSUMED_PARENT_SEED = 'weave-evolve-knn-search-c8b9-d3-tile-reduce'
 PRODUCED_SEED = 'weave-evolve-knn-search-199f-self-d3-single-tile'
 _KERNEL: Any | None = None
-knn_search_dynamic_self_d3_single_tile_0625_199f_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_self_d3_single_tile_0625_199f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_self_d3_single_tile_0625_199f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_dynamic_self_d3_single_tile_0625_199f_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_self_d3_single_tile_0625_199f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [["K_MAX_", 10], ["ROWS_PER_WORKER_", 16]], "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_search_dynamic_self_d3_single_tile_0625_199f_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "constants": [["K_MAX_", 10], ["ROWS_PER_WORKER_", 16]], "cta_group": 1, "threads": 256}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'round157_199f_self_d3_q2048_m2048_k10', 'label': 'blind_dyn_self_q2048_m2048_d3_k10', 'guard': 'B == 1 and Q == 2048 and M == 2048 and D == 3 and K == 10 and self_search and not forced_fallback', 'route': ROUTE_SELF_D3_SINGLE_TILE, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_self_d3_single_tile_0625_199f_v1:launch_for_eval', 'selected_seed': PRODUCED_SEED, 'source_seed': CONSUMED_PARENT_SEED, 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_157_199f_self_d3_single_tile.md', 'coverage_class': 'bucket_seed_dynamic_d_self_q2048_m2048_d3_k10', 'route_source': 'shape-specific-seed', 'coverage_only': False},)
 
 def _shape_key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int, bool]:
