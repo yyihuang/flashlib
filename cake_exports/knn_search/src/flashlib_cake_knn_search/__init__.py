@@ -129,3 +129,7 @@ __all__ = [
     'launch_knn_search_lowd_d256_k64_merge_ir',
     'launch_knn_search_lowd_dbscan_ir',
 ]
+
+# Semantic exports generated from export_plan.package_exports.
+from .semantic import knn_search as knn_search
+__all__ = [*globals().get('__all__', []), 'knn_search']

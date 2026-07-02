@@ -8,10 +8,13 @@
       "workload": "knn_search"
     },
     "name": "knn_search-production-suite",
-    "sha256": "d975c5aa52503d765f2b53c2baf73b8f3b205131081e1a7de12faa438b7b5ca1"
+    "package_exports": {
+      "knn_search": ".semantic:knn_search"
+    },
+    "sha256": "f07839ca13eff33420324e913051057387e2ef2dbcd827804ed2f632aec36904"
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-01T08:43:12.424573+00:00",
+  "generated_at_utc": "2026-07-02T05:32:51.598064+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -1951,6 +1954,6 @@
     }
   ],
   "package": "flashlib_cake_knn_search",
-  "source_commit": "87e6e287e2a068593c719a15255fbeecdc3513f2",
+  "source_commit": "d78c3d18b69b9c48962ba2acc7e84d2e5deb4b37",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
 }
