@@ -20,8 +20,8 @@ MODULE = 'loom.examples.weave.knn_build_common_d_generic_fallback_v1'
 ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 ROUTE_ID = 'knn_build_common_d_generic_fallback_v1:direct_scalar_topk'
 SEED_ID = 'coverage_only_common_d_generic_fallback_v1'
-knn_build_common_d_generic_direct_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_generic_fallback_v1:knn_build_common_d_generic_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "cta_group": 1, "threads": 256}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_generic_fallback_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "cta_group": 1, "threads": 256}'))
+knn_build_common_d_generic_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_generic_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_generic_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernel():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0184"}'))

@@ -23,7 +23,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_k10_online_s7':
         return v20.parent_lowk.stage1_ir
     return v20.parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_exact_7c8d_v42:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_rag_online_exact(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('build', False)) and str(inputs['query'].dtype) == 'torch.bfloat16' and (str(inputs['database'].dtype) == 'torch.bfloat16') and (int(inputs['B']) == 1) and (int(inputs['Q']) == 1) and (int(inputs['M']) == 100000) and (int(inputs['D']) == v20.FEAT_D) and (int(inputs['K']) == v20.TOP_K_MAX)

@@ -76,7 +76,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_DIMMIDK_BAD5_K24K28_VERIFY_KERNEL'] = 'merge_k28_unordered'
         return midk_9b2c._verify_export_ir()
     return base_f552.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_selected_portfolio_e51c_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_k96_a330(inputs: dict[str, Any]) -> bool:
     return default_7c3a._eligible_over64_k96(inputs)

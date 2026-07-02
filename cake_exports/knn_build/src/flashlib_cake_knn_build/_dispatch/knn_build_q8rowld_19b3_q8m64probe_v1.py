@@ -19,8 +19,8 @@ Q8_K32_SHAPE = parent_v9.Q8_K32_SHAPE
 TARGET_SHAPES = (Q8_K32_SHAPE,)
 K32_SPLIT_COUNT = q32rowld.K32_SPLIT_COUNT
 K32_GROUP_COUNT = q32rowld.K32_GROUP_COUNT
-stage1_q8_k32_rowld_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q8rowld_19b3_q8m64probe_v1:stage1_q8_k32_rowld_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q8rowld_19b3_q8m64probe_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+stage1_q8_k32_rowld_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _eligible_q8_k32_rowld(inputs: dict[str, Any]) -> bool:
     return parent_v9._eligible_q8_k32_m64(inputs)

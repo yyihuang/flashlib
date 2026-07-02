@@ -26,16 +26,16 @@ TARGET_SHAPE = 'build_dtype_fp16_b1_q2048_m2048_d128_k10'
 TARGET_SHAPES = (TARGET_SHAPE,)
 ROUTE_FP16_S8_CACHED_MERGE = 'loom.examples.weave.knn_build_fp16_d128_lowfloor_fd37_v1:fp16_d128_s8_cached_merge'
 ROUTE_PARENT_DF2F = 'loom.examples.weave.knn_build_dim_midk_df2f_v1'
-knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_fp16_d128_lowfloor_fd37_v1:knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-stage1_fp16_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_fp16_d128_lowfloor_fd37_v1:stage1_fp16_split_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_fp16_d128_lowfloor_fd37_v1:merge_k10_s8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+stage1_fp16_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_fp16_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = __import__('os').environ.get('LOOM_KNN_FP16_LOWFD37_VERIFY_KERNEL')
     if verify_kernel == 'stage1':
         return stage1_fp16_split_ir
     return merge_k10_s8_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_fp16_d128_lowfloor_fd37_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_fp16_d128_lowfloor_fd37_k10_s8_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compiled_merge_k10_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0033"}'))

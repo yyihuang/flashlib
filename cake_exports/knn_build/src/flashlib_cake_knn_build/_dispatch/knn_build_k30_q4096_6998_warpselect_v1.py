@@ -26,15 +26,15 @@ ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 BASELINE_6998_ENTRYPOINT = 'loom.examples.weave.knn_build_dispatch_6998_residual_19b3_overlay_v1:launch_from_contract_inputs'
 BASELINE_V20_ENTRYPOINT = 'loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v20:launch_from_contract_inputs'
 PRODUCTION_ROUTE_MODULES = {SEED_ID: ROUTE_ENTRYPOINT, 'baseline_6998': BASELINE_6998_ENTRYPOINT, 'baseline_v20': BASELINE_V20_ENTRYPOINT}
-knn_build_k30_q4096_6998_merge_s4_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k30_q4096_6998_warpselect_v1:knn_build_k30_q4096_6998_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k30_q4096_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k30_q4096_6998_warpselect_v1:merge_k30_q4096_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_k30_q4096_6998_merge_s4_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "knn_build_k30_q4096_6998_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k30_q4096_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k30_q4096_6998_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K30_6998_VERIFY_KERNEL')
     if verify_kernel == 'stage1_k30_unordered':
         return v20.stage1_k30_unordered_ir
     return merge_k30_q4096_warp_select_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k30_q4096_6998_warpselect_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k30_q4096_6998_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_merge_k30_q4096_warp_select():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0060"}'))

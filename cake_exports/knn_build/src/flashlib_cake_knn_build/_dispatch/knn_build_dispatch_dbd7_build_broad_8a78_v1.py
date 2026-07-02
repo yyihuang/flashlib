@@ -73,7 +73,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'over32_merge_k48':
         return over32_v25.merge_k48_over32_ir
     return base17b8.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_dbd7_build_broad_8a78_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _dtype_name(inputs: dict[str, Any], name: str='query') -> str:
     tensor = inputs.get(name)

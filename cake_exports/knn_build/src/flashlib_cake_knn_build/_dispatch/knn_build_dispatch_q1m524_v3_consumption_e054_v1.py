@@ -26,7 +26,7 @@ GUARD_ID = 'e054_q1_m524287_s147_g21_register_merge_v3_exact_guard'
 TARGET_SHAPE = base.RAG_Q1_M524287_K10
 TARGET_SHAPES = (TARGET_SHAPE,)
 SPEEDUP_FLOOR = base.SPEEDUP_FLOOR
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_q1m524_v3_consumption_e054_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _eligible_v3(inputs: dict[str, Any]) -> bool:
     return seed_v3.ea43._eligible_q1_m524_n128(inputs)

@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _merge_ir(split_count, group_count)
     return _stage1_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_q128_k10_longm_59fe_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0167"}'))

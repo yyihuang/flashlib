@@ -24,7 +24,7 @@ _CONTRACT_PARAMS_BY_LABEL = _decode_capture(_json_loads('{"__dict_items__": [["f
 _RESIDUAL_SHAPE_SPECS = {label: _CONTRACT_PARAMS_BY_LABEL[label] for label in RESIDUAL_TARGET_SHAPES}
 PRODUCTION_ROUTE_MODULES = {**base_f30c.PRODUCTION_ROUTE_MODULES, SEED_RESIDUAL_19B3_ID: ROUTE_RESIDUAL_19B3_ENTRYPOINT, BASELINE_ID: ROUTE_BASELINE_F30C_ENTRYPOINT}
 CANDIDATE_DISPATCHERS = ({'id': BASELINE_ID, 'entrypoint': BASELINE_ENTRYPOINT, 'consumed_seeds': (), 'guard_plan': base_f30c.CANDIDATE_CONFIGS[base_f30c.DEFAULT_CANDIDATE_KEY]['guard_plan'], 'expected_shape_wins': base_f30c.TARGET_SHAPES, 'fallback': base_f30c.ROUTE_BASELINE_ENTRYPOINT, 'rejected_reason': 'same-session f30c baseline'}, {'id': 'candidate_residual_19b3_overlay_6998_v1', 'entrypoint': f'{MODULE}:candidate_residual_19b3_overlay_6998_v1', 'consumed_seeds': (SEED_RESIDUAL_19B3_ID,), 'guard_plan': ('6998 exact residual below-floor bucket guard', 'delegate matching rows to the 19b3/ed1c Weave portfolio', 'fall through to f30c full82 dispatcher for every other shape'), 'expected_shape_wins': RESIDUAL_TARGET_SHAPES, 'fallback': ROUTE_BASELINE_F30C_ENTRYPOINT, 'rejected_reason': None})
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_6998_residual_19b3_overlay_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 eval_mod = base_f30c.eval_mod
 
 def _matches_contract_spec(inputs: dict[str, Any], spec: dict[str, Any]) -> bool:

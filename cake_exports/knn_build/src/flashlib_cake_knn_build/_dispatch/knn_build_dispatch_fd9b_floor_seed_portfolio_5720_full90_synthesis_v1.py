@@ -27,7 +27,7 @@ from . import knn_build_q4096_k8_lowfloor_fd9b_v3 as q4096_01bb
 from . import knn_build_rag_microbatch_k10_q4q8q32_s144_d5ac_v1 as rag_2425
 MODULE = 'loom.examples.weave.knn_build_dispatch_fd9b_floor_seed_portfolio_5720_full90_synthesis_v1'
 eval_mod = fd9b.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_fd9b_floor_seed_portfolio_5720_full90_synthesis_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 BASE_CANDIDATE_KEY = fd9b.DEFAULT_CANDIDATE_KEY
 BASE_CONFIG = fd9b.CANDIDATE_CONFIGS[BASE_CANDIDATE_KEY]
 BASE_CANDIDATE_ID = BASE_CONFIG['candidate_id']

@@ -25,8 +25,8 @@ MIDK_TARGET_SHAPES = parent_bad5.MIDK_TARGET_SHAPES
 K64_Q2048_SPLITS = 8
 ROUTE_K64_Q2048 = 'loom.examples.weave.knn_build_dim_midk_bad5_k64split8_v1:k64_q2048_s8_tailinf'
 ROUTE_PARENT = 'loom.examples.weave.knn_build_dim_midk_bad5_k24k28_v1'
-stage1_k64_s8_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k64split8_v1:stage1_k64_s8_tailinf_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k64_s8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k64split8_v1:merge_k64_s8_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+stage1_k64_s8_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k64_stage1_tailinf_k64over32tailinfsplitgrid", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k64_s8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k64_merge_s8_unordered_warp_select_k64over32s8warpselect", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_DIMMIDK_BAD5_K64S8_VERIFY_KERNEL')
@@ -37,7 +37,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'parent_k24':
         return parent_bad5.stage1_k24_s8_ir
     return stage1_k64_s8_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_bad5_k64split8_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k64_stage1_tailinf_k64over32tailinfsplitgrid", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k64_s8_tailinf():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0063"}'))

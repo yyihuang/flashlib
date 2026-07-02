@@ -19,7 +19,7 @@ from . import knn_build_fp16_d128_lowfloor_fd37_v1 as fp16_fd37
 from . import knn_build_dispatch_1877_9a17_b644_6a35_full90_selective_v1 as parent_full90
 MODULE = 'loom.examples.weave.knn_build_dispatch_1877_9a17_fp16_fd37_full90_consumption_v1'
 eval_mod = parent_full90.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_1877_9a17_fp16_fd37_full90_consumption_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 BASE_CANDIDATE_KEY = parent_full90.CANDIDATE_9A17_ONLY
 BASE_CONFIG = parent_full90.CANDIDATE_CONFIGS[BASE_CANDIDATE_KEY]
 BASE_CANDIDATE_ID = BASE_CONFIG['candidate_id']

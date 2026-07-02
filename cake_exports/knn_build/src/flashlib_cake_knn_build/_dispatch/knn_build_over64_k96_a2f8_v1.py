@@ -32,12 +32,12 @@ OVER64_QM = 2048
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-stage1_k96_over64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:stage1_k96_over64_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k96_over64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:merge_k96_over64_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_build_k96_stage1_sort4_chunked = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:knn_build_k96_stage1_sort4_chunked", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k96_sort4_chunked_over64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:stage1_k96_sort4_chunked_over64_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-knn_build_k96_merge_s8_unordered_chunkprefill = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:knn_build_k96_merge_s8_unordered_chunkprefill", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k96_s8_chunkprefill_over64_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:merge_k96_s8_chunkprefill_over64_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+stage1_k96_over64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k96over64", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k96_over64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k32_merge_s4_unordered_k96over64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_k96_stage1_sort4_chunked = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_stage1_sort4_chunked", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k96_sort4_chunked_over64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_stage1_sort4_chunked_k96over64sort4chunked", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_k96_merge_s8_unordered_chunkprefill = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_merge_s8_unordered_chunkprefill", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k96_s8_chunkprefill_over64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s8chunkprefill", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     import os
@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k96':
         return merge_k96_s8_chunkprefill_over64_ir
     return stage1_k96_sort4_chunked_over64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_over64_k96_a2f8_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_stage1_sort4_chunked_k96over64sort4chunked", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k96():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0137"}'))

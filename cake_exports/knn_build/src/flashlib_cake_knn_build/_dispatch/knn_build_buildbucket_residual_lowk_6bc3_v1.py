@@ -66,7 +66,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k10_merge_s7_cache':
         return build_v20.parent.parent.parent_cached.merge_k10_s7_cache_ir
     return build_v20.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_buildbucket_residual_lowk_6bc3_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32split", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return base17b8._select_contract_shapes(shape_labels)

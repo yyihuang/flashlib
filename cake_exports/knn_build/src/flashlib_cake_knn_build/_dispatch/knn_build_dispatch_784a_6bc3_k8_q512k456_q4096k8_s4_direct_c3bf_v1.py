@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q4096_k8_merge_s4':
         return v20.merge_k8_ir
     return parent_direct.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_784a_6bc3_k8_q512k456_q4096k8_s4_direct_c3bf_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 def _select_contract_shapes(shape_labels):
     return parent_direct._select_contract_shapes(shape_labels)

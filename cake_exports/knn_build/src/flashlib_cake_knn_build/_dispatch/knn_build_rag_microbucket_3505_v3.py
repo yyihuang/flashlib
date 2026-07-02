@@ -37,8 +37,8 @@ K32_FUSED_MERGE_THREADS = q16_tailinf.K32_FUSED_MERGE_THREADS
 ROUTE_Q4_K10 = 'rag_microbucket_3505_v3_q4_k10_m64_s128_g8'
 ROUTE_Q64_K10 = 'rag_microbucket_3505_v3_q64_k10_m64_s128_g8'
 ROUTE_BASE_4247 = parent_3505.ROUTE_BASE_4247
-knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v3:knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k32_tailinf_cta1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v3:stage1_k32_tailinf_cta1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k32_tailinf_cta1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RAG_MICROBUCKET_3505_V3_VERIFY_KERNEL')
@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q16_k32_fused_merge':
         return q16_tailinf._fused_merge_ir(split_count, group_count)
     return stage1_k32_tailinf_cta1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_3505_v3:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_3505_v3_stage1_k32_tailinf_cta1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_tailinf_cta1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0135"}'))

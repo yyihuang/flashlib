@@ -30,7 +30,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stream_merge_k10_s7_cache':
         return stream_route.parent_lowk.parent_cached.merge_k10_s7_cache_ir
     return stream_route.parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_online_stream_801d_v45:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible_rag_online_stream(inputs: dict[str, Any]) -> bool:
     return online_route._eligible_rag_online_exact(inputs) or stream_route._eligible_rag_stream_exact(inputs)

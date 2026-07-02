@@ -43,7 +43,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return d256_parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return d256_parent._stage1_ir(D256_FEATURE_CHUNKS)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_v12_d256_k10_longm_e2df_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7ee5_m64rag_stage1_d256_5e7f_rag_d64d256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 34048, "cta_group": 1, "threads": 96}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

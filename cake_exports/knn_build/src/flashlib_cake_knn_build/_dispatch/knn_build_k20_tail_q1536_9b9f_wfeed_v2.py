@@ -39,8 +39,8 @@ EXACT_SHAPE_LABELS = ('search_rect_b1_q1536_m65536_d128_k20', 'search_rect_b1_q4
 TAIL_Q_M = (1536, 65536)
 FAST_Q_M = (4096, 65536)
 EXACT_SHAPE_DIMS = {TAIL_Q_M, FAST_Q_M}
-merge_k20_tail_s8_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_tail_q1536_9b9f_wfeed_v2:merge_k20_tail_s8_warp8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_k20_tail_s16_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_tail_q1536_9b9f_wfeed_v2:merge_k20_tail_s16_warp8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k20_tail_s8_warp8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_warp8_select_q1536s8warp8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k20_tail_s16_warp8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_warp8_select_q1536s16warp8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K20_TAIL_9B9F_WFEED_VERIFY_KERNEL')
@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_tail_s16_warp8':
         return merge_k20_tail_s16_warp8_ir
     return parent_v20.stage1_k20_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_tail_q1536_9b9f_wfeed_v2:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _forced_tail_split_count() -> int | None:
     split_text = os.environ.get('LOOM_KNN_K20_TAIL_9B9F_WFEED_SPLITS')

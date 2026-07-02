@@ -36,9 +36,9 @@ SPLIT_COUNT = 2
 TOP_K_K32 = 32
 ROUTE_Q8192_K32_SPLIT2 = 'loom.examples.weave.knn_build_large_square_k32_8a83_v1:q8192_k32_split2'
 ROUTE_PARENT_A989 = 'loom.examples.weave.knn_build_large_square_k20k32_a989_v1'
-knn_build_large_square_k32_s2_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_8a83_v1:knn_build_large_square_k32_s2_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-stage1_k32_split2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_8a83_v1:stage1_k32_split2_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k32_s2_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_8a83_v1:merge_k32_s2_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_large_square_k32_s2_warp_select = _decode_capture(_json_loads('{"__ir__": "knn_build_large_square_k32_s2_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+stage1_k32_split2_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k32_s2_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_large_square_k32_s2_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_LARGE_SQUARE_K32_8A83_VERIFY_KERNEL')
@@ -47,7 +47,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'parent_merge_k32_s4_warp_select':
         return parent_v20.merge_k32_unordered_warp_select_ir
     return stage1_k32_split2_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k32_8a83_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_merge_k32_s2_warp_select():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0129"}'))

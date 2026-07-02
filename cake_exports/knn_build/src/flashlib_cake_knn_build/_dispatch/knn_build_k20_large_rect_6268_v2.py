@@ -31,8 +31,8 @@ CTA_GROUP = de1a.CTA_GROUP
 TOP_K_K20 = de1a.TOP_K_K20
 SPLIT3_COUNT = 3
 EXACT_SHAPE_LABELS = de1a.EXACT_SHAPE_LABELS
-knn_build_k20_large_rect_s3_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_rect_6268_v2:knn_build_k20_large_rect_s3_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_s3_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_rect_6268_v2:merge_k20_s3_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_k20_large_rect_s3_warp_select = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_large_rect_s3_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k20_s3_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_large_rect_s3_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K20_RECT6268_VERIFY_KERNEL')
@@ -45,7 +45,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_s4':
         return parent_v20.merge_k20_unordered_warp_select_ir
     return merge_k20_s3_warp_select_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_large_rect_6268_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_large_rect_s3_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _forced_split_count() -> int | None:
     split_text = os.environ.get('LOOM_KNN_K20_RECT6268_SPLITS')

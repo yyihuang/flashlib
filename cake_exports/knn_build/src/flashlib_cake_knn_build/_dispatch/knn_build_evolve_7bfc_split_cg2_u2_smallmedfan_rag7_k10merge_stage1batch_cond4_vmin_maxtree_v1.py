@@ -30,13 +30,13 @@ SMALL_SPLITS = parent_k10.SMALL_SPLITS
 MEDIUM_SPLITS = parent_k10.MEDIUM_SPLITS
 RAG_SPLITS = parent_k10.RAG_SPLITS
 SMALL_SHAPE_MAX = parent_k10.SMALL_SHAPE_MAX
-generic_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:generic_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:merge_k10_s4_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_k10_s7_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:merge_k10_s7_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:stage1_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_vmin_maxtree_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+generic_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k10_s7_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0092"}'))

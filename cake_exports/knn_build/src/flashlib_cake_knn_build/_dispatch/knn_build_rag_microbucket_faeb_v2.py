@@ -46,8 +46,8 @@ PRODUCTION_ROUTE_MODULES = {'q4_q64_k10_m64': 'loom.examples.weave.knn_build_rag
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-knn_build_rag_microbucket_faeb_v2_k32_wide_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_faeb_v2:knn_build_rag_microbucket_faeb_v2_k32_wide_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 32}'))
-wide_fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_faeb_v2:wide_fused_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 32}'))
+knn_build_rag_microbucket_faeb_v2_k32_wide_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_faeb_v2_k32_wide_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 32}'))
+wide_fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_faeb_v2_k32_wide_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 4096, "cta_group": 1, "threads": 32}'))
 
 def _k32_fused_merge_ir(split_count: int, group_count: int) -> Any:
     _validate_k32_group_shape(split_count, group_count)
@@ -75,7 +75,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_fused_merge':
         return _k32_fused_merge_ir(k32_split, k32_groups)
     return rag_m64.stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_faeb_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 
 @lru_cache(maxsize=None)
 def _compiled_k32_fused_merge(split_count: int, group_count: int):

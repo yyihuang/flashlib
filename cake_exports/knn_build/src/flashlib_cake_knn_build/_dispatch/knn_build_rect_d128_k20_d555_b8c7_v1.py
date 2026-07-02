@@ -33,7 +33,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_tail_s8_warp8':
         return seed_9b9f.merge_k20_tail_s8_warp8_ir
     return seed_9b9f.parent_v20.stage1_k20_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d128_k20_d555_b8c7_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_name(inputs: dict[str, Any], key: str) -> str:
     tensor = inputs.get(key)

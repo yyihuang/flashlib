@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rect_merge_s16':
         return rect_seed.merge_k10_s16_cache_ir
     return q128_seed.direct_seed.stage1_k32_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_residual_rag_search_1877_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return fallback_full90._select_contract_shapes(shape_labels)

@@ -22,7 +22,7 @@ SPLIT_COUNT, GROUP_COUNT = TOPOLOGY_CANDIDATES[1]
 SEED_ID = 'rag_stream_k32_q128_m100000_tile_937e_v1_s72g8'
 ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_knn_build_rag_stream_k32_q128m100000_tile_937e_v1'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_stream_k32_q128m100000_tile_937e_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _eligible(inputs: dict[str, Any]) -> bool:
     return parent._eligible_q128_m100000(inputs)

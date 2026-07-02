@@ -38,7 +38,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q32tail143low_merge':
         return q32exact.rows4._warp_merge_ir(K32_Q32TAIL143_LOW_SPLIT_COUNT)
     return q32exact._stage1_q32_exact_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32_5317_q32tail143low_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _eligible_q32tail143low(inputs: dict[str, Any]) -> bool:
     return parent.uneven.base._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 32 and (int(inputs.get('M', -1)) == 99999) and (int(inputs.get('K', -1)) == q32exact.K32_TOP_K_MAX)

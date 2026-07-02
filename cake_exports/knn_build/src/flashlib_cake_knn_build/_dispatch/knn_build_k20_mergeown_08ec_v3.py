@@ -37,11 +37,11 @@ TOP_K_K20 = de1a.TOP_K_K20
 Q4096_SPLIT_COUNT = de1a.SEED_SPLIT_COUNT
 TAIL_SPLIT_COUNT = de1a.LOWFANOUT_SPLIT_COUNT
 EXACT_SHAPE_LABELS = de1a.EXACT_SHAPE_LABELS
-knn_build_k20_mergeown_08ec_s4_rowbase_lane = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:knn_build_k20_mergeown_08ec_s4_rowbase_lane", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k20_s4_rowbase_lane_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:merge_k20_s4_rowbase_lane_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-knn_build_k20_mergeown_08ec_warp8_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:knn_build_k20_mergeown_08ec_warp8_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_k20_s2_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:merge_k20_s2_warp8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_k20_s4_warp8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:merge_k20_s4_warp8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_k20_mergeown_08ec_s4_rowbase_lane = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_s4_rowbase_lane", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k20_s4_rowbase_lane_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_s4_rowbase_lane", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_k20_mergeown_08ec_warp8_select = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_warp8_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k20_s2_warp8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_warp8_select_s2warp8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_k20_s4_warp8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k20_mergeown_08ec_warp8_select_s4warp8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K20_MERGEOWN_08EC_VERIFY_KERNEL')
@@ -58,7 +58,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_s2_warp8':
         return merge_k20_s2_warp8_ir
     return parent_v20.merge_k20_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k20_mergeown_08ec_v3:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k32_merge_s4_unordered_k20unordered", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _merge_mode() -> str:
     mode = os.environ.get('LOOM_KNN_K20_MERGEOWN_08EC_MERGE', os.environ.get('LOOM_KNN_K20_MERGEOWN_08EC_Q4096_MERGE', 'tailwarp8')).strip().lower()

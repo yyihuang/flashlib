@@ -31,11 +31,11 @@ BASELINE_C3BF_ENTRYPOINT = 'loom.examples.weave.knn_build_dispatch_784a_6bc3_k8_
 SPLIT_COUNT = v20.MEDIUM_SPLITS
 TOP_K = 8
 PRODUCTION_ROUTE_MODULES = {SEED_ID: ROUTE_ENTRYPOINT, GENERIC_UNORDERED_SEED_ID: ROUTE_ENTRYPOINT, 'baseline_c3bf_split4_static': BASELINE_C3BF_ENTRYPOINT}
-knn_build_q4096_k8_fd9b_stage1_unordered_exact_prefill = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:knn_build_q4096_k8_fd9b_stage1_unordered_exact_prefill", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-stage1_k8_unordered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:stage1_k8_unordered_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k8_exact_prefill_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:stage1_k8_exact_prefill_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:merge_k8_warp_select_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_q4096_k8_fd9b_stage1_unordered_exact_prefill = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_stage1_unordered_exact_prefill", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+stage1_k8_unordered_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_fd9b_k8unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k8_exact_prefill_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_stage1_unordered_exact_prefill", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k8_warp_select_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_Q4096K8_FD9B_V3_VERIFY_KERNEL')
@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_exact_prefill':
         return stage1_k8_exact_prefill_ir
     return merge_k8_warp_select_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_q4096_k8_lowfloor_fd9b_v3:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_k8_unordered():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0177"}'))

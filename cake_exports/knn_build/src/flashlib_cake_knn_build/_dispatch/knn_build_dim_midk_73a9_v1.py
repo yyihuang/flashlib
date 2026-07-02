@@ -29,9 +29,9 @@ D64_DEFAULT_SPLITS = 8
 DIM_TARGET_SHAPES = ('build_dim_sweep_b1_q2048_m2048_d64_k10', 'build_dim_sweep_b1_q2048_m2048_d256_k10', 'build_dtype_fp16_b1_q2048_m2048_d128_k10')
 MIDK_TARGET_SHAPES = ('build_k_sweep_qm1024_k16', 'build_k_sweep_qm2048_k24', 'build_k_sweep_qm2048_k28', 'build_k_sweep_qm4096_k28', 'build_over32_stress_qm2048_k64')
 TARGET_SHAPES = (*DIM_TARGET_SHAPES, *MIDK_TARGET_SHAPES)
-knn_build_dim_midk_73a9_d64_split_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_73a9_v1:knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_73a9_v1:stage1_d64_split_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_73a9_v1:merge_generic_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_dim_midk_73a9_d64_split_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_DIMMIDK_73A9_VERIFY_KERNEL')
@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_OVER32_VERIFY_KERNEL'] = 'stage1_k64'
         return k64_parent._verify_export_ir()
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dim_midk_73a9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
 
 def _compiled_d64_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0017"}'))

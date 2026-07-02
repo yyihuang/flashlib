@@ -39,7 +39,7 @@ CTA_GROUP = parent_k32.CTA_GROUP
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k32_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4b5c_v1:merge_k32_s32_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k32_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k32s32_4b5c", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RAG_FRONTIER_4B5C_VERIFY_KERNEL')
@@ -52,7 +52,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_merge_s32':
         return merge_k32_s32_cache_ir
     return merge_k32_s32_cache_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4b5c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k32s32_4b5c", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compiled_merge_k32_s32_cache():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0111"}'))

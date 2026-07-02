@@ -38,8 +38,8 @@ STAGE1_THREADS = v3.STAGE1_THREADS
 GRID_DIM_DEFAULT = v3.GRID_DIM_DEFAULT
 CTA_GROUP = v3.CTA_GROUP
 TOP_K_MAX = v3.TOP_K_MAX
-knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4fbf_v6:knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k32_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4fbf_v6:stage1_k32_tailinf_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k32_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -71,7 +71,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_fused_merge':
         return _fused_merge_ir(split_count, group_count)
     return stage1_k32_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_frontier_4fbf_v6:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_tailinf():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0124"}'))

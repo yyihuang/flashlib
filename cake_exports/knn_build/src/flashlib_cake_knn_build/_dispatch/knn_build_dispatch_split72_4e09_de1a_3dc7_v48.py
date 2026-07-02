@@ -62,7 +62,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'over64_k96_merge':
         return over64_k96.merge_k96_s8_chunkprefill_over64_ir
     return previous_main.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_split72_4e09_de1a_3dc7_v48:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _label_can_hit(inputs: dict[str, Any], target_labels: set[str]) -> bool:
     label = inputs.get('label')

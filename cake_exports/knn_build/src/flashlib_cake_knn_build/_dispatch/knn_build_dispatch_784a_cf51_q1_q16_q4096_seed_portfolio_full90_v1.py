@@ -25,7 +25,7 @@ from . import knn_build_rag_microbucket_k32_q16dual2warp_largem_bdd2_v1 as q16_b
 from . import knn_build_ragonline_mbucket_5706_q1v10_smix_v1 as q1_5706
 MODULE = 'loom.examples.weave.knn_build_dispatch_784a_cf51_q1_q16_q4096_seed_portfolio_full90_v1'
 eval_mod = base_d5f8.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_784a_cf51_q1_q16_q4096_seed_portfolio_full90_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 BASE_D5F8_KEY = 'base_c3bf_d5f8'
 CANDIDATE_CF51_ONLY = 'c3bf_plus_cf51_q1024'
 CANDIDATE_CF51_Q1_Q16 = 'c3bf_plus_cf51_q1024_bca0_q1_5018_q16'

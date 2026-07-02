@@ -27,7 +27,7 @@ GUARD_ID = 'b10e_exact_bf16_build_b1_q2048_m2048_d192_k10'
 TARGET_SHAPE = seed_b10e.TARGET_SHAPE
 TARGET_SHAPES = (TARGET_SHAPE,)
 SPEEDUP_FLOOR = base.SPEEDUP_FLOOR
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_q1m524_v3_d192_b10e_consumption_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
 
 def _eligible_b10e(inputs: dict[str, Any]) -> bool:
     return seed_b10e._eligible(inputs)

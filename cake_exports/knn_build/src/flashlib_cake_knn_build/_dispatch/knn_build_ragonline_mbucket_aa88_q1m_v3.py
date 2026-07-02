@@ -34,13 +34,13 @@ MERGE_GROUP_SLOTS = MERGE_GROUPS * TOP_K_MAX
 MERGE_GROUP_D_BYTES = MERGE_GROUP_SLOTS * 4
 parent_lowk = split72.parent_lowk
 base_v1 = split72.base_v1
-knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_q1m_v3:knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
+knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-coop_merge_s72_k10_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_q1m_v3:coop_merge_s72_k10_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
-coop_merge_s74_k10_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_q1m_v3:coop_merge_s74_k10_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
+coop_merge_s72_k10_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
+coop_merge_s74_k10_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_aa88_q1m_s72_k10_coop_merge_s74_m250", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 512, "cta_group": 1, "threads": 128}'))
 
 class _TraceTensor:
 
@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'coop_merge_s74_k10':
         return coop_merge_s74_k10_ir
     return parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_aa88_q1m_v3:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

@@ -54,10 +54,10 @@ ROUTE_PARENT_WARPMERGE = f'{parent.MODULE}:launch_from_contract_inputs'
 ROUTE_ROWLD1_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 SEED_K32_ROWLD1WARP_ID = 'rag_microbucket_k32rowld1warp_0077_v1_lowq_row16x256b_stage1'
 _rowld1_insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:_rowld1_insert_sorted_pair', 256)
-knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 96}'))
-knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
-stage1_q16_k32_m64_rowld1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:stage1_q16_k32_m64_rowld1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 96}'))
-stage1_q32_k32_m64_rowld2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:stage1_q32_k32_m64_rowld2_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
+knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 96}'))
+knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
+stage1_q16_k32_m64_rowld1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q16_k32_m64_rowld1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 96}'))
+stage1_q32_k32_m64_rowld2_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32rowld1warp_0077_v1_stage1_q32_k32_m64_rowld2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -79,7 +79,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld_stage1':
         return parent.rowld_seed.stage1_q32_k32_m64_rowld_ir
     return parent._warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s144_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q16_k32_m64_rowld1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0148"}'))

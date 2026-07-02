@@ -39,8 +39,8 @@ D64_SMEM_POOL_BYTES = D64_QUERY_BYTES + D64_DATABASE_BYTES + D64_DB_SQ_BYTES
 DEFAULT_SPLIT_COUNT = _decode_capture(_json_loads('132'))
 DEFAULT_GROUP_COUNT = _decode_capture(_json_loads('12'))
 SHAPE_SPECS: dict[str, dict[str, Any]] = {RAG_D64: {'B': 1, 'Q': 16, 'M': 50000, 'D': 64, 'K': 10, 'build': False, 'split_count': DEFAULT_SPLIT_COUNT, 'group_count': DEFAULT_GROUP_COUNT}}
-knn_build_common_d_5e7f_rag_d64_repair_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_5e7f_rag_d64_repair_v1:knn_build_common_d_5e7f_rag_d64_repair_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
-stage1_d64_repair_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_5e7f_rag_d64_repair_v1:stage1_d64_repair_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
+knn_build_common_d_5e7f_rag_d64_repair_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_repair_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
+stage1_d64_repair_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_repair_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_COMMON_D_5E7F_RAG_D64_REPAIR_VERIFY_KERNEL')
@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return fused_merge_parent._fused_merge_ir(split_count, group_count)
     return stage1_d64_repair_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_common_d_5e7f_rag_d64_repair_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_repair_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0188"}'))

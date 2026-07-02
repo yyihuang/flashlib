@@ -51,7 +51,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'm64_stage1':
         return base.m64_seed.stage1_q8_k32_m64_ir
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbucket_k32rows4_0077_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s144r4_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 @lru_cache(maxsize=None)
 def _compiled_warp_merge(split_count: int):

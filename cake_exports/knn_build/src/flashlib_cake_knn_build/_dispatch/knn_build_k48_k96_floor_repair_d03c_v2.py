@@ -49,13 +49,13 @@ ROUTE_K96_WARPSELECT = f'{MODULE}:k96_q1024_s2_warpselect_merge'
 ROUTE_PARENT_4399 = d03c_v1.ROUTE_PARENT_4399
 BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_k48_k96_floor_repair_d03c_v2'
 parent_4399 = d03c_v1.parent_4399
-stage1_k48_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:stage1_k48_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k48_warpselect_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:merge_k48_warpselect_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-stage1_k96_exact_prefill_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:stage1_k96_exact_prefill_ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_k48_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+merge_k48_warpselect_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k48_merge_s4_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+stage1_k96_exact_prefill_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 SOURCE_TASKS = {SEED_ID: 'weave-evolve-knn-build-d03c v2 K48/K96 floor-repair bucket', SEED_K48_WARPSELECT_ID: 'd03c v1 K48 split4 warp-select merge', SEED_K96_Q1024_ID: 'd03c v2 K96 q1024 split2 warp-select merge'}
 PRODUCTION_ROUTE_MODULES = _decode_capture(_json_loads('{"__dict_items__": [["candidate_d03c_v2_k48_k96_warpselect_floor_repair", "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:launch_from_contract_inputs"], ["d03c_k48_s4_warpselect_merge", "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v1:launch_from_contract_inputs"], ["d03c_v2_k96_q1024_s2_warpselect_merge", "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:launch_from_contract_inputs"], ["candidate_fd9b_plus_01bb_2425_1b34_k5_bd76_k20_9334_k32_full90_v1", "loom.examples.weave.knn_build_dispatch_fd9b_floor_seed_portfolio_5720_full90_synthesis_v1:launch_from_contract_inputs"]]}'))
-knn_build_k96_merge_s2_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:knn_build_k96_merge_s2_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k96_s2_warpselect_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:merge_k96_s2_warpselect_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_k96_merge_s2_unordered_warp_select = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_merge_s2_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k96_s2_warpselect_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_merge_s2_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K48_K96_D03C_V2_VERIFY_KERNEL')
@@ -68,7 +68,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k96_merge_s2_warpselect':
         return merge_k96_s2_warpselect_ir
     return merge_k96_s2_warpselect_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_k48_k96_floor_repair_d03c_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_merge_s2_unordered_warp_select", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_k96_exact_prefill():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0072"}'))

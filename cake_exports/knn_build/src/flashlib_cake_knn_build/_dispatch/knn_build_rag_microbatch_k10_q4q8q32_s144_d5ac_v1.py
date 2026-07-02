@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'parent_q64_merge':
         return parent_exact5.q4q64_seed.seed_3505.faeb.rag_m64.parent_micro._fused_merge_ir(parent_exact5.q4q64_seed.seed_3505.faeb.M64_SPLIT_COUNT, parent_exact5.q4q64_seed.seed_3505.faeb.M64_GROUP_COUNT)
     raise ValueError(f'unsupported verify kernel: {verify_kernel}')
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rag_microbatch_k10_q4q8q32_s144_d5ac_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return parent_exact5._select_contract_shapes(shape_labels)

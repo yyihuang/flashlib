@@ -37,8 +37,8 @@ Q1_N128_LOCAL_D_OFFSET = Q1_N128_SMEM_BASE_BYTES
 Q1_N128_LOCAL_I_OFFSET = Q1_N128_LOCAL_D_OFFSET + Q1_N128_LOCAL_ELEMS * 4
 Q1_N128_SMEM_POOL_BYTES = Q1_N128_LOCAL_I_OFFSET + Q1_N128_LOCAL_ELEMS * 4
 _insert_sorted_pair_k10 = _ir_proxy('loom.examples.weave.knn_build_ragonline_mbucket_ea43_q1m524_n128_v1:_insert_sorted_pair_k10', 256)
-knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_ea43_q1m524_n128_v1:knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52992, "cta_group": 1, "threads": 96}'))
-stage1_q1_k10_m64n128_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_ea43_q1m524_n128_v1:stage1_q1_k10_m64n128_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52992, "cta_group": 1, "threads": 96}'))
+knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52992, "cta_group": 1, "threads": 96}'))
+stage1_q1_k10_m64n128_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52992, "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_EA43_Q1M524_N128_VERIFY_KERNEL')
@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return fused_merge_parent._fused_merge_ir(split_count, group_count)
     return base5706.ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_ragonline_mbucket_ea43_q1m524_n128_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_q1_k10_m64n128():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0191"}'))

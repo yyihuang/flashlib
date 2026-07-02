@@ -34,7 +34,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k32':
         return parent_v20.merge_k32_unordered_warp_select_ir
     return parent_v20.stage1_k32_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_square_k20k32_a989_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_is_bf16(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16'

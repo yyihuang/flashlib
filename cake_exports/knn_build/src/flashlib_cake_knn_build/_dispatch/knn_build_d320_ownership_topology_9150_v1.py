@@ -24,7 +24,7 @@ SPLIT_COUNT = 48
 DB_TILES_PER_SPLIT = 4
 TOTAL_WORK = 192
 _SPLIT_ENV = 'LOOM_KNN_NON128_FRONTIER_8227_D320TAIL_SPLITS_SEARCH_RECT_HIGHD_B1_Q512_M12000_D320_K10'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_d320_ownership_topology_9150_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 124160, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_8227_d320tail_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 124160, "cta_group": 1, "threads": 192}'))
 
 def _is_target(inputs: dict[str, Any]) -> bool:
     query = inputs.get('query')

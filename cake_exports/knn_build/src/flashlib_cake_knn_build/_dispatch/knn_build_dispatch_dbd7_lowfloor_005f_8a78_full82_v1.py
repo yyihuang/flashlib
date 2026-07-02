@@ -17,7 +17,7 @@ from . import knn_build_dispatch_17b8_lowmargin_1074_full82_v1 as base9db7
 from . import knn_build_dispatch_dbd7_build_broad_8a78_v1 as seed8a78
 MODULE = 'loom.examples.weave.knn_build_dispatch_dbd7_lowfloor_005f_8a78_full82_v1'
 eval_mod = base9db7.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_dispatch_dbd7_lowfloor_005f_8a78_full82_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
 BASE_9DB7_KEY = 'base_9db7'
 CANDIDATE_005F = '005f_promoted_portfolio'
 CANDIDATE_005F_8A78_TAIL = '005f_plus_8a78_tail'

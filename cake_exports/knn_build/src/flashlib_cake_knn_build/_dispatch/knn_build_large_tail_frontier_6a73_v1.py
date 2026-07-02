@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
         if split_count == 16:
             return parent_v20.merge_k20_s16_ir
     return parent_v20.stage1_k20_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_large_tail_frontier_6a73_v1:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k20split", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _dtype_is_bf16(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16'

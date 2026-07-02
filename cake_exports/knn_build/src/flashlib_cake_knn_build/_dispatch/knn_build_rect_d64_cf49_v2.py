@@ -29,10 +29,10 @@ SUPPORTED_SPLITS = (8, 12, 16, 24, 32, 64)
 RECT_MERGE_THREADS = 64
 ROUTE_RECT_D64 = 'loom.examples.weave.knn_build_rect_d64_cf49_v2:rect_d64_split_cached'
 ROUTE_CURRENT_8700 = 'loom.examples.weave.knn_build_dispatch_rag_seed_portfolio_8700_v1:launch_from_contract_inputs'
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_cf49_v2:stage1_d64_split_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_cf49_v2:merge_generic_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-knn_build_rect_d64_cf49_s16_cached_merge = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_cf49_v2:knn_build_rect_d64_cf49_s16_cached_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
-merge_s16_cached_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_cf49_v2:merge_s16_cached_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_rect_d64_cf49_s16_cached_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d64_cf49_s16_cached_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+merge_s16_cached_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d64_cf49_s16_cached_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RECT_D64_CF49_VERIFY_KERNEL')
@@ -41,7 +41,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_d64_cf49_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
 
 def _compiled_s16_cached_merge():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0131"}'))

@@ -31,11 +31,11 @@ MERGE_THREADS = parent_lowk.parent_cached.RAG_MERGE_THREADS
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k10_s8_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:merge_k10_s8_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s12_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:merge_k10_s12_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s16_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:merge_k10_s16_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s24_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:merge_k10_s24_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:merge_k10_s32_cache_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s8_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_rect4452_s8", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s12_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_rect4452_s12", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s16_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_rect4452_s16", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s24_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_rect4452_s24", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s7_rowbase_cache_rect4452_s32", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RECT_INTERMEDIATE_4452_VERIFY_KERNEL')
@@ -50,7 +50,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_s32':
         return merge_k10_s32_cache_ir
     return parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_intermediate_frontier_6a73_4452_v2:ir", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel
