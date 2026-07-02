@@ -21,15 +21,17 @@ def _benchmark_module():
     return module
 
 
-def test_knn_search_matches_reference_on_smoke_shape():
+BENCHMARK = _benchmark_module()
+
+
+@pytest.mark.parametrize("name", list(BENCHMARK.SHAPES))
+def test_knn_search_matches_reference(name: str):
     torch = pytest.importorskip("torch")
     if not torch.cuda.is_available():
         pytest.skip("CUDA GPU required for exported-kernel correctness")
-    benchmark = _benchmark_module()
-    name = next(iter(benchmark.SHAPES))
-    result = benchmark._run_shape(
+    result = BENCHMARK._run_shape(
         name,
-        benchmark.SHAPES[name],
+        BENCHMARK.SHAPES[name],
         arch=None,
         correctness=True,
         benchmark=False,
