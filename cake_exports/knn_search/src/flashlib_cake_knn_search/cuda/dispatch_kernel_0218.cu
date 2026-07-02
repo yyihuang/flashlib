@@ -42,7 +42,7 @@ typedef short int          int16_t;
 #define SMEM_SMEM_COHORT_TOPK_I_STRIDE 65536
 #define SMEM_TOTAL 165120
 #define THREADS 512
-#define K_MAX_ 12
+#define K_MAX_ 64
 #define EXPOSE_COL_COHORTS 1
 
 #include <math_constants.h>

@@ -24,7 +24,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int partial_list_count, int num_q_tiles)
+kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ group_distances, int32_t* __restrict__ group_indices, int B, int Q, int K, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -38,38 +38,33 @@ kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48
     const int lane_id = lane;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid;
+    int q_group_linear = bid;
+    int group_id = q_group_linear - q_group_linear / 32 * 32;
+    int q_linear = q_group_linear / 32;
     int batch_id = q_linear / Q;
     int q_global = q_linear - batch_id * Q;
     int q_tile = q_global / 128;
     int q_local = q_global - q_tile * 128;
-    float head_d[16];
-    int head_i[16];
-    int head_k[16];
+    int list_group_base = group_id * 64;
+    float head_d[2];
+    int head_i[2];
+    int head_k[2];
     #pragma unroll
-    for (int slot = 0; slot < 16; slot++) {
-        int split_id = lane + slot * 32;
+    for (int slot = 0; slot < 2; slot++) {
+        int split_id = list_group_base + lane + slot * 32;
         head_k[slot] = 0;
-        head_d[slot] = LOOM_INF;
-        head_i[slot] = -1;
-        int valid_slot = 1;
-        if (slot == 15) {
-            valid_slot = ((lane < 32) ? 1 : 0);
-        }
-        if (valid_slot != 0) {
-            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 512 + split_id) * 128 + q_local) * K_MAX_);
-            head_d[slot] = partial_distances[partial_base];
-            head_i[slot] = partial_indices[partial_base];
-        }
+        unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 2048 + split_id) * 128 + q_local) * K_MAX_);
+        head_d[slot] = partial_distances[partial_base];
+        head_i[slot] = partial_indices[partial_base];
     }
-    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 32 + group_id) * K_MAX_);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
         float local_best_d = head_d[0];
         int local_best_i = head_i[0];
         int local_best_slot = 0;
         #pragma unroll
-        for (int slot = 1; slot < 16; slot++) {
+        for (int slot = 1; slot < 2; slot++) {
             float cand_d = head_d[slot];
             int cand_i = head_i[slot];
             int take = ((cand_d < local_best_d) ? 1 : 0);
@@ -161,30 +156,22 @@ kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48
         winner_i = ((take_peer_15 != 0) ? peer_i_13 : winner_i);
         winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
         if (lane == 0) {
-            if (out_k < K) {
-                out_distances[out_base + out_k] = winner_d;
-                out_indices[out_base + out_k] = winner_i;
-            }
+            group_distances[group_base + out_k] = winner_d;
+            group_indices[group_base + out_k] = winner_i;
         }
         if (lane == winner_lane) {
             #pragma unroll
-            for (int slot = 0; slot < 16; slot++) {
+            for (int slot = 0; slot < 2; slot++) {
                 if (local_best_slot == slot) {
                     int next_head = head_k[slot] + 1;
-                    int split_id = lane + slot * 32;
+                    int split_id = list_group_base + lane + slot * 32;
                     head_k[slot] = next_head;
                     head_d[slot] = LOOM_INF;
                     head_i[slot] = -1;
                     if (next_head < K_MAX_) {
-                        int valid_slot = 1;
-                        if (slot == 15) {
-                            valid_slot = ((lane < 32) ? 1 : 0);
-                        }
-                        if (valid_slot != 0) {
-                            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 512 + split_id) * 128 + q_local) * K_MAX_ + next_head);
-                            head_d[slot] = partial_distances[partial_base];
-                            head_i[slot] = partial_indices[partial_base];
-                        }
+                        unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 2048 + split_id) * 128 + q_local) * K_MAX_ + next_head);
+                        head_d[slot] = partial_distances[partial_base];
+                        head_i[slot] = partial_indices[partial_base];
                     }
                 }
             }

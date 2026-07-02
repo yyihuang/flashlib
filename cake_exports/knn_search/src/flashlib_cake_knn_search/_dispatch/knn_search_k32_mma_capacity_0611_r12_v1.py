@@ -101,7 +101,7 @@ def _select_split_m(q_rows: int, m_rows: int) -> int:
     return 1
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0198"}, "partial": {"__kernel__": "dispatch_kernel_0197"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0195"}, "partial": {"__kernel__": "dispatch_kernel_0194"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

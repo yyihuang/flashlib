@@ -86,15 +86,15 @@
     },
     {
       "label": "dispatch_q1024_m65536_d128_k10",
-      "selected_route": "codex0616_v2_highq_qbucket_exact_q256_q512_q1024_q2048_m65536_k10"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "dispatch_q2048_m65536_d128_k10",
-      "selected_route": "codex0616_v2_highq_qbucket_exact_q256_q512_q1024_q2048_m65536_k10"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "dispatch_q4096_m16384_d128_k10",
-      "selected_route": "codex0616_q4096_k10_split4_exact_m16384_20000_32768_65536"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "dispatch_q4096_m32768_d128_k10",

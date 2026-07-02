@@ -35,16 +35,15 @@ typedef short int          int16_t;
 #define SMEM_SMEM_Q_NORM_PART_STAGE_BYTES 4096
 #define SMEM_SMEM_Q_NORM_PART_STRIDE 4096
 #define SMEM_SMEM_COHORT_TOPK_D_OFF 33792
-#define SMEM_SMEM_COHORT_TOPK_D_STAGE_BYTES 20480
-#define SMEM_SMEM_COHORT_TOPK_D_STRIDE 20480
-#define SMEM_SMEM_COHORT_TOPK_I_OFF 54272
-#define SMEM_SMEM_COHORT_TOPK_I_STAGE_BYTES 20480
-#define SMEM_SMEM_COHORT_TOPK_I_STRIDE 20480
-#define SMEM_TOTAL 108800
-#define THREADS 640
-#define K_MAX_ 10
-#define EXPOSE_COL_COHORTS 0
-#define FULL_M_TILES 1
+#define SMEM_SMEM_COHORT_TOPK_D_STAGE_BYTES 65536
+#define SMEM_SMEM_COHORT_TOPK_D_STRIDE 65536
+#define SMEM_SMEM_COHORT_TOPK_I_OFF 99328
+#define SMEM_SMEM_COHORT_TOPK_I_STAGE_BYTES 65536
+#define SMEM_SMEM_COHORT_TOPK_I_STRIDE 65536
+#define SMEM_TOTAL 165120
+#define THREADS 512
+#define K_MAX_ 12
+#define EXPOSE_COL_COHORTS 1
 
 #include <math_constants.h>
 #define LOOM_INF CUDART_INF_F
@@ -295,7 +294,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 
 extern "C" {
 
-__global__ __launch_bounds__(640) void
+__global__ __launch_bounds__(512) void
 kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
 {
     const int tid = threadIdx.x;
@@ -314,7 +313,7 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     const int smem_smem_db_norm_next = smem + 108032;
     const int smem_smem_q_norm_part = smem + 99328;
     const int smem_smem_cohort_topk_d = smem + 33792;
-    const int smem_smem_cohort_topk_i = smem + 54272;
+    const int smem_smem_cohort_topk_i = smem + 99328;
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
@@ -361,13 +360,13 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     #define smem_q_norm_part_addr (smem + 99328)
     float* smem_cohort_topk_d = (float*)(smem_raw + 33792);
     #define smem_cohort_topk_d_addr (smem + 33792)
-    int* smem_cohort_topk_i = (int*)(smem_raw + 54272);
-    #define smem_cohort_topk_i_addr (smem + 54272)
+    int* smem_cohort_topk_i = (int*)(smem_raw + 99328);
+    #define smem_cohort_topk_i_addr (smem + 99328)
     const int mbar_base = smem;
     #define mma_done_addr (mbar_base + 0)
     const int taddr = tmem_addr_storage[0];
 
-    const int tmem_row_base = (warp % 20) * 32;
+    const int tmem_row_base = (warp % 16) * 32;
     const int my_row = tmem_row_base + (lane / 4);
     const int tmem_acc = taddr + TMEM_ACC_OFFSET;
     // === Task calls (dependency order) ===
@@ -385,15 +384,15 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     int q_local = row_base_tmem + lane;
     int q_global = q_start + q_local;
     float q_norm = 0.0f;
-    float best_d[10];
-    int best_i[10];
+    float best_d[K_MAX_];
+    int best_i[K_MAX_];
     #pragma unroll
     for (int kk = 0; kk < K_MAX_; kk++) {
         best_d[kk] = LOOM_INF;
         best_i[kk] = -1;
     }
     #pragma unroll 1
-    for (int e_vec = tid; e_vec < 1024; e_vec += 640) {
+    for (int e_vec = tid; e_vec < 1024; e_vec += 512) {
         int q_elem = e_vec * 16;
         int q_row = q_elem / 128;
         int d_col = q_elem - q_row * 128;
@@ -404,17 +403,19 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
         for (int vi = 0; vi < 16; vi++) {
             q_vals[vi] = 0.0f;
         }
-        if (q_abs < Q) {
-            {
-                const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs) * 128 + d_col));
-                uint4 _vld_0[2];
-                #pragma unroll
-                for (int _blk = 0; _blk < 2; _blk++) {
-                    _vld_0[_blk] = _vptr_0[_blk];
-                    __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
+        if (batch_id < B) {
+            if (q_abs < Q) {
+                {
+                    const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs) * 128 + d_col));
+                    uint4 _vld_0[2];
                     #pragma unroll
-                    for (int _j = 0; _j < 8; _j++)
-                        q_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
+                    for (int _blk = 0; _blk < 2; _blk++) {
+                        _vld_0[_blk] = _vptr_0[_blk];
+                        __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
+                        #pragma unroll
+                        for (int _j = 0; _j < 8; _j++)
+                            q_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
+                    }
                 }
             }
         }
@@ -437,12 +438,14 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     }
     asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
-    if (col_chunk < 4) {
-        if (q_local < 128) {
-            if (q_global < Q) {
-                #pragma unroll
-                for (int part = 0; part < 8; part++) {
-                    q_norm += smem_q_norm_part[q_local * 8 + part];
+    if (batch_id < B) {
+        if (col_chunk < 4) {
+            if (q_local < 128) {
+                if (q_global < Q) {
+                    #pragma unroll
+                    for (int part = 0; part < 8; part++) {
+                        q_norm += smem_q_norm_part[q_local * 8 + part];
+                    }
                 }
             }
         }
@@ -456,13 +459,17 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     int d_base = norm_part * 32;
     int m_abs_part = first_m_start + norm_row;
     float acc_part = 0.0f;
-    if (tid < 512) {
-        #pragma unroll 1
-        for (int vv = 0; vv < 2; vv++) {
-            int d_col = d_base + vv * 16;
-            float db_vals[16];
-            unsigned int db_pack[8];
-            {
+    #pragma unroll 1
+    for (int vv = 0; vv < 2; vv++) {
+        int d_col = d_base + vv * 16;
+        float db_vals[16];
+        unsigned int db_pack[8];
+        #pragma unroll
+        for (int vi = 0; vi < 16; vi++) {
+            db_vals[vi] = 0.0f;
+        }
+        if (batch_id < B) {
+            if (m_abs_part < M) {
                 {
                     const uint4* _vptr_1 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part) * 128 + d_col));
                     uint4 _vld_1[2];
@@ -476,32 +483,34 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
                     }
                 }
             }
-            #pragma unroll
-            for (int _lp = 0; _lp < 8; _lp++) {
-                __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
-                db_pack[_lp] = *(uint32_t*)&_bf2;
-            }
-            int b_store_addr = (smem_b_addr + (d_col / 64 * 16384 + norm_row * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
-            asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
-            int b_store_addr_hi = (smem_b_addr + ((d_col + 8) / 64 * 16384 + norm_row * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
-            asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
-            #pragma unroll
-            for (int vi = 0; vi < 16; vi++) {
-                acc_part += db_vals[vi] * db_vals[vi];
-            }
         }
-        smem_db_norm_part[tid] = acc_part;
+        #pragma unroll
+        for (int _lp = 0; _lp < 8; _lp++) {
+            __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
+            db_pack[_lp] = *(uint32_t*)&_bf2;
+        }
+        int b_store_addr = (smem_b_addr + (d_col / 64 * 16384 + norm_row * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
+        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
+        int b_store_addr_hi = (smem_b_addr + ((d_col + 8) / 64 * 16384 + norm_row * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
+        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
+        #pragma unroll
+        for (int vi = 0; vi < 16; vi++) {
+            acc_part += db_vals[vi] * db_vals[vi];
+        }
     }
+    smem_db_norm_part[tid] = acc_part;
     asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
     if (tid < 128) {
         int m_abs = first_m_start + tid;
         float db_norm = LOOM_INF;
-        {
-            db_norm = 0.0f;
-            #pragma unroll
-            for (int part = 0; part < 4; part++) {
-                db_norm += smem_db_norm_part[tid + part * 128];
+        if (batch_id < B) {
+            if (m_abs < M) {
+                db_norm = 0.0f;
+                #pragma unroll
+                for (int part = 0; part < 4; part++) {
+                    db_norm += smem_db_norm_part[tid + part * 128];
+                }
             }
         }
         smem_db_norm[tid] = db_norm;
@@ -636,13 +645,17 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
                 int d_base_2 = norm_part_1 * 32;
                 int m_abs_part_3 = next_m_start + norm_row_0;
                 float acc_part_4 = 0.0f;
-                if (tid < 512) {
-                    #pragma unroll 1
-                    for (int vv = 0; vv < 2; vv++) {
-                        int d_col = d_base_2 + vv * 16;
-                        float db_vals[16];
-                        unsigned int db_pack[8];
-                        {
+                #pragma unroll 1
+                for (int vv = 0; vv < 2; vv++) {
+                    int d_col = d_base_2 + vv * 16;
+                    float db_vals[16];
+                    unsigned int db_pack[8];
+                    #pragma unroll
+                    for (int vi = 0; vi < 16; vi++) {
+                        db_vals[vi] = 0.0f;
+                    }
+                    if (batch_id < B) {
+                        if (m_abs_part_3 < M) {
                             {
                                 const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_3) * 128 + d_col));
                                 uint4 _vld_2[2];
@@ -656,32 +669,34 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
                                 }
                             }
                         }
-                        #pragma unroll
-                        for (int _lp = 0; _lp < 8; _lp++) {
-                            __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
-                            db_pack[_lp] = *(uint32_t*)&_bf2;
-                        }
-                        int b_store_addr = (smem_b_next_addr + (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
-                        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
-                        int b_store_addr_hi = (smem_b_next_addr + ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
-                        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
-                        #pragma unroll
-                        for (int vi = 0; vi < 16; vi++) {
-                            acc_part_4 += db_vals[vi] * db_vals[vi];
-                        }
                     }
-                    smem_db_norm_part_next[tid] = acc_part_4;
+                    #pragma unroll
+                    for (int _lp = 0; _lp < 8; _lp++) {
+                        __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
+                        db_pack[_lp] = *(uint32_t*)&_bf2;
+                    }
+                    int b_store_addr = (smem_b_next_addr + (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
+                    int b_store_addr_hi = (smem_b_next_addr + ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
+                    #pragma unroll
+                    for (int vi = 0; vi < 16; vi++) {
+                        acc_part_4 += db_vals[vi] * db_vals[vi];
+                    }
                 }
+                smem_db_norm_part_next[tid] = acc_part_4;
                 asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
                 __syncthreads();
                 if (tid < 128) {
                     int m_abs = next_m_start + tid;
                     float db_norm = LOOM_INF;
-                    {
-                        db_norm = 0.0f;
-                        #pragma unroll
-                        for (int part = 0; part < 4; part++) {
-                            db_norm += smem_db_norm_part_next[tid + part * 128];
+                    if (batch_id < B) {
+                        if (m_abs < M) {
+                            db_norm = 0.0f;
+                            #pragma unroll
+                            for (int part = 0; part < 4; part++) {
+                                db_norm += smem_db_norm_part_next[tid + part * 128];
+                            }
                         }
                     }
                     smem_db_norm_next[tid] = db_norm;
@@ -692,13 +707,17 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
                 int d_base_2 = norm_part_1 * 32;
                 int m_abs_part_3 = next_m_start + norm_row_0;
                 float acc_part_4 = 0.0f;
-                if (tid < 512) {
-                    #pragma unroll 1
-                    for (int vv = 0; vv < 2; vv++) {
-                        int d_col = d_base_2 + vv * 16;
-                        float db_vals[16];
-                        unsigned int db_pack[8];
-                        {
+                #pragma unroll 1
+                for (int vv = 0; vv < 2; vv++) {
+                    int d_col = d_base_2 + vv * 16;
+                    float db_vals[16];
+                    unsigned int db_pack[8];
+                    #pragma unroll
+                    for (int vi = 0; vi < 16; vi++) {
+                        db_vals[vi] = 0.0f;
+                    }
+                    if (batch_id < B) {
+                        if (m_abs_part_3 < M) {
                             {
                                 const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_3) * 128 + d_col));
                                 uint4 _vld_3[2];
@@ -712,32 +731,34 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
                                 }
                             }
                         }
-                        #pragma unroll
-                        for (int _lp = 0; _lp < 8; _lp++) {
-                            __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
-                            db_pack[_lp] = *(uint32_t*)&_bf2;
-                        }
-                        int b_store_addr = (smem_b_addr + (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
-                        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
-                        int b_store_addr_hi = (smem_b_addr + ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
-                        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
-                        #pragma unroll
-                        for (int vi = 0; vi < 16; vi++) {
-                            acc_part_4 += db_vals[vi] * db_vals[vi];
-                        }
                     }
-                    smem_db_norm_part[tid] = acc_part_4;
+                    #pragma unroll
+                    for (int _lp = 0; _lp < 8; _lp++) {
+                        __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
+                        db_pack[_lp] = *(uint32_t*)&_bf2;
+                    }
+                    int b_store_addr = (smem_b_addr + (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + norm_row_0 * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
+                    int b_store_addr_hi = (smem_b_addr + ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
+                    #pragma unroll
+                    for (int vi = 0; vi < 16; vi++) {
+                        acc_part_4 += db_vals[vi] * db_vals[vi];
+                    }
                 }
+                smem_db_norm_part[tid] = acc_part_4;
                 asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
                 __syncthreads();
                 if (tid < 128) {
                     int m_abs = next_m_start + tid;
                     float db_norm = LOOM_INF;
-                    {
-                        db_norm = 0.0f;
-                        #pragma unroll
-                        for (int part = 0; part < 4; part++) {
-                            db_norm += smem_db_norm_part[tid + part * 128];
+                    if (batch_id < B) {
+                        if (m_abs < M) {
+                            db_norm = 0.0f;
+                            #pragma unroll
+                            for (int part = 0; part < 4; part++) {
+                                db_norm += smem_db_norm_part[tid + part * 128];
+                            }
                         }
                     }
                     smem_db_norm[tid] = db_norm;
@@ -1020,282 +1041,33 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     }
     int scratch_base = q_local * K_MAX_;
     {
+        int partial_split_m = split_m * 4;
+        int partial_split_id = split_id * 4 + col_chunk;
+        unsigned long long partial_col_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_split_m + partial_split_id) * 128 + q_local) * K_MAX_);
         if (col_chunk < 4) {
             if (q_local < 128) {
-                const int cohort_scratch_base = col_chunk * 128 * K_MAX_;
-                #pragma unroll
-                for (int kk = 0; kk < K_MAX_; kk++) {
-                    smem_cohort_topk_d[cohort_scratch_base + scratch_base + kk] = best_d[kk];
-                    smem_cohort_topk_i[cohort_scratch_base + scratch_base + kk] = best_i[kk];
-                }
-            }
-        }
-        __syncthreads();
-        unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local) * K_MAX_);
-        int pair_scratch_base = q_local * K_MAX_;
-        if (col_chunk == 0) {
-            if (q_local < 128) {
                 if (q_global < Q) {
-                    const int cohort0_base = 0;
-                    const int cohort1_base = 1280;
-                    int head0_k = 0;
-                    int head1_k = 0;
-                    float head0_d = smem_cohort_topk_d[cohort0_base + scratch_base];
-                    float head1_d = smem_cohort_topk_d[cohort1_base + scratch_base];
-                    int head0_i = smem_cohort_topk_i[cohort0_base + scratch_base];
-                    int head1_i = smem_cohort_topk_i[cohort1_base + scratch_base];
-                    #pragma unroll
-                    for (int out_k = 0; out_k < K_MAX_; out_k++) {
-                        int take1 = ((head1_d < head0_d) ? 1 : 0);
-                        best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
-                        best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
-                        if (take1 == 0) {
-                            head0_k += 1;
-                            head0_d = LOOM_INF;
-                            head0_i = -1;
-                            if (head0_k < K_MAX_) {
-                                int head0_next = cohort0_base + scratch_base + head0_k;
-                                head0_d = smem_cohort_topk_d[head0_next];
-                                head0_i = smem_cohort_topk_i[head0_next];
+                    {
+                        #pragma unroll
+                        for (int kk = 0; kk < K_MAX_; kk += 2) {
+                            {
+                                float2 _v2 = make_float2(best_d[kk + 0], best_d[kk + 1]);
+                                *reinterpret_cast<float2*>(partial_distances + partial_col_base + kk) = _v2;
                             }
                         }
-                        if (take1 != 0) {
-                            head1_k += 1;
-                            head1_d = LOOM_INF;
-                            head1_i = -1;
-                            if (head1_k < K_MAX_) {
-                                int head1_next = cohort1_base + scratch_base + head1_k;
-                                head1_d = smem_cohort_topk_d[head1_next];
-                                head1_i = smem_cohort_topk_i[head1_next];
+                        #pragma unroll
+                        for (int kk = 0; kk < K_MAX_; kk += 2) {
+                            {
+                                int2 _iv2 = make_int2(best_i[kk + 0], best_i[kk + 1]);
+                                *reinterpret_cast<int2*>(partial_indices + partial_col_base + kk) = _iv2;
                             }
                         }
                     }
+                } else {
                     #pragma unroll
                     for (int kk = 0; kk < K_MAX_; kk++) {
-                        smem_cohort_topk_d[cohort0_base + pair_scratch_base + kk] = best_d[kk];
-                        smem_cohort_topk_i[cohort0_base + pair_scratch_base + kk] = best_i[kk];
-                    }
-                }
-            }
-        }
-        if (col_chunk == 2) {
-            if (q_local < 128) {
-                if (q_global < Q) {
-                    const int cohort2_base = 2560;
-                    const int cohort3_base = 3840;
-                    int head0_k = 0;
-                    int head1_k = 0;
-                    float head0_d = smem_cohort_topk_d[cohort2_base + scratch_base];
-                    float head1_d = smem_cohort_topk_d[cohort3_base + scratch_base];
-                    int head0_i = smem_cohort_topk_i[cohort2_base + scratch_base];
-                    int head1_i = smem_cohort_topk_i[cohort3_base + scratch_base];
-                    #pragma unroll
-                    for (int out_k = 0; out_k < K_MAX_; out_k++) {
-                        int take1 = ((head1_d < head0_d) ? 1 : 0);
-                        best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
-                        best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
-                        if (take1 == 0) {
-                            head0_k += 1;
-                            head0_d = LOOM_INF;
-                            head0_i = -1;
-                            if (head0_k < K_MAX_) {
-                                int head0_next = cohort2_base + scratch_base + head0_k;
-                                head0_d = smem_cohort_topk_d[head0_next];
-                                head0_i = smem_cohort_topk_i[head0_next];
-                            }
-                        }
-                        if (take1 != 0) {
-                            head1_k += 1;
-                            head1_d = LOOM_INF;
-                            head1_i = -1;
-                            if (head1_k < K_MAX_) {
-                                int head1_next = cohort3_base + scratch_base + head1_k;
-                                head1_d = smem_cohort_topk_d[head1_next];
-                                head1_i = smem_cohort_topk_i[head1_next];
-                            }
-                        }
-                    }
-                    #pragma unroll
-                    for (int kk = 0; kk < K_MAX_; kk++) {
-                        smem_cohort_topk_d[cohort2_base + pair_scratch_base + kk] = best_d[kk];
-                        smem_cohort_topk_i[cohort2_base + pair_scratch_base + kk] = best_i[kk];
-                    }
-                }
-            }
-        }
-        __syncthreads();
-        if (col_chunk == 0) {
-            if (q_local < 128) {
-                if (q_local < 64) {
-                    if (q_global < Q) {
-                        const int pair01_base = 0;
-                        const int pair23_base = 2560;
-                        int head0_k = 0;
-                        int head1_k = 0;
-                        float head0_d = smem_cohort_topk_d[pair01_base + pair_scratch_base];
-                        float head1_d = smem_cohort_topk_d[pair23_base + pair_scratch_base];
-                        int head0_i = smem_cohort_topk_i[pair01_base + pair_scratch_base];
-                        int head1_i = smem_cohort_topk_i[pair23_base + pair_scratch_base];
-                        #pragma unroll
-                        for (int out_k = 0; out_k < K_MAX_; out_k++) {
-                            int take1 = ((head1_d < head0_d) ? 1 : 0);
-                            best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
-                            best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
-                            if (take1 == 0) {
-                                head0_k += 1;
-                                head0_d = LOOM_INF;
-                                head0_i = -1;
-                                if (head0_k < K_MAX_) {
-                                    int head0_next = pair01_base + pair_scratch_base + head0_k;
-                                    head0_d = smem_cohort_topk_d[head0_next];
-                                    head0_i = smem_cohort_topk_i[head0_next];
-                                }
-                            }
-                            if (take1 != 0) {
-                                head1_k += 1;
-                                head1_d = LOOM_INF;
-                                head1_i = -1;
-                                if (head1_k < K_MAX_) {
-                                    int head1_next = pair23_base + pair_scratch_base + head1_k;
-                                    head1_d = smem_cohort_topk_d[head1_next];
-                                    head1_i = smem_cohort_topk_i[head1_next];
-                                }
-                            }
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[0 + 0], best_d[0 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 0) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[2 + 0], best_d[2 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 2) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[4 + 0], best_d[4 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 4) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[6 + 0], best_d[6 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 6) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[8 + 0], best_d[8 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 8) = _v2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[0 + 0], best_i[0 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 0) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[2 + 0], best_i[2 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 2) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[4 + 0], best_i[4 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 4) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[6 + 0], best_i[6 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 6) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[8 + 0], best_i[8 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 8) = _iv2;
-                        }
-                    } else {
-                        #pragma unroll
-                        for (int kk = 0; kk < K_MAX_; kk++) {
-                            partial_distances[partial_base + kk] = LOOM_INF;
-                            partial_indices[partial_base + kk] = -1;
-                        }
-                    }
-                }
-            }
-        }
-        if (col_chunk == 2) {
-            if (q_local < 128) {
-                if (q_local >= 64) {
-                    if (q_global < Q) {
-                        const int pair01_base = 0;
-                        const int pair23_base = 2560;
-                        int head0_k = 0;
-                        int head1_k = 0;
-                        float head0_d = smem_cohort_topk_d[pair01_base + pair_scratch_base];
-                        float head1_d = smem_cohort_topk_d[pair23_base + pair_scratch_base];
-                        int head0_i = smem_cohort_topk_i[pair01_base + pair_scratch_base];
-                        int head1_i = smem_cohort_topk_i[pair23_base + pair_scratch_base];
-                        #pragma unroll
-                        for (int out_k = 0; out_k < K_MAX_; out_k++) {
-                            int take1 = ((head1_d < head0_d) ? 1 : 0);
-                            best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
-                            best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
-                            if (take1 == 0) {
-                                head0_k += 1;
-                                head0_d = LOOM_INF;
-                                head0_i = -1;
-                                if (head0_k < K_MAX_) {
-                                    int head0_next = pair01_base + pair_scratch_base + head0_k;
-                                    head0_d = smem_cohort_topk_d[head0_next];
-                                    head0_i = smem_cohort_topk_i[head0_next];
-                                }
-                            }
-                            if (take1 != 0) {
-                                head1_k += 1;
-                                head1_d = LOOM_INF;
-                                head1_i = -1;
-                                if (head1_k < K_MAX_) {
-                                    int head1_next = pair23_base + pair_scratch_base + head1_k;
-                                    head1_d = smem_cohort_topk_d[head1_next];
-                                    head1_i = smem_cohort_topk_i[head1_next];
-                                }
-                            }
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[0 + 0], best_d[0 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 0) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[2 + 0], best_d[2 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 2) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[4 + 0], best_d[4 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 4) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[6 + 0], best_d[6 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 6) = _v2;
-                        }
-                        {
-                            float2 _v2 = make_float2(best_d[8 + 0], best_d[8 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_base + 8) = _v2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[0 + 0], best_i[0 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 0) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[2 + 0], best_i[2 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 2) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[4 + 0], best_i[4 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 4) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[6 + 0], best_i[6 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 6) = _iv2;
-                        }
-                        {
-                            int2 _iv2 = make_int2(best_i[8 + 0], best_i[8 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_base + 8) = _iv2;
-                        }
-                    } else {
-                        #pragma unroll
-                        for (int kk = 0; kk < K_MAX_; kk++) {
-                            partial_distances[partial_base + kk] = LOOM_INF;
-                            partial_indices[partial_base + kk] = -1;
-                        }
+                        partial_distances[partial_col_base + kk] = LOOM_INF;
+                        partial_indices[partial_col_base + kk] = -1;
                     }
                 }
             }

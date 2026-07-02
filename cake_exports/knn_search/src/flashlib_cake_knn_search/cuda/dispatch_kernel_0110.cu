@@ -16,8 +16,8 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define NUM_MAIN_STAGES 1
 #define THREADS 256
-#define D_ 264
-#define K_CAP_ 64
+#define D_ 384
+#define K_CAP_ 10
 #define BLOCK_M_ 512
 #define NUM_WARPS_ 8
 

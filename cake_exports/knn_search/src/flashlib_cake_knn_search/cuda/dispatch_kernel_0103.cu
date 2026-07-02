@@ -23,7 +23,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define SMEM_SMEM_IDX_STRIDE 2048
 #define SMEM_TOTAL 4096
 #define THREADS 256
-#define D_ 264
+#define D_ 136
 #define K_CAP_ 10
 #define NUM_WARPS_ 8
 
