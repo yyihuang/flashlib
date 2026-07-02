@@ -43,7 +43,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'streamdep_reduce':
         return _streamdep.reduce_ir
     return _r1.partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_gridcap128_8512_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz = int(inputs['B'])

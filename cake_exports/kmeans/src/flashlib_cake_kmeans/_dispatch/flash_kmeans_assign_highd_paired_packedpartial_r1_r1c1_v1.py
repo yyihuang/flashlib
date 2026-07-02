@@ -40,10 +40,10 @@ PAIRED_K_SLICES = 8
 U32_MASK = 4294967295
 ROUTE_ID = 'highd_paired_packedpartial_r1_r1c1_v1'
 SEED_ID = 'highd-paired-packedpartial-r1-r1c1-v1'
-flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_r1_r1c1_v1:flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
-flash_kmeans_assign_highd_paired_packedpartial_reduce_r1_r1c1_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_r1_r1c1_v1:flash_kmeans_assign_highd_paired_packedpartial_reduce_r1_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_r1_r1c1_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_r1_r1c1_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_highd_paired_packedpartial_reduce_r1_r1c1_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_reduce_r1_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_reduce_r1_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_FLASH_KMEANS_HIGHD_PAIRED_PACKEDPARTIAL_R1_R1C1_VERIFY_KERNEL')
@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'streamdep_reduce':
         return _streamdep.reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_packedpartial_r1_r1c1_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_packedpartial_producer_r1c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=1)
 def _loaded_partial_key_kernel() -> tuple[Any, int, int]:

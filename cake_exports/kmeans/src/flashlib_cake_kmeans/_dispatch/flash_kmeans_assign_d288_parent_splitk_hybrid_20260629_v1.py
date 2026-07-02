@@ -20,7 +20,7 @@ ROUTE_ID = 'd288_parent_splitk_hybrid_20260629_v1'
 SEED_ID = 'd288-parent-splitk-hybrid-20260629-v1'
 PARENT_CHILD_ROUTE_ID = 'd288_exactd_a532_v1'
 SPLITK_CHILD_ROUTE_ID = _splitk.ROUTE_ID
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_parent_splitk_hybrid_20260629_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_exactd_a532_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz, n_points, dim, n_clusters, dtype_name = _shape_fields(inputs)

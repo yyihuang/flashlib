@@ -32,16 +32,16 @@ REDUCE_THREADS = 128
 SPLITK_MIN_K_TILES = 8
 ROUTE_ID = 'd288_splitk_cta_0438_v1'
 SEED_ID = 'd288-splitk-cta-0438-v1'
-flash_kmeans_assign_d288_splitk_cta_0438_v1_partial = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_splitk_cta_0438_v1:flash_kmeans_assign_d288_splitk_cta_0438_v1_partial", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
-flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_splitk_cta_0438_v1:flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_splitk_cta_0438_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_splitk_cta_0438_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+flash_kmeans_assign_d288_splitk_cta_0438_v1_partial = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_splitk_cta_0438_v1_partial", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_splitk_cta_0438_v1_partial", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     if os.environ.get('LOOM_FLASH_KMEANS_D288_SPLITK_CTA_0438_V1_VERIFY_KERNEL') == 'reduce':
         return reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d288_splitk_cta_0438_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d288_splitk_cta_0438_v1_partial", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     return _direct._cuda_include_dirs()

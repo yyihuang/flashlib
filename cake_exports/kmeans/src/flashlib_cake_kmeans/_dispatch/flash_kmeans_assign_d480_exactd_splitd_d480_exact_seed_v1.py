@@ -16,7 +16,7 @@ CHUNK_D = _core.CHUNK_D
 FEAT_D = 480
 ROUTE_ID = 'd480_exactd_splitd_d480_exact_seed_v1'
 SEED_ID = 'd480-exactd-splitd-d480-exact-seed-v1'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_exactd_splitd_d480_exact_seed_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d416_exactd_splitd_a4a579d1_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 26624, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     dim = int(inputs['D'])

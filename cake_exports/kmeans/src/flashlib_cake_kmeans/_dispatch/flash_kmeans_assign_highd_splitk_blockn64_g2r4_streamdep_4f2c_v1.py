@@ -22,14 +22,14 @@ SPLITK_TILE_K = _g2r4.SPLITK_TILE_K
 SPLITK_GRID_CAP = _g2r4.SPLITK_GRID_CAP
 ROUTE_ID = 'highd_splitk_blockn64_g2r4_streamdep_4f2c_v1'
 SEED_ID = 'highd-splitk-blockn64-g2r4-streamdep-4f2c-v1'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g2r4_streamdep_4f2c_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g2r4_streamdep_4f2c_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_reduce_blockn64_g2r4_b5a6_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     if os.environ.get('LOOM_FLASH_KMEANS_HIGHD_SPLITK_BLOCKN64_G2R4_STREAMDEP_4F2C_VERIFY_KERNEL') == 'reduce':
         return reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_blockn64_g2r4_streamdep_4f2c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=1)
 def _loaded_partial_kernel() -> tuple[Any, int, int]:

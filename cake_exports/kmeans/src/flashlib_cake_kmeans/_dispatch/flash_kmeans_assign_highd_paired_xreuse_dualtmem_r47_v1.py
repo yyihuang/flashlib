@@ -39,9 +39,9 @@ NUM_COMPUTE_WARPS = _g2r4.NUM_COMPUTE_WARPS
 U32_MASK = _r39.U32_MASK
 ROUTE_ID = 'highd_paired_xreuse_dualtmem_r47_v1'
 SEED_ID = 'highd-paired-xreuse-dualtmem-r47-v1'
-flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_xreuse_dualtmem_r47_v1:flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_xreuse_dualtmem_r47_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_xreuse_dualtmem_r47_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
+flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 64}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_FLASH_KMEANS_HIGHD_PAIRED_XREUSE_DUALTMEM_R47_VERIFY_KERNEL')
@@ -52,7 +52,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'd512_reduce':
         return _r39._r2.reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_paired_xreuse_dualtmem_r47_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 75776, "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=1)
 def _loaded_partial_key_kernel() -> tuple[Any, int, int]:

@@ -20,7 +20,7 @@ ROUTE_ID = 'microdim_hybrid_9c0d_v1'
 SEED_ID = 'microdim-hybrid-9c0d-v1'
 DIRECT_CHILD_ROUTE_ID = _direct.ROUTE_ID
 PACK_CHILD_ROUTE_ID = 'microdim_pack_6cd2_v1'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_microdim_hybrid_9c0d_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_microdim_direct_9c0d_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz, n_points, dim, n_clusters, dtype_name = _shape_fields(inputs)

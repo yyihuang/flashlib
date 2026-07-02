@@ -15,7 +15,7 @@ from . import flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1 as
 TARGET_D = 768
 ROUTE_ID = 'd768_no_padding_splitk_priority_d768_exact_seed_v1'
 SEED_ID = 'd768-no-padding-splitk-priority-d768-exact-seed-v1'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d768_no_padding_splitk_priority_d768_exact_seed_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 43008, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     bsz = int(inputs['B'])

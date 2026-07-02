@@ -25,8 +25,8 @@ CSQ_TILE_BYTES = BLOCK_K * 4
 _TMAP_CACHE: dict[tuple[int, int, int, int, int, int], Any] = {}
 ROUTE_ID = 'd64_direct_single64_1p2gap_9f2a_v1'
 SEED_ID = 'd64-direct-single64-1p2gap-9f2a-v1'
-flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1:flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs

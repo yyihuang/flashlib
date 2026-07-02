@@ -31,16 +31,16 @@ REDUCE_THREADS = 128
 SPLITK_MIN_K_TILES = 16
 ROUTE_ID = 'highd_splitk_8de8_v1'
 SEED_ID = 'highd-splitk-8de8-v1'
-flash_kmeans_assign_highd_splitk_partial_8de8_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_8de8_v1:flash_kmeans_assign_highd_splitk_partial_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
-flash_kmeans_assign_highd_splitk_reduce_8de8_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_8de8_v1:flash_kmeans_assign_highd_splitk_reduce_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_8de8_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_8de8_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+flash_kmeans_assign_highd_splitk_partial_8de8_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_highd_splitk_reduce_8de8_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_reduce_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_reduce_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     if os.environ.get('LOOM_FLASH_KMEANS_HIGHD_SPLITK_VERIFY_KERNEL') == 'reduce':
         return reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitk_8de8_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitk_partial_8de8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     return _splitd._cuda_include_dirs()

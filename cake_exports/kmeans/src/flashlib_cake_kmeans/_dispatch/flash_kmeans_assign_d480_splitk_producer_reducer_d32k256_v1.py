@@ -37,16 +37,16 @@ REDUCE_THREADS = BLOCK_N * REDUCE_LANES_PER_ROW
 ROUTE_ID = 'd480_splitk_producer_reducer_d32k256_v1'
 SEED_ID = 'd480-splitk-producer-reducer-d32k256-v1'
 VERIFY_ENV = 'LOOM_FLASH_KMEANS_D480_SPLITK_PRODUCER_REDUCER_D32K256_VERIFY_KERNEL'
-flash_kmeans_assign_d480_splitk_partial_d32k256_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1:flash_kmeans_assign_d480_splitk_partial_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
-flash_kmeans_assign_d480_splitk_reduce_d32k256_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1:flash_kmeans_assign_d480_splitk_reduce_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
-reduce_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1:reduce_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+flash_kmeans_assign_d480_splitk_partial_d32k256_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d480_splitk_partial_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_d480_splitk_reduce_d32k256_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d480_splitk_reduce_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d480_splitk_partial_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
+reduce_ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d480_splitk_reduce_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     if os.environ.get(VERIFY_ENV) == 'reduce':
         return reduce_ir
     return partial_ir
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_d480_splitk_partial_d32k256_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 22528, "cta_group": 1, "threads": 192}'))
 
 def _compiled_partial_kernel() -> tuple[bytes, str, int, int]:
     return _decode_capture(_json_loads('{"__tuple__": [{"__kernel_source__": "dispatch_kernel_0348"}, "kernel_flash_kmeans_assign_d480_splitk_partial_d32k256_v1", 22528, 192]}'))

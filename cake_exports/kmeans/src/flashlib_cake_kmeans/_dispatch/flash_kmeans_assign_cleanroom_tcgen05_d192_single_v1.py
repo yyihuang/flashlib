@@ -21,7 +21,7 @@ C_TILE_BYTES = BLOCK_K * FEAT_D * 2
 X_FEAT_CHUNK_BYTES = BLOCK_N * 64 * 2
 C_FEAT_CHUNK_BYTES = BLOCK_K * 64 * 2
 CSQ_TILE_BYTES = BLOCK_K * 4
-flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1:flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149504, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 149504, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs

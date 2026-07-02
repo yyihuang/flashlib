@@ -25,7 +25,7 @@ SUPPORTED_DIMS = {320, 384, 448, 512}
 BF16_DTYPE_NAMES = {'bfloat16', 'bf16', 'torch.bfloat16'}
 ROUTE_ID = 'highd_splitd_single_tile_6fcf_v1'
 SEED_ID = 'highd-splitd-single-tile-6fcf-v1'
-flash_kmeans_assign_highd_splitd_6fcf_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitd_6fcf_v1:flash_kmeans_assign_highd_splitd_6fcf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+flash_kmeans_assign_highd_splitd_6fcf_v1 = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitd_6fcf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def _cuda_include_dirs() -> list[str]:
     from .._dispatch_runtime import _cuda_include_dirs as _common_cuda_include_dirs
@@ -48,7 +48,7 @@ def _make_tmaps(inputs: dict[str, Any]) -> tuple[Any, Any]:
 
 def _compiled_kernel() -> tuple[bytes, str, int, int]:
     return _decode_capture(_json_loads('{"__tuple__": [{"__kernel_source__": "dispatch_kernel_0330"}, "kernel_flash_kmeans_assign_highd_splitd_6fcf_v1", 51200, 192]}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.flash_kmeans_assign_highd_splitd_6fcf_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "flash_kmeans_assign_highd_splitd_6fcf_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 51200, "cta_group": 1, "threads": 192}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch
