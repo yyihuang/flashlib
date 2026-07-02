@@ -7,7 +7,7 @@ the collective with ``INF`` and are not inserted into the tile-local top-K list.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_lowq_q2q4_blockm640_0614_r10_e864_v1 as base

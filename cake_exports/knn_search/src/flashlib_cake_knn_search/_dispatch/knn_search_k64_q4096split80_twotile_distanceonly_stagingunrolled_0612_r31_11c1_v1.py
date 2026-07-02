@@ -10,7 +10,7 @@ runtime split-grid math with the registered bucket constants.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_highq_qbucket_registered_0612_r19_4e96split64_v1 as registered_parent

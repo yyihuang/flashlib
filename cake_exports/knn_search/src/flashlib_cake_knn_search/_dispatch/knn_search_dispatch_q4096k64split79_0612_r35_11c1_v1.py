@@ -8,7 +8,7 @@ an additive policy wrapper: no kernel body or fallback semantics are changed.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from collections.abc import Callable
 from typing import Any, NamedTuple
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as q4096_k64_split79

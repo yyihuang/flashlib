@@ -1,0 +1,74 @@
+"""Exact D4096/Q4/M32768/K10 direct-stride tcgen05 kNN seed.
+
+Minimum target architecture: sm_100a.  This additive exact-shape seed extends
+the verified D4096 direct-stride tcgen05 producer and its full top-10 merge
+ABI to ``B=1, Q=4, M=32768, D=4096, K=10``.  The eval path is Weave-only.
+"""
+from __future__ import annotations
+from json import loads as _json_loads
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+import math
+from typing import Any
+from .._dispatch_runtime import evaluate, select_named_shapes
+from . import knn_search_d4096_q4q8_m8192m16384_k10_0623_5ff7_v1 as seed
+from . import knn_search_mma_split_v1 as mma
+THREADS = seed.THREADS
+MERGE_THREADS = seed.MERGE_THREADS
+BLOCK_Q = seed.BLOCK_Q
+BLOCK_M = seed.BLOCK_M
+D_ORIG = seed.D_ORIG
+K_MAX = seed.K_MAX
+SPLIT_M = seed.SPLIT_M
+SMEM_BYTES = seed.SMEM_BYTES
+ROUTE = '3737_target0627_d4096_q4_m32768_k10_directstride_tcgen05'
+ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:launch_for_eval'
+TARGET_LABELS = ('target0627_d4096_q4_m32768_k10',)
+TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d4096_q4_m32768_k10", "params": {"B": 1, "D": 4096, "K": 10, "M": 32768, "Q": 4, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612114, "self_search": false}}]'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:partial_ir"}'))
+knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1 = _ir_proxy('loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1', 256)
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:ir"}'))
+_KERNELS: dict[str, Any] = {}
+
+def _shape_key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int, bool]:
+    return (int(inputs.get('B', 1)), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K']), bool(inputs.get('self_search', False)))
+
+def _active(inputs: dict[str, Any]) -> bool:
+    return _shape_key(inputs) == (1, 4, 32768, 4096, 10, False) and (not bool(inputs.get('force_fallback', False))) and seed._tcgen05_capable_arch()
+
+def selected_route(inputs: dict[str, Any]) -> str:
+    return ROUTE if _active(inputs) else seed.selected_route(inputs)
+
+def selected_route_name(inputs: dict[str, Any]) -> str:
+    return selected_route(inputs)
+
+def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
+    if not _active(inputs):
+        return seed.route_info(inputs)
+    return {'route': ROUTE, 'selected_route': ROUTE, 'selected_entrypoint': ENTRYPOINT, 'route_kind': 'specialized', 'route_source': 'shape-specific-seed', 'coverage_class': 'bucket_seed_target0627_d4096_q4_m32768_k10', 'classification': 'seed-produced', 'coverage_only': False, 'production_policy': 'weave_only', 'external_fallback': None, 'guard_id': 'target0627_d4096_q4_m32768_k10', 'guard_condition': 'B==1,Q==4,M==32768,D==4096,K==10,nonself,sm100a_or_sm103a', 'selected_guard': 'exact_d4096_q4_m32768_k10', 'forced_fallback': False, 'selected_seed': 'weave-evolve-knn-search-3737', 'producer_seed': 'weave-evolve-knn-search-5ff7-d4096-q4q8-targetd', 'padding_tag': 'none', 'uses_materialized_padding': False, 'uses_kernel_padding': False, 'padding_overhead_timed': False, 'padded_D': D_ORIG, 'workspace_reuse': True}
+
+def _compile_kernels() -> dict[str, Any]:
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0472"}, "partial": {"__kernel__": "dispatch_kernel_0471"}}'))
+
+def _launch_exact(inputs: dict[str, Any]) -> dict[str, Any]:
+    import torch
+    if not _KERNELS:
+        _KERNELS.update(_compile_kernels())
+    split_m = 256
+    num_q_tiles = math.ceil(int(inputs['Q']) / BLOCK_Q)
+    partial_dist, partial_idx = seed._scratch(inputs, split_m, num_q_tiles)
+    _KERNELS['partial'].launch(grid=(int(inputs['B']) * num_q_tiles * split_m, 1, 1), block=(THREADS, 1, 1), args=[inputs['queries'], inputs['database'], partial_dist, partial_idx, int(inputs['B']), int(inputs['Q']), int(inputs['M']), split_m, num_q_tiles, 256], shared_mem=SMEM_BYTES)
+    _KERNELS['merge'].launch(grid=(int(inputs['B']) * int(inputs['Q']), 1, 1), block=(MERGE_THREADS, 1, 1), args=[partial_dist, partial_idx, inputs['out_distances'], inputs['out_indices'], int(inputs['B']), int(inputs['Q']), int(inputs['K']), split_m, num_q_tiles], shared_mem=mma.MERGE_SMEM_BYTES)
+    torch.cuda.synchronize()
+    return {'distances': inputs['out_distances'], 'indices': inputs['out_indices']}
+
+def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
+    if _active(inputs):
+        return _launch_exact(inputs)
+    return seed.launch_for_eval(inputs)
+
+def compile_and_launch(*, benchmark: bool=True) -> dict[str, Any]:
+    result = evaluate(launch_for_eval, shapes=TARGET_SHAPES, benchmark=benchmark)
+    result['passed'] = bool(result.get('summary', {}).get('all_correct'))
+    print(result)
+    return result

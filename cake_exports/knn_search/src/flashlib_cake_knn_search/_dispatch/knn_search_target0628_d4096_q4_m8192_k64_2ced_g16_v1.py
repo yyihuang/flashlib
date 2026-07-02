@@ -1,0 +1,68 @@
+"""Exact D4096/Q4/M8192/K64 tcgen05 seed with a 16-way merge.
+
+Minimum target architecture: sm_100a.  The tcgen05 producer is inherited from
+the proven exact-D route; this additive tile-grouping candidate changes the
+partial-list consumer from 32 to 16 groups while preserving full top-64 output
+semantics.
+"""
+from __future__ import annotations
+from json import loads as _json_loads
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from typing import Any
+from . import knn_search_target0628_d4096_q4_m8192_k64_e750_v1 as parent
+THREADS = parent.THREADS
+MERGE_THREADS = 32
+BLOCK_Q = parent.BLOCK_Q
+K64_MAX = parent.K64_MAX
+HIERMERGE_GROUPS = 16
+HIERMERGE_LISTS_PER_GROUP_MAX = 8
+SMEM_BYTES = parent.SMEM_BYTES
+MERGE_SMEM_BYTES = parent.parent.merge_seed.MERGE_SMEM_BYTES
+ROUTE = '2ced_target0628_d4096_q4_m8192_k64_group16_tcgen05'
+ENTRYPOINT = 'loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:launch_for_eval'
+TARGET_SHAPES = parent.TARGET_SHAPES
+_KERNELS: dict[str, Any] | None = None
+_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
+_GROUP_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
+knn_search_target0628_d4096_q4_m8192_k64_group16_merge_2ced_v1 = _ir_proxy('loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:knn_search_target0628_d4096_q4_m8192_k64_group16_merge_2ced_v1', 256)
+knn_search_target0628_d4096_q4_m8192_k64_group16_final_2ced_v1 = _ir_proxy('loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:knn_search_target0628_d4096_q4_m8192_k64_group16_final_2ced_v1', 256)
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:partial_ir"}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:group_merge_ir"}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:final_merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_2ced_g16_v1:ir"}'))
+
+def _active(inputs: dict[str, Any]) -> bool:
+    return parent._active(inputs)
+
+def selected_route(inputs: dict[str, Any]) -> str:
+    return ROUTE if _active(inputs) else parent.selected_route(inputs)
+
+def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
+    if _active(inputs):
+        return {**parent.route_info(inputs), 'selected_route': ROUTE, 'selected_entrypoint': ENTRYPOINT, 'coverage_class': 'bucket_seed_target0627_d4096_q4_m8192_k64_group16'}
+    return parent.route_info(inputs)
+
+def _compile_kernels() -> dict[str, Any]:
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0478"}, "group": {"__kernel__": "dispatch_kernel_0477"}, "partial": {"__kernel__": "dispatch_kernel_0476"}}'))
+
+def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
+    import torch
+    global _KERNELS
+    if _KERNELS is None:
+        _KERNELS = _compile_kernels()
+    key = (id(inputs['queries']), str(inputs['queries'].dtype))
+    partial = _SCRATCH.get(key)
+    if partial is None:
+        partial = (torch.empty((1, 1, 128, BLOCK_Q, K64_MAX), dtype=torch.float32, device=inputs['queries'].device), torch.empty((1, 1, 128, BLOCK_Q, K64_MAX), dtype=torch.int32, device=inputs['queries'].device))
+        _SCRATCH[key] = partial
+    groups = _GROUP_SCRATCH.get(key)
+    if groups is None:
+        groups = (torch.empty((1, 4, HIERMERGE_GROUPS, K64_MAX), dtype=torch.float32, device=inputs['queries'].device), torch.empty((1, 4, HIERMERGE_GROUPS, K64_MAX), dtype=torch.int32, device=inputs['queries'].device))
+        _GROUP_SCRATCH[key] = groups
+    _KERNELS['partial'].launch(grid=(128, 1, 1), block=(THREADS, 1, 1), args=[inputs['queries'], inputs['database'], partial[0], partial[1], 1, 4, 8192, 128, 1], shared_mem=SMEM_BYTES)
+    _KERNELS['group'].launch(grid=(4 * HIERMERGE_GROUPS, 1, 1), block=(MERGE_THREADS, 1, 1), args=[partial[0], partial[1], groups[0], groups[1], 1, 4, 128, 1], shared_mem=MERGE_SMEM_BYTES)
+    _KERNELS['final'].launch(grid=(4, 1, 1), block=(MERGE_THREADS, 1, 1), args=[groups[0], groups[1], inputs['out_distances'], inputs['out_indices'], 1, 4, 64], shared_mem=MERGE_SMEM_BYTES)
+    return {'distances': inputs['out_distances'], 'indices': inputs['out_indices']}
+
+def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
+    return _launch(inputs) if _active(inputs) else parent.launch_for_eval(inputs)

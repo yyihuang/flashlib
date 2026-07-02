@@ -8,7 +8,7 @@ round-56 1f56 large-M routes and inherited Weave fallback behavior.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_lowq_q2q4_q8q64_registered_0613_r56_1f56_v1 as parent

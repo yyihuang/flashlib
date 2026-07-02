@@ -6,7 +6,7 @@ all other shapes retain the existing exported Weave-only dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from importlib import import_module
 from typing import Any
 from . import knn_search_r278_q4096_exported_vertical_slice_b4ae378a3287_v1 as seed
@@ -20,7 +20,7 @@ SHAPE_DISPATCH_REGISTRY = (_ENTRY,)
 _SEED_BLOCK_M = 128
 
 def _parent() -> Any:
-    return import_module('loom.examples.weave.knn_search_dispatch0630_exported_q8_rag_synthesis_6675_v1')
+    return _import_dispatch_module('knn_search_dispatch0630_exported_q8_rag_synthesis_6675_v1')
 
 def __getattr__(name: str) -> Any:
     return getattr(_parent(), name)

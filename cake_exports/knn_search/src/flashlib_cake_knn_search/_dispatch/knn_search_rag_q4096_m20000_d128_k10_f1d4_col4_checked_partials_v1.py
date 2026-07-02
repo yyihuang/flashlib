@@ -7,7 +7,7 @@ an exact squared-L2 subproblem.  It is deliberately not a benchmark path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any, Iterable
 from . import knn_search_mma_split_v1 as mma

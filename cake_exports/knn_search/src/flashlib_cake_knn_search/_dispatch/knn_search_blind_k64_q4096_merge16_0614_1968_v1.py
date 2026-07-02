@@ -9,7 +9,7 @@ the contract-visible producer or top-K semantics.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_blind_k64_twotile_portfolio_0614_50cc_v1 as parent
 K64_MAX = parent.K64_MAX

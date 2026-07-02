@@ -7,7 +7,7 @@ Q1 large-M tail route and high-Q mid-M Q-bucket split policy.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_highq_midm_qbucket_0611_r19_4e96_v1 as highq_qbucket
 from . import knn_search_k20k30_mma_q128register_0611_r20_4e96_v1 as parent

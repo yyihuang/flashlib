@@ -7,7 +7,7 @@ no kernel schedule; it repairs route retention for complete source export.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0701_k11_d128_guard_repair_v1 as current
 from . import knn_search_ext_k_capacity_0618_28ec_v1 as ext_k

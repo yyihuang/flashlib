@@ -7,7 +7,7 @@ buckets through the round-15 tie-stable split-4 path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k20k30_mma_q128register_0611_r20_4e96_v1 as parent
 from . import knn_search_q4096_split4_tiestable_0612_r15_4e2c_v1 as q4096_split4

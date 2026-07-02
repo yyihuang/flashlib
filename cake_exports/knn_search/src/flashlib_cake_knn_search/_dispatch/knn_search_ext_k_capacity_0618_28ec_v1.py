@@ -9,7 +9,7 @@ high-Q two-tile K64 producer with a shape-specific split.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_dispatch0618_seed_portfolio_c492_v1 as c492

@@ -8,7 +8,7 @@ the current 084a dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_dispatch0618_084a_lowd_d256_post_d384_k64_v1 as base

@@ -8,7 +8,7 @@ contract-suite M-bucket shapes.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k20k30_mma_capacity_0611_r15_4e96_v1 as parent
 from . import knn_search_q128_split_policy_f295_v1 as q128_policy

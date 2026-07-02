@@ -8,7 +8,7 @@ tcgen05 producer from the sibling round-34 capacity branch.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_lowd_d256_mma64_over48e9_0612_r34_48e9_v1 as d256_k64
 from . import knn_search_lowd_d256_over48e9_0612_r34_d256mma_v1 as parent

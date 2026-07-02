@@ -11,7 +11,7 @@ b08d to explicitly measured Q128 sub-buckets.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1 as ann_b72b
 from . import knn_search_dispatch0610_extk_sweep_176c_r3_lowkseed_v1 as extk_bbd5

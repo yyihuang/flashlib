@@ -8,7 +8,7 @@ the physical scratch ABI before exported distances and indices are written.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from importlib import import_module
 from typing import Any
 from . import knn_search_rag_q4096_m20000_d128_k10_repair_q4096_seed3_real_scratch_v1 as d07b
@@ -19,7 +19,7 @@ GUARD = 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 10 and not se
 ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_r278_q4096_exported_vertical_slice_b4ae378a3287_v1:ir"}'))
 
 def _parent() -> Any:
-    return import_module('loom.examples.weave.knn_search_dispatch0630_exported_q8_rag_synthesis_6675_v1')
+    return _import_dispatch_module('knn_search_dispatch0630_exported_q8_rag_synthesis_6675_v1')
 
 def _is_target(inputs: dict[str, Any]) -> bool:
     return d07b.selected_route(inputs) in {d07b.TARGET_ROUTE, d07b.FORCED_FALLBACK_ROUTE}

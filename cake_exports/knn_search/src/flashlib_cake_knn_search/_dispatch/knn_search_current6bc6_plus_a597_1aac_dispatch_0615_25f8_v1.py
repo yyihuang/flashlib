@@ -8,7 +8,7 @@ does not retune any seed schedule.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_blind_lowd_non_d128_tcgen05_dispatch0610_r99_ec7c_v1 as lowd_a597
 from . import knn_search_extendedk_dispatch0610_r2_k48k64portfolio_v1 as ext_1aac

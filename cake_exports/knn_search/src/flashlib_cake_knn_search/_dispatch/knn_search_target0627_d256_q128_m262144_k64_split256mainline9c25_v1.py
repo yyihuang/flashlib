@@ -1,0 +1,81 @@
+"""D256/Q128/M262144/K64 split256 tcgen05 mainline seed.
+
+Minimum target architecture: sm_100a.  This exact-shape route retains the
+verified CTA-local D256 tcgen05 producer and rows8 ABI merge, while splitting
+the 4096 database tiles into 256 independent producer CTAs.  The larger
+producer grid removes the B300 underfill of the split128 seed; its partial ABI
+remains split-major, cohort-minor top64 lists consumed directly by the merge.
+"""
+from __future__ import annotations
+from json import loads as _json_loads
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+import math
+from typing import Any
+from .._dispatch_runtime import select_named_shapes
+from . import knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1 as base
+THREADS = base.THREADS
+MERGE_THREADS = base.MERGE_THREADS
+ROWS_PER_CTA = base.ROWS_PER_CTA
+BLOCK_Q = base.BLOCK_Q
+BLOCK_M = base.BLOCK_M
+K_MAX = base.K_MAX
+POST_MMA_COL_COHORTS = base.POST_MMA_COL_COHORTS
+MMA_SMEM_BYTES = base.MMA_SMEM_BYTES
+MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
+SPLIT_M = 256
+MERGE_SLOTS = 16
+TARGET_LABELS = ('target0627_d256_q128_m262144_k64',)
+TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d256_q128_m262144_k64", "params": {"B": 1, "D": 256, "K": 64, "M": 262144, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612106, "self_search": false}}]'))
+ROUTE = 'target0627_d256_q128_m262144_k64_split256mainline9c25_tcgen05_rows8'
+ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_split256mainline9c25_v1:launch_for_eval'
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_split256mainline9c25_v1:partial_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_split256mainline9c25_v1:ir"}'))
+_KERNELS: dict[str, Any] = {}
+_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
+
+def _use_target(inputs: dict[str, Any]) -> bool:
+    return not bool(inputs.get('force_fallback', False)) and base.base._tcgen05_capable_arch() and (base.base._shape_key(inputs) == (1, 128, 262144, 256, 64, False))
+knn_search_d256_split256_rows8_merge_v1 = _ir_proxy('loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_split256mainline9c25_v1:knn_search_d256_split256_rows8_merge_v1', 256)
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_split256mainline9c25_v1:merge_ir"}'))
+
+def _scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
+    import torch
+    key = (int(inputs['B']), int(inputs['Q']), int(inputs['M']), partial_list_count, num_q_tiles, K_MAX, int(inputs['queries'].device.index or 0), str(inputs['queries'].dtype))
+    cached = _SCRATCH.get(key)
+    if cached is None:
+        shape = (int(inputs['B']), num_q_tiles, partial_list_count, BLOCK_Q, K_MAX)
+        cached = (torch.empty(shape, dtype=torch.float32, device=inputs['queries'].device), torch.empty(shape, dtype=torch.int32, device=inputs['queries'].device))
+        _SCRATCH[key] = cached
+    return cached
+
+def _compile_kernels() -> dict[str, Any]:
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0381"}, "partial": {"__kernel__": "dispatch_kernel_0380"}}'))
+
+def _ensure_kernels() -> dict[str, Any]:
+    if not _KERNELS:
+        _KERNELS.update(_compile_kernels())
+    return _KERNELS
+
+def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
+    kernels = _ensure_kernels()
+    bsz, q_rows, m_rows, k = (int(inputs[name]) for name in ('B', 'Q', 'M', 'K'))
+    num_q_tiles = math.ceil(q_rows / BLOCK_Q)
+    total_m_tiles = math.ceil(m_rows / BLOCK_M)
+    split_m = min(SPLIT_M, total_m_tiles)
+    tiles_per_split = math.ceil(total_m_tiles / split_m)
+    partial_list_count = split_m * POST_MMA_COL_COHORTS
+    partial_dist, partial_idx = _scratch(inputs, partial_list_count, num_q_tiles)
+    kernels['partial'].launch(grid=(bsz * num_q_tiles * split_m, 1, 1), block=(THREADS, 1, 1), args=[inputs['queries'], inputs['database'], partial_dist, partial_idx, bsz, q_rows, m_rows, split_m, num_q_tiles, total_m_tiles, tiles_per_split], shared_mem=MMA_SMEM_BYTES)
+    kernels['merge'].launch(grid=(math.ceil(bsz * q_rows / ROWS_PER_CTA), 1, 1), block=(MERGE_THREADS, 1, 1), args=[partial_dist, partial_idx, inputs['out_distances'], inputs['out_indices'], bsz, q_rows, k, partial_list_count, num_q_tiles], shared_mem=MERGE_SMEM_BYTES)
+    return {'distances': inputs['out_distances'], 'indices': inputs['out_indices']}
+
+def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
+    return _launch(inputs) if _use_target(inputs) else base.launch_for_eval(inputs)
+
+def selected_route(inputs: dict[str, Any]) -> str:
+    return ROUTE if _use_target(inputs) else base.selected_route(inputs)
+
+def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
+    if not _use_target(inputs):
+        return base.route_info(inputs)
+    return {'route': ROUTE, 'selected_route': ROUTE, 'selected_entrypoint': ENTRYPOINT, 'route_kind': 'specialized', 'route_source': 'shape-specific-seed', 'production_policy': 'weave_only', 'arch_requirement': 'sm_100a', 'split_m': SPLIT_M, 'partial_list_count': SPLIT_M * POST_MMA_COL_COHORTS, 'producer_to_merge_abi': '[B,q_tile,split*2+cohort,q_local,K64] f32/i32 top64', 'producer_operands': 'CTA-local smem_a and ping-pong CTA-local smem_b', 'producer_layout': 'split-major/cohort-minor TMEM top64', 'consumer_layout': 'eight warp-owned Q rows/CTA', 'padding_tag': 'none', 'uses_materialized_padding': False, 'uses_kernel_padding': False, 'padding_overhead_timed': False, 'workspace_reuse': 'cached exact-shape scratch'}

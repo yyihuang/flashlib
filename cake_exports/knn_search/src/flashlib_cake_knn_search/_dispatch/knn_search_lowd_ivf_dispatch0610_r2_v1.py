@@ -7,7 +7,7 @@ wrapper, which in turn delegates the incumbent K<=10 frontier.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .knn_search_lowd_dbscan_dispatch0610_r1_v1 import launch_for_eval as _round1_launch_for_eval
 THREADS = 32

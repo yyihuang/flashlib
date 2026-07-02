@@ -9,7 +9,7 @@ Q4096/K64 rowflag route, delegate to the 25f8 Weave dispatcher unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_current6bc6_plus_a597_1aac_dispatch_0615_25f8_v1 as base_25f8
 from . import knn_search_k48_q128split512_truek48_kexact_0615_2d9eee_v1 as truek48_2d9eee

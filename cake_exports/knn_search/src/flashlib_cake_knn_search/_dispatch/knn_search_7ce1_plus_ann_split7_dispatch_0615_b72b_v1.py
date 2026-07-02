@@ -7,7 +7,7 @@ measured split-7 ANN high-Q seed. All other shapes delegate to 7ce1 unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_9afb_plus_4aa6_lowq_dispatch_0615_7ce1_v1 as base_7ce1
