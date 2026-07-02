@@ -1,0 +1,18 @@
+{
+  "benchmark_passed": 228,
+  "correctness_passed": 228,
+  "hardware": {
+    "arch": "sm_100a",
+    "device": "NVIDIA GB200"
+  },
+  "measured_at_utc": "2026-07-02T18:46:33+00:00",
+  "shape_count": 228,
+  "slurm_job_id": 1449487,
+  "speedup_vs_baseline": {
+    "geomean": 19.380060530932074,
+    "max": 1396.13628999595,
+    "min": 2.5937389752725384
+  },
+  "status": "passed",
+  "timing_backend": "cupti"
+}
