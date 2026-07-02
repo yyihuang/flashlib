@@ -1,0 +1,84 @@
+"""Round-46 high-Q mid-M D128 K1/K2 capacity dispatcher for BF16 kNN.
+
+Minimum target architecture: sm_100a for the tcgen05 high-Q MMA routes. This
+additive dispatcher routes ``Q=4096, M=20000, D=128, K=1`` to the existing
+split-9 K1-capacity path, routes ``K=2`` to the round-46 split-9 K2-capacity
+path, and preserves the inherited high-Q split-4/low-K dispatcher for all
+other contract shapes.
+"""
+from __future__ import annotations
+from json import loads as _json_loads
+from .._dispatch_runtime import _decode_capture, _ir_proxy
+from typing import Any
+from .._dispatch_runtime import select_named_shapes
+from . import knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1 as k1_route
+from . import knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1 as k2_route
+THREADS = k1_route.THREADS
+MERGE_THREADS = k1_route.MERGE_THREADS
+BLOCK_Q = k1_route.BLOCK_Q
+BLOCK_M = k1_route.BLOCK_M
+D_STATIC = k1_route.D_STATIC
+Q4096_ROWS = k1_route.Q4096_ROWS
+Q4096_LOWK_M = k1_route.Q4096_LOWK_M
+partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:partial_k1_ir"}'))
+merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:merge_k1_ir"}'))
+partial_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:partial_k2_ir"}'))
+merge_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:merge_k2_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:ir"}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2partial_split9_dispatch_0613_r46_48e9_v1:parent_ir"}'))
+Q4096_K1_LABELS: tuple[str, ...] = ('ksweep_q4096_m20000_d128_k1',)
+Q4096_K2_LABELS: tuple[str, ...] = ('ksweep_q4096_m20000_d128_k2',)
+Q4096_LOWK_LABELS: tuple[str, ...] = (*Q4096_K1_LABELS, *Q4096_K2_LABELS)
+HIGHQ_MIDM_K1K2_LABELS: tuple[str, ...] = k1_route.parent.HIGHQ_MIDM_SPLIT4_LOWK_LABELS
+Q4096_K1_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q4096_m20000_d128_k1", "params": {"B": 1, "D": 128, "K": 1, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610310, "self_search": false}}]'))
+Q4096_K2_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q4096_m20000_d128_k2", "params": {"B": 1, "D": 128, "K": 2, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610311, "self_search": false}}]'))
+Q4096_LOWK_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q4096_m20000_d128_k1", "params": {"B": 1, "D": 128, "K": 1, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610310, "self_search": false}}, {"label": "ksweep_q4096_m20000_d128_k2", "params": {"B": 1, "D": 128, "K": 2, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610311, "self_search": false}}]'))
+HIGHQ_MIDM_K1K2_SHAPES = _decode_capture(_json_loads('[{"label": "dispatch_q256_m65536_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 65536, "Q": 256, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610206, "self_search": false}}, {"label": "dispatch_q512_m65536_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 65536, "Q": 512, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610207, "self_search": false}}, {"label": "dispatch_q1024_m65536_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 65536, "Q": 1024, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610208, "self_search": false}}, {"label": "dispatch_q2048_m65536_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 65536, "Q": 2048, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610209, "self_search": false}}, {"label": "rag_q4096_m20000_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 20000, "Q": 4096, "benchmark": true, "check_correctness": true, "dtype": "bfloat16", "min_recall": 0.999, "seed": 3, "self_search": false}}, {"label": "rag_batch_q4096_m20000_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610110, "self_search": false}}, {"label": "dispatch_q4096_m16384_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 16384, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610210, "self_search": false}}, {"label": "dispatch_q4096_m32768_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 32768, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610211, "self_search": false}}, {"label": "ksweep_q4096_m20000_d128_k1", "params": {"B": 1, "D": 128, "K": 1, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610310, "self_search": false}}, {"label": "ksweep_q4096_m20000_d128_k2", "params": {"B": 1, "D": 128, "K": 2, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610311, "self_search": false}}]'))
+ROUND46_PRESERVE_SHAPES = k1_route.ROUND44_PRESERVE_SHAPES
+SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'd128_q4096_lowk_k1partial_split9', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 1 and tcgen05', 'route': 'round46_q4096_lowk_k1partial_split9'}, {'shape_key': 'd128_q4096_lowk_k2partial_split9', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 2 and tcgen05', 'route': 'round46_q4096_lowk_k2partial_split9'}, *k1_route.parent.SHAPE_DISPATCH_REGISTRY)
+
+def _use_q4096_k1(inputs: dict[str, Any]) -> bool:
+    return k1_route._use_q4096_k1(inputs)
+
+def _use_q4096_k2(inputs: dict[str, Any]) -> bool:
+    return k2_route._use_q4096_k2(inputs)
+
+def selected_route(inputs: dict[str, Any]) -> str:
+    if _use_q4096_k1(inputs):
+        return 'round46_q4096_lowk_k1partial_split9'
+    if _use_q4096_k2(inputs):
+        return 'round46_q4096_lowk_k2partial_split9'
+    return k1_route.parent.selected_route(inputs)
+
+def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
+    if _use_q4096_k1(inputs):
+        return k1_route._launch_q4096_k1(inputs)
+    if _use_q4096_k2(inputs):
+        return k2_route._launch_q4096_k2(inputs)
+    return k1_route.parent.launch_for_eval(inputs)
+
+def _select_contract_shapes(shape_labels: str | tuple[str, ...] | list[str] | None):
+    if shape_labels is None:
+        return None
+    return select_named_shapes(shape_labels)
+
+def knn_search_compile_and_launch_q4096_lowk(*, benchmark: bool=True, shapes: list[dict[str, Any]] | None=None) -> dict[str, Any]:
+    from .._dispatch_runtime import evaluate
+    result = evaluate(launch_for_eval, shapes=Q4096_LOWK_SHAPES if shapes is None else shapes, benchmark=benchmark)
+    result['passed'] = bool(result.get('summary', {}).get('all_correct'))
+    print(result)
+    return result
+
+def knn_search_compile_and_launch_highq_midm_k1k2(*, benchmark: bool=True, shapes: list[dict[str, Any]] | None=None) -> dict[str, Any]:
+    from .._dispatch_runtime import evaluate
+    result = evaluate(launch_for_eval, shapes=HIGHQ_MIDM_K1K2_SHAPES if shapes is None else shapes, benchmark=benchmark)
+    result['passed'] = bool(result.get('summary', {}).get('all_correct'))
+    print(result)
+    return result
+
+def knn_search_compile_and_launch_round46_preserve(*, benchmark: bool=True) -> dict[str, Any]:
+    from .._dispatch_runtime import evaluate
+    result = evaluate(launch_for_eval, shapes=ROUND46_PRESERVE_SHAPES, benchmark=benchmark)
+    result['passed'] = bool(result.get('summary', {}).get('all_correct'))
+    print(result)
+    return result
