@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import bisect
+import ctypes
 import importlib
 import importlib.metadata
 import statistics
@@ -64,6 +65,22 @@ def _extend_cuda_namespace_for_pathfinder() -> None:
 
 
 def _preload_cupti_library() -> None:
+    try:
+        distribution = importlib.metadata.distribution("nvidia-cuda-cupti")
+        major = importlib.metadata.version("cupti-python").split(".", 1)[0]
+        packaged = next(
+            (
+                distribution.locate_file(path)
+                for path in distribution.files or ()
+                if str(path).endswith(f"/libcupti.so.{major}")
+            ),
+            None,
+        )
+        if packaged is not None and Path(packaged).is_file():
+            ctypes.CDLL(str(packaged), mode=ctypes.RTLD_GLOBAL)
+            return
+    except (importlib.metadata.PackageNotFoundError, OSError):
+        pass
     _extend_cuda_namespace_for_pathfinder()
     try:
         pathfinder = importlib.import_module("cuda.pathfinder")

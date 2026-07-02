@@ -1,0 +1,13 @@
+{
+  "benchmark": "not_run_due_to_correctness_failure",
+  "correctness_failed": 90,
+  "correctness_passed": 73,
+  "expected_shape_count": 163,
+  "hardware": {
+    "arch": "sm_103a",
+    "device": "NVIDIA GB300"
+  },
+  "reason": "exported Python interface supports only D=128 and K<=10 while the exported CUDA inventory and Cake ledger contain broader routes",
+  "slurm_job_id": 1449293,
+  "status": "failed"
+}

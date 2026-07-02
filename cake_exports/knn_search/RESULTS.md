@@ -4,8 +4,8 @@
 
 - Package: `flashlib_cake_knn_search`
 - Source repository: `ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git`
-- Source commit: `c6033fbd89844c8086798585f6b3d53ff4155f65`
-- Generated at: `2026-07-02T18:17:54.325158+00:00`
+- Source commit: `0e46454eee1c7aee5b5991fa2b0c6bc6a97293e4`
+- Generated at: `2026-07-02T18:49:24.855961+00:00`
 
 ## Latest Recorded Results
 
