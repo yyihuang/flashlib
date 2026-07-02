@@ -9,10 +9,13 @@
 
 ## Latest Recorded Results
 
-No semantic correctness or kernel throughput benchmark result was recorded by
-the generic exporter at generation time.
+Validated the complete 228-shape Cake ledger on 2026-07-02 using an NVIDIA
+GB200 (`sm_100a`) allocation. All 228 shapes passed semantic correctness,
+exact recorded-route selection, and strict CUPTI cold-L2 timing. The gate ran
+in 15 isolated Slurm shards to bound compiler and tensor-cache memory (job
+1451577).
 
-The generated checks are:
+Reproduce with:
 
 ```bash
 pytest
@@ -20,18 +23,13 @@ python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/co
 python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 ```
 
-The shape runner requires a configured `benchmarks/workload.py` adapter. It
-validates candidate output against the reference before running strict
-CUPTI-backed, cold-L2 timing.
-
 ## Result Table
 
 | Test | Hardware | Command | Result |
 | --- | --- | --- | --- |
-| metadata unit tests | not required | `pytest tests/test_exported_kernels.py tests/test_benchmark_harness.py -q` | pending |
-| NVRTC compile benchmark | CUDA host | `python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json` | pending |
-| semantic correctness | target GPU | `python benchmarks/benchmark_shapes.py` | pending |
-| kernel performance | target GPU | `python benchmarks/benchmark_shapes.py` | pending |
+| semantic correctness | NVIDIA GB200 | `pytest tests/test_correctness.py -q` | 228/228 passed |
+| recorded route gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 228/228 matched |
+| CUPTI performance gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 228/228 used `cupti` |
 
 ## Kernel Inventory
 
