@@ -21,7 +21,7 @@ from . import knn_build_d64_q4096_c271_twostage_v1 as d64_6a35
 from . import knn_build_residual_rag_search_1877_v1 as rag_9a17
 MODULE = 'loom.examples.weave.knn_build_dispatch_1877_9a17_b644_6a35_full90_selective_v1'
 eval_mod = base1877.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 BASE_1877_KEY = base1877.DEFAULT_CANDIDATE_KEY
 BASE_1877_CONFIG = base1877.CANDIDATE_CONFIGS[BASE_1877_KEY]
 BASE_1877_ID = BASE_1877_CONFIG['candidate_id']

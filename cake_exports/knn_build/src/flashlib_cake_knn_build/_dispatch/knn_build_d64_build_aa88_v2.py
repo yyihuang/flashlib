@@ -26,16 +26,16 @@ TARGET_SHAPES = D64_BUILD_TARGET_LABELS
 ROUTE_D64_BUCKET_S4_FAST = 'loom.examples.weave.knn_build_d64_build_aa88_v2:d64_split_s4_k10_cached_merge'
 ROUTE_D64_BUCKET_S8_FAST = 'loom.examples.weave.knn_build_d64_build_aa88_v2:d64_split_s8_k10_cached_merge'
 ROUTE_PARENT_AA88 = 'loom.examples.weave.knn_build_d64_build_aa88_v1'
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10]], "cta_group": 1, "threads": 256}'))
+knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
+merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_D64_AA88_V2_VERIFY_KERNEL')
@@ -46,7 +46,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_73a9_d64_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _eligible_d64_build_bucket(inputs: dict[str, Any]) -> bool:
     return parent_aa88._eligible_d64_build_bucket(inputs)

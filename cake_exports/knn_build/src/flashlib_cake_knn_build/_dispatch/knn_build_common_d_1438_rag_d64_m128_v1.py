@@ -45,8 +45,8 @@ WEAVE_SMEM_SYSTEM_BYTES = 1024
 D64_STAGE_SMEM_BYTES = D64_SMEM_POOL_BYTES + WEAVE_SMEM_SYSTEM_BYTES
 GRID_DIM_DEFAULT = parent.GRID_DIM_DEFAULT
 TOP_K_MAX = parent.TOP_K_MAX
-knn_build_common_d_1438_rag_d64_m128_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 512}'))
-stage1_d64_m128_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 512}'))
+knn_build_common_d_1438_rag_d64_m128_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [], "cta_group": 1, "threads": 512}'))
+stage1_d64_m128_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_COMMON_D_1438_RAG_D64_M128_VERIFY_KERNEL')
@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return stage1_d64_m128_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _compiled_stage1_d64_m128():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0193"}'))

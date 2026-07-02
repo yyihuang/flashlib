@@ -63,7 +63,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_LARGE_SQUARE_K32_8A83_VERIFY_KERNEL'] = 'merge_k32_s2_warp_select'
         return q8192_k32_seed._verify_export_ir()
     return base_f853.ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 48]], "cta_group": 1, "threads": 192}'))
 
 def _eligible_lowk(inputs: dict[str, Any]) -> bool:
     return lowk_seed._eligible_q512_lowk(inputs) or lowk_seed._eligible_q1024_k16(inputs)

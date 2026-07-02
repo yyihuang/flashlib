@@ -33,12 +33,12 @@ THREADS = chunked_parent.THREADS
 FAST_MERGE_THREADS = 32
 GRID_DIM_DEFAULT = chunked_parent.GRID_DIM_DEFAULT
 SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["build_common_d768_b1_q1024_m1024_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 768], ["K", 10], ["build", true], ["feature_chunks", 6], ["split_count", 16]]}], ["build_common_d1024_b1_q512_m512_k10", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 512], ["D", 1024], ["K", 10], ["build", true], ["feature_chunks", 8], ["split_count", 8]]}], ["build_common_d4096_b1_q512_m512_k10", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 512], ["D", 4096], ["K", 10], ["build", true], ["feature_chunks", 32], ["split_count", 8]]}]]}'))
-stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_d1024_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d1024", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_d4096_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d4096", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-knn_build_common_d_56f3_k10_merge_rowbase_cache = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_base_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 6]], "cta_group": 1, "threads": 192}'))
+stage1_d1024_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d1024", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 8]], "cta_group": 1, "threads": 192}'))
+stage1_d4096_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d4096", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 32]], "cta_group": 1, "threads": 192}'))
+stage1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 6]], "cta_group": 1, "threads": 192}'))
+knn_build_common_d_56f3_k10_merge_rowbase_cache = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 16]], "cta_group": 1, "threads": 32}'))
+merge_base_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 16]], "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -46,7 +46,7 @@ def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
 
 def _merge_ir(split_count: int) -> Any:
     return _ir_with_constants(merge_base_ir, suffix=f's{int(split_count)}', SPLIT_COUNT=int(split_count))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache_s16", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_56f3_k10_merge_rowbase_cache_s16", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 16]], "cta_group": 1, "threads": 32}'))
 
 def _stage_ir(feature_chunks: int) -> Any:
     return chunked_parent._stage1_ir(int(feature_chunks))
@@ -60,7 +60,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _merge_ir(int(os.environ.get('LOOM_KNN_COMMON_D_56F3_BUILD_VERIFY_SPLITS', '16')))
     return stage1_d768_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 6]], "cta_group": 1, "threads": 192}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1(feature_chunks: int):

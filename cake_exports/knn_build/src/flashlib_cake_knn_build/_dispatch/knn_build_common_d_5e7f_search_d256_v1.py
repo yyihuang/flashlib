@@ -38,7 +38,7 @@ SHAPE_SPEC: dict[str, Any] = {'B': 1, 'Q': 1024, 'M': 32768, 'D': 256, 'K': 10, 
 
 def _validate_group_shape(split_count: int, group_count: int) -> None:
     fused_parent._validate_group_shape(int(split_count), int(group_count))
-stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d256", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d256", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 2]], "cta_group": 1, "threads": 192}'))
 
 def _fused_merge_ir(split_count: int=SEARCH_SPLIT_COUNT, group_count: int=SEARCH_GROUP_COUNT) -> Any:
     _validate_group_shape(split_count, group_count)
@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _fused_merge_ir(int(os.environ.get('LOOM_KNN_COMMON_D_5E7F_SEARCH_D256_VERIFY_SPLITS', SEARCH_SPLIT_COUNT)), int(os.environ.get('LOOM_KNN_COMMON_D_5E7F_SEARCH_D256_VERIFY_GROUPS', SEARCH_GROUP_COUNT)))
     return stage1_d256_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d256", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d256", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 2]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_d256():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0192"}'))

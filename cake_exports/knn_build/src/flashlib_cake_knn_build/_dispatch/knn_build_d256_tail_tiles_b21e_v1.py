@@ -25,7 +25,7 @@ TARGET_SHAPE = 'rag_stream_largek_common_d256_b1_q128_m100000_k32'
 TARGET_SHAPES = (TARGET_SHAPE,)
 TILE_SHAPE = _decode_capture(_json_loads('{"__tuple__": [128, 128, 256]}'))
 SPLIT_COUNT = _decode_capture(_json_loads('64'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["K_TILE", 128], ["FEATURE_CHUNKS", 2], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
 
 def _eligible(inputs: dict[str, Any]) -> bool:
     return parent._target_label_for_inputs(inputs) == TARGET_SHAPE

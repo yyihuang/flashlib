@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'warp_merge':
         return parent.rows4.base._warp_merge_ir(split_count)
     return parent.rows4._warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s148r4_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s148r4_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 148], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _eligible_q16_split148(inputs: dict[str, Any]) -> bool:
     return parent._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 16 and (int(inputs.get('M', -1)) in {100000, 131071}) and (int(inputs.get('K', -1)) == 32)

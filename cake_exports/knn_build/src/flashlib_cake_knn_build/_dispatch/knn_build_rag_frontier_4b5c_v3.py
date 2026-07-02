@@ -41,7 +41,7 @@ TOP_K_MAX = parent_k32.TOP_K_SPLIT_MAX
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-knn_build_rag_frontier_4b5c_k32_group_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4b5c_k32_group_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_rag_frontier_4b5c_k32_group_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4b5c_k32_group_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 8]], "cta_group": 1, "threads": 32}'))
 
 def _validate_group_shape(split_count: int, group_count: int) -> None:
     if split_count <= 0 or group_count <= 0:
@@ -70,7 +70,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_final_merge':
         return _final_merge_ir(group_count)
     return _group_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4b5c_k32_group_merge_k32s72g8_4b5c_v3", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4b5c_k32_group_merge_k32s72g8_4b5c_v3", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=None)
 def _compiled_group_merge(split_count: int, group_count: int):

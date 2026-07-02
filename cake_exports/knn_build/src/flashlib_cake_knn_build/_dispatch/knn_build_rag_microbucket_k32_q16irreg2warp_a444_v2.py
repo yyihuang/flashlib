@@ -53,8 +53,8 @@ Q16_2WARP_SMEM_POOL_BYTES = Q16_2WARP_LOCAL_I_OFFSET + Q16_2WARP_LOCAL_ELEMS * 4
 ROUTE_PARENT_ROWS4 = f'{parent.MODULE}:launch_from_contract_inputs'
 ROUTE_Q16_IRREG_2WARP_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 SEED_K32_Q16_IRREG_2WARP_A444_V2_ID = 'rag_microbucket_k32_q16irreg2warp_a444_v2_rowld1_2warp_rows4'
-knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52480, "cta_group": 1, "threads": 128}'))
-stage1_q16_rowld1_2warp_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52480, "cta_group": 1, "threads": 128}'))
+knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52480, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 16]], "cta_group": 1, "threads": 128}'))
+stage1_q16_rowld1_2warp_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2_stage1_q16_rowld1_2warp", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 52480, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 16]], "cta_group": 1, "threads": 128}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -74,7 +74,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld1_2warp_stage1':
         return _stage1_rowld1_2warp_ir()
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s148r4_a444_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s148r4_a444_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 148], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q16_rowld1_2warp():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0161"}'))

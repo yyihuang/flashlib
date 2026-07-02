@@ -45,8 +45,8 @@ Q1_HALF_LOCAL_D_OFFSET = Q1_HALF_SMEM_BASE_BYTES
 Q1_HALF_LOCAL_I_OFFSET = Q1_HALF_LOCAL_D_OFFSET + Q1_HALF_LOCAL_ELEMS * 4
 Q1_HALF_SMEM_POOL_BYTES = Q1_HALF_LOCAL_I_OFFSET + Q1_HALF_LOCAL_ELEMS * 4
 _insert_sorted_pair_k10 = _ir_proxy('loom.examples.weave.knn_build_ragonline_mbucket_4fc7_q1m262_v2:_insert_sorted_pair_k10', 256)
-knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
-stage1_q1_k10_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10], ["ROWS_COVERED", 1]], "cta_group": 1, "threads": 96}'))
+stage1_q1_k10_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10], ["ROWS_COVERED", 1]], "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_Q1M262_V2_VERIFY_KERNEL')
@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return fused_merge_parent._fused_merge_ir(split_count, group_count)
     return stage1_q1_k10_m64_halfrow_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10], ["ROWS_COVERED", 1]], "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_q1_k10_m64_halfrow():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0169"}'))

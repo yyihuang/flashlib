@@ -39,7 +39,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1':
         return seed_q16.seed._stage1_rowld1_2warp_ir()
     return seed_q16.seed._warp_merge_ir(Q16_M250_SPLIT_COUNT)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s288r4_56ed_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s288r4_56ed_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 288], ["SPLITS_PER_LANE", 9], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _select_contract_shapes(shape_labels) -> list[dict[str, Any]]:
     return parent_v11._select_contract_shapes(shape_labels)

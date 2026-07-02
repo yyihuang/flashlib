@@ -40,8 +40,8 @@ MICRO_STAGE_SMEM_BYTES = MICRO_SMEM_POOL_BYTES + WEAVE_SMEM_SYSTEM_BYTES
 GRID_DIM_DEFAULT = parent_micro.GRID_DIM_DEFAULT
 TOP_K_MAX = parent_micro.TOP_K_MAX
 _m64_insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_rag_microbatch_m64_d4f7_v1:_m64_insert_sorted_pair', 256)
-knn_build_rag_microbatch_m64_d4f7_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
-stage1_m64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+knn_build_rag_microbatch_m64_d4f7_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
+stage1_m64_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RAG_MICROBATCH_M64_D4F7_V1_VERIFY_KERNEL')
@@ -50,7 +50,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return parent_micro._fused_merge_ir(split_count, group_count)
     return stage1_m64_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _compile_ir(ir_obj: Any, *, smem_bytes: int | None=None):
     from .._dispatch_runtime import generate_kernel

@@ -36,8 +36,8 @@ def _select_arch_and_preload() -> str:
             pass
     from .._dispatch_runtime import arch_flag_for_cc
     return arch_flag_for_cc(major, minor)
-knn_build_evolve_7bfc_v1 = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "cta_group": 1, "threads": 192}'))
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "cta_group": 1, "threads": 192}'))
+knn_build_evolve_7bfc_v1 = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _ir_for_top_k_max(top_k_max: int):
     if top_k_max == TOP_K_MAX:

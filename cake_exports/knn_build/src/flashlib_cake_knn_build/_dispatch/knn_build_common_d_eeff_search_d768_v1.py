@@ -32,7 +32,7 @@ GRID_DIM_DEFAULT = chunked_parent.GRID_DIM_DEFAULT
 SEARCH_SPLIT_COUNT = _decode_capture(_json_loads('32'))
 SEARCH_GROUP_COUNT = _decode_capture(_json_loads('8'))
 SHAPE_SPEC: dict[str, Any] = {'B': 1, 'Q': 512, 'M': 8192, 'D': 768, 'K': 10, 'build': False, 'dtype': 'bfloat16'}
-stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+stage1_d768_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 6]], "cta_group": 1, "threads": 192}'))
 
 def _validate_group_shape(split_count: int, group_count: int) -> None:
     fused_parent._validate_group_shape(int(split_count), int(group_count))
@@ -40,14 +40,14 @@ def _validate_group_shape(split_count: int, group_count: int) -> None:
 def _fused_merge_ir(split_count: int=SEARCH_SPLIT_COUNT, group_count: int=SEARCH_GROUP_COUNT) -> Any:
     _validate_group_shape(split_count, group_count)
     return fused_parent._fused_merge_ir(int(split_count), int(group_count))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s32g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s32g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 4]], "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_COMMON_D_EEFF_SEARCH_D768_VERIFY_KERNEL')
     if verify_kernel == 'merge':
         return _fused_merge_ir(int(os.environ.get('LOOM_KNN_COMMON_D_EEFF_SEARCH_D768_VERIFY_SPLITS', SEARCH_SPLIT_COUNT)), int(os.environ.get('LOOM_KNN_COMMON_D_EEFF_SEARCH_D768_VERIFY_GROUPS', SEARCH_GROUP_COUNT)))
     return stage1_d768_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_stage1_d768", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["K_TILE", 128], ["TOP_K_MAX", 10], ["FEATURE_CHUNKS", 6]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_d768():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0194"}'))

@@ -46,8 +46,8 @@ ROUTE_PARENT_V11 = dispatch_v11.ROUTE_ENTRYPOINT
 ROUTE_V9_K12_PROBE = 'loom.examples.weave.knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v9:_launch_k32_split_path'
 BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_knn_build_rag_microbucket_k12_2f22_q48exact_v1'
 _insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_k12_2f22_q48exact_v1:_insert_sorted_pair', 256)
-knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "cta_group": 1, "threads": 192}'))
-stage1_q48_k12_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "cta_group": 1, "threads": 192}'))
+knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 12]], "cta_group": 1, "threads": 192}'))
+stage1_q48_k12_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 12]], "cta_group": 1, "threads": 192}'))
 
 def _warp_merge_ir(split_count: int) -> Any:
     return rows4._ir_with_constants(rows4.base.k32_warp_row_merge_ir, suffix=f'q48k12s{split_count}r{Q48_K12_ROWS_PER_MERGE_CTA}_2f22_v1', TOP_K_MAX=Q48_K12_TOP_K_MAX, SPLIT_COUNT=split_count, SPLITS_PER_LANE=rows4.base._splits_per_lane(split_count), ROWS_PER_CTA=Q48_K12_ROWS_PER_MERGE_CTA)
@@ -58,7 +58,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return _warp_merge_ir(split_count)
     return stage1_q48_k12_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k12_2f22_q48exact_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 58624, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 12]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_q48_k12():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0156"}'))

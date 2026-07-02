@@ -25,7 +25,7 @@ Q1_S147_SPLIT = 147
 Q1_S147_GROUPS = 21
 Q1_S147_GROUP_SPLITS = Q1_S147_SPLIT // Q1_S147_GROUPS
 Q1_S147_MERGE_THREADS = ea43.fused_merge_parent.K10_FUSED_MERGE_THREADS
-knn_build_q1m524_workfeed_s147_g21_register_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_q1m524_workfeed_s147_g21_register_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_build_q1m524_workfeed_s147_g21_register_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_q1m524_workfeed_s147_g21_register_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 21], ["GROUP_SPLITS", 7]], "cta_group": 1, "threads": 32}'))
 
 def _fused_merge_ir() -> Any:
     constants = tuple(((name, {'GROUP_COUNT': Q1_S147_GROUPS, 'GROUP_SPLITS': Q1_S147_GROUP_SPLITS}.get(name, value)) for name, value in knn_build_q1m524_workfeed_s147_g21_register_merge.constants))
@@ -41,7 +41,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return _fused_merge_ir()
     return ea43.ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10], ["ROWS_COVERED", 1]], "cta_group": 1, "threads": 96}'))
 
 def route_for_contract_inputs(inputs: dict[str, Any], *, force_fallback: bool=False) -> str:
     if not force_fallback and ea43._eligible_q1_m524_n128(inputs):

@@ -46,8 +46,8 @@ Q8_HALF_SMEM_POOL_BYTES = Q8_HALF_LOCAL_I_OFFSET + Q8_HALF_LOCAL_ELEMS * 4
 ROUTE_PARENT_ROWLD1WARP = f'{parent.MODULE}:launch_from_contract_inputs'
 ROUTE_Q8_HALF_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 SEED_K32_Q8_HALF_ID = 'rag_microbucket_k32q8half_0077_v1_q8_row16x256b_half_stage1'
-knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "cta_group": 1, "threads": 96}'))
-stage1_q8_k32_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "cta_group": 1, "threads": 96}'))
+knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 8]], "cta_group": 1, "threads": 96}'))
+stage1_q8_k32_m64_halfrow_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 8]], "cta_group": 1, "threads": 96}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -64,7 +64,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_warp_merge':
         return warpmerge_parent._warp_merge_ir(split_count)
     return _stage1_q8_half_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow_q8half_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow_q8half_0077_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 8]], "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_q8_k32_m64_halfrow():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0147"}'))

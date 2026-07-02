@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel is not None:
         os.environ['LOOM_KNN_DISPATCH_4FBF_7399_D15E_VERIFY_KERNEL'] = verify_kernel
     return dispatch_k32._verify_export_ir()
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 48]], "cta_group": 1, "threads": 192}'))
 
 def _eligible_dim_d64_73a9(inputs: dict[str, Any]) -> bool:
     label = inputs.get('label')

@@ -44,12 +44,12 @@ DEFAULT_SPLIT_COUNT = 12
 SUPPORTED_SPLIT_COUNTS = (8, 10, 12, 14, 16)
 WARP4_MERGE_THREADS = seed_9b9f.K20_MERGE_THREADS
 GRID_DIM_DEFAULT = seed_9b9f.GRID_DIM_DEFAULT
-knn_build_rect_d128_k20_q1536_warp4_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_tail_s12_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_tail_s8_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s8warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_tail_s10_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s10warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_tail_s14_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s14warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_tail_s16_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s16warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_rect_d128_k20_q1536_warp4_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 12]], "cta_group": 1, "threads": 128}'))
+merge_k20_tail_s12_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 12]], "cta_group": 1, "threads": 128}'))
+merge_k20_tail_s8_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s8warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 8]], "cta_group": 1, "threads": 128}'))
+merge_k20_tail_s10_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s10warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 10]], "cta_group": 1, "threads": 128}'))
+merge_k20_tail_s14_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s14warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 14]], "cta_group": 1, "threads": 128}'))
+merge_k20_tail_s16_warp4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rect_d128_k20_q1536_warp4_merge_s16warp4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT_CONST", 16]], "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RECT_D128_K20_Q1536_S12WARP4_VERIFY_KERNEL')
@@ -64,7 +64,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_k20_tail_s16_warp4':
         return merge_k20_tail_s16_warp4_ir
     return parent_v20.stage1_k20_unordered_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 20]], "cta_group": 1, "threads": 192}'))
 
 def _forced_split_count() -> int | None:
     split_text = os.environ.get('LOOM_KNN_RECT_D128_K20_Q1536_S12WARP4_SPLITS')

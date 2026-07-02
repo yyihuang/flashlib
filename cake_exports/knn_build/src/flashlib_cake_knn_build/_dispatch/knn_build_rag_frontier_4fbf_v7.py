@@ -39,10 +39,10 @@ STAGE1_THREADS = v3.STAGE1_THREADS
 GRID_DIM_DEFAULT = v3.GRID_DIM_DEFAULT
 CTA_GROUP = v3.CTA_GROUP
 TOP_K_MAX = v3.TOP_K_MAX
-knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k32_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 8192, "cta_group": 1, "threads": 32}'))
-fused_merge_generalized_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 8192, "cta_group": 1, "threads": 32}'))
+knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
+stage1_k32_tailinf_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
+knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 8192, "constants": [["TOP_K_MAX", 32], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
+fused_merge_generalized_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_k32_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 8192, "constants": [["TOP_K_MAX", 32], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -76,7 +76,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'k32_fused_merge':
         return _fused_merge_ir(split_count, group_count)
     return stage1_k32_tailinf_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_tailinf():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0123"}'))

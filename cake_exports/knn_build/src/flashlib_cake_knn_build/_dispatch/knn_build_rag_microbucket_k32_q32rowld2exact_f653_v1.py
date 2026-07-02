@@ -48,7 +48,7 @@ ROUTE_PARENT_F653 = f'{parent.MODULE}:launch_from_contract_inputs'
 ROUTE_Q32_ROWLD2EXACT_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'
 SEED_K32_Q32_ROWLD2EXACT_F653_V1_ID = 'rag_microbucket_k32_q32rowld2exact_f653_v1'
 _insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_build_rag_microbucket_k32_q32rowld2exact_f653_v1:_insert_sorted_pair', 256)
-knn_build_rag_microbucket_k32_q32rowld2exact_f653_v1_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q32rowld2exact_f653_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "cta_group": 1, "threads": 128}'))
+knn_build_rag_microbucket_k32_q32rowld2exact_f653_v1_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_q32rowld2exact_f653_v1_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 32], ["SPLIT_COUNT_CONST", 141], ["NUM_DB_TILES_CONST", 1563], ["TILES_FLOOR_CONST", 11], ["EXTRA_SPLITS_CONST", 12], ["DB_TILES_PER_SPLIT_CONST", 12], ["M_LIMIT", 100000]], "cta_group": 1, "threads": 128}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -68,7 +68,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld2_exact_stage1':
         return _stage1_q32_rowld2exact_ir()
     return _warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32exact_s141r4_f653_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32exact_s141r4_f653_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 141], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q32_rowld2exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0189"}'))

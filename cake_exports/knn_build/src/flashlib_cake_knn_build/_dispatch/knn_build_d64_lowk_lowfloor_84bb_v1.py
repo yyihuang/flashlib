@@ -47,7 +47,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'd64_merge_s4':
         return d64_seed.merge_k10_s4_ir
     return lowk_seed.stage1_q512_lowk_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return baseline_1877._select_contract_shapes(shape_labels)

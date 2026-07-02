@@ -34,10 +34,10 @@ TOP_K_MAX = parent_k10.TOP_K_MAX
 STAGE1_THREADS = parent_k10.STAGE1_THREADS
 GRID_DIM_DEFAULT = parent_k10.GRID_DIM_DEFAULT
 CTA_GROUP = 1
-knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_cta1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
-fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+stage1_cta1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
+fused_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -64,7 +64,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1':
         return stage1_cta1_ir
     return _fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge_s144g12_4a72_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_k10_fused_group_final_merge_s144g12_4a72_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 12], ["GROUP_SPLITS", 12]], "cta_group": 1, "threads": 32}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

@@ -18,11 +18,11 @@ TOP_K_MAX = base_v1.TOP_K_MAX
 THREADS = base_v1.THREADS
 GRID_DIM_DEFAULT = base_v1.GRID_DIM_DEFAULT
 D64_FEAT_D = 64
-knn_build_evolve_7bfc_d64_tcgen05_base = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_d64_tcgen05_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25600, "cta_group": 1, "threads": 192}'))
+knn_build_evolve_7bfc_d64_tcgen05_base = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_d64_tcgen05_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25600, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _verify_export_ir() -> Any:
     return knn_build_evolve_7bfc_d64_tcgen05_base
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_d64_tcgen05_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25600, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_d64_tcgen05_base", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25600, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_d64_kernel():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0100"}'))

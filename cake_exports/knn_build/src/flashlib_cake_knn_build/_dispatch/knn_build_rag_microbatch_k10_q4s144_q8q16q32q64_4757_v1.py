@@ -60,7 +60,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'm64_stage':
         return parent_exact5.q8q16_parent.rag_m64.stage1_m64_ir
     raise ValueError(f'unsupported verify kernel: {verify_kernel}')
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _select_contract_shapes(shape_labels):
     return parent_exact5._select_contract_shapes(shape_labels)

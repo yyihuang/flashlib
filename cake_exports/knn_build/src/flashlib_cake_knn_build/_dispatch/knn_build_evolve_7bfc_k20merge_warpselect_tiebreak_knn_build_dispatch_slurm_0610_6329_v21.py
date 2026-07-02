@@ -26,15 +26,15 @@ GRID_DIM_DEFAULT = parent_v20.GRID_DIM_DEFAULT
 CTA_GROUP = parent_v20.CTA_GROUP
 K20_Q4096_SPLITS = parent_v20.MEDIUM_SPLITS
 TOP_K_K20 = 20
-knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k20_unordered_warp_select_splitmajor_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 128}'))
+merge_k20_unordered_warp_select_splitmajor_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_K20_WARPSELECT_TIE_VERIFY_KERNEL')
     if verify_kernel == 'stage1_k20_unordered':
         return parent_v20.stage1_k20_unordered_ir
     return merge_k20_unordered_warp_select_splitmajor_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_merge_k20_unordered_warp_select_splitmajor():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0101"}'))

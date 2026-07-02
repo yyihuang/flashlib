@@ -22,10 +22,10 @@ MIDK_CLEANUP_SHAPES = ('build_k_sweep_qm2048_k24', 'build_k_sweep_qm2048_k28', '
 DEFAULT_MIDK_SPLITS = 8
 ROUTE_MIDK_S8 = 'loom.examples.weave.knn_build_dim_midk_bad5_midkcleanup_v1:midk_k24_k28_s8'
 ROUTE_PARENT_BAD5 = 'loom.examples.weave.knn_build_dim_midk_bad5_fp16split_v1'
-stage1_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k24", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k28", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_bad5midks8k24", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_bad5midks8k28", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+stage1_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k24", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 24]], "cta_group": 1, "threads": 192}'))
+stage1_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k28", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 28]], "cta_group": 1, "threads": 192}'))
+merge_k24_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_bad5midks8k24", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 24], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
+merge_k28_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_bad5midks8k28", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 28], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_DIMMIDK_BAD5_MIDK_VERIFY_KERNEL')
@@ -40,7 +40,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'parent':
         return parent_bad5.ir
     return stage1_k28_s8_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k28", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5midks8k28", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 28]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k24_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0041"}'))

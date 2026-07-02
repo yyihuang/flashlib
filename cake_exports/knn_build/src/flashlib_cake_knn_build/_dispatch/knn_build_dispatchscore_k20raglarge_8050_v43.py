@@ -12,7 +12,7 @@ from typing import Any
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_k20_rag_large_m_7487_v42 as route_v42
 TARGET_SHAPE = route_v42.TARGET_SHAPE
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k20unordered", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 20]], "cta_group": 1, "threads": 192}'))
 candidate = route_v42.candidate
 launch_from_contract_inputs = route_v42.launch_from_contract_inputs
 _select_contract_shapes = route_v42._select_contract_shapes

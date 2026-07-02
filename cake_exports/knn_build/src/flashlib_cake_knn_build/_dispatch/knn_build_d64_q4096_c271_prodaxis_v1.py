@@ -29,17 +29,17 @@ DEFAULT_SPLIT_COUNT = 4
 SUPPORTED_EXACT_SPLITS = (4, 5, 6, 8)
 ROUTE_D64_Q4096_SPLIT4_SYNCDROP = 'loom.examples.weave.knn_build_d64_q4096_c271_prodaxis_v1:d64_q4096_split4_syncdrop_exact_merge'
 ROUTE_PARENT_AA88_V2 = 'loom.examples.weave.knn_build_d64_build_aa88_v2'
-knn_build_d64_q4096_c271_stage1_syncdrop = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_d64_q4096_c271_stage1_syncdrop = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+stage1_d64_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10]], "cta_group": 1, "threads": 256}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s5_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s6_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
-merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k10_s4_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_s4", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 32}'))
+merge_k10_s5_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 5]], "cta_group": 1, "threads": 32}'))
+merge_k10_s6_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 6]], "cta_group": 1, "threads": 32}'))
+merge_k10_s8_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 8]], "cta_group": 1, "threads": 32}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_D64_Q4096_C271_PROD_VERIFY_KERNEL')
@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d64_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_syncdrop():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0181"}'))

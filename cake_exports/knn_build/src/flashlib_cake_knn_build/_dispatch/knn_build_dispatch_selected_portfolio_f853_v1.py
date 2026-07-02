@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
         os.environ['LOOM_KNN_DIMMIDK_F8C3_Q4096K64_VERIFY_KERNEL'] = 'merge_k64_s8'
         return q4096_seed._verify_export_ir()
     return base_f8c3.ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k48over32", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 48]], "cta_group": 1, "threads": 192}'))
 
 def _eligible_q4096_k64(inputs: dict[str, Any]) -> bool:
     return q4096_seed._eligible_q4096_k64(inputs)

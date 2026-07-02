@@ -42,8 +42,8 @@ D64_SMEM_POOL_BYTES = D64_QUERY_BYTES + D64_DATABASE_BYTES + D64_DB_SQ_BYTES
 DEFAULT_SPLIT_COUNT = _decode_capture(_json_loads('128'))
 DEFAULT_GROUP_COUNT = _decode_capture(_json_loads('8'))
 SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["rag_microbatch_common_d64_b1_q16_m50000_k10", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 50000], ["D", 64], ["K", 10], ["build", false], ["feature_chunks", 1], ["split_count", 144], ["group_count", 8], ["producer", "d64_m64"]]}], ["rag_microbatch_common_d256_b1_q16_m50000_k10", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 50000], ["D", 256], ["K", 10], ["build", false], ["feature_chunks", 2], ["split_count", 144], ["group_count", 8], ["producer", "m64_chunked"]]}]]}'))
-knn_build_common_d_5e7f_rag_d64_m64_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_m64_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
-d64_m64_stage1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_m64_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "cta_group": 1, "threads": 96}'))
+knn_build_common_d_5e7f_rag_d64_m64_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_m64_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "constants": [], "cta_group": 1, "threads": 96}'))
+d64_m64_stage1_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_5e7f_rag_d64_m64_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 17664, "constants": [], "cta_group": 1, "threads": 96}'))
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
@@ -64,7 +64,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'pad_d64':
         return m64_parent.non128_base._pad_ir(K_TILE)
     return fused_merge_parent._fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s128g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s128g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 16]], "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1(feature_chunks: int):

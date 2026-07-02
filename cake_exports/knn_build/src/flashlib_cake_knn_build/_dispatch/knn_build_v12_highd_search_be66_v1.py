@@ -55,7 +55,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'stage1_d4096':
         return _stage1_ir(32)
     return m64_4warp.fused_parent._fused_merge_ir(split_count, group_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s64g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_4be7_d768fused_merge_s64g8_4be7_d768fused_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 1024, "constants": [["TOP_K_MAX", 10], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 8]], "cta_group": 1, "threads": 32}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1(feature_chunks: int):

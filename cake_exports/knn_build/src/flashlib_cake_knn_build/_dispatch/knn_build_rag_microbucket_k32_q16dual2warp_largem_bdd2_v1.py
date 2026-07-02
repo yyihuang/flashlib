@@ -37,7 +37,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'rowld1_2warp_stage1':
         return seed._stage1_rowld1_2warp_ir()
     return seed._warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s280r4_56ed_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s280r4_56ed_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 280], ["SPLITS_PER_LANE", 9], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _eligible_q16_dual_2warp_largem(inputs: dict[str, Any]) -> bool:
     return seed.rows4.parent.parent._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 16 and (int(inputs.get('M', -1)) in {100000, 131071, 250000}) and (int(inputs.get('K', -1)) == 32)

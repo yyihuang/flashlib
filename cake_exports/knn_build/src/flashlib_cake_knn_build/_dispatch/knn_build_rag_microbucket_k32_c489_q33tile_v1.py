@@ -42,7 +42,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q33tile_fused_merge':
         return e5db.compact_seed.q16_tailinf._fused_merge_ir(split_count, group_count)
     return e5db.stage1_q32_k32_m64_rowld_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_q32rowld_e5db_v1_stage1_q32_k32_m64", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
 
 def _eligible_q33tile(inputs: dict[str, Any]) -> bool:
     return e5db._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) in {33, 40} and (int(inputs.get('M', -1)) == 100000) and (int(inputs.get('K', -1)) == 32)

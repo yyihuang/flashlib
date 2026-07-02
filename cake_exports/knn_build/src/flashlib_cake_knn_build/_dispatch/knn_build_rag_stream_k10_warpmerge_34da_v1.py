@@ -33,15 +33,15 @@ ROUTE_PARENT = parent_v11.ROUTE_ENTRYPOINT
 ROUTE_K10_WARPMERGE = f'{MODULE}:q128_m100000_k10_s72_warpmerge_r{ROWS_PER_CTA}'
 BENCHMARK_ENTRYPOINT = f'{MODULE}:benchmark_knn_build_rag_stream_k10_warpmerge_34da_v1'
 SEED_ID = 'rag_stream_k10_warpmerge_34da_v1_s72_r4'
-knn_build_rag_stream_k10_s72_warp_row_merge_34da = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_stream_k10_s72_warp_row_merge_34da", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k10_s72_warp_row_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_stream_k10_s72_warp_row_merge_34da", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_rag_stream_k10_s72_warp_row_merge_34da = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_stream_k10_s72_warp_row_merge_34da", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K", 10], ["SPLITS", 72], ["LANESLOTS", 3], ["ROWS", 4]], "cta_group": 1, "threads": 128}'))
+merge_k10_s72_warp_row_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_stream_k10_s72_warp_row_merge_34da", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K", 10], ["SPLITS", 72], ["LANESLOTS", 3], ["ROWS", 4]], "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_RAG_STREAM_K10_WARPMERGE_34DA_VERIFY_KERNEL')
     if verify_kernel == 'merge':
         return merge_k10_s72_warp_row_ir
     return split72.parent_lowk.stage1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_stage1_batch8_cond4_vmin_maxtree", "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_merge_k10_s72_warp_row():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0076"}'))

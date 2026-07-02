@@ -34,8 +34,8 @@ base_v1 = direct_split72.rag_split72.base_v1
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
     return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
-knn_build_d128_rag_q128_k10_s74_warp_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
-merge_k10_s74_warp_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+knn_build_d128_rag_q128_k10_s74_warp_merge = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 74]], "cta_group": 1, "threads": 128}'))
+merge_k10_s74_warp_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 74]], "cta_group": 1, "threads": 128}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_D128_RAG_Q128_K10_DF0F_WARPMERGE_VERIFY_KERNEL')
@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return merge_k10_s74_warp_ir
     return merge_k10_s74_warp_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d128_rag_q128_k10_s74_warp_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 74]], "cta_group": 1, "threads": 128}'))
 
 def _compile_ir(ir_obj: Any):
     from .._dispatch_runtime import generate_kernel

@@ -36,7 +36,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return base.parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return base.ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_ragonline_mbucket_4fc7_q1m262_v2_stage1_q1_k10_m64_halfrow", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 36608, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10], ["ROWS_COVERED", 1]], "cta_group": 1, "threads": 96}'))
 
 def _eligible_q1large_s144(inputs: dict[str, Any]) -> bool:
     return base._eligible_q1_large_halfrow(inputs) and int(inputs.get('M', -1)) in SPLIT_BY_M

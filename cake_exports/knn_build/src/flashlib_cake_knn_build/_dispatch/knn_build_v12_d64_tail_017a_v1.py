@@ -49,8 +49,8 @@ Q4_SPLIT = _decode_capture(_json_loads('144'))
 Q4_GROUPS = _decode_capture(_json_loads('12'))
 SHAPE_SPECS: dict[str, dict[str, Any]] = {RAG_ONLINE_D64_Q1_M262: {'B': 1, 'Q': 1, 'M': 262143, 'D': 64, 'K': 10, 'build': False, 'split_count': Q1_SPLIT, 'group_count': Q1_GROUPS, 'rows_covered': 1}, RAG_MICRO_D64_Q4_M100: {'B': 1, 'Q': 4, 'M': 100000, 'D': 64, 'K': 10, 'build': False, 'split_count': Q4_SPLIT, 'group_count': Q4_GROUPS, 'rows_covered': 4}}
 _insert_sorted_pair_k10 = _ir_proxy('loom.examples.weave.knn_build_v12_d64_tail_017a_v1:_insert_sorted_pair_k10', 256)
-knn_build_v12_d64_tail_017a_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "cta_group": 1, "threads": 96}'))
-stage1_v12_d64_tail_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "cta_group": 1, "threads": 96}'))
+knn_build_v12_d64_tail_017a_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 64], ["TOP_K_MAX", 10], ["ROWS_COVERED", 4]], "cta_group": 1, "threads": 96}'))
+stage1_v12_d64_tail_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 64], ["TOP_K_MAX", 10], ["ROWS_COVERED", 4]], "cta_group": 1, "threads": 96}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_V12_D64_TAIL_017A_VERIFY_KERNEL')
@@ -59,7 +59,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'fused_merge':
         return d64_parent.fused_merge_parent._fused_merge_ir(split_count, group_count)
     return stage1_v12_d64_tail_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "cta_group": 1, "threads": 96}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d64_tail_017a_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20224, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 64], ["TOP_K_MAX", 10], ["ROWS_COVERED", 4]], "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_v12_d64_tail():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0187"}'))

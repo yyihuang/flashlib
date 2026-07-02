@@ -22,7 +22,7 @@ from . import knn_build_rag_microbatch_k10_q8q16_4757_v1 as rag_ceb3
 from . import knn_build_rag_stream_k32_q128m100000_ad64_v1 as q128_m100000
 MODULE = 'loom.examples.weave.knn_build_dispatch_ad64_1b8f_4b51_ceb3_full90_synthesis_v1'
 eval_mod = parent.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 BASE_AD64_KEY = parent.DEFAULT_CANDIDATE_KEY
 CANDIDATE_1B8F_BUILD_K10 = 'ad64_plus_1b8f_build_k10'
 CANDIDATE_4B51_BUILD_K10 = 'ad64_plus_4b51_build_k10'

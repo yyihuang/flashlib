@@ -5,6 +5,7 @@ _KERNEL_ALIAS_BY_REQUEST = {'{"ir_name":"knn_build_evolve_7bfc_split_cg2_stage1_
 import json
 import ctypes
 import importlib
+from dataclasses import dataclass
 from importlib import resources
 from types import SimpleNamespace
 
@@ -23,6 +24,7 @@ def _decode_capture(value):
             value.get("computed_smem_bytes", 0),
             value.get("cluster_dims", (1, 1, 1)),
             value.get("cta_group", 1),
+            value.get("constants", ()),
         )
     if isinstance(value, dict) and set(value) == {"__kernel__"}:
         return DispatchKernel(value["__kernel__"])
@@ -42,16 +44,24 @@ def _decode_capture(value):
     return value
 
 
+@dataclass(frozen=True)
 class _IRProxy:
-    def __init__(self, name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
-        self.name = name.rpartition(":")[2]
-        self.threads = int(threads)
-        self.computed_smem_bytes = int(computed_smem_bytes)
-        self.grid = SimpleNamespace(cluster_dims=tuple(cluster_dims), cta_group=int(cta_group))
+    name: str
+    threads: int = 256
+    computed_smem_bytes: int = 0
+    constants: tuple = ()
+    grid: object = None
 
 
-def _ir_proxy(name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
-    return _IRProxy(name, threads, computed_smem_bytes, cluster_dims, cta_group)
+def _ir_proxy(
+    name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1),
+    cta_group=1, constants=(),
+):
+    return _IRProxy(
+        name.rpartition(":")[2], int(threads), int(computed_smem_bytes),
+        tuple(tuple(item) for item in constants),
+        SimpleNamespace(cluster_dims=tuple(cluster_dims), cta_group=int(cta_group)),
+    )
 
 
 class DispatchKernel:

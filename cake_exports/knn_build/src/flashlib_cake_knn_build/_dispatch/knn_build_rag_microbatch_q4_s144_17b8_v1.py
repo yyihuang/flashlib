@@ -40,7 +40,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 's144_merge':
         return rag_faeb.rag_s144._fused_merge_ir(S144_SPLIT_COUNT, S144_GROUP_COUNT)
     return rag_faeb.rag_s144.stage1_cta1_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_4a72_v2_stage1_k10_cta1_maxtree", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _dtype_name(inputs: dict[str, Any], key: str) -> str:
     tensor = inputs.get(key)

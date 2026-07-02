@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q512_merge_generic':
         return lowk_seed.merge_q512_generic_ir
     return parent_fcf2.ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _select_contract_shapes(shape_labels):
     return parent_fcf2._select_contract_shapes(shape_labels)

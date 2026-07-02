@@ -32,10 +32,10 @@ TARGET_SHAPE_SET = set(TARGET_SHAPES)
 SHAPE_SPECS = _decode_capture(_json_loads('{"__dict_items__": [["build_dim_sweep_b1_q1024_m1024_d96_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 96], ["K", 10], ["build", true], ["feature_chunks", 1], ["split_count", 8]]}], ["build_dim_sweep_b1_q2048_m2048_d192_k10", {"__dict_items__": [["B", 1], ["Q", 2048], ["M", 2048], ["D", 192], ["K", 10], ["build", true], ["feature_chunks", 2], ["split_count", 8]]}], ["build_highd_b1_q1024_m1024_d320_k10", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 320], ["K", 10], ["build", true], ["feature_chunks", 3], ["split_count", 8]]}], ["search_rect_highd_b1_q512_m12000_d320_k10", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 12000], ["D", 320], ["K", 10], ["build", false], ["feature_chunks", 3], ["split_count", 32]]}], ["rag_microbatch_highd_b1_q16_m50000_d768_k10", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 50000], ["D", 768], ["K", 10], ["build", false], ["feature_chunks", 6], ["split_count", 64]]}]]}'))
 WIDE_D256_SHAPES = {'build_dim_sweep_b1_q2048_m2048_d192_k10'}
 WIDE_D384_SHAPES = {'build_highd_b1_q1024_m1024_d320_k10', 'search_rect_highd_b1_q512_m12000_d320_k10'}
-stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
-stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_8199_d384_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 148736, "cta_group": 1, "threads": 192}'))
-pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_pad_bf16_rows", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+stage1_d256_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+stage1_d384_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_8199_d384_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 148736, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+pad_bf16_rows_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_7231_pad_bf16_rows", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_PAD", 128]], "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10]], "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_NON128_FRONTIER_8199_WIDECOMBINE_VERIFY_KERNEL')
@@ -56,7 +56,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge':
         return merge_ir
     return stage1_d384_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_8199_d384_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 148736, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_non128_frontier_8199_d384_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 148736, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

@@ -17,7 +17,7 @@ from . import knn_build_rag_microbucket_k32_q24rowld2_24dc_v1 as q24_seed
 from . import knn_build_rag_stream_k32_q128rowld_60fb_v1 as q128_seed
 MODULE = 'loom.examples.weave.knn_build_dispatch_784a_cf51_q1_q16_q24_q128_seed_portfolio_full90_v1'
 eval_mod = parent.eval_mod
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbatch_m64_d4f7_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 91392, "constants": [], "cta_group": 1, "threads": 512}'))
 BASE_D5F8_KEY = parent.BASE_D5F8_KEY
 PARENT_CF51_Q1_Q16_KEY = parent.CANDIDATE_CF51_Q1_Q16
 CANDIDATE_Q128_ONLY = 'c3bf_plus_cf51_q1024_bca0_q1_5018_q16_b0e2_q128'

@@ -18,7 +18,7 @@ MODULE = 'loom.examples.weave.knn_build_d192_tile_search_b10e_v1'
 TARGET_SHAPE = 'build_dim_sweep_b1_q2048_m2048_d192_k10'
 TARGET_SHAPES = (TARGET_SHAPE,)
 SPLIT_COUNT = 8
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _eligible(inputs: dict[str, Any]) -> bool:
     query = inputs.get('query')

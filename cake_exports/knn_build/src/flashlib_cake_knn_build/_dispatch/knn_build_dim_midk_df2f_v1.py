@@ -39,11 +39,11 @@ ROUTE_D64_73A9 = 'loom.examples.weave.knn_build_dim_midk_73a9_v1:d64_split_s8'
 ROUTE_D256_SPLIT = 'loom.examples.weave.knn_build_dim_midk_df2f_v1:d256_split_s8'
 ROUTE_FP16_SPLIT = 'loom.examples.weave.knn_build_dim_midk_df2f_v1:fp16_d128_split_s8'
 ROUTE_PARENT = 'loom.examples.weave.knn_build_dim_midk_73a9_v1'
-knn_build_dim_midk_df2f_d256_split_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
-knn_build_dim_midk_df2f_fp16_split_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_fp16_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-stage1_d256_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
-stage1_fp16_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_fp16_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "cta_group": 1, "threads": 192}'))
-merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+knn_build_dim_midk_df2f_d256_split_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+knn_build_dim_midk_df2f_fp16_split_stage1 = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_fp16_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+stage1_d256_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+stage1_fp16_split_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_fp16_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
+merge_generic_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_merge", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10]], "cta_group": 1, "threads": 256}'))
 
 def _verify_export_ir() -> Any:
     verify_kernel = os.environ.get('LOOM_KNN_DIMMIDK_DF2F_VERIFY_KERNEL')
@@ -54,7 +54,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'merge_generic':
         return merge_generic_ir
     return stage1_d256_split_ir
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "cta_group": 1, "threads": 192}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_dim_midk_df2f_d256_split_stage1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_d256_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0023"}'))

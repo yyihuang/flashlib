@@ -43,7 +43,7 @@ def _verify_export_ir() -> Any:
     if verify_kernel == 'q32tail_exact_merge':
         return q32exact.rows4._warp_merge_ir(K32_Q32TAIL_EXACT_SPLIT_COUNT)
     return uneven._warp_merge_ir(split_count)
-ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32uneven_s141r4_f653_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32uneven_s141r4_f653_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 141], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _eligible_q31tail(inputs: dict[str, Any]) -> bool:
     if not uneven.base._is_bf16_d128_nonbuild(inputs):
