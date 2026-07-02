@@ -15,13 +15,9 @@ if str(SRC) not in sys.path:
 from flashlib_cake_knn_build._benchmark import bench_gpu_time, require_cupti  # noqa: E402
 
 
+SHAPE_RECORDS = json.loads((Path(__file__).with_name("shape_records.json")).read_text(encoding="utf-8"))
 SHAPES: dict[str, dict[str, Any]] = {
-    "build_k5_n256": {"B": 1, "N": 256, "D": 128, "K": 5, "seed": 17},
-    "build_k10_n4096": {"B": 1, "N": 4096, "D": 128, "K": 10, "seed": 23},
-    "build_k12_n2048": {"B": 1, "N": 2048, "D": 128, "K": 12, "seed": 29},
-    "build_k20_n4096": {"B": 1, "N": 4096, "D": 128, "K": 20, "seed": 31},
-    "build_k30_n512": {"B": 1, "N": 512, "D": 128, "K": 30, "seed": 37},
-    "build_k32_n4096": {"B": 1, "N": 4096, "D": 128, "K": 32, "seed": 41},
+    row["label"]: {**row["params"], "recorded": row["recorded"]} for row in SHAPE_RECORDS
 }
 
 
@@ -31,8 +27,8 @@ def _make_database(shape: dict[str, Any]):
     generator = torch.Generator(device="cuda")
     generator.manual_seed(int(shape["seed"]))
     return torch.randn(
-        (int(shape["B"]), int(shape["N"]), int(shape["D"])),
-        dtype=torch.bfloat16,
+        (int(shape["B"]), int(shape["M"]), int(shape["D"])),
+        dtype=torch.float16 if shape.get("dtype") == "float16" else torch.bfloat16,
         device="cuda",
         generator=generator,
     ).contiguous()
@@ -96,7 +92,8 @@ def _run_shape(
     result: dict[str, Any] = {
         "shape": name,
         "B": int(shape["B"]),
-        "N": int(shape["N"]),
+        "Q": int(shape["Q"]),
+        "M": int(shape["M"]),
         "D": int(shape["D"]),
         "K": k,
     }
@@ -117,10 +114,13 @@ def _run_shape(
         result["timing_backend"] = timing.backend
         result["bench_iters"] = len(timing.times_ms)
         flops = (
-            2.0 * int(shape["B"]) * int(shape["N"]) * int(shape["N"]) * int(shape["D"])
+            2.0 * int(shape["B"]) * int(shape["Q"]) * int(shape["M"]) * int(shape["D"])
         )
         result["tflops"] = flops / timing.median_ms / 1e9
-        result["qps"] = int(shape["B"]) * int(shape["N"]) / (timing.median_ms / 1000.0)
+        result["qps"] = int(shape["B"]) * int(shape["Q"]) / (timing.median_ms / 1000.0)
+        result["baseline_name"] = shape["recorded"]["baseline_name"]
+        result["baseline_ms"] = float(shape["recorded"]["baseline_ms"])
+        result["speedup_vs_baseline"] = result["baseline_ms"] / timing.median_ms
 
     return result
 
@@ -159,12 +159,19 @@ def main() -> int:
     selected = args.shape or list(SHAPES)
     payload: dict[str, Any] = {
         "api": "flashlib_cake_knn_build.knn_build",
+        "baseline_name": "Cake-recorded FlashLib baseline",
         "shapes": {name: SHAPES[name] for name in selected},
         "metadata_only": bool(args.metadata_only),
     }
     if args.metadata_only:
         payload["results"] = []
     else:
+        import torch
+
+        payload["hardware"] = {
+            "device": torch.cuda.get_device_name(),
+            "arch": f"sm_{torch.cuda.get_device_capability()[0]}{torch.cuda.get_device_capability()[1]}a",
+        }
         if not args.no_benchmark:
             require_cupti()
         payload["results"] = [

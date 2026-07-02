@@ -16,10 +16,13 @@
     "package_exports": {
       "knn_build": ".interface:knn_build"
     },
-    "sha256": "87b8e48b81db523c9ef99efb848a4952f3777965fc1cf83ac3511c2e25d76a05"
+    "sha256": "4283f7f2e57456eba01efb106b1dbde1b8d22a64c5740e04c53467c51af41784",
+    "validation": {
+      "expected_shape_count": 58
+    }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-02T06:14:45.955440+00:00",
+  "generated_at_utc": "2026-07-02T18:17:26.168496+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -7787,6 +7790,6 @@
     }
   ],
   "package": "flashlib_cake_knn_build",
-  "source_commit": "6e540dc8631ed512d874199c16aa8de5b9cfa2bf",
+  "source_commit": "c6033fbd89844c8086798585f6b3d53ff4155f65",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
 }
