@@ -1,0 +1,142 @@
+"""kNN search rectangular Q1024/M8192 K10 exact seed.
+
+Minimum target architecture: sm_100a. This additive bucket-kernel candidate
+targets only ``search_rect_b1_q1024_m8192_d128_k10``. It routes the row through
+the existing K10 tcgen05/TMA stage-1 producer with an M-axis split fanout and a
+matching cached K10 merge. Guard misses delegate to the current exported Weave
+dispatcher; the benchmark hook reports only the target bucket row.
+"""
+from __future__ import annotations
+from json import loads as _json_loads
+from .._dispatch_runtime import _decode_capture, _ir_proxy
+import argparse
+from dataclasses import replace
+from functools import lru_cache
+import json
+import os
+from typing import Any, Callable
+from .. import _dispatch_runtime as eval_mod
+from . import knn_build_dispatch_split72_4e09_de1a_3dc7_v48 as current_dispatch
+from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_v1 as parent_lowk
+TARGET_SHAPE = 'search_rect_b1_q1024_m8192_d128_k10'
+TARGET_SHAPES = (TARGET_SHAPE,)
+FEAT_D = parent_lowk.FEAT_D
+TOP_K = parent_lowk.TOP_K_MAX
+SPLIT_COUNT_DEFAULT = 16
+SUPPORTED_SPLITS = (8, 16, 32)
+MERGE_THREADS = parent_lowk.parent_cached.RAG_MERGE_THREADS
+
+def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
+    constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
+    return replace(ir_obj, name=f'{ir_obj.name}_{suffix}', constants=constants)
+merge_k10_s8_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s8_cache_ir"}'))
+merge_k10_s16_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s16_cache_ir"}'))
+merge_k10_s32_cache_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:merge_k10_s32_cache_ir"}'))
+
+def _verify_export_ir() -> Any:
+    verify_kernel = os.environ.get('LOOM_KNN_RECT_D15E_VERIFY_KERNEL')
+    if verify_kernel == 'merge_s8':
+        return merge_k10_s8_cache_ir
+    if verify_kernel == 'merge_s16':
+        return merge_k10_s16_cache_ir
+    if verify_kernel == 'merge_s32':
+        return merge_k10_s32_cache_ir
+    return parent_lowk.stage1_ir
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:ir"}'))
+
+def _compile_ir(ir_obj: Any):
+    from .._dispatch_runtime import generate_kernel
+    from .._dispatch_runtime import _cuda_include_dirs
+    from .._dispatch_runtime import compile_cuda
+    from .._dispatch_runtime import CUDAKernel
+    source = generate_kernel(ir_obj, validate=False, smem_bytes=ir_obj.computed_smem_bytes)
+    cubin = compile_cuda(source, arch=parent_lowk.base_v1._select_arch_and_preload(), options=['--use_fast_math'], include_dirs=_cuda_include_dirs())
+    return CUDAKernel(cubin, f'kernel_{ir_obj.name}')
+
+def _merge_ir_for_split(split_count: int) -> Any:
+    if split_count == 8:
+        return merge_k10_s8_cache_ir
+    if split_count == 16:
+        return merge_k10_s16_cache_ir
+    if split_count == 32:
+        return merge_k10_s32_cache_ir
+    raise ValueError(f'unsupported rect split count: {split_count}')
+
+@lru_cache(maxsize=3)
+def _compiled_merge_for_split(split_count: int):
+    return _compile_ir(_merge_ir_for_split(split_count))
+
+def _rect_split_count() -> int:
+    split_text = os.environ.get('LOOM_KNN_RECT_D15E_SPLIT_COUNT')
+    if not split_text:
+        return SPLIT_COUNT_DEFAULT
+    split_count = int(split_text)
+    if split_count not in SUPPORTED_SPLITS:
+        raise ValueError(f'LOOM_KNN_RECT_D15E_SPLIT_COUNT must be one of {SUPPORTED_SPLITS}')
+    return split_count
+
+def _dtype_is_bf16(inputs: dict[str, Any]) -> bool:
+    return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16'
+
+def _eligible_rect_smallq_largem(inputs: dict[str, Any]) -> bool:
+    label = inputs.get('label')
+    if label is not None and str(label) != TARGET_SHAPE:
+        return False
+    return not bool(inputs.get('build', False)) and _dtype_is_bf16(inputs) and (int(inputs['B']) == 1) and (int(inputs['Q']) == 1024) and (int(inputs['M']) == 8192) and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) == TOP_K)
+
+def _launch_rect_smallq_largem(inputs: dict[str, Any]) -> None:
+    split_count = _rect_split_count()
+    parent_lowk._launch_k10_cached_path(inputs, split_count=split_count, merge_threads=MERGE_THREADS, merge_kernel=_compiled_merge_for_split(split_count), merge_ir=_merge_ir_for_split(split_count))
+
+def launch_from_contract_inputs(inputs: dict[str, Any]) -> None:
+    if _eligible_rect_smallq_largem(inputs):
+        _launch_rect_smallq_largem(inputs)
+        return
+    current_dispatch.launch_from_contract_inputs(inputs)
+
+def candidate(inputs: dict[str, Any]):
+    launch_from_contract_inputs(inputs)
+    return None
+
+def evaluate_contract(*, shapes=None, correctness: bool=True, benchmark: bool=True) -> dict[str, Any]:
+    from .._dispatch_runtime import evaluate
+    return evaluate(candidate, shapes=shapes, correctness=correctness, benchmark=benchmark)
+
+def _select_contract_shapes(shape_labels):
+    return current_dispatch._select_contract_shapes(shape_labels)
+
+def compile_and_launch_knn_build(*, shape_labels=TARGET_SHAPES, benchmark: bool=False) -> dict[str, Any]:
+    """e2e-test entrypoint for the exact rectangular target row."""
+    report = evaluate_contract(shapes=_select_contract_shapes(shape_labels), correctness=True, benchmark=benchmark)
+    passed = bool(report.get('summary', {}).get('all_correct', False))
+    report['passed'] = passed
+    report['all_pass'] = passed
+    return report
+
+def _set_bench_backend(use_cupti: bool):
+    previous = eval_mod.CONTRACT.bench.get('use_cupti', True)
+    eval_mod.CONTRACT.bench['use_cupti'] = bool(use_cupti)
+    return previous
+
+def _run_with_timing_backend(kernel_fn: Callable[[dict[str, Any]], Any], *, use_cupti: bool, shape_labels=TARGET_SHAPES) -> dict[str, Any]:
+    prior_use_cupti = _set_bench_backend(use_cupti)
+    try:
+        return eval_mod.evaluate(kernel_fn, shapes=_select_contract_shapes(shape_labels), correctness=True, benchmark=True)
+    finally:
+        eval_mod.CONTRACT.bench['use_cupti'] = prior_use_cupti
+
+def _summarize_rows(report: dict[str, Any]) -> dict[str, Any]:
+    rows = report.get('per_shape', {})
+    return {label: {'passed': rows.get(label, {}).get('passed'), 'kernel_ms': rows.get(label, {}).get('kernel_ms'), 'tflops': rows.get(label, {}).get('tflops'), 'flashlib_ms': rows.get(label, {}).get('flashlib_ms'), 'ratio_vs_flashlib': rows.get(label, {}).get('ratio_vs_flashlib'), 'timing_backend': rows.get(label, {}).get('timing_backend'), 'measurement_comparable': rows.get(label, {}).get('measurement_comparable'), 'recall': rows.get(label, {}).get('recall'), 'boundary_passed': rows.get(label, {}).get('boundary_passed'), 'distance_max_abs': rows.get(label, {}).get('distance_max_abs'), 'distance_max_rel': rows.get(label, {}).get('distance_max_rel')} for label in TARGET_SHAPES if label in rows}
+
+def benchmark_knn_build_rect_smallq_largem_ff59_d15e_v1(*, use_cupti: bool=False) -> dict[str, Any]:
+    candidate_report = _run_with_timing_backend(candidate, use_cupti=use_cupti)
+    baseline_report = _run_with_timing_backend(current_dispatch.candidate, use_cupti=use_cupti)
+    candidate_rows = candidate_report.get('per_shape', {})
+    baseline_rows = baseline_report.get('per_shape', {})
+    per_shape_delta = {}
+    for label in TARGET_SHAPES:
+        cand_ms = candidate_rows.get(label, {}).get('kernel_ms')
+        base_ms = baseline_rows.get(label, {}).get('kernel_ms')
+        per_shape_delta[label] = {'candidate_ms': cand_ms, 'current_dispatch_ms': base_ms, 'speedup_vs_current_dispatch': base_ms / cand_ms if cand_ms and base_ms else None, 'candidate_tflops': candidate_rows.get(label, {}).get('tflops'), 'current_dispatch_tflops': baseline_rows.get(label, {}).get('tflops'), 'flashlib_ms': candidate_rows.get(label, {}).get('flashlib_ms'), 'candidate_ratio_vs_flashlib': candidate_rows.get(label, {}).get('ratio_vs_flashlib')}
+    return {'tflops': candidate_report['summary']['primary_mean'] or 0.0, 'all_correct': candidate_report['summary']['all_correct'], 'performance_comparable': candidate_report['summary']['performance_comparable'], 'invalid_performance_reason': candidate_report['summary']['invalid_performance_reason'], 'timing_backend_requested': 'cupti' if use_cupti else 'cuda_event', 'use_cupti': use_cupti, 'split_count': _rect_split_count(), 'target_shapes': TARGET_SHAPES, 'measured_entrypoint': 'loom.examples.weave.knn_build_rect_smallq_largem_ff59_d15e_v1:benchmark_knn_build_rect_smallq_largem_ff59_d15e_v1', 'candidate_rows': _summarize_rows(candidate_report), 'current_dispatch_rows': _summarize_rows(baseline_report), 'per_shape_delta': per_shape_delta, 'report': candidate_report, 'current_dispatch_report': baseline_report}
