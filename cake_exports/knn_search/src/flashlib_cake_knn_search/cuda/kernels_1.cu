@@ -1131,8 +1131,8 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 

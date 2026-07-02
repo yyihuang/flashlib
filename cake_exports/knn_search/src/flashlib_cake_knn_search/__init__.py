@@ -131,5 +131,5 @@ __all__ = [
 ]
 
 # Semantic exports generated from export_plan.package_exports.
-from .semantic import knn_search as knn_search
+from .interface import knn_search as knn_search
 __all__ = [*globals().get('__all__', []), 'knn_search']

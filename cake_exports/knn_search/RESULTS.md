@@ -4,8 +4,8 @@
 
 - Package: `flashlib_cake_knn_search`
 - Source repository: `ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git`
-- Source commit: `d78c3d18b69b9c48962ba2acc7e84d2e5deb4b37`
-- Generated at: `2026-07-02T05:32:51.598064+00:00`
+- Source commit: `6e540dc8631ed512d874199c16aa8de5b9cfa2bf`
+- Generated at: `2026-07-02T06:14:21.053810+00:00`
 
 ## Latest Recorded Results
 
@@ -30,8 +30,8 @@ CUPTI-backed, cold-L2 timing.
 | --- | --- | --- | --- |
 | metadata unit tests | not required | `pytest tests/test_exported_kernels.py tests/test_benchmark_harness.py -q` | pending |
 | NVRTC compile benchmark | CUDA host | `python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json` | pending |
-| semantic correctness | target GPU | `python benchmarks/benchmark_shapes.py` | pending |
-| kernel performance | target GPU | `python benchmarks/benchmark_shapes.py` | pending |
+| semantic correctness | target GPU | `pytest tests/test_correctness.py -q` | pending |
+| kernel performance | target GPU | `python benchmarks/benchmark.py --no-correctness` | pending |
 
 ## Kernel Inventory
 

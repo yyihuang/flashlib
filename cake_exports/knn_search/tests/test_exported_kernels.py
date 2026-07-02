@@ -33,6 +33,16 @@ def test_manifest_matches_package_exports():
         assert hasattr(pkg, public_name), public_name
         assert public_name in pkg.__all__, public_name
 
+    if "export_plan" in manifest:
+        entrypoints = manifest["export_plan"].get("entrypoints", {})
+        assert set(entrypoints) == {
+            "python_interface",
+            "correctness_test",
+            "performance_benchmark",
+        }
+        for path in entrypoints.values():
+            assert (ROOT / path).is_file(), path
+
 
 def test_manifest_sources_exist_and_contain_symbols():
     manifest = _manifest()

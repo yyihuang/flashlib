@@ -1698,8 +1698,8 @@ kernel_knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1(_
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -2817,8 +2817,8 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -5786,8 +5786,8 @@ kernel_knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1(__nv_bfloat16* _
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -12092,8 +12092,8 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -13652,8 +13652,8 @@ kernel_knn_search_d384_mma_split_partial_0612_r34_v1(__nv_bfloat16* __restrict__
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -19432,8 +19432,8 @@ kernel_knn_search_80a5_blocker_k64_q256_m65536_twotile_partial_v1(__nv_bfloat16*
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
