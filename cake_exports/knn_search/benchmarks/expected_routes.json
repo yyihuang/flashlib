@@ -78,11 +78,11 @@
     },
     {
       "label": "dispatch_q256_m65536_d128_k10",
-      "selected_route": "codex0616_v2_highq_qbucket_exact_q256_q512_q1024_q2048_m65536_k10"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "dispatch_q512_m65536_d128_k10",
-      "selected_route": "codex0616_v2_highq_qbucket_exact_q256_q512_q1024_q2048_m65536_k10"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "dispatch_q1024_m65536_d128_k10",
@@ -98,7 +98,7 @@
     },
     {
       "label": "dispatch_q4096_m32768_d128_k10",
-      "selected_route": "codex0616_q4096_k10_split4_exact_m16384_20000_32768_65536"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "ksweep_q128_m131072_d128_k1",
@@ -218,7 +218,7 @@
     },
     {
       "label": "blind_highq_q4096_m65536_d128_k10",
-      "selected_route": "rounda7f3_q4096_m65536_k10_split4_fulltile"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_midq_q96_m98304_d128_k10",

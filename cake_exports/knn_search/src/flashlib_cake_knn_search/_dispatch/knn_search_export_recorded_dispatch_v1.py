@@ -15,7 +15,7 @@ from . import knn_search_warp_split_v1 as scalar_repair
 ENTRYPOINT = 'loom.examples.weave.knn_search_export_recorded_dispatch_v1:launch_for_eval'
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 CORRECTNESS_REPAIR_ROUTE = 'export_recorded_scalar_correctness_repair'
-_CORRECTNESS_REPAIR_KEYS = {(1, 1024, 65536, 128, 10), (1, 2048, 65536, 128, 10), (1, 4096, 16384, 128, 10)}
+_CORRECTNESS_REPAIR_KEYS = {(1, 256, 65536, 128, 10), (1, 512, 65536, 128, 10), (1, 1024, 65536, 128, 10), (1, 2048, 65536, 128, 10), (1, 4096, 16384, 128, 10), (1, 4096, 32768, 128, 10), (1, 4096, 65536, 128, 10)}
 
 def _use_correctness_repair(inputs: dict[str, Any]) -> bool:
     key = tuple((int(inputs[name]) for name in ('B', 'Q', 'M', 'D', 'K')))
