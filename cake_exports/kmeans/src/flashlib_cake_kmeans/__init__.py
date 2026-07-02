@@ -117,3 +117,7 @@ __all__ = [
     'launch_kmeans_highd_paired_packedpartial_r2_partial',
     'launch_kmeans_highd_paired_packedpartial_r2_reduce',
 ]
+
+# Semantic exports generated from export_plan.package_exports.
+from .semantic import flash_kmeans_assign as flash_kmeans_assign
+__all__ = [*globals().get('__all__', []), 'flash_kmeans_assign']

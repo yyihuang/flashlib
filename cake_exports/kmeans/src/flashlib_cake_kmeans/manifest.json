@@ -8,10 +8,13 @@
       "workload": "kmeans"
     },
     "name": "kmeans-production-suite",
-    "sha256": "87ebf6e131942fe93ed931e2b3a6e452743f98491071b02067b12380ed520eec"
+    "package_exports": {
+      "flash_kmeans_assign": ".semantic:flash_kmeans_assign"
+    },
+    "sha256": "271b75ac2122d8055760ca7c3689659d6dd523d31c148f663bedef9033d6cd37"
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-01T08:43:31.541286+00:00",
+  "generated_at_utc": "2026-07-02T05:33:10.291313+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -1919,6 +1922,6 @@
     }
   ],
   "package": "flashlib_cake_kmeans",
-  "source_commit": "87e6e287e2a068593c719a15255fbeecdc3513f2",
+  "source_commit": "d78c3d18b69b9c48962ba2acc7e84d2e5deb4b37",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
 }

@@ -28,6 +28,10 @@ def test_manifest_matches_package_exports():
     assert names
     assert set(pkg.KERNELS) == set(names)
     assert manifest["package"] == PACKAGE_NAME
+    package_exports = manifest.get("export_plan", {}).get("package_exports", {})
+    for public_name in package_exports:
+        assert hasattr(pkg, public_name), public_name
+        assert public_name in pkg.__all__, public_name
 
 
 def test_manifest_sources_exist_and_contain_symbols():
