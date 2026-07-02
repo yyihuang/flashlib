@@ -8,7 +8,7 @@ rejects tcgen05 instructions. D160 is listed as a blocked sibling because its
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1 as _d192_single
 from . import flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1 as _d192

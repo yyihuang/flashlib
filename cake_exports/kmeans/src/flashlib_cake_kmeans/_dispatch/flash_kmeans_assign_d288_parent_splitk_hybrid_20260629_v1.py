@@ -8,7 +8,7 @@ tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import flash_kmeans_assign_d288_exactd_a532_v1 as _parent
 from . import flash_kmeans_assign_d288_splitk_cta_0438_v1 as _splitk

@@ -7,7 +7,7 @@ sm_120a/sm_121a where ptxas rejects tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _ir_proxy
+from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 from typing import Any
 from .flash_kmeans_assign_microdim_6cd2_v1 import ir as d64_ir
