@@ -1,5 +1,10 @@
 {
   "export_plan": {
+    "entrypoints": {
+      "correctness_test": "tests/test_correctness.py",
+      "performance_benchmark": "benchmarks/benchmark.py",
+      "python_interface": "src/flashlib_cake_kmeans/interface.py"
+    },
     "file": "plan.json",
     "kernel_count": 27,
     "metadata": {
@@ -9,12 +14,12 @@
     },
     "name": "kmeans-production-suite",
     "package_exports": {
-      "flash_kmeans_assign": ".semantic:flash_kmeans_assign"
+      "flash_kmeans_assign": ".interface:flash_kmeans_assign"
     },
-    "sha256": "271b75ac2122d8055760ca7c3689659d6dd523d31c148f663bedef9033d6cd37"
+    "sha256": "57d5a50831f15d5d9451610810408384f6ecf85e2ff3fd14f21880dd477f5b6d"
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-02T05:33:10.291313+00:00",
+  "generated_at_utc": "2026-07-02T06:13:47.679372+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -1922,6 +1927,6 @@
     }
   ],
   "package": "flashlib_cake_kmeans",
-  "source_commit": "d78c3d18b69b9c48962ba2acc7e84d2e5deb4b37",
+  "source_commit": "6e540dc8631ed512d874199c16aa8de5b9cfa2bf",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
 }

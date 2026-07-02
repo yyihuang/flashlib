@@ -119,5 +119,5 @@ __all__ = [
 ]
 
 # Semantic exports generated from export_plan.package_exports.
-from .semantic import flash_kmeans_assign as flash_kmeans_assign
+from .interface import flash_kmeans_assign as flash_kmeans_assign
 __all__ = [*globals().get('__all__', []), 'flash_kmeans_assign']

@@ -533,9 +533,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_v10(float* __restrict__ x_sq, float
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -1487,9 +1487,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_v15(float* __restrict__ x_sq, float
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(512));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -1841,9 +1841,9 @@ kernel_flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1(float* __restrict__ x_sq, f
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -2262,9 +2262,9 @@ kernel_flash_kmeans_assign_microdim_direct_9c0d_v1(__nv_bfloat16* __restrict__ x
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -2733,9 +2733,9 @@ kernel_flash_kmeans_assign_microdim_6cd2_v1(float* __restrict__ x_sq, float* __r
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -3243,9 +3243,9 @@ kernel_flash_kmeans_assign_lowdim_e50c_v1(float* __restrict__ x_sq, float* __res
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -4629,9 +4629,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_d160_splitd_v1(float* __restrict__ 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(512));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -5061,9 +5061,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1(float* __restrict__ 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -6091,9 +6091,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1(float* __restrict__ 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(512));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -6562,9 +6562,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_d256_single_v1(float* __restrict__ 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -7668,9 +7668,9 @@ kernel_flash_kmeans_assign_cleanroom_tcgen05_d256_splitd_v1(float* __restrict__ 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(512));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -8031,9 +8031,9 @@ kernel_flash_kmeans_assign_highd_splitd_6fcf_v1(float* __restrict__ x_sq, float*
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -8377,9 +8377,9 @@ kernel_flash_kmeans_assign_highd_splitk_partial_8de8_v1(float* __restrict__ c_sq
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 1) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -8781,9 +8781,9 @@ kernel_flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1(float* __r
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 5) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -9202,9 +9202,9 @@ kernel_flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1(f
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 5) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -9738,9 +9738,9 @@ kernel_flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1(float* _
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 5) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(512));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
@@ -10158,9 +10158,9 @@ kernel_flash_kmeans_assign_highd_paired_packedpartial_producer_7b3c_v1(float* __
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
-    if (warp == 0) {
-        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
+    if (warp == 5) {
         asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(256));
+        asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }
 
