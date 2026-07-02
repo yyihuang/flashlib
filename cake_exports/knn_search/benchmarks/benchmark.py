@@ -28,18 +28,23 @@ def _make_inputs(shape: dict[str, Any]):
 
     generator = torch.Generator(device="cuda")
     generator.manual_seed(int(shape["seed"]))
-    query = torch.randn(
-        (int(shape["B"]), int(shape["Q"]), int(shape["D"])),
-        dtype=torch.bfloat16,
-        device="cuda",
-        generator=generator,
-    ).contiguous()
     database = torch.randn(
         (int(shape["B"]), int(shape["M"]), int(shape["D"])),
         dtype=torch.bfloat16,
         device="cuda",
         generator=generator,
     ).contiguous()
+    if bool(shape.get("self_search", False)):
+        if int(shape["Q"]) != int(shape["M"]):
+            raise ValueError("self_search shapes require Q == M")
+        query = database
+    else:
+        query = torch.randn(
+            (int(shape["B"]), int(shape["Q"]), int(shape["D"])),
+            dtype=torch.bfloat16,
+            device="cuda",
+            generator=generator,
+        ).contiguous()
     return query, database
 
 
