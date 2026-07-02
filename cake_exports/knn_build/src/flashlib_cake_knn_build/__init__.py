@@ -477,3 +477,7 @@ __all__ = [
     'launch_knn_build_rect_smallq_largem_ff59_d15e_v1_merge_k10_s32_cache_ir',
     'launch_knn_build_rect_smallq_largem_ff59_d15e_v1_ir',
 ]
+
+# Semantic exports generated from export_plan.package_exports.
+from .semantic import knn_build as knn_build
+__all__ = [*globals().get('__all__', []), 'knn_build']
