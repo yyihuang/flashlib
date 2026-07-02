@@ -23,12 +23,12 @@ MMA_SMEM_BYTES = d256.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = d256.MERGE_SMEM_BYTES
 ROUTE_D256_Q512_M65536 = 'round80a5_d256_q512_m65536_k10_tcgen05'
 ROUTE_PARENT_DEFAULT_AFE6 = parent.PROFILE_ALL
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:merge_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:parent_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 120576, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
 D256_Q512_LABELS: tuple[str, ...] = ('blind_post6912_d256_q512_m65536_k10',)
-D256_Q512_SHAPES = _decode_capture(_json_loads('[{"label": "blind_post6912_d256_q512_m65536_k10", "params": {"B": 1, "D": 256, "K": 10, "M": 65536, "Q": 512, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610706, "self_search": false}}]'))
+D256_Q512_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_post6912_d256_q512_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 65536], ["D", 256], ["K", 10], ["dtype", "bfloat16"], ["seed", 610706], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _D256_Q512_ENTRY: dict[str, str] = {'shape_key': 'round80a5_d256_q512_m65536_k10_tcgen05', 'guard': 'B == 1 and Q == 512 and M == 65536 and D == 256 and K == 10 and not self_search and tcgen05_capable_arch', 'route': ROUTE_D256_Q512_M65536, 'entrypoint': 'loom.examples.weave.knn_search_80a5_blocker_d256_q512_m65536_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-49a1', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_11_80a5_d256_q512_m65536.md', 'selected_seed': 'weave-evolve-knn-search-49a1'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_D256_Q512_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 

@@ -37,10 +37,10 @@ _KNN_SEARCH_K64_Q4096_ROWFLAG_FUSEDCERT_E4CB_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q4096_ROWFLAG_FUSEDCERT_E4CB_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q4096_ROWFLAG_FUSEDCERT_E4CB_FLAGS: dict[tuple[int, int], Any] = {}
 _KNN_SEARCH_K64_Q4096_ROWFLAG_FUSEDCERT_E4CB_STATS: dict[str, int | bool | None] = {'attempts': 0, 'certified_count': 0, 'fallback_count': 0, 'last_overflow': None}
-knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:ir"}'))
+knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 def _scratch_rowflag_fusedcert(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

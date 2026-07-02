@@ -30,12 +30,12 @@ CONSUMED_MAIN_SEED = main_seed.CONSUMED_K32_PREFIX8_SEED
 CONSUMED_TAILINSERT_SEED = 'weave-evolve-knn-search-132-67a5-k32-tailinsert'
 TARGET_LABELS: tuple[str, ...] = ('exp_tail_q4096_m32769_d128_k32',)
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': 'exp_tail_q4096_m32769_d128_k32', 'params': {'B': 1, 'Q': Q4096_ROWS, 'M': Q4096_M32769_ROWS, 'D': D_STATIC, 'K': K32_TARGET, 'dtype': 'bfloat16', 'seed': 610610, 'self_search': False, 'min_recall': 0.999}}]
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:merge_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:parent_ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 _KNN_SEARCH_Q4096_M32769_K32_TAILINSERT_KERNELS: dict[str, Any] = {}
-knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1 = _ir_proxy('loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:ir"}'))
+knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'round132_67a5_q4096_m32769_d128_k32_prefix8_tailinsert', 'label': 'exp_tail_q4096_m32769_d128_k32', 'guard': 'B == 1 and Q == 4096 and M == 32769 and D == 128 and K == 32 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_M32769_K32_TAILINSERT, 'entrypoint': 'loom.examples.weave.knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1:launch_for_eval', 'selected_seed': CONSUMED_TAILINSERT_SEED, 'producer_seed': CONSUMED_MAIN_SEED, 'source_task': 'weave-evolve-knn-search-132-67a5', 'coverage_class': 'performance_route_q4096_m32769_d128_k32_prefix8_tailinsert', 'route_source': 'shape-specific-seed'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_tailinsert_kernel() -> dict[str, Any]:

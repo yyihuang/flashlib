@@ -13,10 +13,10 @@ import math
 from typing import Any
 from . import knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1 as parent
 from . import knn_search_mma_split_v1 as mma
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:merge_ir"}'))
-registered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:registered_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+registered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_ann_highq_split7_0613_r38_48e9_v1:registered_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 ANN_HIGHQ_SPLIT_M = 7
 ANN_HIGHQ_SPLIT7_SHAPES: list[dict[str, Any]] = [{'label': 'ann_sift_like_q10000_m100000_d128_k10', 'params': {'B': 1, 'Q': 10000, 'M': 100000, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610401, 'self_search': False, 'min_recall': 0.999}}]
 

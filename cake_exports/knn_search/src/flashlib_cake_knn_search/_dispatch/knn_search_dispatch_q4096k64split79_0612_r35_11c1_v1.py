@@ -12,9 +12,9 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 from collections.abc import Callable
 from typing import Any, NamedTuple
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as q4096_k64_split79
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_q4096k64split79_0612_r35_11c1_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 class DispatchRoute(NamedTuple):
     name: str
@@ -30,7 +30,7 @@ def _use_q4096_k64_split79(inputs: dict[str, Any]) -> bool:
 def _launch_q4096_k64_split79(inputs: dict[str, Any]) -> dict[str, Any]:
     return q4096_k64_split79._launch_q4096_k64_split79_oddevensort_fastmerge(inputs)
 DISPATCH_ROUTES: tuple[DispatchRoute, ...] = (DispatchRoute(name='q4096_m20000_d128_k64_split79_oddeven_fastmerge', shape_key='B1_Q4096_M20000_D128_K64', guard='B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 64 and tcgen05_capable_arch', predicate=_use_q4096_k64_split79, launcher=_launch_q4096_k64_split79, source_round_doc='design_doc/active/weave_evolve_knn_search_round_34_11c1_q4096k64split79.md'),)
-DISPATCH_REGISTRY = _decode_capture(_json_loads('{"__tuple__": [{"kernel_ref": "loom.examples.weave.knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1:launch_for_eval", "name": "q4096_m20000_d128_k64_split79_oddeven_fastmerge", "shape_guard": "B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 64 and tcgen05_capable_arch", "shape_key": "B1_Q4096_M20000_D128_K64", "source_round_doc": "design_doc/active/weave_evolve_knn_search_round_34_11c1_q4096k64split79.md"}]}'))
+DISPATCH_REGISTRY = _decode_capture(_json_loads('{"__tuple__": [{"__dict_items__": [["name", "q4096_m20000_d128_k64_split79_oddeven_fastmerge"], ["shape_key", "B1_Q4096_M20000_D128_K64"], ["shape_guard", "B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 64 and tcgen05_capable_arch"], ["kernel_ref", "loom.examples.weave.knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1:launch_for_eval"], ["source_round_doc", "design_doc/active/weave_evolve_knn_search_round_34_11c1_q4096k64split79.md"]]}]}'))
 DISPATCHER_R35_SHAPES: list[dict[str, Any]] = [{'label': 'rag_q128_m131072_d128_k10', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 2, 'self_search': False, 'min_recall': 0.999}}, {'label': 'rag_q4096_m20000_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 3, 'self_search': False, 'min_recall': 0.999}}, *q4096_k64_split79.K64_Q4096_SPLIT79_ODDEVENSORT_FASTMERGE_SHAPES]
 
 def selected_route_name(inputs: dict[str, Any]) -> str:

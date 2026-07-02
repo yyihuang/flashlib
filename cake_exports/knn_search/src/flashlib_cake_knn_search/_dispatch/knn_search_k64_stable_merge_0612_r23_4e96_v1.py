@@ -26,11 +26,11 @@ MERGE_SPLITS_PER_LANE_MAX = base.MERGE_SPLITS_PER_LANE_MAX
 MMA_POST_MMA_COL_COHORTS = base.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = base.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:partial_ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K64_STABLE_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_STABLE_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k64_stable_merge_0612_r23_4e96_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:knn_search_k64_stable_merge_0612_r23_4e96_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:ir"}'))
+knn_search_k64_stable_merge_0612_r23_4e96_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:knn_search_k64_stable_merge_0612_r23_4e96_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_stable_merge_0612_r23_4e96_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _compile_k64_stable_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0196"}, "partial": {"__kernel__": "dispatch_kernel_0195"}}'))

@@ -22,12 +22,12 @@ TILE_SMEM_BYTES = _q1_tail.TILE_SMEM_BYTES
 MERGE_GROUP_DIST_BYTES = MERGE_WARPS * K_MAX * 4
 MERGE_GROUP_IDX_BYTES = MERGE_WARPS * K_MAX * 4
 MERGE_SMEM_BYTES = MERGE_GROUP_DIST_BYTES + MERGE_GROUP_IDX_BYTES
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q1_flashdecode_0614_r92_4b34_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q1_flashdecode_0614_r92_4b34_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, str], tuple[Any, Any]] = {}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'q1_flashdecode_b1_m_65536_to_262144_d128_k_le_10_bf16', 'guard': 'B == 1 and Q == 1 and 65536 <= M <= 262144 and D == 128 and K <= 10', 'route': 'q1_tail_safe_tile_reduce_merge128', 'entrypoint': 'loom.examples.weave.knn_search_q1_flashdecode_0614_r92_4b34_v1:launch_for_eval', 'source_kernel': 'loom.examples.weave.knn_search_q1_irregular_m_tail_v1', 'workflow_mode': 'shape_specific_evolution'},)
 Q1_FLASHDECODE_SHAPES: list[dict[str, Any]] = [{'label': 'rag_online_q1_m100000_d128_k10', 'params': {'B': 1, 'Q': 1, 'M': 100000, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610101, 'self_search': False, 'min_recall': 1.0}}, {'label': 'heldout_q1_m65536_d128_k10', 'params': {'B': 1, 'Q': 1, 'M': 65536, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610111, 'self_search': False, 'min_recall': 1.0}}, {'label': 'heldout_q1_m131072_d128_k10', 'params': {'B': 1, 'Q': 1, 'M': 131072, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610102, 'self_search': False, 'min_recall': 1.0}}, {'label': 'heldout_q1_m262144_d128_k10', 'params': {'B': 1, 'Q': 1, 'M': 262144, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610112, 'self_search': False, 'min_recall': 1.0}}]
-knn_search_q1_flashdecode_merge128_0614_r92_v1 = _ir_proxy('loom.examples.weave.knn_search_q1_flashdecode_0614_r92_4b34_v1:knn_search_q1_flashdecode_merge128_0614_r92_v1', 256)
+knn_search_q1_flashdecode_merge128_0614_r92_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q1_flashdecode_0614_r92_4b34_v1:knn_search_q1_flashdecode_merge128_0614_r92_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0342"}, "partial": {"__kernel__": "dispatch_kernel_0341"}}'))

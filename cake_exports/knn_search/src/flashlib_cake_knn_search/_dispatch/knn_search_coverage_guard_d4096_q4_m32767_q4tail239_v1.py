@@ -15,9 +15,9 @@ ENTRYPOINT = 'loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4ta
 ROUTE = 'q4tail239_coverage_guard_d4096_q4_m32767_independent_warp_tail_tcgen05'
 TARGET_SHAPE_KEY = 'coverage_guard_boundary_d4096_q4_m32767_k10'
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': TARGET_SHAPE_KEY, 'params': {'B': 1, 'Q': 4, 'M': 32767, 'D': 4096, 'K': 10, 'dtype': 'bfloat16', 'seed': 630001, 'self_search': False, 'min_recall': 0.999}}]
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 192768, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 192768, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _active(inputs: dict[str, Any]) -> bool:
     return (int(inputs.get('B', 1)), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K']), bool(inputs.get('self_search', False))) == (1, 4, 32767, 4096, 10, False) and (not bool(inputs.get('force_fallback', False))) and q4_handoff.parent.seed.parent.parent.seed._tcgen05_capable_arch()

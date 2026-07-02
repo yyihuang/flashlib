@@ -24,15 +24,15 @@ Q4096_ROWS = 4096
 Q4096_LOWK_M = 20000
 Q4096_LOWK_K1_SPLIT_M = 9
 LOWK_MMA_SMEM_BYTES = k1_base.LOWK_MMA_SMEM_BYTES
-partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:partial_k1_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:parent_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:ir"}'))
+partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:partial_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 _K1_MARGIN_KERNELS: dict[str, Any] = {}
 _K1_MARGIN_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k1_top1_margin_0614_r93_merge8_v1 = _ir_proxy('loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:knn_search_k1_top1_margin_0614_r93_merge8_v1', 256)
-merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:merge_k1_ir"}'))
+knn_search_k1_top1_margin_0614_r93_merge8_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:knn_search_k1_top1_margin_0614_r93_merge8_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
+merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k1_top1_margin_0614_r93_merge8_v1:merge_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 128}'))
 TARGET_LABELS: tuple[str, ...] = ('ksweep_q4096_m20000_d128_k1',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q4096_m20000_d128_k1", "params": {"B": 1, "D": 128, "K": 1, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610310, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "ksweep_q4096_m20000_d128_k1"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 20000], ["D", 128], ["K", 1], ["dtype", "bfloat16"], ["seed", 610310], ["self_search", false], ["min_recall", 1.0]]}]]}]'))
 K1_MARGIN_SHAPES = [*TARGET_SHAPES, *k1_375f.HELDOUT_K1_HIGHQ_SHAPES]
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'round93_k1_top1_margin_merge8_target', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 1 and tcgen05', 'route': 'round93_k1_top1_margin_merge8_split9'}, *k1_375f.SHAPE_DISPATCH_REGISTRY)
 

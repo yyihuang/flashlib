@@ -23,11 +23,11 @@ SMEM_BYTES = seed.SMEM_BYTES
 ROUTE = '3737_target0627_d4096_q4_m32768_k10_directstride_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:launch_for_eval'
 TARGET_LABELS = ('target0627_d4096_q4_m32768_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d4096_q4_m32768_k10", "params": {"B": 1, "D": 4096, "K": 10, "M": 32768, "Q": 4, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612114, "self_search": false}}]'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:partial_ir"}'))
-knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1 = _ir_proxy('loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1', 256)
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:ir"}'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d4096_q4_m32768_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 4], ["M", 32768], ["D", 4096], ["K", 10], ["dtype", "bfloat16"], ["seed", 612114], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
+knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d4096_q4_m32768_k10_3737_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
 _KERNELS: dict[str, Any] = {}
 
 def _shape_key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int, bool]:

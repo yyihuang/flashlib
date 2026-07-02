@@ -51,18 +51,18 @@ MERGE_THREADS = lowd.MERGE_THREADS
 MERGE_SMEM_BYTES = lowd.MERGE_SMEM_BYTES
 TINY_DYNAMIC_D_SPLIT_M = lowd.NON_D128_SPLIT_M
 SUPPORTED_D = {7, 63}
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
 _TINY_DYNAMIC_D_KERNELS: dict[int, dict[str, Any]] = {}
 _TINY_DYNAMIC_D_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 TINY_DYNAMIC_D_SHAPES: list[dict[str, Any]] = [{'label': 'blind_dyn_d3_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 3, 'K': 10, 'dtype': 'bfloat16', 'seed': 610801, 'self_search': False, 'min_recall': 0.999}}, {'label': 'blind_dyn_d7_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 7, 'K': 10, 'dtype': 'bfloat16', 'seed': 610802, 'self_search': False, 'min_recall': 0.999}}, {'label': 'blind_dyn_d63_q128_m65536_k10', 'params': {'B': 1, 'Q': 128, 'M': 65536, 'D': 63, 'K': 10, 'dtype': 'bfloat16', 'seed': 610803, 'self_search': False, 'min_recall': 0.999}}]
 _knn_accumulate_q_norm_guarded_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:_knn_accumulate_q_norm_guarded_d', 256)
 _knn_stage_q_pass_guarded_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:_knn_stage_q_pass_guarded_d', 256)
 _knn_stage_database_pass_guarded_d = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:_knn_stage_database_pass_guarded_d', 256)
-knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1 = _ir_proxy('loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:partial_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:ir"}'))
+knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:knn_search_dynamic_d_tiny_q128_m65536_tcgen05_partial_0618_c8b9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d_tiny_q128_m65536_tcgen05_0618_c8b9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
 
 def _q_norm_parts(dim: int) -> int:
     return math.ceil(dim / MMA_STAGE_VEC_ELEMS)

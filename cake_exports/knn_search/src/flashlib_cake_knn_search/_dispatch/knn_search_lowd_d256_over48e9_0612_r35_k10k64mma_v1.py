@@ -15,9 +15,9 @@ from . import knn_search_lowd_d256_over48e9_0612_r34_d256mma_v1 as parent
 K64_MAX = d256_k64.K_MAX
 LOWD_D256_OVER48E9_SHAPES = parent.LOWD_D256_OVER48E9_SHAPES
 LOWD_D256_PRESERVE_SHAPES = parent.LOWD_D256_PRESERVE_SHAPES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
 
 def _use_d256_mma_k64(inputs: dict[str, Any]) -> bool:
     return int(inputs['K']) == K64_MAX and d256_k64._use_d256_mma(inputs)

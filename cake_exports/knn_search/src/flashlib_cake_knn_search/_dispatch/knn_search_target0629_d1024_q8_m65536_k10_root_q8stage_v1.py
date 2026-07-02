@@ -48,14 +48,14 @@ _DIRECT_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, 
 _knn_accumulate_q_norm_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:_knn_accumulate_q_norm_highd_direct_d', 256)
 _knn_stage_q_pass_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:_knn_stage_q_pass_highd_direct_d', 256)
 _knn_stage_database_pass_highd_direct_d = _ir_proxy('loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:_knn_stage_database_pass_highd_direct_d', 256)
-knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1 = _ir_proxy('loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:ir"}'))
+knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
 ROUTE_HIGH_DYNAMIC_D_TCGEN05 = '9286_dynamic_d768d1024_q32q16_directstride_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-9286-d768d1024-directstride-tcgen05'
 HIGH_DYNAMIC_D_LABELS: tuple[str, ...] = ('blind_ext_dyn_d768_q32_m32768_k10', 'blind_ext_dyn_d1024_q16_m32768_k10')
-HIGH_DYNAMIC_D_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dyn_d768_q32_m32768_k10", "params": {"B": 1, "D": 768, "K": 10, "M": 32768, "Q": 32, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610923, "self_search": false}}, {"label": "blind_ext_dyn_d1024_q16_m32768_k10", "params": {"B": 1, "D": 1024, "K": 10, "M": 32768, "Q": 16, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610924, "self_search": false}}]'))
+HIGH_DYNAMIC_D_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dyn_d768_q32_m32768_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 32768], ["D", 768], ["K", 10], ["dtype", "bfloat16"], ["seed", 610923], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_ext_dyn_d1024_q16_m32768_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 32768], ["D", 1024], ["K", 10], ["dtype", "bfloat16"], ["seed", 610924], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'overlay': 'dynamic_d768d1024_q32q16_directstride_tcgen05_9286', 'shape_key': 'B=1,M=32768,(Q,D) in {(32,768),(16,1024)},K=10', 'labels': HIGH_DYNAMIC_D_LABELS, 'guard': 'B == 1 and M == 32768 and (Q,D) in {(32,768),(16,1024)} and K == 10 and not self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_HIGH_DYNAMIC_D_TCGEN05, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_d768d1024_q32q16_tcgen05_0618_9286_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_task': 'weave-evolve 9286 extended dynamic-D D768/D1024 bucket seed', 'coverage_class': 'bucket_seed_ext_dynamic_d768d1024_q32q16_m32768_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _use_high_dynamic_d_tcgen05(inputs: dict[str, Any]) -> bool:
@@ -82,7 +82,7 @@ def _target_merge_kernel() -> Any:
         from .._dispatch_runtime import _cuda_include_dirs
         from .._dispatch_runtime import compile_cuda, detect_gpu_arch
         from .._dispatch_runtime import CUDAKernel
-        merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:merge_ir"}'))
+        merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
         source = generate_kernel(merge_ir, validate=False, smem_bytes=MERGE_SMEM_BYTES)
         cubin = compile_cuda(source, arch=detect_gpu_arch(), options=['--use_fast_math'], include_dirs=_cuda_include_dirs())
         _TARGET_MERGE_KERNEL = CUDAKernel(cubin, f'kernel_{merge_ir.name}')

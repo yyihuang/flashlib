@@ -24,15 +24,15 @@ K_MAX = base.K_MAX
 MMA_SMEM_BYTES = base.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
 TARGET_LABELS = ('target0627_d256_q128_m262144_k64',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d256_q128_m262144_k64", "params": {"B": 1, "D": 256, "K": 64, "M": 262144, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612106, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d256_q128_m262144_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 262144], ["D", 256], ["K", 64], ["dtype", "bfloat16"], ["seed", 612106], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE = 'target0627_d256_q128_m262144_k64_localcta2387_tcgen05_rows8'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:launch_for_eval'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:partial_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] = {}
 _SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
-knn_search_d256_localcta_rows8_merge_v1 = _ir_proxy('loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:knn_search_d256_localcta_rows8_merge_v1', 256)
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:merge_ir"}'))
+knn_search_d256_localcta_rows8_merge_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:knn_search_d256_localcta_rows8_merge_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d256_q128_m262144_k64_localcta2387_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 
 def _use_target(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('force_fallback', False)) and base._tcgen05_capable_arch() and (base._shape_key(inputs) == (1, 128, 262144, 256, 64, False))

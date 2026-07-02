@@ -12,10 +12,10 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 from typing import Any
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as registered_parent
 from . import knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1 as lowd_d256
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:merge_ir"}'))
-registered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:registered_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+registered_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dispatch_registered_lowd_d256_0612_r36_48e9_v1:registered_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 LOWD_D256_OVER48E9_SHAPES = lowd_d256.LOWD_D256_OVER48E9_SHAPES
 LOWD_D256_PRESERVE_SHAPES = lowd_d256.LOWD_D256_PRESERVE_SHAPES
 REGISTERED_Q4096_K64_PRESERVE_SHAPES = [shape for shape in registered_parent.K64_Q4096_SPLIT79_ODDEVENSORT_FASTMERGE_SHAPES if shape['label'] == 'ksweep_q4096_m20000_d128_k64']

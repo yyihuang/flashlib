@@ -21,15 +21,15 @@ K_MAX = exact384.K_MAX
 MERGE_THREADS = exact384.MERGE_THREADS
 SPLIT_M = exact384.D384_Q32_SPLIT_M
 TOTAL_M_TILES = exact384.D384_Q32_TOTAL_M_TILES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:ir"}'))
-scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:scalar_capacity_ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 122624, "cta_group": 1, "threads": 640}'))
+scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:scalar_capacity_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 ROUTE_D384_Q32_EXACT_272C = '272c_dynamic_d384_q32_m131072_directstride_tcgen05'
 ROUTE_SCALAR_CAPACITY = 'afe6_dynamic_d_scalar_capacity'
 CONSUMED_SEED = 'weave-evolve-knn-search-272c-d384-q32-directstride'
 TARGET_LABELS: tuple[str, ...] = ('blind_dyn_d384_q32_m131072_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_dyn_d384_q32_m131072_k10", "params": {"B": 1, "D": 384, "K": 10, "M": 131072, "Q": 32, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610807, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_dyn_d384_q32_m131072_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 131072], ["D", 384], ["K", 10], ["dtype", "bfloat16"], ["seed", 610807], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _ENTRY: dict[str, Any] = {'overlay': '272c_dynamic_d384_q32_m131072_directstride_tcgen05', 'shape_key': 'B=1,Q=32,M=131072,D=384,K=10', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 32 and M == 131072 and D == 384 and K == 10 and not self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_D384_Q32_EXACT_272C, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_d384_q32_m131072_exact_0621_r123_272c_v1:launch_for_eval', 'source_entrypoint': 'loom.examples.weave.knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_0618_5847_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_123_272c_d384_q32_directstride.md', 'coverage_class': 'bucket_seed_dynamic_d384_q32_m131072_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel', 'arch_requirement': 'sm_100a'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = (_ENTRY,)
 

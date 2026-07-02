@@ -23,9 +23,9 @@ MERGE_THREADS = parent.MERGE_THREADS
 MMA_POST_MMA_COL_COHORTS = parent.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = parent.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = parent.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_mma64k10_over48e9_0612_r35_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 256}'))
 LOWD_D256_OVER48E9_SHAPES = parent.LOWD_D256_OVER48E9_SHAPES
 LOWD_D256_PRESERVE_SHAPES = parent.LOWD_D256_PRESERVE_SHAPES
 D256_K10_SHAPES = [shape for shape in LOWD_D256_OVER48E9_SHAPES if shape['label'] == 'glm5_rag_q128_m131072_d256_k10']

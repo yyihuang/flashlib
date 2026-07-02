@@ -26,12 +26,12 @@ WARP_IDX_OFFSET = WARP_DIST_OFFSET + NUM_WARPS * 4
 WARP_THREAD_OFFSET = WARP_IDX_OFFSET + NUM_WARPS * 4
 SMEM_POOL_BYTES = WARP_THREAD_OFFSET + NUM_WARPS * 4
 TARGET_LABELS: tuple[str, ...] = ('blind_ext_dbscan_self_q4096_m4096_d3_k32',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dbscan_self_q4096_m4096_d3_k32", "params": {"B": 1, "D": 3, "K": 32, "M": 4096, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610932, "self_search": true}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dbscan_self_q4096_m4096_d3_k32"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 4096], ["D", 3], ["K", 32], ["dtype", "bfloat16"], ["seed", 610932], ["self_search", true], ["min_recall", 0.999]]}]]}]'))
 ROUTE_D3_K32_SELF_TILE = 'round117_9d5c_d3_k32_self_tile'
 CONSUMED_SEED = 'weave-evolve-knn-search-9d5c-d3-k32-self'
 _KERNELS: dict[str, Any] = {}
-knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1 = _ir_proxy('loom.examples.weave.knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1:knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1:ir"}'))
+knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1:knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 32896, "cta_group": 1, "threads": 256}'))
 
 def _shape_guard(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == 4096 and (int(inputs['M']) == 4096) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K_MAX) and bool(inputs.get('self_search', False)) and (not bool(inputs.get('force_fallback', False)))

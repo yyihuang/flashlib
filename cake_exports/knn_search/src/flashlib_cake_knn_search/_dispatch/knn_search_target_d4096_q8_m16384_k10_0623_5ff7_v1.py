@@ -51,17 +51,17 @@ SMEM_BYTES = SMEM_POOL_BYTES + mma.WEAVE_SMEM_SYSTEM_BYTES
 ROUTE_D4096_Q8_M16384_TCGEN05 = '5ff7_d4096_q8_m16384_k10_q64loop_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-5ff7-d4096-q8'
 TARGET_LABELS: tuple[str, ...] = ('target_d4096_q8_m16384_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target_d4096_q8_m16384_k10", "params": {"B": 1, "D": 4096, "K": 10, "M": 16384, "Q": 8, "dtype": "bfloat16", "min_recall": 0.999, "seed": 611113, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target_d4096_q8_m16384_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 8], ["M", 16384], ["D", 4096], ["K", 10], ["dtype", "bfloat16"], ["seed", 611113], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _KERNELS: dict[str, Any] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _accumulate_q_norm_direct_d4096 = _ir_proxy('loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:_accumulate_q_norm_direct_d4096', 256)
 _stage_q_pass_direct_d4096 = _ir_proxy('loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:_stage_q_pass_direct_d4096', 256)
 _stage_database_pass_direct_d4096 = _ir_proxy('loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:_stage_database_pass_direct_d4096', 256)
 _accumulate_db_norm_pass_runtime_init = _ir_proxy('loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:_accumulate_db_norm_pass_runtime_init', 256)
-knn_search_target_d4096_q8_m16384_k10_tcgen05_partial_0623_5ff7_v1 = _ir_proxy('loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:knn_search_target_d4096_q8_m16384_k10_tcgen05_partial_0623_5ff7_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:ir"}'))
+knn_search_target_d4096_q8_m16384_k10_tcgen05_partial_0623_5ff7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:knn_search_target_d4096_q8_m16384_k10_tcgen05_partial_0623_5ff7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 159488, "cta_group": 1, "threads": 512}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'overlay': 'target_d4096_q8_m16384_k10_q64loop_tcgen05_5ff7', 'shape_key': 'target_d4096_q8_m16384_k10', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 8 and M == 16384 and D == 4096 and K == 10 and not self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_D4096_Q8_M16384_TCGEN05, 'entrypoint': 'loom.examples.weave.knn_search_target_d4096_q8_m16384_k10_0623_5ff7_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_task': 'weave-evolve-knn-search-5ff7-d4096-q8', 'coverage_class': 'bucket_seed_target_d4096_q8_m16384_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _tcgen05_capable_arch() -> bool:

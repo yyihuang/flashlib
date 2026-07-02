@@ -30,11 +30,11 @@ LOCAL_PREFIX_K = prefix_parent.LOCAL_PREFIX_K
 MMA_POST_MMA_COL_COHORTS = prefix_parent.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = prefix_parent.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = prefix_parent.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 TARGET_LABELS: tuple[str, ...] = ('ksweep_q128_m131072_d128_k64',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q128_m131072_d128_k64", "params": {"B": 1, "D": 128, "K": 64, "M": 131072, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610312, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "ksweep_q128_m131072_d128_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 131072], ["D", 128], ["K", 64], ["dtype", "bfloat16"], ["seed", 610312], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _Q128_M131072_K64_PREFIX8_ENTRY: dict[str, Any] = {'shape_key': 'round147_3363_q128_m131072_d128_k64_prefix8', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 128 and M == 131072 and D == 128 and K == 64 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q128_M131072_K64_PREFIX8, 'entrypoint': 'loom.examples.weave.knn_search_q128_m131072_k64_prefix8_0624_3363_v1:launch_for_eval', 'source_task': CONSUMED_SEED, 'selected_seed': CONSUMED_SEED, 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_147_3363_q128k64prefix8.md', 'coverage_class': 'bucket_seed_q128_m131072_d128_k64_prefix8', 'route_source': 'shape-specific-seed'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = (_Q128_M131072_K64_PREFIX8_ENTRY, *parent_dispatcher.SHAPE_DISPATCH_REGISTRY)
 

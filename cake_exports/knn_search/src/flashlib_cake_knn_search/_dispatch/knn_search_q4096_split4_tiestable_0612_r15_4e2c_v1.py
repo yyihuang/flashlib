@@ -14,7 +14,7 @@ from . import knn_search_q4096_split4_0611_r14_4e2c_v1 as parent
 Q4096_ROWS = parent.Q4096_ROWS
 Q4096_SPLIT_M = parent.Q4096_SPLIT_M
 Q4096_SPLIT4_M_ROWS = frozenset({*parent.Q4096_SPLIT4_M_ROWS, 49152})
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_split4_tiestable_0612_r15_4e2c_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_split4_tiestable_0612_r15_4e2c_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 Q4096_SPLIT4_TIESTABLE_SHAPES: list[dict[str, Any]] = [*parent.Q4096_SPLIT4_SHAPES, {'label': 'sweep_q4096_m49152_d128_k10', 'params': {'B': 1, 'Q': 4096, 'M': 49152, 'D': 128, 'K': 10, 'dtype': 'bfloat16', 'seed': 610212, 'self_search': False, 'min_recall': 0.999}}]
 
 def _use_q4096_split4_tiestable(inputs: dict[str, Any]) -> bool:

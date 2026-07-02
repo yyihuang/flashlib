@@ -12,7 +12,7 @@ from typing import Any
 from . import knn_search_dispatch0701_k11_d128_guard_repair_v1 as current
 from . import knn_search_ext_k_capacity_0618_28ec_v1 as ext_k
 ENTRYPOINT = 'loom.examples.weave.knn_search_export_recorded_dispatch_v1:launch_for_eval'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_export_recorded_dispatch_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_export_recorded_dispatch_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _use_ext_k(inputs: dict[str, Any]) -> bool:
     return bool(ext_k._use_q128_m131072_k40(inputs) or ext_k._use_q128_m65536_k56(inputs) or ext_k._use_q4096_m49152_k64(inputs))

@@ -52,13 +52,13 @@ MERGE_SMEM_BYTES = mma.MERGE_SMEM_BYTES
 D384_SPLIT_M = mma.Q128_SPLIT_M
 ROUTE_D384_Q256_TCGEN05 = 'round80a5_d384_q256_m32768_k10_tcgen05_split148'
 ROUTE_PARENT_DEFAULT_AFE6 = parent.PROFILE_ALL
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
 _D384_MMA_KERNELS: dict[str, Any] = {}
 _D384_MMA_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 D384_Q256_LABELS: tuple[str, ...] = ('blind_post6912_d384_q256_m32768_k10',)
-D384_Q256_SHAPES = _decode_capture(_json_loads('[{"label": "blind_post6912_d384_q256_m32768_k10", "params": {"B": 1, "D": 384, "K": 10, "M": 32768, "Q": 256, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610707, "self_search": false}}]'))
+D384_Q256_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_post6912_d384_q256_m32768_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 256], ["M", 32768], ["D", 384], ["K", 10], ["dtype", "bfloat16"], ["seed", 610707], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _D384_Q256_ENTRY: dict[str, str] = {'shape_key': 'round80a5_d384_q256_m32768_k10_tcgen05_split148', 'guard': 'B == 1 and Q == 256 and M == 32768 and D == 384 and K == 10 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_D384_Q256_TCGEN05, 'entrypoint': 'loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:launch_for_eval', 'source_task': 'generalize-auto-tuning-knn-search-80a5', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_116_80a5_d384_q256_reissue_request.md', 'selected_seed': 'd384_q256_tcgen05_split148_80a5'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_D384_Q256_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 _knn_accumulate_q_norm_d384 = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:_knn_accumulate_q_norm_d384', 256)
@@ -66,9 +66,9 @@ _knn_stage_q_half_d384 = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_
 _knn_stage_database_half_d384 = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:_knn_stage_database_half_d384', 256)
 _knn_combine_db_norm_d384 = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:_knn_combine_db_norm_d384', 256)
 _knn_capture_d384_distance_tile = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:_knn_capture_d384_distance_tile', 256)
-knn_search_d384_mma_split_partial_0612_r34_v1 = _ir_proxy('loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:knn_search_d384_mma_split_partial_0612_r34_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:partial_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:ir"}'))
+knn_search_d384_mma_split_partial_0612_r34_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:knn_search_d384_mma_split_partial_0612_r34_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_d384_q256_tcgen05_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 126720, "cta_group": 1, "threads": 640}'))
 
 def _compile_d384_mma_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0352"}, "partial": {"__kernel__": "dispatch_kernel_0351"}}'))

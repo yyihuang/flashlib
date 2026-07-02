@@ -18,15 +18,15 @@ BLOCK_M = tinyd.BLOCK_M
 K_MAX = tinyd.K_MAX
 MERGE_THREADS = tinyd.MERGE_THREADS
 SUPPORTED_D = {31, 63}
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:merge_ir"}'))
-scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:scalar_capacity_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 112384, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:scalar_capacity_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 ROUTE_D31D63_Q128_TCGEN05 = '9ec2_d31d63_q128_m65536_guarded_tcgen05'
 ROUTE_SCALAR_CAPACITY = 'scalar_capacity_parent'
 CONSUMED_SEED = 'weave-evolve-knn-search-9ec2-r123-d31d63-q128'
 TARGET_LABELS: tuple[str, ...] = ('blind_ext_dyn_d31_q128_m65536_k10', 'blind_dyn_d63_q128_m65536_k10')
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dyn_d31_q128_m65536_k10", "params": {"B": 1, "D": 31, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610916, "self_search": false}}, {"label": "blind_dyn_d63_q128_m65536_k10", "params": {"B": 1, "D": 63, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610803, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dyn_d31_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 31], ["K", 10], ["dtype", "bfloat16"], ["seed", 610916], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_dyn_d63_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 63], ["K", 10], ["dtype", "bfloat16"], ["seed", 610803], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _ENTRY: dict[str, Any] = {'overlay': '9ec2_d31d63_q128_dynamic_d', 'shape_key': 'B=1,Q=128,M=65536,D in {31,63},K=10', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 128 and M == 65536 and D in {31,63} and K == 10 and not self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_D31D63_Q128_TCGEN05, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_d31d63_q128_m65536_9ec2_r123_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_123_9ec2_dynamic_d31d63.md', 'coverage_class': 'bucket_seed_dynamic_d31d63_q128_m65536_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = (_ENTRY,)
 

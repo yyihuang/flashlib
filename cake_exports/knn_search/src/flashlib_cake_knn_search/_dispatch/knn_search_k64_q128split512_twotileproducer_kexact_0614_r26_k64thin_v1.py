@@ -45,13 +45,13 @@ MMA_STAGE_VEC_ELEMS = base.MMA_STAGE_VEC_ELEMS
 MMA_STAGE_PACK_WORDS = base.MMA_STAGE_PACK_WORDS
 MMA_DB_NORM_PARTS = base.MMA_DB_NORM_PARTS
 MMA_DB_NORM_CHUNK = base.MMA_DB_NORM_CHUNK
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:group_merge_ir"}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:final_merge_ir"}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 _KNN_SEARCH_K64_Q128_TWOTILE_KERNELS: dict[str, Any] = {}
 _knn_stage_database_tile_q128_k64 = _ir_proxy('loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:_knn_stage_database_tile_q128_k64', 256)
-knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:partial_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:ir"}'))
+knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_twotileproducer_kexact_0614_r26_k64thin_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = parent.K64_THIN_MARGIN_SHAPES
 
 def _compile_q128_split512_twotile_kernels() -> dict[str, Any]:

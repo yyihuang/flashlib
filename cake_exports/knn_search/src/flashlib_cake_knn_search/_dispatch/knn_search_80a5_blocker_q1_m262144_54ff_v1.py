@@ -20,12 +20,12 @@ Q1_M262144_ROWS = 262144
 Q1_K = 10
 ROUTE_Q1_M262144_FLASHDECODE = 'round80a5_q1_m262144_k10_flashdecode'
 ROUTE_PARENT_DEFAULT_AFE6 = parent.PROFILE_ALL
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:merge_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:parent_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
 Q1_M262144_LABELS: tuple[str, ...] = ('blind_q1_m262144_d128_k10',)
-Q1_M262144_SHAPES = _decode_capture(_json_loads('[{"label": "blind_q1_m262144_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 262144, "Q": 1, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610612, "self_search": false}}]'))
+Q1_M262144_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_q1_m262144_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 1], ["M", 262144], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 610612], ["self_search", false], ["min_recall", 1.0]]}]]}]'))
 _Q1_M262144_ENTRY: dict[str, str] = {'shape_key': 'round80a5_q1_m262144_d128_k10_flashdecode', 'guard': 'B == 1 and Q == 1 and M == 262144 and D == 128 and K == 10 and not self_search', 'route': ROUTE_Q1_M262144_FLASHDECODE, 'entrypoint': 'loom.examples.weave.knn_search_80a5_blocker_q1_m262144_54ff_v1:launch_for_eval', 'source_task': 'generalize-auto-tuning-knn-search-80a5', 'source_round_doc': 'design_doc/active/generalize_auto_tuning_knn_search_round_10_80a5.md', 'selected_seed': 'q1_flashdecode_54ff_revalidated_for_80a5'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_Q1_M262144_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 

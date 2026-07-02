@@ -16,9 +16,9 @@ TARGET_SHAPES = base.TARGET_SHAPES
 ROUTE = 'target0630_d4096_q1_m65536_k10_restore296_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:launch_for_eval'
 SPLIT_M = base.SPLIT_M
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0630_d4096_q1_m65536_k10_restore296_92e6_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 62848, "cta_group": 1, "threads": 512}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return base._matches(inputs)

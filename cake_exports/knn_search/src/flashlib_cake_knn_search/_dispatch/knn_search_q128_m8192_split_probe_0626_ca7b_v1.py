@@ -30,13 +30,13 @@ PROFILE_CHOICES = {PROFILE_E2EB, PROFILE_SPLIT32_FULLTILE, PROFILE_SPLIT64_FULLT
 ROUTE_E2EB = 'ca7b_q128_m8192_e2eb_split64_masked'
 ROUTE_SPLIT32_FULLTILE = 'ca7b_q128_m8192_split32_fulltile'
 ROUTE_SPLIT64_FULLTILE = 'ca7b_q128_m8192_split64_fulltile'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:merge_ir"}'))
-merge_stream_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:merge_stream_ir"}'))
-base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:base_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_stream_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:merge_stream_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:base_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 Q128_M8192_LABELS: tuple[str, ...] = ('dispatch_q128_m8192_d128_k10',)
-Q128_M8192_SHAPES = _decode_capture(_json_loads('[{"label": "dispatch_q128_m8192_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 8192, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610201, "self_search": false}}]'))
+Q128_M8192_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "dispatch_q128_m8192_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 8192], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 610201], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'ca7b_q128_m8192_split_probe', 'guard': 'B == 1 and Q == 128 and M == 8192 and D == 128 and K <= 10 and not self_search and not forced_fallback and tcgen05', 'route': 'profile-selected by LOOM_KNN_Q128_M8192_CA7B_PROFILE', 'entrypoint': 'loom.examples.weave.knn_search_q128_m8192_split_probe_0626_ca7b_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-ca7b-q128-m8192'},)
 
 def _active_profile() -> str:

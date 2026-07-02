@@ -38,11 +38,11 @@ _KERNELS: dict[int, dict[str, Any]] = {}
 _SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
 _GROUP_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
 _accumulate_q_norm_d4096 = _ir_proxy('loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:_accumulate_q_norm_d4096', 256)
-knn_search_target0628_d4096_q4_m8192_k64_partial_7738_v1 = _ir_proxy('loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:knn_search_target0628_d4096_q4_m8192_k64_partial_7738_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:partial_ir"}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:group_merge_ir"}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:final_merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:ir"}'))
+knn_search_target0628_d4096_q4_m8192_k64_partial_7738_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:knn_search_target0628_d4096_q4_m8192_k64_partial_7738_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 166400, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 166400, "cta_group": 1, "threads": 256}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0628_d4096_q4_m8192_k64_7738_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 166400, "cta_group": 1, "threads": 256}'))
 
 def _active(inputs: dict[str, Any]) -> bool:
     return (int(inputs['B']), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K']), bool(inputs.get('self_search', False))) == (1, 4, 8192, 4096, 64, False) and (not bool(inputs.get('force_fallback', False))) and producer_seed._tcgen05_capable_arch()

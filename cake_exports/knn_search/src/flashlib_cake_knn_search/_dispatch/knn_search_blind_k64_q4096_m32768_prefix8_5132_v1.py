@@ -41,15 +41,15 @@ Q4096_M32768_PREFIX_SPLITS_PER_LANE = Q4096_M32768_PARTIAL_LISTS // MERGE_THREAD
 ROUTE_Q4096_K64_PREFIX8 = 'round122_5132_q4096_m32768_k64_prefix8'
 ROUTE_PARENT = merge16_parent.ROUTE_Q4096_K64_MERGE16
 TARGET_LABELS: tuple[str, ...] = ('blind_k64_q4096_m32768_d128_k64',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_k64_q4096_m32768_d128_k64", "params": {"B": 1, "D": 128, "K": 64, "M": 32768, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610507, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_k64_q4096_m32768_d128_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 32768], ["D", 128], ["K", 64], ["dtype", "bfloat16"], ["seed", 610507], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 K64_Q4096_M32768_PREFIX8_SHAPES = TARGET_SHAPES
 _KNN_SEARCH_Q4096_M32768_PREFIX8_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_Q4096_M32768_PREFIX8_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1 = _ir_proxy('loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1', 256)
-knn_search_blind_k64_q4096_m32768_prefix8_merge_5132_v1 = _ir_proxy('loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:knn_search_blind_k64_q4096_m32768_prefix8_merge_5132_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:ir"}'))
+knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+knn_search_blind_k64_q4096_m32768_prefix8_merge_5132_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:knn_search_blind_k64_q4096_m32768_prefix8_merge_5132_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'round122_5132_q4096_m32768_d128_k64_prefix8', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 64 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_K64_PREFIX8, 'entrypoint': 'loom.examples.weave.knn_search_blind_k64_q4096_m32768_prefix8_5132_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-5132', 'selected_seed': 'weave-evolve-knn-search-5132-prefix8'}, *merge16_parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_prefix8_kernels() -> dict[str, Any]:

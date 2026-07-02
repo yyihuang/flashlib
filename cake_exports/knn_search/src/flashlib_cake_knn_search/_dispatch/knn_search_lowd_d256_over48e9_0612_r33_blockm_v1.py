@@ -15,12 +15,12 @@ from . import knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_0612
 from . import knn_search_lowd_dbscan_coopmerge_0612_r23_6e85_v1 as lowd_dbscan
 from . import knn_search_lowd_ivf_dispatch0610_r2_v1 as lowd_ivf
 from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:merge_ir"}'))
-lowd_dbscan_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:lowd_dbscan_ir"}'))
-lowd_ivf_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:lowd_ivf_ir"}'))
-scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:scalar_capacity_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+lowd_dbscan_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:lowd_dbscan_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "cta_group": 1, "threads": 256}'))
+lowd_ivf_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:lowd_ivf_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "cta_group": 1, "threads": 32}'))
+scalar_capacity_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_d256_over48e9_0612_r33_blockm_v1:scalar_capacity_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 256}'))
 D256_BLOCK_M_K10 = 2048
 D256_BLOCK_M_K64 = 16384
 _D256_SCALAR_KERNELS: dict[tuple[int, int, int], dict[str, Any]] = {}

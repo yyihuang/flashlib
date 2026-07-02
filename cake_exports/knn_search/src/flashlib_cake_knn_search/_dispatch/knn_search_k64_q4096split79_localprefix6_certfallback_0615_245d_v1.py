@@ -35,11 +35,11 @@ _KNN_SEARCH_K64_Q4096_PREFIX6CERT_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIX6CERT_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q4096_PREFIX6CERT_FLAGS: dict[int, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIX6CERT_STATS: dict[str, int | bool | None] = {'attempts': 0, 'certified_count': 0, 'fallback_count': 0, 'last_overflow': None}
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:merge_ir"}'))
-certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:certflag_init_ir"}'))
-cert_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:cert_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:certflag_init_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+cert_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:cert_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 def _scratch_prefixcert(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

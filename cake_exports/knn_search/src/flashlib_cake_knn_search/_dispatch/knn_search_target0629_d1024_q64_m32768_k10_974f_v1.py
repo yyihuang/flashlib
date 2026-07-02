@@ -19,9 +19,9 @@ ROUTE = '974f_target0629_d1024_q64_m32768_k10_directstride_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-974f-d1024-q64-m32768-k10'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:launch_for_eval'
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': TARGET_LABEL, 'params': {'B': 1, 'Q': Q_ROWS, 'M': M_ROWS, 'D': D_ORIG, 'K': K_MAX, 'dtype': 'bfloat16', 'seed': 612111, 'self_search': False, 'min_recall': 0.999}}]
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d1024_q64_m32768_k10_974f_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIG) and (int(inputs['K']) == K_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and producer.mma._tcgen05_capable_arch()

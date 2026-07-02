@@ -19,17 +19,17 @@ BLOCK_M = base_7ce1.BLOCK_M
 D_STATIC = base_7ce1.D_STATIC
 K_MAX = base_7ce1.K_MAX
 SPLIT_M = base_7ce1.SPLIT_M
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:parent_ir"}'))
-base_7ce1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:base_7ce1_ir"}'))
-ann_split7_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_ir"}'))
-ann_split7_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_partial_ir"}'))
-ann_split7_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+base_7ce1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:base_7ce1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+ann_split7_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ann_split7_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ann_split7_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_7ce1_plus_ann_split7_dispatch_0615_b72b_v1:ann_split7_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 ROUTE_ANN_SPLIT7 = 'roundb72b_ann_q10000_m100000_split7'
 ROUTE_BASE_7CE1 = 'current_7ce1_dispatcher'
 PROFILE_7CE1_PLUS_ANN_SPLIT7 = 'current_7ce1_plus_ann_split7_b72b'
 ANN_HIGHQ_LABEL = 'ann_sift_like_q10000_m100000_d128_k10'
-ANN_HIGHQ_SPLIT7_SHAPES = _decode_capture(_json_loads('[{"label": "ann_sift_like_q10000_m100000_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 100000, "Q": 10000, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610401, "self_search": false}}]'))
+ANN_HIGHQ_SPLIT7_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "ann_sift_like_q10000_m100000_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 10000], ["M", 100000], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 610401], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _ANN_SPLIT7_REGISTRY_ENTRY: dict[str, str] = {'shape_key': 'roundb72b_ann_q10000_m100000_d128_k10_split7', 'guard': 'B == 1 and Q == 10000 and M == 100000 and D == 128 and K == 10 and tcgen05', 'route': ROUTE_ANN_SPLIT7}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_ANN_SPLIT7_REGISTRY_ENTRY, *base_7ce1.SHAPE_DISPATCH_REGISTRY)
 

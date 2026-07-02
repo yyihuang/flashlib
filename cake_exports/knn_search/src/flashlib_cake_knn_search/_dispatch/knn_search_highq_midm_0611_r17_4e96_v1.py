@@ -17,7 +17,7 @@ HIGHQ_MIDM_Q_MAX = 2048
 HIGHQ_MIDM_M_MIN = 16384
 HIGHQ_MIDM_M_MAX = 65536
 HIGHQ_MIDM_SPLIT_CAP = 128
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_0611_r17_4e96_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_0611_r17_4e96_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _use_highq_midm_split_policy(inputs: dict[str, Any]) -> bool:
     q_rows = int(inputs['Q'])

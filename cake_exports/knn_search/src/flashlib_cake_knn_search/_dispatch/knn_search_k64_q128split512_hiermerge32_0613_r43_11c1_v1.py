@@ -32,15 +32,15 @@ MERGE_THREADS = base.MERGE_THREADS
 MMA_POST_MMA_COL_COHORTS = base.MMA_POST_MMA_COL_COHORTS
 MMA_SMEM_BYTES = base.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:partial_ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K64_Q128_SPLIT512_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q128_SPLIT512_PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q128_SPLIT512_GROUP_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1', 256)
-knn_search_k64_q128split512_finalmerge32_0613_r43_11c1_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:knn_search_k64_q128split512_finalmerge32_0613_r43_11c1_v1', 256)
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:group_merge_ir"}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:final_merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:ir"}'))
+knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_k64_q128split512_finalmerge32_0613_r43_11c1_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:knn_search_k64_q128split512_finalmerge32_0613_r43_11c1_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 K64_Q128_SPLIT512_HIERMERGE_SHAPES: list[dict[str, Any]] = [{'label': 'ksweep_q128_m131072_d128_k64', 'params': {'B': 1, 'Q': 128, 'M': 131072, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610312, 'self_search': False, 'min_recall': 0.999}}, {'label': 'ksweep_q4096_m20000_d128_k64', 'params': {'B': 1, 'Q': 4096, 'M': 20000, 'D': 128, 'K': 64, 'dtype': 'bfloat16', 'seed': 610313, 'self_search': False, 'min_recall': 0.999}}]
 
 def _compile_q128_split512_hiermerge_kernels() -> dict[str, Any]:

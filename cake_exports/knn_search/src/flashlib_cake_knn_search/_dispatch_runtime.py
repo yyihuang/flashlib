@@ -14,14 +14,25 @@ def _import_dispatch_module(short_name):
 
 
 def _decode_capture(value):
-    if isinstance(value, dict) and set(value) == {"__ir__"}:
-        return _ir_proxy(value["__ir__"])
+    if isinstance(value, dict) and "__ir__" in value:
+        return _ir_proxy(
+            value["__ir__"],
+            value.get("threads", 256),
+            value.get("computed_smem_bytes", 0),
+            value.get("cluster_dims", (1, 1, 1)),
+            value.get("cta_group", 1),
+        )
     if isinstance(value, dict) and set(value) == {"__kernel__"}:
         return DispatchKernel(value["__kernel__"])
     if isinstance(value, dict) and set(value) == {"__kernel_source__"}:
         return value["__kernel_source__"]
     if isinstance(value, dict) and set(value) == {"__tuple__"}:
         return tuple(_decode_capture(item) for item in value["__tuple__"])
+    if isinstance(value, dict) and set(value) == {"__dict_items__"}:
+        return {
+            _decode_capture(key): _decode_capture(item)
+            for key, item in value["__dict_items__"]
+        }
     if isinstance(value, dict):
         return {key: _decode_capture(item) for key, item in value.items()}
     if isinstance(value, list):
@@ -30,15 +41,15 @@ def _decode_capture(value):
 
 
 class _IRProxy:
-    def __init__(self, name, threads=256):
+    def __init__(self, name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
         self.name = name.rpartition(":")[2]
         self.threads = int(threads)
-        self.computed_smem_bytes = 0
-        self.grid = SimpleNamespace(cluster_dims=(1, 1, 1), cta_group=1)
+        self.computed_smem_bytes = int(computed_smem_bytes)
+        self.grid = SimpleNamespace(cluster_dims=tuple(cluster_dims), cta_group=int(cta_group))
 
 
-def _ir_proxy(name, threads=256):
-    return _IRProxy(name, threads)
+def _ir_proxy(name, threads=256, computed_smem_bytes=0, cluster_dims=(1, 1, 1), cta_group=1):
+    return _IRProxy(name, threads, computed_smem_bytes, cluster_dims, cta_group)
 
 
 class DispatchKernel:

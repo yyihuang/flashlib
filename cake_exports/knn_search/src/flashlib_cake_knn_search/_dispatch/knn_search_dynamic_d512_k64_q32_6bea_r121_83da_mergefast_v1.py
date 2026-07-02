@@ -55,7 +55,7 @@ ROUTE_D512_Q32_K64_MERGEFAST = '83da_r121_d512_q32_k64_mergefast_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-83da-r121-d512-q32-k64-mergefast'
 REPLACED_SEED = parent.CONSUMED_SEED
 TARGET_LABELS: tuple[str, ...] = ('blind_ext_dyn_d512_k64_q32_m32768',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dyn_d512_k64_q32_m32768", "params": {"B": 1, "D": 512, "K": 64, "M": 32768, "Q": 32, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610930, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dyn_d512_k64_q32_m32768"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 32768], ["D", 512], ["K", 64], ["dtype", "bfloat16"], ["seed", 610930], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _KERNELS: dict[str, Any] = {}
 _PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _q64_k64_mma_issue = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:_q64_k64_mma_issue', 256)
@@ -63,11 +63,11 @@ _accumulate_q_norm_d512_q32_active = _ir_proxy('loom.examples.weave.knn_search_d
 _stage_q_pass_d512_q32_active = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:_stage_q_pass_d512_q32_active', 256)
 _stage_database_pass_d512_q32_active = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:_stage_database_pass_d512_q32_active', 256)
 _capture_row16_tile_to_smem_q32_active = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:_capture_row16_tile_to_smem_q32_active', 256)
-knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1 = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1', 256)
-knn_search_d512_q32_k64_mergefast_merge_83da_r121_v1 = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:knn_search_d512_q32_k64_mergefast_merge_83da_r121_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:ir"}'))
+knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 88576, "cta_group": 1, "threads": 256}'))
+knn_search_d512_q32_k64_mergefast_merge_83da_r121_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:knn_search_d512_q32_k64_mergefast_merge_83da_r121_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 88576, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 88576, "cta_group": 1, "threads": 256}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'overlay': '83da_r121_d512_q32_k64_mergefast_tcgen05', 'shape_key': 'blind_ext_dyn_d512_k64_q32_m32768', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 32 and M == 32768 and D == 512 and K == 64 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_D512_Q32_K64_MERGEFAST, 'entrypoint': 'loom.examples.weave.knn_search_dynamic_d512_k64_q32_6bea_r121_83da_mergefast_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_task': CONSUMED_SEED, 'coverage_class': 'bucket_seed_dynamic_d512_q32_k64_mergefast', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _tcgen05_capable_arch() -> bool:

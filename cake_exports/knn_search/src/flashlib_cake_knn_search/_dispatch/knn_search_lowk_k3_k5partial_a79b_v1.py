@@ -28,11 +28,11 @@ BLOCK_M = k5.BLOCK_M
 D_STATIC = k5.D_STATIC
 LOWK_MMA_SMEM_BYTES = k5.LOWK_MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = mma.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:partial_ir"}'))
-merge_k3_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:merge_k3_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_k3_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:merge_k3_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowk_k3_k5partial_a79b_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 Q4096_K3_LABELS: tuple[str, ...] = ('blind_lowk_q4096_m20000_d128_k3',)
-Q4096_K3_SHAPES = _decode_capture(_json_loads('[{"label": "blind_lowk_q4096_m20000_d128_k3", "params": {"B": 1, "D": 128, "K": 3, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610607, "self_search": false}}]'))
+Q4096_K3_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_lowk_q4096_m20000_d128_k3"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 20000], ["D", 128], ["K", 3], ["dtype", "bfloat16"], ["seed", 610607], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE_Q4096_K3_K5PARTIAL_A79B = 'a79b_q4096_m20000_k3_k5partial_split4'
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'a79b_exact_q4096_m20000_d128_k3_k5partial_split4', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 3 and tcgen05', 'route': ROUTE_Q4096_K3_K5PARTIAL_A79B},)
 _KNN_SEARCH_K3_K5PARTIAL_KERNELS: dict[str, Any] = {}

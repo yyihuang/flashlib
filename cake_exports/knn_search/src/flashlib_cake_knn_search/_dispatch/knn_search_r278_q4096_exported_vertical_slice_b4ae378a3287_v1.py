@@ -16,7 +16,7 @@ ENTRYPOINT = 'loom.examples.weave.knn_search_r278_q4096_exported_vertical_slice_
 CONSUMED_SEED = 'weave-evolve-knn-search-d07b'
 GUARD_ID = 'r278_q4096_d07b_owned_real72_vertical_slice'
 GUARD = 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 10 and not self_search and arch in {sm_100a,sm_103a}'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_r278_q4096_exported_vertical_slice_b4ae378a3287_v1:ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_r278_q4096_exported_vertical_slice_b4ae378a3287_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 
 def _parent() -> Any:
     return _import_dispatch_module('knn_search_dispatch0630_exported_q8_rag_synthesis_6675_v1')

@@ -31,15 +31,15 @@ ROUTE_D1024_Q32_K64_HIERMERGE8 = 'f561_v2_d1024_q32_k64_hiermerge8_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-f561-v2-d1024-q32-k64-hiermerge8'
 PARENT_SEED = parent.CONSUMED_SEED
 TARGET_LABELS: tuple[str, ...] = ('target_d1024_q32_m32768_k64',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target_d1024_q32_m32768_k64", "params": {"B": 1, "D": 1024, "K": 64, "M": 32768, "Q": 32, "dtype": "bfloat16", "min_recall": 0.999, "seed": 611110, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target_d1024_q32_m32768_k64"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 32768], ["D", 1024], ["K", 64], ["dtype", "bfloat16"], ["seed", 611110], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _KERNELS: dict[str, Any] = {}
 _GROUP_SCRATCH: dict[tuple[int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_d1024_q32_k64_hiermerge8_group_f561_v2 = _ir_proxy('loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:knn_search_d1024_q32_k64_hiermerge8_group_f561_v2', 256)
-knn_search_d1024_q32_k64_hiermerge8_final_f561_v2 = _ir_proxy('loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:knn_search_d1024_q32_k64_hiermerge8_final_f561_v2', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:partial_ir"}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:group_merge_ir"}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:final_merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:ir"}'))
+knn_search_d1024_q32_k64_hiermerge8_group_f561_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:knn_search_d1024_q32_k64_hiermerge8_group_f561_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_d1024_q32_k64_hiermerge8_final_f561_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:knn_search_d1024_q32_k64_hiermerge8_final_f561_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 92672, "cta_group": 1, "threads": 256}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'overlay': 'f561_v2_d1024_q32_k64_hiermerge8_tcgen05', 'shape_key': 'target_d1024_q32_m32768_k64', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == 32 and M == 32768 and D == 1024 and K == 64 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_D1024_Q32_K64_HIERMERGE8, 'entrypoint': 'loom.examples.weave.knn_search_d1024_q32_m32768_k64_0623_f561_hiermerge8_v2:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'parent_seed': PARENT_SEED, 'coverage_class': 'bucket_seed_dynamic_d1024_q32_k64_targetd_hiermerge8', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _tcgen05_capable_arch() -> bool:

@@ -29,10 +29,10 @@ ROUTE_PARENT = '9d5c_r117_parent'
 CONSUMED_SEED = 'weave-evolve-knn-search-6bea-r118-d512-ivf'
 REUSED_D512_SEED = parent.CONSUMED_SEED
 TARGET_LABELS: tuple[str, ...] = ('blind_ext_dyn_d512_k64_q32_m32768', 'blind_ext_ivf_q12_m100_d64_k20')
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dyn_d512_k64_q32_m32768", "params": {"B": 1, "D": 512, "K": 64, "M": 32768, "Q": 32, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610930, "self_search": false}}, {"label": "blind_ext_ivf_q12_m100_d64_k20", "params": {"B": 1, "D": 64, "K": 20, "M": 100, "Q": 12, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610931, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dyn_d512_k64_q32_m32768"], ["params", {"__dict_items__": [["B", 1], ["Q", 32], ["M", 32768], ["D", 512], ["K", 64], ["dtype", "bfloat16"], ["seed", 610930], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_ext_ivf_q12_m100_d64_k20"], ["params", {"__dict_items__": [["B", 1], ["Q", 12], ["M", 100], ["D", 64], ["K", 20], ["dtype", "bfloat16"], ["seed", 610931], ["self_search", false], ["min_recall", 1.0]]}]]}]'))
 _IVF_KERNEL: dict[str, Any] = {}
-knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1 = _ir_proxy('loom.examples.weave.knn_search_dynamic_d512_ivf_6bea_r118_v1:knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_ivf_6bea_r118_v1:ir"}'))
+knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_ivf_6bea_r118_v1:knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 128, "cta_group": 1, "threads": 128}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d512_ivf_6bea_r118_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 128, "cta_group": 1, "threads": 128}'))
 
 def _use_ivf_direct(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == IVF_Q and (int(inputs['M']) == IVF_M) and (int(inputs['D']) == IVF_D) and (int(inputs['K']) == IVF_K) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False)))

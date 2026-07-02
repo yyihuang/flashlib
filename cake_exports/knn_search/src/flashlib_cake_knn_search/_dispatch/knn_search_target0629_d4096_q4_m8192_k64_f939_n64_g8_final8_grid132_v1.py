@@ -20,13 +20,13 @@ MERGE_SMEM_BYTES = parent.MERGE_SMEM_BYTES
 ROUTE = 'f939_target0629_d4096_q4_m8192_k64_native_n64_g8_final8_grid132_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:launch_for_eval'
 TARGET_SHAPES = parent.TARGET_SHAPES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:partial_ir"}'))
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:group_merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "cta_group": 1, "threads": 256}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 105984, "cta_group": 1, "threads": 256}'))
 _KERNELS: dict[str, Any] | None = None
 _SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
 _GROUP_SCRATCH: dict[tuple[Any, ...], tuple[Any, Any]] = {}
-final_merge_ir = _ir_proxy('loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:final_merge_ir', 256)
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 
 def _active(inputs: dict[str, Any]) -> bool:
     return parent._active(inputs)

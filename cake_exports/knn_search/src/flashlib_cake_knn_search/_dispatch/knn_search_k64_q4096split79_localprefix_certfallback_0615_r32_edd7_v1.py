@@ -36,14 +36,14 @@ _KNN_SEARCH_K64_Q4096_PREFIXCERT_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_SCRATCH: dict[tuple[int, int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_FLAGS: dict[int, Any] = {}
 _KNN_SEARCH_K64_Q4096_PREFIXCERT_STATS: dict[str, int | bool | None] = {'attempts': 0, 'certified_count': 0, 'fallback_count': 0, 'last_overflow': None}
-knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1', 256)
-knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1', 256)
-knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1 = _ir_proxy('loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1', 256)
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:merge_ir"}'))
-certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:certflag_init_ir"}'))
-cert_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:cert_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:ir"}'))
+knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+certflag_init_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:certflag_init_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+cert_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:cert_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 
 def _scratch_prefixcert(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

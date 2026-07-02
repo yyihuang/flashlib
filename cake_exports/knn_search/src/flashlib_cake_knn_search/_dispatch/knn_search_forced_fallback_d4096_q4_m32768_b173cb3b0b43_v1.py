@@ -18,9 +18,9 @@ ENTRYPOINT = 'loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b17
 ROUTE = 'forced_fallback_d4096_q4_m32768_qreuse_tcgen05'
 CONSUMED_SEED = 'weave-evolve-knn-search-d15e'
 TARGET_SHAPE_KEY = 'coverage_forced_fallback_d4096_q4_m32768_k10'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 192768, "cta_group": 1, "threads": 512}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 192768, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_forced_fallback_d4096_q4_m32768_b173cb3b0b43_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 _ENTRY = {'shape_key': TARGET_SHAPE_KEY, 'route': ROUTE, 'entrypoint': ENTRYPOINT, 'selected_seed': CONSUMED_SEED, 'guard': 'force_fallback and B == 1 and Q == 4 and M == 32768 and D == 4096 and K == 10 and not self_search and arch in {sm_100a,sm_103a}', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_231_profiled_weave_evolve.md'}
 
 def _active(inputs: dict[str, Any]) -> bool:

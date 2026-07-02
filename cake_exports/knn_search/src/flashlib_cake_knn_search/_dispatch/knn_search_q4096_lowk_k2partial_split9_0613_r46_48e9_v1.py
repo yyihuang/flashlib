@@ -23,15 +23,15 @@ Q4096_ROWS = k2_base.Q4096_ROWS
 Q4096_LOWK_M = k2_base.Q4096_LOWK_M
 Q4096_LOWK_K2_SPLIT_M = 9
 LOWK_MMA_SMEM_BYTES = k2_base.LOWK_MMA_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:partial_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:parent_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 _LOWK_K2_SPLIT9_KERNELS: dict[str, Any] = {}
 _LOWK_K2_SPLIT9_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1 = _ir_proxy('loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1', 256)
-merge_k2_split9_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:merge_k2_split9_ir"}'))
+knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k2_split9_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_q4096_lowk_k2partial_split9_0613_r46_48e9_v1:merge_k2_split9_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 Q4096_K2_LABELS: tuple[str, ...] = ('ksweep_q4096_m20000_d128_k2',)
-Q4096_K2_SHAPES = _decode_capture(_json_loads('[{"label": "ksweep_q4096_m20000_d128_k2", "params": {"B": 1, "D": 128, "K": 2, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 1.0, "seed": 610311, "self_search": false}}]'))
+Q4096_K2_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "ksweep_q4096_m20000_d128_k2"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 20000], ["D", 128], ["K", 2], ["dtype", "bfloat16"], ["seed", 610311], ["self_search", false], ["min_recall", 1.0]]}]]}]'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'd128_q4096_lowk_k2partial_split9', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 2 and tcgen05', 'route': 'round46_q4096_lowk_k2partial_split9'}, *k2_base.parent.SHAPE_DISPATCH_REGISTRY)
 
 def _use_q4096_k2(inputs: dict[str, Any]) -> bool:

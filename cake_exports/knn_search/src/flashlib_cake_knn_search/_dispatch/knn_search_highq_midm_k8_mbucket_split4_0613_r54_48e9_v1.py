@@ -23,10 +23,10 @@ K8_OUT_MAX = 8
 Q4096_ROWS = 4096
 Q4096_K8_M_BUCKETS = (16384, 32768)
 Q4096_LOWK_K8_MBUCKET_SPLIT_M = 4
-partial_k8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:partial_k8_ir"}'))
-merge_k8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:merge_k8_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:parent_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:ir"}'))
+partial_k8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:partial_k8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_k8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:merge_k8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k8_mbucket_split4_0613_r54_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 Q4096_K8_MBUCKET_SHAPES: list[dict[str, Any]] = [{'label': 'round54_q4096_m16384_d128_k8', 'params': {'B': 1, 'Q': Q4096_ROWS, 'M': 16384, 'D': D_STATIC, 'K': K8_OUT_MAX, 'dtype': 'bfloat16', 'seed': 610316, 'self_search': False, 'min_recall': 0.999}}, {'label': 'round54_q4096_m32768_d128_k8', 'params': {'B': 1, 'Q': Q4096_ROWS, 'M': 32768, 'D': D_STATIC, 'K': K8_OUT_MAX, 'dtype': 'bfloat16', 'seed': 610317, 'self_search': False, 'min_recall': 0.999}}]
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'd128_q4096_m16384_lowk_k8_stride10_out8_split4', 'guard': 'B == 1 and Q == 4096 and M == 16384 and D == 128 and K == 8 and tcgen05', 'route': 'round54_q4096_m16384_lowk_k8_stride10_out8_split4'}, {'shape_key': 'd128_q4096_m32768_lowk_k8_stride10_out8_split4', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 8 and tcgen05', 'route': 'round54_q4096_m32768_lowk_k8_stride10_out8_split4'}, *k8_round52.SHAPE_DISPATCH_REGISTRY)
 

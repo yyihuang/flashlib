@@ -26,12 +26,12 @@ TARGET_SPLIT_M = 8
 ROUTE_SELF_K10_Q1024_SPLIT8 = 'round125_f4bc_self_q1024_m1024_d128_k10_split8'
 ROUTE_PARENT_R124 = parent.PROFILE_ALL
 CONSUMED_SEED = 'weave-evolve-knn-search-f4bc'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:merge_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:parent_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 TARGET_LABELS: tuple[str, ...] = ('blind_post6912_self_q1024_m1024_d128_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "blind_post6912_self_q1024_m1024_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 1024, "Q": 1024, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610710, "self_search": true}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_post6912_self_q1024_m1024_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 610710], ["self_search", true], ["min_recall", 0.999]]}]]}]'))
 _SELF_K10_Q1024_ENTRY: dict[str, str] = {'shape_key': 'round125_f4bc_self_q1024_m1024_d128_k10_split8', 'labels': TARGET_LABELS, 'guard': 'B == 1 and Q == M == 1024 and D == 128 and K == 10 and self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_SELF_K10_Q1024_SPLIT8, 'entrypoint': 'loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_task': 'weave-evolve-knn-search-f4bc', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_125_f4bc.md', 'coverage_class': 'bucket_seed_self_q1024_m1024_d128_k10_split8', 'route_source': 'shape-specific-seed'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = (_SELF_K10_Q1024_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 

@@ -13,14 +13,14 @@ from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_d768_q16_compatible_consumer_d810_v1 as n256
 TARGET_LABELS: tuple[str, ...] = ('target0627_d768_q16_m65536_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d768_q16_m65536_k10", "params": {"B": 1, "D": 768, "K": 10, "M": 65536, "Q": 16, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612107, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d768_q16_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 16], ["M", 65536], ["D", 768], ["K", 10], ["dtype", "bfloat16"], ["seed", 612107], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 PHYSICAL_SPLIT_M = 148
 ACTIVE_SPLIT_M = 128
 TOTAL_M_TILES = 256
 ROUTE = 'target0628_d768_q16_m65536_k10_4950_directstride_n256_split2_tcgen05'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0627_d768_q16_m65536_k10_4950_split2_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 170240, "cta_group": 1, "threads": 640}'))
 
 def _matches(inputs: dict[str, Any]) -> bool:
     return n256.selected_route(inputs) == n256.TARGET_ROUTE

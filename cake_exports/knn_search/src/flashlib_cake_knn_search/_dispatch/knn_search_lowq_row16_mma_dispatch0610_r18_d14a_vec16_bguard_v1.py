@@ -47,8 +47,8 @@ _KERNELS: dict[str, Any] = {}
 _row16_mma_issue = _ir_proxy('loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:_row16_mma_issue', 256)
 _insert_sorted_pair = _ir_proxy('loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:_insert_sorted_pair', 256)
 _stage_database_tile = _ir_proxy('loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:_stage_database_tile', 256)
-knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1 = _ir_proxy('loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:ir"}'))
+knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0295"}, "partial": {"__kernel__": "dispatch_kernel_0294"}}'))

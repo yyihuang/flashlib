@@ -26,12 +26,12 @@ D_STATIC = parent.D_STATIC
 MERGE_THREADS = parent.MERGE_THREADS
 MMA_SMEM_BYTES = parent.MMA_SMEM_BYTES
 MERGE_SMEM_BYTES = parent.MERGE_SMEM_BYTES
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:partial_ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 _KNN_SEARCH_K64_M262144_KERNELS: dict[str, Any] = {}
-knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1 = _ir_proxy('loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1', 256)
-group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:group_merge_ir"}'))
-final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:final_merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:ir"}'))
+knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_blind_k64_m262144_portfolio_0614_r19_6389_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
 ROUTE_Q128_M262144_K64 = 'round19_6389_q128_m262144_k64_twotile_hiermerge32'
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'B1_Q128_M262144_D128_K64', 'guard': 'B == 1 and Q == 128 and M == 262144 and D == 128 and K == 64 and tcgen05_capable_arch', 'route': ROUTE_Q128_M262144_K64}, *parent.SHAPE_DISPATCH_REGISTRY)
 

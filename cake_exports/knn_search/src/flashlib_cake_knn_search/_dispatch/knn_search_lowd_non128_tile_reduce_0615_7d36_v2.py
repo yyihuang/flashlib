@@ -28,7 +28,7 @@ MERGE_GROUP_DIST_BYTES = MERGE_WARPS * K_MAX * 4
 MERGE_GROUP_IDX_BYTES = MERGE_WARPS * K_MAX * 4
 MERGE_SMEM_BYTES = MERGE_GROUP_DIST_BYTES + MERGE_GROUP_IDX_BYTES
 LOWD_NON128_LABELS: tuple[str, ...] = ('blind_d64_q128_m65536_k10', 'blind_d96_q128_m65536_k10', 'blind_d192_q128_m65536_k10', 'blind_d320_q128_m65536_k10')
-LOWD_NON128_SHAPES = _decode_capture(_json_loads('[{"label": "blind_d64_q128_m65536_k10", "params": {"B": 1, "D": 64, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610508, "self_search": false}}, {"label": "blind_d96_q128_m65536_k10", "params": {"B": 1, "D": 96, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610520, "self_search": false}}, {"label": "blind_d192_q128_m65536_k10", "params": {"B": 1, "D": 192, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610521, "self_search": false}}, {"label": "blind_d320_q128_m65536_k10", "params": {"B": 1, "D": 320, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610509, "self_search": false}}]'))
+LOWD_NON128_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_d64_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 64], ["K", 10], ["dtype", "bfloat16"], ["seed", 610508], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d96_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 96], ["K", 10], ["dtype", "bfloat16"], ["seed", 610520], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d192_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 192], ["K", 10], ["dtype", "bfloat16"], ["seed", 610521], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_d320_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 320], ["K", 10], ["dtype", "bfloat16"], ["seed", 610509], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _KERNELS: dict[int, dict[str, Any]] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 D96_BLOCK_M = 640
@@ -46,14 +46,14 @@ D320_SUBWARP_WIDTH = 8
 D320_SUBWARPS_PER_WARP = 4
 D320_NUM_ROW_WORKERS = NUM_WARPS * D320_SUBWARPS_PER_WARP
 D320_ROWS_PER_WORKER = _decode_capture(_json_loads('10'))
-knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2 = _ir_proxy('loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2', 256)
-knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2 = _ir_proxy('loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2', 256)
-knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2 = _ir_proxy('loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2', 256)
-knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2 = _ir_proxy('loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2', 256)
-knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2 = _ir_proxy('loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:merge_ir"}'))
+knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_non128_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d96_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d192_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_d320_tile_reduce_partial_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 256}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_lowd_non128_tile_reduce_0615_7d36_v2:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "cta_group": 1, "threads": 256}'))
 
 def _config_for_d(d: int) -> dict[str, int]:
     if d == 64:

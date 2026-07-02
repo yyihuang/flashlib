@@ -25,9 +25,9 @@ ROUTE_D512_Q64_M131072_TCGEN05 = '28cc_d512_q64_m131072_k10_row16_directstride_t
 CONSUMED_SEED = 'weave-evolve-knn-search-28cc-d512-q64-m131072-k10'
 TARGET_LABEL = 'exp_targetd_heldout_d512_q64_m131072_k10'
 TARGET_SHAPES: list[dict[str, Any]] = [{'label': TARGET_LABEL, 'params': {'B': 1, 'Q': 64, 'M': 131072, 'D': 512, 'K': 10, 'dtype': 'bfloat16', 'seed': 620201, 'self_search': False, 'min_recall': 0.999}}]
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 102144, "cta_group": 1, "threads": 512}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 102144, "cta_group": 1, "threads": 512}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'overlay': 'd512_q64_m131072_row16_directstride_28cc', 'shape_key': TARGET_LABEL, 'labels': (TARGET_LABEL,), 'guard': 'B == 1 and Q == 64 and M == 131072 and D == 512 and K == 10 and not self_search and not forced_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE_D512_Q64_M131072_TCGEN05, 'entrypoint': 'loom.examples.weave.knn_search_d512_q64_m131072_k10_0623_28cc_v1:launch_for_eval', 'selected_seed': CONSUMED_SEED, 'source_task': 'weave-evolve-knn-search-28cc-d512-q64-m131072-k10', 'coverage_class': 'expanded_targetd_d512_q64_m131072_k10', 'workflow_mode': 'generalize_auto_tuning', 'auto_tuning_stage': 'bucket-kernel'},)
 
 def _tcgen05_capable_arch() -> bool:

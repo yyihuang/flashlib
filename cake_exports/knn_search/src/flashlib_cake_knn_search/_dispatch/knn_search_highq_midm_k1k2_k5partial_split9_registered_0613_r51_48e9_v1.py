@@ -24,18 +24,18 @@ Q4096_ROWS = k5_base.Q4096_ROWS
 Q4096_LOWK_M = k5_base.Q4096_LOWK_M
 Q4096_LOWK_K5_SPLIT_M = 9
 LOWK_MMA_SMEM_BYTES = k5_base.LOWK_MMA_SMEM_BYTES
-partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k1_ir"}'))
-merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k1_ir"}'))
-partial_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k2_ir"}'))
-merge_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k2_ir"}'))
-partial_k5_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k5_ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:parent_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:ir"}'))
+partial_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_k1_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k1_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k2_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_k2_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k2_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+partial_k5_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:partial_k5_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 _LOWK_K5_SPLIT9_KERNELS: dict[str, Any] = {}
 _LOWK_K5_SPLIT9_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
-knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1 = _ir_proxy('loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1', 256)
-merge_k5_split9_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k5_split9_ir"}'))
-merge_k5_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k5_ir"}'))
+knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k5_split9_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k5_split9_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+merge_k5_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1:merge_k5_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 Q4096_K5_LABELS: tuple[str, ...] = k5_base.Q4096_K5_LABELS
 Q4096_K5_SHAPES = k5_base.Q4096_K5_SHAPES
 HIGHQ_MIDM_REGISTERED_LABELS = k5_base.ROUND49_MEASURE_LABELS
@@ -44,7 +44,7 @@ ROUND51_PRESERVE_SHAPES = registered.ROUND50_PRESERVE_SHAPES
 DEFAULT_REGISTRY_CORRECTNESS_LABELS = registered.DEFAULT_REGISTRY_CORRECTNESS_LABELS
 DEFAULT_REGISTRY_PERFORMANCE_LABELS = registered.DEFAULT_REGISTRY_PERFORMANCE_LABELS
 DEFAULT_REGISTRY_CORRECTNESS_SHAPES = registered.DEFAULT_REGISTRY_CORRECTNESS_SHAPES
-DEFAULT_REGISTRY_PERFORMANCE_SHAPES = _decode_capture(_json_loads('[{"label": "rag_q128_m131072_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 131072, "Q": 128, "benchmark": true, "check_correctness": true, "dtype": "bfloat16", "min_recall": 0.999, "seed": 2, "self_search": false}}, {"label": "rag_q4096_m20000_d128_k10", "params": {"B": 1, "D": 128, "K": 10, "M": 20000, "Q": 4096, "benchmark": true, "check_correctness": true, "dtype": "bfloat16", "min_recall": 0.999, "seed": 3, "self_search": false}}, {"label": "ksweep_q4096_m20000_d128_k5", "params": {"B": 1, "D": 128, "K": 5, "M": 20000, "Q": 4096, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610314, "self_search": false}}]'))
+DEFAULT_REGISTRY_PERFORMANCE_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "rag_q128_m131072_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 131072], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 2], ["self_search", false], ["check_correctness", true], ["benchmark", true], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "rag_q4096_m20000_d128_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 20000], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 3], ["self_search", false], ["check_correctness", true], ["benchmark", true], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "ksweep_q4096_m20000_d128_k5"], ["params", {"__dict_items__": [["B", 1], ["Q", 4096], ["M", 20000], ["D", 128], ["K", 5], ["dtype", "bfloat16"], ["seed", 610314], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'registered_d128_q4096_lowk_k5partial_split9', 'guard': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 5 and tcgen05', 'route': 'round51_registered_q4096_lowk_k5partial_split9'}, *registered.SHAPE_DISPATCH_REGISTRY)
 
 def _use_q4096_k5(inputs: dict[str, Any]) -> bool:

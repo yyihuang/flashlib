@@ -21,12 +21,12 @@ DIRECT_SMEM_BYTES = DIRECT_DIST_BYTES + DIRECT_IDX_BYTES
 ROUTE_SELF_K5_DIRECT = 'round_selfk5direct0616_q256_q512_direct_k5'
 ROUTE_PARENT_ED52 = parent.PROFILE_ALL
 SELF_K5_EVAL_LABELS: tuple[str, ...] = ('flashml_self_b1_q256_m256_d128_k5', 'flashml_self_b1_q512_m512_d128_k5', 'flashml_self_b1_q1024_m1024_d128_k5')
-SELF_K5_SHAPES = _decode_capture(_json_loads('[{"label": "flashml_self_b1_q256_m256_d128_k5", "params": {"B": 1, "D": 128, "K": 5, "M": 256, "Q": 256, "benchmark": true, "check_correctness": true, "dtype": "bfloat16", "min_recall": 0.99, "seed": 0, "self_search": true}}, {"label": "flashml_self_b1_q512_m512_d128_k5", "params": {"B": 1, "D": 128, "K": 5, "M": 512, "Q": 512, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610601, "self_search": true}}, {"label": "flashml_self_b1_q1024_m1024_d128_k5", "params": {"B": 1, "D": 128, "K": 5, "M": 1024, "Q": 1024, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610602, "self_search": true}}]'))
+SELF_K5_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "flashml_self_b1_q256_m256_d128_k5"], ["params", {"__dict_items__": [["B", 1], ["Q", 256], ["M", 256], ["D", 128], ["K", 5], ["dtype", "bfloat16"], ["seed", 0], ["self_search", true], ["check_correctness", true], ["benchmark", true], ["min_recall", 0.99]]}]]}, {"__dict_items__": [["label", "flashml_self_b1_q512_m512_d128_k5"], ["params", {"__dict_items__": [["B", 1], ["Q", 512], ["M", 512], ["D", 128], ["K", 5], ["dtype", "bfloat16"], ["seed", 610601], ["self_search", true], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "flashml_self_b1_q1024_m1024_d128_k5"], ["params", {"__dict_items__": [["B", 1], ["Q", 1024], ["M", 1024], ["D", 128], ["K", 5], ["dtype", "bfloat16"], ["seed", 610602], ["self_search", true], ["min_recall", 0.999]]}]]}]'))
 SELF_K5_DIRECT_ROWS: frozenset[int] = frozenset({256, 512})
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'dispatch0616_self_k5_q256_q512_direct', 'guard': 'B == 1 and self_search and Q == M in {256,512} and D == 128 and K == 5', 'route': ROUTE_SELF_K5_DIRECT, 'entrypoint': 'loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:launch_for_eval'}, *parent.SHAPE_DISPATCH_REGISTRY)
 _KERNELS: dict[str, Any] = {}
-knn_search_self_k5_direct_v1 = _ir_proxy('loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:knn_search_self_k5_direct_v1', 256)
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:ir"}'))
+knn_search_self_k5_direct_v1 = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:knn_search_self_k5_direct_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "cta_group": 1, "threads": 256}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_self_k5_direct_0616_selfk5direct_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
     return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0296"}}'))

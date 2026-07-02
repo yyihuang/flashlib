@@ -20,13 +20,13 @@ BLOCK_M = base_25f8.BLOCK_M
 D_STATIC = base_25f8.D_STATIC
 K_MAX = base_25f8.K_MAX
 SPLIT_M = base_25f8.SPLIT_M
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:ir"}'))
-parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:parent_ir"}'))
-base_25f8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:base_25f8_ir"}'))
-truek48_2d9eee_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_ir"}'))
-truek48_2d9eee_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_partial_ir"}'))
-truek48_2d9eee_group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_group_merge_ir"}'))
-truek48_2d9eee_final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_final_merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+parent_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:parent_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+base_25f8_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:base_25f8_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+truek48_2d9eee_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+truek48_2d9eee_partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "cta_group": 1, "threads": 512}'))
+truek48_2d9eee_group_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_group_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+truek48_2d9eee_final_merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1:truek48_2d9eee_final_merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
 ROUTE_LOWD_A597 = base_25f8.ROUTE_LOWD_A597
 ROUTE_1AAC_K16 = base_25f8.ROUTE_1AAC_K16
 ROUTE_OLD_1AAC_K48 = base_25f8.ROUTE_1AAC_K48
@@ -34,8 +34,8 @@ ROUTE_2D9EEE_K48 = truek48_2d9eee.ROUTE_Q128_K48_TRUEK48
 ROUTE_BASE_25F8 = 'current_6bc6_plus_a597_plus_1aac_nonq4096_25f8'
 PROFILE_BASE_25F8 = base_25f8.PROFILE_ALL
 PROFILE_25F8_PLUS_2D9EEE = 'current_6bc6_plus_a597_plus_truek48_2d9eee_9afb'
-_A597_REGISTRY_ENTRY = _decode_capture(_json_loads('{"guard": "B == 1 and Q == 128 and M == 65536 and D in {64,96,192,320} and K == 10 and tcgen05_capable_arch", "route": "round99_blind_lowd_non_d128_padded_tcgen05", "shape_key": "round102_25f8_a597_blind_non_d128_q128_m65536_k10"}'))
-_1AAC_K16_REGISTRY_ENTRY = _decode_capture(_json_loads('{"guard": "B == 1 and Q == 128 and M == 131072 and D == 128 and K == 16 and tcgen05", "route": "round20_k20_k30_tcgen05_capacity", "shape_key": "round102_25f8_1aac_d128_q128_m131072_k16"}'))
+_A597_REGISTRY_ENTRY = _decode_capture(_json_loads('{"__dict_items__": [["shape_key", "round102_25f8_a597_blind_non_d128_q128_m65536_k10"], ["guard", "B == 1 and Q == 128 and M == 65536 and D in {64,96,192,320} and K == 10 and tcgen05_capable_arch"], ["route", "round99_blind_lowd_non_d128_padded_tcgen05"]]}'))
+_1AAC_K16_REGISTRY_ENTRY = _decode_capture(_json_loads('{"__dict_items__": [["shape_key", "round102_25f8_1aac_d128_q128_m131072_k16"], ["guard", "B == 1 and Q == 128 and M == 131072 and D == 128 and K == 16 and tcgen05"], ["route", "round20_k20_k30_tcgen05_capacity"]]}'))
 _2D9EEE_K48_REGISTRY_ENTRY: dict[str, str] = {'shape_key': 'round103_9afb_2d9eee_d128_q128_m131072_k48_truek48', 'guard': 'B == 1 and Q == 128 and M == 131072 and D == 128 and K == 48 and tcgen05', 'route': ROUTE_2D9EEE_K48}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_A597_REGISTRY_ENTRY, _1AAC_K16_REGISTRY_ENTRY, _2D9EEE_K48_REGISTRY_ENTRY, *base_25f8.current_6bc6.SHAPE_DISPATCH_REGISTRY)
 

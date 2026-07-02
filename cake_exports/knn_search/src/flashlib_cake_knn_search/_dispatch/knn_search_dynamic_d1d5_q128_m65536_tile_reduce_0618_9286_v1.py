@@ -22,12 +22,12 @@ MERGE_SMEM_BYTES = base.MERGE_SMEM_BYTES
 MERGE_TILES_PER_GROUP = base.MERGE_TILES_PER_GROUP
 SUPPORTED_D = {1, 5}
 EXT_TINYD_LABELS: tuple[str, ...] = ('blind_ext_dyn_d1_q128_m65536_k10', 'blind_ext_dyn_d5_q128_m65536_k10')
-EXT_TINYD_SHAPES = _decode_capture(_json_loads('[{"label": "blind_ext_dyn_d1_q128_m65536_k10", "params": {"B": 1, "D": 1, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610913, "self_search": false}}, {"label": "blind_ext_dyn_d5_q128_m65536_k10", "params": {"B": 1, "D": 5, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610914, "self_search": false}}]'))
+EXT_TINYD_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_ext_dyn_d1_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 1], ["K", 10], ["dtype", "bfloat16"], ["seed", 610913], ["self_search", false], ["min_recall", 0.999]]}]]}, {"__dict_items__": [["label", "blind_ext_dyn_d5_q128_m65536_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 65536], ["D", 5], ["K", 10], ["dtype", "bfloat16"], ["seed", 610914], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 ROUTE_EXT_TINYD_D1D5_TILE_REDUCE = '9286_ext_dynamic_d1d5_q128_tile_reduce'
 CONSUMED_SEED = 'weave-evolve-knn-search-9286-d1d5-tile-reduce'
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:merge_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 128}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 10240, "cta_group": 1, "threads": 128}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_dynamic_d1d5_q128_m65536_tile_reduce_0618_9286_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "cta_group": 1, "threads": 128}'))
 _KERNELS: dict[tuple[int, int], dict[str, Any]] = {}
 _SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 

@@ -13,13 +13,13 @@ from .._dispatch_runtime import select_named_shapes
 from . import knn_search_dispatch0629_2ada_plus_8048_grid132_v1 as fallback
 from . import knn_search_dynamic_d768d1024_q32q16_tcgen05_0618_9286_v1 as producer
 TARGET_LABELS: tuple[str, ...] = ('target0627_d768_q128_m32768_k10',)
-TARGET_SHAPES = _decode_capture(_json_loads('[{"label": "target0627_d768_q128_m32768_k10", "params": {"B": 1, "D": 768, "K": 10, "M": 32768, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 612109, "self_search": false}}]'))
+TARGET_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "target0627_d768_q128_m32768_k10"], ["params", {"__dict_items__": [["B", 1], ["Q", 128], ["M", 32768], ["D", 768], ["K", 10], ["dtype", "bfloat16"], ["seed", 612109], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 B_STATIC, Q_STATIC, M_STATIC, D_STATIC, K_STATIC = (1, 128, 32768, 768, 10)
 ROUTE = 'c3bc_target0629_d768_q128_m32768_k10_directstride_tcgen05'
 ENTRYPOINT = 'loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:launch_for_eval'
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:partial_ir"}'))
-merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:merge_ir"}'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:ir"}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
+merge_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:merge_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_target0629_d768_q128_m32768_k10_c3bc_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 143104, "cta_group": 1, "threads": 640}'))
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': TARGET_LABELS[0], 'shape': (B_STATIC, Q_STATIC, M_STATIC, D_STATIC, K_STATIC, False), 'guard': 'B == 1 and Q == 128 and M == 32768 and D == 768 and K == 10 and not self_search and not force_fallback and arch in {sm_100a,sm_103a}', 'route': ROUTE, 'entrypoint': ENTRYPOINT, 'source_entrypoint': 'loom.examples.weave.knn_search_dynamic_d768d1024_q32q16_tcgen05_0618_9286_v1:_launch_high_dynamic_d_tcgen05', 'coverage_class': 'target_dimension_frontier_d768_q128_m32768_k10', 'arch_requirement': 'sm_100a'},)
 
 def _active(inputs: dict[str, Any]) -> bool:

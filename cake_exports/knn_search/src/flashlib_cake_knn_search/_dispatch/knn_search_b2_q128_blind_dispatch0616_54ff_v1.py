@@ -20,18 +20,18 @@ BLOCK_M = mma.BLOCK_M
 D_STATIC = mma.D_STATIC
 K_MAX = mma.K_MAX
 SPLIT_M = _decode_capture(_json_loads('72'))
-ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:ir"}'))
-partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:partial_ir"}'))
-merge_stream_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:merge_stream_ir"}'))
-base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:base_ir"}'))
-current_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:current_ir"}'))
+ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+partial_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:partial_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
+merge_stream_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:merge_stream_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "cta_group": 1, "threads": 32}'))
+base_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:base_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 96000, "cta_group": 1, "threads": 512}'))
+current_ir = _decode_capture(_json_loads('{"__ir__": "loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:current_ir", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "cta_group": 1, "threads": 640}'))
 PROFILE_BASE_6912 = base6912.PROFILE_SELECTED
 PROFILE_B2_Q128_BLIND = '54ff_b2_q128_blind_spot'
 PROFILE_ALL = PROFILE_B2_Q128_BLIND
 ROUTE_BASE_6912 = 'round6912_seed_bank_selected_dispatcher'
 ROUTE_B2_Q128_QBUCKET = 'round5_54ff_b2_q128_qbucket_exact_m65536'
 B2_Q128_BLIND_LABELS: tuple[str, ...] = ('blind_b2_q128_m65536_d128_k10',)
-B2_Q128_BLIND_SHAPES = _decode_capture(_json_loads('[{"label": "blind_b2_q128_m65536_d128_k10", "params": {"B": 2, "D": 128, "K": 10, "M": 65536, "Q": 128, "dtype": "bfloat16", "min_recall": 0.999, "seed": 610604, "self_search": false}}]'))
+B2_Q128_BLIND_SHAPES = _decode_capture(_json_loads('[{"__dict_items__": [["label", "blind_b2_q128_m65536_d128_k10"], ["params", {"__dict_items__": [["B", 2], ["Q", 128], ["M", 65536], ["D", 128], ["K", 10], ["dtype", "bfloat16"], ["seed", 610604], ["self_search", false], ["min_recall", 0.999]]}]]}]'))
 _B2_Q128_ENTRY: dict[str, str] = {'shape_key': 'round5_54ff_b2_q128_m65536_qbucket_split', 'guard': 'B == 2 and Q == 128 and M == 65536 and D == 128 and K == 10 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_B2_Q128_QBUCKET, 'entrypoint': 'loom.examples.weave.knn_search_b2_q128_blind_dispatch0616_54ff_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-54ff-b2q128', 'source_round_doc': 'design_doc/active/weave_evolve_knn_search_round_5_54ff_b2q128.md', 'selected_seed': 'weave-evolve-knn-search-54ff-b2q128'}
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_B2_Q128_ENTRY, *base6912.SHAPE_DISPATCH_REGISTRY)
 
