@@ -34,7 +34,7 @@ knn_search_q1_irregular_m_tail_partial_v1 = _decode_capture(_json_loads('{"__ir_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q1_irregular_m_tail_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 5120, "constants": [["D_", 128], ["K_MAX_", 10], ["BLOCK_M_", 256], ["NUM_WARPS_", 8], ["NUM_ROW_WORKERS_", 64], ["SUBWARP_WIDTH_", 4], ["SUBWARPS_PER_WARP_", 8], ["LOCAL_LIST_CAP_", 4]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0191"}, "partial": {"__kernel__": "dispatch_kernel_0190"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0188"}, "partial": {"__kernel__": "dispatch_kernel_0187"}}'))
 
 def _scratch(inputs: dict[str, Any], num_m_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -278,7 +278,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
+kernel_knn_search_80a5_blocker_k64_q256_m65536_twotile_partial_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -354,9 +354,11 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
     int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
     int work_id = bid;
-    int batch_id = work_id / split_m;
-    int split_id = work_id - batch_id * split_m;
-    int q_start = 0;
+    int split_id = work_id % split_m;
+    int q_tile_linear = work_id / split_m;
+    int batch_id = q_tile_linear / num_q_tiles;
+    int q_tile = q_tile_linear - batch_id * num_q_tiles;
+    int q_start = q_tile * 128;
     const int col_chunk = warp / 4;
     const int row_base_tmem = warp % 4 * 32;
     int q_local = row_base_tmem + lane;
@@ -372,7 +374,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float q_vals[16];
     unsigned int q_pack[8];
     {
-        const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * 128 + q_abs) * 128 + d_col));
+        const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)(q_abs * 128 + d_col));
         uint4 _vld_0[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -406,7 +408,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float q_vals_4[16];
     unsigned int q_pack_5[8];
     {
-        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * 128 + q_abs_3) * 128 + d_col_2));
+        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(queries + (unsigned long long)(q_abs_3 * 128 + d_col_2));
         uint4 _vld_1[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -451,7 +453,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float db_vals0[16];
     unsigned int db_pack0[8];
     {
-        const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * 65536 + m_abs_part) * 128 + d_col0));
+        const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part * 128 + d_col0));
         uint4 _vld_2[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -479,7 +481,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float db_vals1[16];
     unsigned int db_pack1[8];
     {
-        const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * 65536 + m_abs_part) * 128 + d_col1));
+        const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part * 128 + d_col1));
         uint4 _vld_3[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -580,7 +582,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float db_vals0_16[16];
     unsigned int db_pack0_17[8];
     {
-        const uint4* _vptr_4 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * 65536 + m_abs_part_13) * 128 + d_col0_15));
+        const uint4* _vptr_4 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part_13 * 128 + d_col0_15));
         uint4 _vld_4[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -608,7 +610,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
     float db_vals1_21[16];
     unsigned int db_pack1_22[8];
     {
-        const uint4* _vptr_5 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * 65536 + m_abs_part_13) * 128 + d_col1_20));
+        const uint4* _vptr_5 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part_13 * 128 + d_col1_20));
         uint4 _vld_5[2];
         #pragma unroll
         for (int _blk = 0; _blk < 2; _blk++) {
@@ -896,7 +898,7 @@ kernel_knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1(__nv_bfloat16* 
         best_i[32 + j_rel + 7] = m_abs31;
     }
     int partial_split_id = split_id * 4 + col_chunk;
-    unsigned long long partial_col_base = (unsigned long long)(((batch_id * num_q_tiles * 1024 + partial_split_id) * 128 + q_local) * K_MAX_);
+    unsigned long long partial_col_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 1024 + partial_split_id) * 128 + q_local) * K_MAX_);
     float left_d = best_d[0];
     float right_d = best_d[1];
     int left_i = best_i[0];

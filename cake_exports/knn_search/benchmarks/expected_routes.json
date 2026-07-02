@@ -154,7 +154,7 @@
     },
     {
       "label": "ann_sift_like_q10000_m100000_d128_k10",
-      "selected_route": "roundb72b_ann_q10000_m100000_split7"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "glm5_rag_q128_m131072_d256_k10",
@@ -210,7 +210,7 @@
     },
     {
       "label": "blind_d64_q128_m65536_k10",
-      "selected_route": "round99_blind_lowd_non_d128_padded_tcgen05"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_d320_q128_m65536_k10",
@@ -230,11 +230,11 @@
     },
     {
       "label": "blind_midq_q384_m49152_d128_k10",
-      "selected_route": "round43_highq_midm_qbucket"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_midq_q768_m49152_d128_k10",
-      "selected_route": "round43_highq_midm_qbucket"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_midbucket_q128_m98304_d128_k10",
@@ -258,15 +258,15 @@
     },
     {
       "label": "blind_d96_q128_m65536_k10",
-      "selected_route": "round99_blind_lowd_non_d128_padded_tcgen05"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_d192_q128_m65536_k10",
-      "selected_route": "round99_blind_lowd_non_d128_padded_tcgen05"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_self_q4096_m4096_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "flashml_self_b1_q512_m512_d128_k5",
@@ -282,7 +282,7 @@
     },
     {
       "label": "blind_b2_q128_m65536_d128_k10",
-      "selected_route": "round5_54ff_b2_q128_qbucket_exact_m65536"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_lowq_q3_m131072_d128_k10",
@@ -298,7 +298,7 @@
     },
     {
       "label": "blind_lowk_q4096_m20000_d128_k7",
-      "selected_route": "codex0616_q4096_lowk_k3_k7_split4_exact_m20000"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "ksweep_q128_m131072_d128_k32",
@@ -326,15 +326,15 @@
     },
     {
       "label": "blind_post6912_lowq_q24_m196608_d128_k10",
-      "selected_route": "round39_lowq_tcgen05_mma_split"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_post6912_batch_b2_q4096_m20000_d128_k10",
-      "selected_route": "round40_q4096_split8"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_post6912_batch_b2_q64_m262144_d128_k10",
-      "selected_route": "round39_lowq_tcgen05_mma_split"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_post6912_d256_q512_m65536_k10",
@@ -354,7 +354,7 @@
     },
     {
       "label": "blind_post6912_self_q1024_m1024_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_post6912_self_q2048_m2048_d128_k5",
@@ -362,7 +362,7 @@
     },
     {
       "label": "blind_post6912_midq_q1536_m49152_d128_k10",
-      "selected_route": "round43_highq_midm_qbucket"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_dyn_d3_q128_m65536_k10",
@@ -442,35 +442,35 @@
     },
     {
       "label": "blind_ext_tail_q129_m131073_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_tail_q255_m262143_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_tail_q257_m262145_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_q513_m98304_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_highq_q3072_m49152_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_highq_q4096_m49152_d128_k5",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_lowq_q9_m196608_d128_k10",
-      "selected_route": "round39_lowq_tcgen05_mma_split"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_lowq_q17_m196608_d128_k10",
-      "selected_route": "round39_lowq_tcgen05_mma_split"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_b2_q3_m131072_d128_k10",
@@ -478,11 +478,11 @@
     },
     {
       "label": "blind_ext_b2_q257_m65536_d128_k10",
-      "selected_route": "round43_highq_midm_qbucket"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_self_q3072_m3072_d128_k10",
-      "selected_route": "round34_application_wrapper"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "blind_ext_dyn_d1_q128_m65536_k10",
@@ -566,7 +566,7 @@
     },
     {
       "label": "target_d64_q128_m65536_k10",
-      "selected_route": "round99_blind_lowd_non_d128_padded_tcgen05"
+      "selected_route": "export_recorded_scalar_correctness_repair"
     },
     {
       "label": "target_d256_q128_m131072_k10",

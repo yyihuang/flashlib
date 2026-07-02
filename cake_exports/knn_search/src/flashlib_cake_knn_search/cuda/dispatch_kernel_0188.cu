@@ -15,17 +15,15 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define NUM_MAIN_STAGES 1
-#define SMEM_SMEM_DIST_OFF 0
-#define SMEM_SMEM_DIST_STAGE_BYTES 10240
-#define SMEM_SMEM_DIST_STRIDE 10240
-#define SMEM_SMEM_IDX_OFF 10240
-#define SMEM_SMEM_IDX_STAGE_BYTES 10240
-#define SMEM_SMEM_IDX_STRIDE 10240
-#define SMEM_TOTAL 20480
+#define SMEM_GROUP_DIST_OFF 0
+#define SMEM_GROUP_DIST_STAGE_BYTES 320
+#define SMEM_GROUP_DIST_STRIDE 320
+#define SMEM_GROUP_IDX_OFF 320
+#define SMEM_GROUP_IDX_STAGE_BYTES 320
+#define SMEM_GROUP_IDX_STRIDE 320
+#define SMEM_TOTAL 640
 #define THREADS 256
 #define K_MAX_ 10
-#define NUM_WARPS_ 8
-#define PARTIAL_ELEMS_PER_TILE_ 80
 
 #include <math_constants.h>
 #define LOOM_INF CUDART_INF_F
@@ -33,7 +31,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(256) void
-kernel_knn_search_warp_split_merge_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int num_m_tiles)
+kernel_knn_search_q1_tile_reduce_merge_v1(float* __restrict__ partial_distances, int32_t* __restrict__ partial_indices, float* __restrict__ out_distances, int32_t* __restrict__ out_indices, int B, int Q, int K, int num_m_tiles, int num_groups, int tiles_per_group)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -42,101 +40,141 @@ kernel_knn_search_warp_split_merge_v1(float* __restrict__ partial_distances, int
     extern __shared__ __align__(1024) char smem_raw[];
     int smem;
     smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
-    const int smem_smem_dist = smem + 0;
-    const int smem_smem_idx = smem + 10240;
+    const int smem_group_dist = smem + 0;
+    const int smem_group_idx = smem + 320;
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
 
     const int warp_id = warp;
     const int lane_id = lane;
-    float* smem_dist = (float*)(smem_raw + 0);
-    #define smem_dist_addr (smem + 0)
-    int* smem_idx = (int*)(smem_raw + 10240);
-    #define smem_idx_addr (smem + 10240)
+    float* group_dist = (float*)(smem_raw + 0);
+    #define group_dist_addr (smem + 0)
+    int* group_idx = (int*)(smem_raw + 320);
+    #define group_idx_addr (smem + 320)
 
     // === Task calls (dependency order) ===
-    int work_id = bid;
-    int batch_id = work_id / Q;
-    int q_row = work_id - batch_id * Q;
+    int batch_id = bid;
     if (batch_id < B) {
-        float local_d[10];
-        int local_i[10];
+        int group_id = warp;
+        int group_tile_start = group_id * tiles_per_group;
+        int group_tile_stop_raw = group_tile_start + tiles_per_group;
+        int group_tile_stop = ((group_tile_stop_raw < num_m_tiles) ? group_tile_stop_raw : num_m_tiles);
+        int group_tile_count = group_tile_stop - group_tile_start;
+        int group_head0 = 0;
+        int group_head1 = 0;
         #pragma unroll
-        for (int kk = 0; kk < K_MAX_; kk++) {
-            local_d[kk] = LOOM_INF;
-            local_i[kk] = -1;
-        }
-        int total_partials = num_m_tiles * PARTIAL_ELEMS_PER_TILE_;
-        unsigned long long partial_query_base = (unsigned long long)((batch_id * Q + q_row) * total_partials);
-        #pragma unroll 1
-        for (int entry = tid; entry < total_partials; entry += 256) {
-            int cand_i = partial_indices[partial_query_base + (unsigned long long)entry];
-            if (cand_i >= 0) {
-                float cand_d = partial_distances[partial_query_base + (unsigned long long)entry];
-                if (cand_d < local_d[K_MAX_ - 1]) {
-                    float carry_d = cand_d;
-                    int carry_i = cand_i;
-                    #pragma unroll
-                    for (int kk = 0; kk < K_MAX_; kk++) {
-                        float old_d = local_d[kk];
-                        int old_i = local_i[kk];
-                        int take = ((carry_d < old_d) ? 1 : 0);
-                        local_d[kk] = ((take != 0) ? carry_d : old_d);
-                        local_i[kk] = ((take != 0) ? carry_i : old_i);
-                        carry_d = ((take != 0) ? old_d : carry_d);
-                        carry_i = ((take != 0) ? old_i : carry_i);
-                    }
+        for (int out_k = 0; out_k < K_MAX_; out_k++) {
+            float head0_d = LOOM_INF;
+            int head0_i = -1;
+            float head1_d = LOOM_INF;
+            int head1_i = -1;
+            if (group_id < num_groups) {
+                if (lane < group_tile_count) {
+                    int src_tile = group_tile_start + lane;
+                    unsigned long long partial_base = (unsigned long long)((batch_id * num_m_tiles + src_tile) * K_MAX_ + group_head0);
+                    head0_d = partial_distances[partial_base];
+                    head0_i = partial_indices[partial_base];
+                }
+                if (lane + 32 < group_tile_count) {
+                    int src_tile1 = group_tile_start + lane + 32;
+                    unsigned long long partial_base1 = (unsigned long long)((batch_id * num_m_tiles + src_tile1) * K_MAX_ + group_head1);
+                    head1_d = partial_distances[partial_base1];
+                    head1_i = partial_indices[partial_base1];
                 }
             }
-        }
-        #pragma unroll
-        for (int kk = 0; kk < K_MAX_; kk++) {
-            int smem_off = tid * K_MAX_ + kk;
-            smem_dist[smem_off] = local_d[kk];
-            smem_idx[smem_off] = local_i[kk];
+            int take_head1 = ((head1_d < head0_d) ? 1 : 0);
+            float winner_d = ((take_head1 != 0) ? head1_d : head0_d);
+            int winner_i = ((take_head1 != 0) ? head1_i : head0_i);
+            float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 16);
+            float peer_d = _shfl_xor_0;
+            int _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 16);
+            int peer_i = _shfl_xor_1;
+            int take_peer = ((peer_d < winner_d) ? 1 : 0);
+            winner_d = ((take_peer != 0) ? peer_d : winner_d);
+            winner_i = ((take_peer != 0) ? peer_i : winner_i);
+            float _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 8);
+            float peer_d_0 = _shfl_xor_2;
+            int _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 8);
+            int peer_i_1 = _shfl_xor_3;
+            int take_peer_2 = ((peer_d_0 < winner_d) ? 1 : 0);
+            winner_d = ((take_peer_2 != 0) ? peer_d_0 : winner_d);
+            winner_i = ((take_peer_2 != 0) ? peer_i_1 : winner_i);
+            float _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
+            float peer_d_3 = _shfl_xor_4;
+            int _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
+            int peer_i_4 = _shfl_xor_5;
+            int take_peer_5 = ((peer_d_3 < winner_d) ? 1 : 0);
+            winner_d = ((take_peer_5 != 0) ? peer_d_3 : winner_d);
+            winner_i = ((take_peer_5 != 0) ? peer_i_4 : winner_i);
+            float _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
+            float peer_d_6 = _shfl_xor_6;
+            int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
+            int peer_i_7 = _shfl_xor_7;
+            int take_peer_8 = ((peer_d_6 < winner_d) ? 1 : 0);
+            winner_d = ((take_peer_8 != 0) ? peer_d_6 : winner_d);
+            winner_i = ((take_peer_8 != 0) ? peer_i_7 : winner_i);
+            float _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
+            float peer_d_9 = _shfl_xor_8;
+            int _shfl_xor_9 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
+            int peer_i_10 = _shfl_xor_9;
+            int take_peer_11 = ((peer_d_9 < winner_d) ? 1 : 0);
+            winner_d = ((take_peer_11 != 0) ? peer_d_9 : winner_d);
+            winner_i = ((take_peer_11 != 0) ? peer_i_10 : winner_i);
+            if (lane == 0) {
+                int group_base = group_id * K_MAX_;
+                group_dist[group_base + out_k] = winner_d;
+                group_idx[group_base + out_k] = winner_i;
+            }
+            int inc_head0 = ((head0_i == winner_i) ? 1 : 0);
+            int inc_head1 = ((head1_i == winner_i) ? 1 : 0);
+            group_head0 += inc_head0;
+            group_head1 += inc_head1;
         }
         __syncthreads();
-        if (tid == 0) {
-            float final_d[10];
-            int final_i[10];
+        if (warp == 0) {
+            int final_head = 0;
+            unsigned long long out_base = (unsigned long long)(batch_id * Q * K);
             #pragma unroll
-            for (int kk = 0; kk < K_MAX_; kk++) {
-                final_d[kk] = LOOM_INF;
-                final_i[kk] = -1;
-            }
-            #pragma unroll 1
-            for (int src_thread = 0; src_thread < 256; src_thread++) {
-                #pragma unroll
-                for (int src_k = 0; src_k < K_MAX_; src_k++) {
-                    int smem_off = src_thread * K_MAX_ + src_k;
-                    int cand_i = smem_idx[smem_off];
-                    if (cand_i >= 0) {
-                        float cand_d = smem_dist[smem_off];
-                        if (cand_d < final_d[K_MAX_ - 1]) {
-                            float carry_d = cand_d;
-                            int carry_i = cand_i;
-                            #pragma unroll
-                            for (int kk = 0; kk < K_MAX_; kk++) {
-                                float old_d = final_d[kk];
-                                int old_i = final_i[kk];
-                                int take = ((carry_d < old_d) ? 1 : 0);
-                                final_d[kk] = ((take != 0) ? carry_d : old_d);
-                                final_i[kk] = ((take != 0) ? carry_i : old_i);
-                                carry_d = ((take != 0) ? old_d : carry_d);
-                                carry_i = ((take != 0) ? old_i : carry_i);
-                            }
-                        }
+            for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                float head_d = LOOM_INF;
+                int head_i = -1;
+                if (lane < num_groups) {
+                    int group_base = lane * K_MAX_ + final_head;
+                    head_d = group_dist[group_base];
+                    head_i = group_idx[group_base];
+                }
+                float winner_d = head_d;
+                int winner_i = head_i;
+                float _shfl_xor_10 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
+                float peer_d = _shfl_xor_10;
+                int _shfl_xor_11 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
+                int peer_i = _shfl_xor_11;
+                int take_peer = ((peer_d < winner_d) ? 1 : 0);
+                winner_d = ((take_peer != 0) ? peer_d : winner_d);
+                winner_i = ((take_peer != 0) ? peer_i : winner_i);
+                float _shfl_xor_12 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
+                float peer_d_0 = _shfl_xor_12;
+                int _shfl_xor_13 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
+                int peer_i_1 = _shfl_xor_13;
+                int take_peer_2 = ((peer_d_0 < winner_d) ? 1 : 0);
+                winner_d = ((take_peer_2 != 0) ? peer_d_0 : winner_d);
+                winner_i = ((take_peer_2 != 0) ? peer_i_1 : winner_i);
+                float _shfl_xor_14 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
+                float peer_d_3 = _shfl_xor_14;
+                int _shfl_xor_15 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
+                int peer_i_4 = _shfl_xor_15;
+                int take_peer_5 = ((peer_d_3 < winner_d) ? 1 : 0);
+                winner_d = ((take_peer_5 != 0) ? peer_d_3 : winner_d);
+                winner_i = ((take_peer_5 != 0) ? peer_i_4 : winner_i);
+                if (lane == 0) {
+                    if (out_k < K) {
+                        out_distances[out_base + out_k] = winner_d;
+                        out_indices[out_base + out_k] = winner_i;
                     }
                 }
-            }
-            unsigned long long out_base = (unsigned long long)((batch_id * Q + q_row) * K);
-            #pragma unroll
-            for (int kk = 0; kk < K_MAX_; kk++) {
-                if (kk < K) {
-                    out_distances[out_base + kk] = final_d[kk];
-                    out_indices[out_base + kk] = final_i[kk];
-                }
+                int inc_final = ((head_i == winner_i) ? 1 : 0);
+                final_head += inc_final;
             }
         }
     }

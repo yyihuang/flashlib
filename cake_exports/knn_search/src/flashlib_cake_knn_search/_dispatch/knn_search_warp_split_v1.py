@@ -29,7 +29,7 @@ knn_search_warp_split_merge_v1 = _decode_capture(_json_loads('{"__ir__": "knn_se
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_warp_split_partial_v1", "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["D_", 128], ["K_MAX_", 10], ["BLOCK_M_", 512], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0189"}, "merge": {"__kernel__": "dispatch_kernel_0188"}, "partial": {"__kernel__": "dispatch_kernel_0187"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0195"}, "merge": {"__kernel__": "dispatch_kernel_0194"}, "partial": {"__kernel__": "dispatch_kernel_0193"}}'))
 
 def _scratch(inputs: dict[str, Any], num_m_tiles: int) -> tuple[Any, Any]:
     import torch
