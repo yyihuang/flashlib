@@ -34,7 +34,7 @@ def _make_database(shape: dict[str, Any]):
     ).contiguous()
 
 
-def _reference_topk(database, k: int):
+def _reference_topk(database, k: int, query_indices):
     import torch
 
     values: list[Any] = []
@@ -42,8 +42,9 @@ def _reference_topk(database, k: int):
     db_f32 = database.float()
     db_sq = (db_f32 * db_f32).sum(-1)
     block = 256
-    for start in range(0, int(database.shape[1]), block):
-        query = db_f32[:, start : start + block, :]
+    sampled = db_f32[:, query_indices, :]
+    for start in range(0, int(sampled.shape[1]), block):
+        query = sampled[:, start : start + block, :]
         q_sq = (query * query).sum(-1)
         dots = torch.matmul(query, db_f32.transpose(-1, -2))
         dists = q_sq.unsqueeze(-1) + db_sq.unsqueeze(1) - 2.0 * dots
@@ -60,16 +61,17 @@ def _recall(got_indices, expected_indices) -> float:
     )
 
 
-def _distances_for_indices(database, indices):
+def _distances_for_indices(database, indices, query_indices):
     import torch
 
     db_f32 = database.float()
     bsz, n_rows, dim = db_f32.shape
+    q_rows = int(query_indices.numel())
     safe_indices = indices.to(torch.int64).clamp(0, n_rows - 1)
-    gather_src = db_f32.unsqueeze(1).expand(bsz, n_rows, n_rows, dim)
+    gather_src = db_f32.unsqueeze(1).expand(bsz, q_rows, n_rows, dim)
     gather_idx = safe_indices.unsqueeze(-1).expand(-1, -1, -1, dim)
     neighbors = torch.gather(gather_src, 2, gather_idx)
-    query = db_f32.unsqueeze(2)
+    query = db_f32[:, query_indices, :].unsqueeze(2)
     return ((query - neighbors) ** 2).sum(-1)
 
 
@@ -99,11 +101,15 @@ def _run_shape(
     }
 
     if correctness:
-        _, ref_indices = _reference_topk(database, k)
+        sample_count = min(int(shape.get("correctness_query_sample", shape["Q"])), int(shape["Q"]))
+        query_indices = torch.linspace(0, int(shape["Q"]) - 1, sample_count, device="cuda").round().to(torch.int64).unique()
+        _, ref_indices = _reference_topk(database, k, query_indices)
         torch.cuda.synchronize()
-        exact_dists = _distances_for_indices(database, out[1])
-        result["recall"] = _recall(out[1], ref_indices)
-        result["max_abs_dist_error"] = float((out[0] - exact_dists).abs().max().item())
+        got_distances = out[0][:, query_indices, :]
+        got_indices = out[1][:, query_indices, :]
+        exact_dists = _distances_for_indices(database, got_indices, query_indices)
+        result["recall"] = _recall(got_indices, ref_indices)
+        result["max_abs_dist_error"] = float((got_distances - exact_dists).abs().max().item())
         result["correct"] = bool(
             result["recall"] >= 0.999 and result["max_abs_dist_error"] <= 1.0e-2
         )

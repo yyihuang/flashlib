@@ -4,8 +4,8 @@
 
 - Package: `flashlib_cake_knn_build`
 - Source repository: `ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git`
-- Source commit: `0e46454eee1c7aee5b5991fa2b0c6bc6a97293e4`
-- Generated at: `2026-07-02T18:48:37.212801+00:00`
+- Source commit: `1bb65f6f6ad6ac66dab882c1c80b050362d3847c`
+- Generated at: `2026-07-02T18:51:27.126139+00:00`
 
 ## Latest Recorded Results
 
