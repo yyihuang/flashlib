@@ -1,0 +1,12 @@
+{
+  "benchmark": "not_run_due_to_correctness_failure",
+  "correctness": "failed (multiple failures observed; run stopped before completion)",
+  "expected_shape_count": 58,
+  "hardware": {
+    "arch": "sm_103a",
+    "device": "NVIDIA GB300"
+  },
+  "reason": "exported Python interface is the old D=128/limited-K dispatcher and does not consume the full exported CUDA portfolio",
+  "slurm_job_id": 1449292,
+  "status": "failed"
+}
