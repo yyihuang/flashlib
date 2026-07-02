@@ -17,6 +17,7 @@ test = [
 ]
 benchmark = [
     "cupti-python",
+    "nvidia-cuda-cupti",
     "pytest",
 ]
 
