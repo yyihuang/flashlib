@@ -21,6 +21,10 @@ benchmark = [
     "pytest",
 ]
 
+tvm-ffi = [
+    "apache-tvm-ffi>=0.1.12,<0.2",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

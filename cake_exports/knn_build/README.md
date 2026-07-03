@@ -8,12 +8,36 @@ Review the complete workload through `src/flashlib_cake_knn_build/interface.py`,
 `tests/test_correctness.py`, `benchmarks/benchmark.py`, and
 `benchmarks/expected_routes.json`. The package contains no Weave IR.
 
+## TVM FFI
+
+`flashlib_cake_knn_build.register_tvm_ffi()` registers both the workload-level public API
+declared by a complete export plan and every low-level frozen kernel in the
+TVM FFI global registry. Tensor arguments use DLPack zero-copy conversion and
+launches honor the current TVM FFI CUDA stream.
+
+```python
+import tvm_ffi
+import flashlib_cake_knn_build
+
+names = flashlib_cake_knn_build.register_tvm_ffi()
+print(names)
+
+# Complete plans expose semantic functions as <package>.<public_name>.
+semantic = tvm_ffi.get_global_func("flashlib_cake_knn_build.<public_name>", allow_missing=True)
+
+# Low-level functions use <package>.launch_<kernel>. The final seven
+# positional arguments are grid xyz, block xyz, and dynamic shared-memory bytes.
+launch = tvm_ffi.get_global_func("flashlib_cake_knn_build.launch_dispatch_kernel_0000")
+launch(*kernel_args, 1, 1, 1, 256, 1, 1, 0)
+```
+
 ## Repository Layout
 
 ```text
 src/flashlib_cake_knn_build/
   __init__.py          # public Python exports
   kernels.py           # KernelSpec, get_kernel(), launch_<kernel>() wrappers
+  tvm_ffi.py           # optional TVM FFI global-function registration
   _runtime.py          # NVRTC + CUDA driver launch support
   _benchmark.py        # strict CUPTI timing with cold-L2 flushing
   manifest.json        # provenance, parameter order, launch metadata

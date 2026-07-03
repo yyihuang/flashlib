@@ -1,4 +1,5 @@
 from .interface import SEMANTIC_ENTRYPOINT, knn_build
+from .tvm_ffi import register_tvm_ffi, tvm_ffi_function_names
 from .kernels import (
     KERNELS,
     ExportedKernel,
@@ -801,4 +802,7 @@ __all__ = [
     'launch_dispatch_kernel_0195',
     'launch_dispatch_kernel_0196',
     'launch_dispatch_kernel_0197',
+    'register_tvm_ffi',
+    'tvm_ffi_function_names',
+    'knn_build',
 ]
