@@ -14,6 +14,12 @@ GB200 (`sm_100a`) allocation. All 58 shapes passed semantic correctness, exact
 recorded-route selection, and strict CUPTI cold-L2 timing. The gate ran in six
 isolated Slurm shards to bound compiler and tensor-cache memory (job 1451560).
 
+The TVM FFI refresh was validated on 2026-07-02 on NVIDIA GB200 (job 1452673).
+The semantic `knn_build` registry call ran on a non-default CUDA stream with
+`recall=1.0` and `max_abs_dist_error=9.1552734375e-05`; all 198 low-level
+launchers plus the semantic API were registered. The frozen CUDA, dispatcher,
+and route tree remained byte-identical (`sha256=3f9598a50a7e81f98ad6964d7e7cf589d6a440d6dd61e1348f835c206fa3fae1`).
+
 Reproduce with:
 
 ```bash
@@ -29,6 +35,7 @@ python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 | semantic correctness | NVIDIA GB200 | `pytest tests/test_correctness.py -q` | 58/58 passed |
 | recorded route gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 58/58 matched |
 | CUPTI performance gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 58/58 used `cupti` |
+| TVM FFI semantic GPU smoke | NVIDIA GB200 | `register_tvm_ffi(); get_global_func(...)(...)` | 199/199 registered; recall 1.0; passed |
 
 ## Kernel Inventory
 
