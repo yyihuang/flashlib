@@ -18,6 +18,12 @@ non-passing summaries (root job 1452090; continuation/retry jobs 1452199,
 1452221, 1452229, 1452230, 1452231, 1452239, 1452258, 1452287, 1452299,
 1452349, and 1452365).
 
+The TVM FFI refresh was validated on 2026-07-02 on NVIDIA GB200 (job 1452673).
+The semantic `knn_search` registry call ran on a non-default CUDA stream with
+`recall=1.0` and `max_abs_dist_error=3.0517578125e-05`; all 520 low-level
+launchers plus the semantic API were registered. The frozen CUDA, dispatcher,
+and route tree remained byte-identical (`sha256=e6c179caf70bab11ea0fbe59ece00559ad45486379a3b86f42e0b30548a00969`).
+
 Reproduce with:
 
 ```bash
@@ -33,6 +39,7 @@ python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 | semantic correctness | NVIDIA GB200 | `pytest tests/test_correctness.py -q` | 163/163 passed |
 | recorded route gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 163/163 matched |
 | CUPTI performance gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 163/163 used `cupti` |
+| TVM FFI semantic GPU smoke | NVIDIA GB200 | `register_tvm_ffi(); get_global_func(...)(...)` | 521/521 registered; recall 1.0; passed |
 
 ## Kernel Inventory
 
