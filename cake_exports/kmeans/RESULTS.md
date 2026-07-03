@@ -15,6 +15,12 @@ exact recorded-route selection, and strict CUPTI cold-L2 timing. The gate ran
 in 15 isolated Slurm shards to bound compiler and tensor-cache memory (job
 1451577).
 
+The TVM FFI refresh was validated on 2026-07-02 on NVIDIA GB200 (job 1452673).
+The semantic `flash_kmeans_assign` registry call ran on a non-default CUDA
+stream with exact assignment match `1.0`; all 356 low-level launchers plus the
+semantic API were registered. The frozen CUDA, dispatcher, and route tree
+remained byte-identical (`sha256=71c74b8c4326db8525d78b4c912355b94a8d697ab5f00c8bdd238ff4411954f0`).
+
 Reproduce with:
 
 ```bash
@@ -30,6 +36,7 @@ python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 | semantic correctness | NVIDIA GB200 | `pytest tests/test_correctness.py -q` | 228/228 passed |
 | recorded route gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 228/228 matched |
 | CUPTI performance gate | NVIDIA GB200 | `python benchmarks/benchmark.py` | 228/228 used `cupti` |
+| TVM FFI semantic GPU smoke | NVIDIA GB200 | `register_tvm_ffi(); get_global_func(...)(...)` | 357/357 registered; exact match 1.0; passed |
 
 ## Kernel Inventory
 
