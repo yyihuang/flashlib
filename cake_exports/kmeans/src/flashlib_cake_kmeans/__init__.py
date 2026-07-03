@@ -1,4 +1,5 @@
 from .interface import SEMANTIC_ENTRYPOINT, flash_kmeans_assign
+from .tvm_ffi import register_tvm_ffi, tvm_ffi_function_names
 from .kernels import (
     KERNELS,
     ExportedKernel,
@@ -1433,4 +1434,7 @@ __all__ = [
     'launch_dispatch_kernel_0353',
     'launch_dispatch_kernel_0354',
     'launch_dispatch_kernel_0355',
+    'register_tvm_ffi',
+    'tvm_ffi_function_names',
+    'flash_kmeans_assign',
 ]
