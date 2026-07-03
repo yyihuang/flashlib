@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import json
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -70,6 +71,35 @@ def test_exported_repo_docs_and_benchmarks_exist():
     assert (ROOT / "benchmarks" / "benchmark_exported_kernels.py").is_file()
     assert (ROOT / "benchmarks" / "benchmark_shapes.py").is_file()
     assert (ROOT / "benchmarks" / "workload.py").is_file()
+    assert (SRC / PACKAGE_NAME / "tvm_ffi.py").is_file()
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'apache-tvm-ffi>=0.1.12,<0.2' in pyproject
+
+
+def test_tvm_ffi_adapter_registers_low_level_functions_without_import_time_dependency(monkeypatch):
+    pkg = importlib.import_module(PACKAGE_NAME)
+    registrations = {}
+
+    class FakeTensor:
+        pass
+
+    def register_global_func(name, function, *, override=False):
+        assert override is False
+        registrations[name] = function
+
+    fake_tvm_ffi = types.SimpleNamespace(
+        Tensor=FakeTensor,
+        register_global_func=register_global_func,
+        get_raw_stream=lambda device: 0,
+    )
+    monkeypatch.setitem(sys.modules, "tvm_ffi", fake_tvm_ffi)
+
+    expected = pkg.tvm_ffi_function_names("export_test")
+    registered = pkg.register_tvm_ffi("export_test")
+    assert registered == expected
+    assert set(registrations) == set(expected)
+    assert registered == pkg.register_tvm_ffi("export_test")
+    assert len(registrations) == len(expected)
 
 
 def test_benchmark_runtime_requires_cupti_without_event_or_wall_clock_fallback():
@@ -87,3 +117,8 @@ def test_launch_argument_count_is_checked_before_compilation():
     with pytest.raises(TypeError, match="expects"):
         kernel.launch(*bad_args, grid=(1, 1, 1))
 
+
+
+def test_tvm_ffi_function_names_include_semantic_api():
+    pkg = importlib.import_module(PACKAGE_NAME)
+    assert 'semantic_test.knn_search' in pkg.tvm_ffi_function_names('semantic_test')

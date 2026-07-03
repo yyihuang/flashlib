@@ -1,4 +1,5 @@
 from .interface import SEMANTIC_ENTRYPOINT, knn_search
+from .tvm_ffi import register_tvm_ffi, tvm_ffi_function_names
 from .kernels import (
     KERNELS,
     ExportedKernel,
@@ -2085,4 +2086,7 @@ __all__ = [
     'launch_dispatch_kernel_0516',
     'launch_dispatch_kernel_0517',
     'launch_dispatch_kernel_0518',
+    'register_tvm_ffi',
+    'tvm_ffi_function_names',
+    'knn_search',
 ]
