@@ -10,7 +10,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_search_current6bc6_plus_a597_1aac_dispatch_0615_25f8_v1 as parent
 from . import knn_search_mma_split_v1 as mma
 THREADS = mma.THREADS

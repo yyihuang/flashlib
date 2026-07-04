@@ -11,7 +11,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_mma_split_v1 as mma
 from . import knn_search_q4096_lowk_k5partial_dispatch_0613_r49_48e9_v1 as k5

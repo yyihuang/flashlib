@@ -13,7 +13,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_search_dispatch0618_seed_portfolio_c492_v1 as fallback_parent
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as sort_parent

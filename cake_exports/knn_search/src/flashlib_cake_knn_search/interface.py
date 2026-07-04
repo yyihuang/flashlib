@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from ._dispatch import knn_search_export_recorded_dispatch_v1 as _dispatcher
+from ._dispatch import knn_search_dispatch0701_k11_d128_guard_repair_v1 as _dispatcher
 
-SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_export_recorded_dispatch_v1:launch_for_eval"
+SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval"
 
 
 def knn_search(

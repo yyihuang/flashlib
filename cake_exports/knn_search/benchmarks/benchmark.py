@@ -16,7 +16,7 @@ from flashlib_cake_knn_search._benchmark import bench_gpu_time, require_cupti  #
 SHAPE_RECORDS = json.loads((Path(__file__).with_name("shape_records.json")).read_text(encoding="utf-8"))
 ROUTE_MANIFEST = json.loads((Path(__file__).with_name("expected_routes.json")).read_text(encoding="utf-8"))
 EXPECTED_ROUTES = {row["shape"]: row["selected_route"] for row in ROUTE_MANIFEST}
-SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_export_recorded_dispatch_v1:launch_for_eval"
+SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval"
 SHAPES: dict[str, dict[str, Any]] = {
     row["label"]: {**row["params"], "recorded": row["recorded"]} for row in SHAPE_RECORDS
 }

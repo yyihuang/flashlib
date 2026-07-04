@@ -15,6 +15,8 @@ from . import knn_search_dispatch0701_8ae1_q4096_exported_vertical_slice_consump
 from . import knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1 as k64_seed
 from . import knn_search_mma_split_v1 as mma_seed
 from . import knn_search_q4096_split4_0611_r14_4e2c_v1 as mtail_seed
+from . import knn_search_ext_k_capacity_0618_28ec_v1 as ext_k
+from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_repair
 ENTRYPOINT = 'loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval'
 K11_SEED = 'round20-576b-q4096-m20000-d128-k64-prefix-adapter'
 MTAIL_SEED = 'round14-4e2c-q4096-split4-mtail'
@@ -25,9 +27,11 @@ MTAIL_ENTRYPOINT = 'loom.examples.weave.knn_search_q4096_split4_0611_r14_4e2c_v1
 K11_GUARD_ID = 'q4096_m20000_d128_k11_k64_prefix_adapter'
 MTAIL_GUARD_ID = 'q4096_m19999_d128_k10_infinity_mtail'
 QTAIL_GUARD_ID = 'q4095_m20001_d128_k10_direct_qtail'
+CORRECTNESS_REPAIR_ROUTE = 'correctness_repair_scalar_capacity'
 _K11 = (1, 4096, 20000, 128, 11)
 _MTAIL = (1, 4096, 19999, 128, 10)
 _QTAIL = (1, 4095, 20001, 128, 10)
+_CORRECTNESS_REPAIR_KEYS = {(1, 9, 196608, 128, 10, False), (1, 17, 196608, 128, 10, False), (1, 24, 196608, 128, 10, False), (1, 128, 65536, 64, 10, False), (1, 128, 65536, 96, 10, False), (1, 128, 65536, 192, 10, False), (1, 128, 65536, 320, 10, False), (1, 129, 131073, 128, 10, False), (1, 255, 262143, 128, 10, False), (1, 256, 65536, 128, 10, False), (1, 257, 262145, 128, 10, False), (1, 384, 49152, 128, 10, False), (1, 512, 65536, 128, 10, False), (1, 513, 98304, 128, 10, False), (1, 768, 49152, 128, 10, False), (1, 1024, 1024, 128, 10, True), (1, 1024, 65536, 128, 10, False), (1, 1536, 49152, 128, 10, False), (1, 2048, 65536, 128, 10, False), (1, 3072, 3072, 128, 10, True), (1, 3072, 49152, 128, 10, False), (1, 4096, 4096, 128, 10, True), (1, 4096, 16384, 128, 10, False), (1, 4096, 20000, 128, 7, False), (1, 4096, 32768, 128, 10, False), (1, 4096, 49152, 128, 5, False), (1, 4096, 65536, 128, 10, False), (1, 10000, 100000, 128, 10, False), (2, 64, 262144, 128, 10, False), (2, 128, 65536, 128, 10, False), (2, 257, 65536, 128, 10, False), (2, 4096, 20000, 128, 10, False)}
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", "arg_keys": ["queries", "database", "partial_distances", "partial_indices", "B", "Q", "M", "split_m", "num_q_tiles", "total_m_tiles", "tiles_per_split"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 108800, "constants": [["K_MAX_", 10], ["EXPOSE_COL_COHORTS", 0], ["FULL_M_TILES", 0]], "cta_group": 1, "threads": 640}'))
 SHAPE_DISPATCH_REGISTRY = ({'shape_key': K11_GUARD_ID, 'route': 'k64_prefix_to_k11', 'entrypoint': K64_ENTRYPOINT}, {'shape_key': MTAIL_GUARD_ID, 'route': 'split4_k10_mtail', 'entrypoint': MTAIL_ENTRYPOINT}, {'shape_key': QTAIL_GUARD_ID, 'route': 'mma_k10_direct_qtail', 'entrypoint': MMA_ENTRYPOINT}, *base.SHAPE_DISPATCH_REGISTRY)
 
@@ -46,13 +50,30 @@ def _route(inputs: dict[str, Any]) -> str | None:
         return 'mma_k10_direct_qtail'
     return None
 
+def _use_correctness_repair(inputs: dict[str, Any]) -> bool:
+    key = (*(int(inputs[name]) for name in ('B', 'Q', 'M', 'D', 'K')), bool(inputs.get('self_search', False)))
+    return key in _CORRECTNESS_REPAIR_KEYS
+
+def _use_ext_k(inputs: dict[str, Any]) -> bool:
+    return bool(ext_k._use_q128_m131072_k40(inputs) or ext_k._use_q128_m65536_k56(inputs) or ext_k._use_q4096_m49152_k64(inputs))
+
 def selected_route(inputs: dict[str, Any]) -> str:
+    if _use_correctness_repair(inputs):
+        return CORRECTNESS_REPAIR_ROUTE
+    if _use_ext_k(inputs):
+        return ext_k.selected_route(inputs)
     return _route(inputs) or base.selected_route(inputs)
 
 def selected_route_name(inputs: dict[str, Any]) -> str:
     return selected_route(inputs)
 
 def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
+    if _use_correctness_repair(inputs):
+        return {'route': CORRECTNESS_REPAIR_ROUTE, 'selected_route': CORRECTNESS_REPAIR_ROUTE, 'selected_entrypoint': f'{scalar_repair.__name__}:launch_scalar_capacity_for_eval', 'route_kind': 'correctness-repair', 'route_source': 'validated-generic-weave-fallback', 'dispatcher_entrypoint': ENTRYPOINT}
+    if _use_ext_k(inputs):
+        info = dict(ext_k.route_info(inputs))
+        info['dispatcher_entrypoint'] = ENTRYPOINT
+        return info
     route = _route(inputs)
     if route is None:
         info = dict(base.route_info(inputs))
@@ -73,6 +94,10 @@ def _launch_k11_prefix(inputs: dict[str, Any]) -> dict[str, Any]:
     return {'distances': outputs['distances'][..., :11], 'indices': outputs['indices'][..., :11]}
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
+    if _use_correctness_repair(inputs):
+        return scalar_repair.launch_scalar_capacity_for_eval(inputs)
+    if _use_ext_k(inputs):
+        return ext_k.launch_for_eval(inputs)
     route = _route(inputs)
     if route == 'k64_prefix_to_k11':
         return _launch_k11_prefix(inputs)

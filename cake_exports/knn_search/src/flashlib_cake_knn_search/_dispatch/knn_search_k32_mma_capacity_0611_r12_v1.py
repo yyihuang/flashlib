@@ -12,7 +12,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import math
 import os
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .knn_search_lowq_tile_reduce_dispatch0610_r3_v1 import BLOCK_M as LOWQ_TILE_BLOCK_M
 from .knn_search_lowq_tile_reduce_dispatch0610_r3_v1 import launch_for_eval as _lowq_launch_for_eval
 from .knn_search_lowq_tile_reduce_dispatch0610_r8_blockm512_v1 import launch_for_eval as _lowq_blockm512_launch_for_eval

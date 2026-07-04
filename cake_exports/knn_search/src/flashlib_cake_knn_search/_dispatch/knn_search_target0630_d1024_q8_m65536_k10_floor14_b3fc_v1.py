@@ -10,7 +10,7 @@ producer-to-partial-list or partial-list-to-output path.
 from __future__ import annotations
 from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from typing import Any
 from .._dispatch_runtime import evaluate
 from . import knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1 as parent

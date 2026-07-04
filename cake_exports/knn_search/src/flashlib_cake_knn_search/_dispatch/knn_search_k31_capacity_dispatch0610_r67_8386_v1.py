@@ -11,7 +11,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k32_registered_dispatch0610_r66_8386_v1 as parent
 from .knn_search_k32_guardedmerge_dispatch0610_r60_v1 import BLOCK_M, BLOCK_Q, D_STATIC, MERGE_SMEM_BYTES, MERGE_THREADS, MMA_SMEM_BYTES, Q128_SPLIT_M, THREADS, knn_search_k32_q128_split148_guarded_merge_r60_v1
