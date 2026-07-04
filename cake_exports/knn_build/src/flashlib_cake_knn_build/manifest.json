@@ -14,9 +14,12 @@
     },
     "name": "flashlib-knn-build-production",
     "package_exports": {
-      "knn_build": ".interface:knn_build"
+      "PreparedKNNBuild": ".interface:PreparedKNNBuild",
+      "knn_build": ".interface:knn_build",
+      "knn_build_prepared": ".interface:knn_build_prepared",
+      "prepare_knn_build": ".interface:prepare_knn_build"
     },
-    "sha256": "647f8b4db91bf4c121dfd34a356da3ea4a017f272bacd3b3694f844ce14055c4",
+    "sha256": "e8b883831c8e25281915583de7cba240c80daac41e0a0489bf79049d38227f51",
     "validation": {
       "expected_routes": [
         {
@@ -473,7 +476,7 @@
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-04T07:30:04.274644+00:00",
+  "generated_at_utc": "2026-07-04T09:10:13.861460+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -16302,8 +16305,8 @@
     "kernel_count": 232,
     "module_count": 267
   },
-  "source_commit": "59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
+  "source_commit": "90083f7caff1734b740c24083f944615d7fab15e",
+  "source_repo": "https://gitlab-master.nvidia.com/cake/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_build",

@@ -77,6 +77,7 @@ kernel_knn_build_q1m524_workfeed_s147_g21_register_merge(float* __restrict__ par
             #pragma unroll
             for (int offset = 16; offset > 0; offset >>= 1)
                 _warp_reduce_0 = fminf(_warp_reduce_0, __shfl_xor_sync(0xFFFFFFFF, _warp_reduce_0, offset));
+            warp_min = _warp_reduce_0;
             unsigned int _vote_0 = __ballot_sync(0xFFFFFFFF, group_best_d == warp_min);
             int owner_ballot = _vote_0;
             int _ffs_0 = __ffs(owner_ballot);

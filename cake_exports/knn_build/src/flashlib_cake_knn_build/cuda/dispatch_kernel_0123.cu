@@ -350,13 +350,11 @@ kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1(co
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: compute ----
     if (warp <= 3) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
@@ -365,7 +363,7 @@ kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1(co
                 int batch_idx = query_work / num_q_tiles;
                 int q_tile = query_work % num_q_tiles;
                 int off_q = q_tile * 128;
-                int q_idx = off_q + thread_row_idx;
+                int q_idx = off_q + (warp % 4 * 32 + lane);
                 int valid_q = ((q_idx < Q) ? 1 : 0);
                 float q_sq_val = 0.0f;
                 if (valid_q != 0) {
@@ -383,18 +381,18 @@ kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1(co
                 for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
                     int db_tile = db_tile_start + local_db_tile;
                     int db_start = db_tile * 64;
-                    int db_sq_idx = db_start + thread_row_idx;
-                    if (thread_row_idx < 64) {
+                    int db_sq_idx = db_start + (warp % 4 * 32 + lane);
+                    if (warp % 4 * 32 + lane < 64) {
                         if (db_sq_idx < M) {
-                            smem_database_sq[thread_row_idx] = database_sq[batch_idx * M + db_sq_idx];
+                            smem_database_sq[warp % 4 * 32 + lane] = database_sq[batch_idx * M + db_sq_idx];
                         } else {
-                            smem_database_sq[thread_row_idx] = 3.4e+38f;
+                            smem_database_sq[warp % 4 * 32 + lane] = 3.4e+38f;
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)tmem_row_addr_offset;
+                    int cross_addr = taddr + (unsigned int)(warp % 4 * 32 << 16);
                     float _tmem_load_0[64];
                     asm volatile(
                         "tcgen05.ld.sync.aligned.32x32b.x64.b32"
@@ -588,8 +586,8 @@ kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1(co
                         mbarrier_wait(database_full_addr, _phase_database_full_0);
                         _phase_database_full_0 ^= 1;
                         asm volatile("tcgen05.fence::after_thread_sync;");
-                        int _mma_ss_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-                        int _mma_ss_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                        int _mma_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
+                        int _mma_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
                         asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -643,7 +641,7 @@ kernel_knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1(co
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(((((feat_chunk_1 == 0) ? 1 : 0)) ? 0 : 1)));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(((((feat_chunk_1 == 0) ? 1 : 0)) ? 0 : 1)));
                         asm volatile("tcgen05.fence::after_thread_sync;");
                         elect_commit(query_empty_addr);
                         elect_commit(database_empty_addr);

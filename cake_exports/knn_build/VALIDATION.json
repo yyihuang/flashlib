@@ -5,14 +5,28 @@
     "arch": "sm_100a",
     "device": "NVIDIA B200"
   },
-  "measured_at_utc": "2026-07-04T07:32:00+00:00",
+  "measured_at_utc": "2026-07-04T09:15:00+00:00",
+  "public_over_prepared": {
+    "geomean": 2.760141150197315,
+    "max": 6.472567486594865,
+    "min": 1.053845287371819
+  },
   "route_count": 112,
   "semantic_entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs",
   "shape_count": 112,
   "speedup_vs_baseline": {
-    "geomean": 0.7450161494473775,
-    "max": 2.085360114483655,
-    "min": 0.23161770879209093
+    "prepared": {
+      "geomean": 2.013696379948891,
+      "max": 4.2444309070253725,
+      "min": 0.8233098604497233,
+      "shapes_above_one": 111
+    },
+    "public": {
+      "geomean": 0.7295628268159176,
+      "max": 2.0337924122405777,
+      "min": 0.23144752803951393,
+      "shapes_above_one": 25
+    }
   },
   "status": "passed",
   "timing_backend": "cupti"

@@ -14,8 +14,9 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import argparse
 import json
 import os
-from functools import lru_cache
-from typing import Any, Callable
+from collections.abc import Callable
+from functools import cache
+from typing import Any
 from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32warpmerge_0077_v1 as parent

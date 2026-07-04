@@ -11,12 +11,13 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import argparse
 import json
 import os
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Any, Callable
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
-from . import knn_build_rag_stream_k32_q128m100000_tile_937e_v1 as parent
 from . import knn_build_rag_frontier_4fbf_v6 as direct_seed
 from . import knn_build_rag_microbatch_m64_d4f7_v1 as m128_parent
+from . import knn_build_rag_stream_k32_q128m100000_tile_937e_v1 as parent
 MODULE = 'loom.examples.weave.knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1'
 ROUTE_PREFIX = 'knn_build_rag_stream_k32_q128m100000_staticn128_664a_v1'
 ROUTE_ENTRYPOINT = f'{MODULE}:launch_from_contract_inputs'

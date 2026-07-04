@@ -9,15 +9,16 @@ stay in registers, avoiding the intermediate shared-memory group-list handoff.
 from __future__ import annotations
 from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
-from .._dispatch_runtime import dc as dc
-from functools import lru_cache
 import json
 import os
+from collections.abc import Callable
+from tvm_ffi.dataclasses import replace
+from functools import lru_cache
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
-from .._dispatch_runtime import pack_kernel_args
 from . import knn_build_ragonline_mbucket_ea43_q1m524_n128_v1 as ea43
+from .._dispatch_runtime import pack_kernel_args
 MODULE = 'loom.examples.weave.knn_build_q1m524_workfeed_q1m524_workfeed_codex_v3'
 ONLINE_M524K_SHAPE = ea43.ONLINE_M524K_SHAPE
 TARGET_SHAPES = (ONLINE_M524K_SHAPE,)
@@ -31,7 +32,7 @@ knn_build_q1m524_workfeed_s147_g21_register_merge = _decode_capture(_json_loads(
 
 def _fused_merge_ir() -> Any:
     constants = tuple(((name, {'GROUP_COUNT': Q1_S147_GROUPS, 'GROUP_SPLITS': Q1_S147_GROUP_SPLITS}.get(name, value)) for name, value in knn_build_q1m524_workfeed_s147_g21_register_merge.constants))
-    return dc.replace(knn_build_q1m524_workfeed_s147_g21_register_merge, symbol='knn_build_q1m524_workfeed_s147_g21_register_merge', constants=constants)
+    return replace(knn_build_q1m524_workfeed_s147_g21_register_merge, symbol='knn_build_q1m524_workfeed_s147_g21_register_merge', constants=constants)
 
 def _compiled_fused_merge():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0231"}'))
@@ -122,7 +123,7 @@ def route_trace_for_contract_shapes(shape_labels=None, *, force_fallback: bool=F
         inputs = ea43.base5706._trace_inputs_from_shape(shape)
         route = route_for_contract_inputs(inputs, force_fallback=force_fallback)
         specialized = route.startswith('rag_online_mbucket_workfeed_q1m524')
-        row = {'shape_key': shape['label'], 'selected_route': route, 'route_kind': 'specialized_m64n128_s147_exacttile' if specialized else 'inherited_ea43', 'guard_condition': 'Q1 BF16 online exact M524 M64/N128 K10 producer with validated S147/G7 merge' if specialized else 'delegate to EA43'}
+        row = {'shape_key': shape['label'], 'selected_route': route, 'route_kind': 'specialized_m64n128_s147_exacttile' if specialized else 'inherited_ea43', 'guard_condition': 'Q1 BF16 online exact M524 M64/N128 K10 producer with S147/G21 merge group heads' if specialized else 'delegate to EA43'}
         if specialized:
             row['split_count'] = Q1_S147_SPLIT
             row['group_count'] = Q1_S147_VALIDATED_GROUPS
@@ -152,10 +153,10 @@ def write_benchmark_artifacts(artifact_dir: str | os.PathLike[str], *, use_cupti
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = 'cupti' if use_cupti else 'cuda_event'
     payload = benchmark_knn_build_q1m524_workfeed_q1m524_workfeed_codex_v3(use_cupti=use_cupti)
-    candidate_path = out_dir / f'q1m524_s147_g7_exacttile_1row_{suffix}.json'
+    candidate_path = out_dir / f'q1m524_s147_g21_register_merge_1row_{suffix}.json'
     candidate_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n')
     summary = {'artifact_dir': str(out_dir), 'artifacts': {'candidate': str(candidate_path)}, 'candidate_summary': payload['contract_summary'], 'parent_summary': payload['parent_contract_summary'], 'target_rows': payload['target_rows']}
-    summary_path = out_dir / f'q1m524_s147_g7_exacttile_summary_1row_{suffix}.json'
+    summary_path = out_dir / f'q1m524_s147_g21_register_merge_summary_1row_{suffix}.json'
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
     summary['artifacts']['summary'] = str(summary_path)
     return summary

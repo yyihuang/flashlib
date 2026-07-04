@@ -17,6 +17,18 @@ typedef short int          int16_t;
 #define SMEM_SMEM_DATABASE_OFF 66560
 #define SMEM_SMEM_DATABASE_STAGE_BYTES 32768
 #define SMEM_SMEM_DATABASE_STRIDE 32768
+#define SMEM_SMEM_QUERY_LO_OFF 1024
+#define SMEM_SMEM_QUERY_LO_STAGE_BYTES 32768
+#define SMEM_SMEM_QUERY_LO_STRIDE 32768
+#define SMEM_SMEM_QUERY_HI_OFF 33792
+#define SMEM_SMEM_QUERY_HI_STAGE_BYTES 32768
+#define SMEM_SMEM_QUERY_HI_STRIDE 32768
+#define SMEM_SMEM_DATABASE_LO_OFF 66560
+#define SMEM_SMEM_DATABASE_LO_STAGE_BYTES 16384
+#define SMEM_SMEM_DATABASE_LO_STRIDE 16384
+#define SMEM_SMEM_DATABASE_HI_OFF 82944
+#define SMEM_SMEM_DATABASE_HI_STAGE_BYTES 16384
+#define SMEM_SMEM_DATABASE_HI_STRIDE 16384
 #define SMEM_TOTAL 99328
 #define THREADS 192
 #define BLOCK_Q 128
@@ -241,6 +253,14 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
     const int smem_query_addr = smem + 1024;
     __nv_bfloat16* smem_database = reinterpret_cast<__nv_bfloat16*>(smem_raw + 66560);
     const int smem_database_addr = smem + 66560;
+    __nv_bfloat16* smem_query_lo = reinterpret_cast<__nv_bfloat16*>(smem_raw + 1024);
+    const int smem_query_lo_addr = smem + 1024;
+    __nv_bfloat16* smem_query_hi = reinterpret_cast<__nv_bfloat16*>(smem_raw + 33792);
+    const int smem_query_hi_addr = smem + 33792;
+    __nv_bfloat16* smem_database_lo = reinterpret_cast<__nv_bfloat16*>(smem_raw + 66560);
+    const int smem_database_lo_addr = smem + 66560;
+    __nv_bfloat16* smem_database_hi = reinterpret_cast<__nv_bfloat16*>(smem_raw + 82944);
+    const int smem_database_hi_addr = smem + 82944;
 
     // Mbarrier init (6 groups, 6 barriers)
     // Mbarriers at smem_raw[0..48)
@@ -284,7 +304,7 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: load ----
     if (warp == 0) {
@@ -333,10 +353,8 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
                     mbarrier_wait(database_full_addr, _phase_database_full_0);
                     _phase_database_full_0 ^= 1;
                     asm volatile("tcgen05.fence::after_thread_sync;");
-                    int _desc_lo_0 = make_warp_uniform((smem_query_addr + 32768 >> 4) & 0x3FFF);
-                    int _desc_lo_1 = make_warp_uniform((smem_database_addr + 16384 >> 4) & 0x3FFF);
-                    int _mma_ss_a_lo_2 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-                    int _mma_ss_b_lo_2 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                    int _mma_a_lo_0 = make_warp_uniform((smem_query_lo_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_0 = make_warp_uniform((smem_database_lo_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -390,8 +408,10 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_2), "r"(_mma_ss_b_lo_2), "r"(taddr), "r"(0));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(0));
                     asm volatile("tcgen05.fence::after_thread_sync;");
+                    int _mma_a_lo_1 = make_warp_uniform((smem_query_hi_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_1 = make_warp_uniform((smem_database_hi_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -445,7 +465,7 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(1));
+                    :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_cross), "r"(1));
                     elect_commit(score_full_addr);
                     elect_commit(database_empty_addr);
                 }
@@ -455,15 +475,13 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
     // ---- Role: compute ----
     } else if (warp >= 2 && warp <= 5) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int tile_idx_2 = bid; tile_idx_2 < total_tiles; tile_idx_2 += num_bids) {
                 int batch_idx_1 = tile_idx_2 / (unsigned int)num_q_tiles;
                 int q_tile_1 = tile_idx_2 % (unsigned int)num_q_tiles;
                 int off_q_1 = q_tile_1 * BLOCK_Q;
-                int q_idx = off_q_1 + thread_row_idx;
+                int q_idx = off_q_1 + (warp % 4 * 32 + lane);
                 int valid_q = ((q_idx < Q) ? 1 : 0);
                 float q_sq_val = 0.0f;
                 if (valid_q != 0) {
@@ -480,7 +498,7 @@ kernel_knn_build_evolve_7bfc_d256_twomma_base(const void* __restrict__ tmap_quer
                 for (int db_tile_1 = 0; db_tile_1 < num_db_tiles; db_tile_1++) {
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)tmem_row_addr_offset;
+                    int cross_addr = taddr + (unsigned int)(warp % 4 * 32 << 16);
                     float _tmem_load_0[64];
                     tmem_ld_x32(&_tmem_load_0[0], cross_addr);
                     tmem_ld_x32(&_tmem_load_0[32], cross_addr + 32);

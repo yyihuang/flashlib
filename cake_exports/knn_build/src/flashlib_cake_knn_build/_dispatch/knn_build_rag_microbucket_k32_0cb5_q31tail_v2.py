@@ -12,9 +12,10 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import argparse
 import json
 import os
-from functools import lru_cache
+from collections.abc import Callable
+from functools import cache
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_v11_common_d_seed_portfolio_a4ec_v1 as dispatch_v11
 from . import knn_build_rag_microbucket_k32_0cb5_q31tail_v1 as parent

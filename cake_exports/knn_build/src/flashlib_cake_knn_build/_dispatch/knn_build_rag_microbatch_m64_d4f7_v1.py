@@ -10,9 +10,10 @@ seed, so no production dispatcher or external runtime route is changed.
 from __future__ import annotations
 from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
-from functools import lru_cache
 import os
-from typing import Any, Callable
+from collections.abc import Callable
+from functools import lru_cache
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbatch_4a72_v1 as parent_micro
 TARGET_SHAPES = parent_micro.TARGET_SHAPES

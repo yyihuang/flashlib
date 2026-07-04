@@ -360,7 +360,7 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: load ----
     if (warp == 0) {
@@ -419,8 +419,8 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
                         mbarrier_wait(database_full_addr, _phase_database_full_0);
                         _phase_database_full_0 ^= 1;
                         asm volatile("tcgen05.fence::after_thread_sync;");
-                        int _mma_ss_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-                        int _mma_ss_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                        int _mma_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
+                        int _mma_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
                         asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -474,7 +474,7 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(((((feat_chunk_1 == 0) ? 1 : 0)) ? 0 : 1)));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(((((feat_chunk_1 == 0) ? 1 : 0)) ? 0 : 1)));
                         asm volatile("tcgen05.fence::after_thread_sync;");
                         elect_commit(query_empty_addr);
                         elect_commit(database_empty_addr);
@@ -486,8 +486,6 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
     // ---- Role: compute ----
     } else if (warp >= 2 && warp <= 5) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int work_idx_2 = bid; work_idx_2 < total_work; work_idx_2 += num_bids) {
@@ -496,7 +494,7 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
                 int batch_idx_1 = query_work_1 / num_q_tiles;
                 int q_tile_1 = query_work_1 % num_q_tiles;
                 int off_q_1 = q_tile_1 * BLOCK_Q;
-                int q_idx = off_q_1 + thread_row_idx;
+                int q_idx = off_q_1 + (warp % 4 * 32 + lane);
                 int valid_q = ((q_idx < Q) ? 1 : 0);
                 float q_sq_val = 0.0f;
                 if (valid_q != 0) {
@@ -514,18 +512,18 @@ kernel_knn_build_non128_frontier_7231_stage1_d256(const void* __restrict__ tmap_
                 for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
                     int db_tile_1 = db_tile_start_1 + local_db_tile_1;
                     int db_start = db_tile_1 * BLOCK_M;
-                    int db_sq_idx = db_start + thread_row_idx;
-                    if (thread_row_idx < BLOCK_M) {
+                    int db_sq_idx = db_start + (warp % 4 * 32 + lane);
+                    if (warp % 4 * 32 + lane < BLOCK_M) {
                         if (db_sq_idx < M) {
-                            smem_database_sq[thread_row_idx] = database_sq[batch_idx_1 * M + db_sq_idx];
+                            smem_database_sq[warp % 4 * 32 + lane] = database_sq[batch_idx_1 * M + db_sq_idx];
                         } else {
-                            smem_database_sq[thread_row_idx] = 0.0f;
+                            smem_database_sq[warp % 4 * 32 + lane] = 0.0f;
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)tmem_row_addr_offset;
+                    int cross_addr = taddr + (unsigned int)(warp % 4 * 32 << 16);
                     float _tmem_load_0[64];
                     tmem_ld_x32(&_tmem_load_0[0], cross_addr);
                     tmem_ld_x32(&_tmem_load_0[32], cross_addr + 32);

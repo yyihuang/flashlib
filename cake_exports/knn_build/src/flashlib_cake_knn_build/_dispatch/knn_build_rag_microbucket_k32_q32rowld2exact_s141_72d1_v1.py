@@ -14,12 +14,13 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import argparse
 import json
 import os
-from functools import lru_cache
-from typing import Any, Callable
+from collections.abc import Callable
+from tvm_ffi.dataclasses import replace
+from functools import cache
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
-from .._dispatch_runtime import dc as dc
-from .._dispatch_runtime import pack_kernel_args
 from . import knn_build_rag_microbucket_k32_q32rowld2_f653_v1 as parent
+from .._dispatch_runtime import pack_kernel_args
 MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32_q32rowld2exact_s141_72d1_v1'
 Q32_K32_SHAPE = parent.Q32_K32_SHAPE
 Q32_ROWLD2EXACT_TARGET_SHAPES = (Q32_K32_SHAPE,)
@@ -53,7 +54,7 @@ knn_build_rag_microbucket_k32_q32rowld2exact_s141_72d1_v1_stage1 = _decode_captu
 
 def _ir_with_constants(ir_obj: Any, *, suffix: str, **updates: int) -> Any:
     constants = tuple(((name, updates.get(name, value)) for name, value in ir_obj.constants))
-    return dc.replace(ir_obj, symbol=f'{ir_obj.symbol}_{suffix}', constants=constants)
+    return replace(ir_obj, symbol=f'{ir_obj.symbol}_{suffix}', constants=constants)
 
 def _stage1_q32_rowld2exact_ir() -> Any:
     return _ir_with_constants(knn_build_rag_microbucket_k32_q32rowld2exact_s141_72d1_v1_stage1, suffix='q32rowld2exact_f653_v1', BLOCK_Q=rowld2_seed.Q16_ROWLD1_BLOCK_Q, BLOCK_M=rowld2_seed.Q16_ROWLD1_BLOCK_M, FEAT_D=rowld2_seed.Q16_ROWLD1_FEAT_D, TOP_K_MAX=K32_TOP_K_MAX, ROWS_COVERED=Q32_ROWLD2EXACT_ACTIVE_ROWS)
@@ -74,7 +75,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpm
 def _compiled_stage1_q32_rowld2exact():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0108"}'))
 
-@lru_cache(maxsize=None)
+@cache
 def _compiled_rows4_warp_merge(split_count: int):
     return base.rowld_seed.compact_seed.q16_tailinf.parent_k32._compile_ir(_warp_merge_ir(split_count))
 

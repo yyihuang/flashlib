@@ -11,8 +11,9 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import argparse
 import json
 import os
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Any, Callable
+from typing import Any
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_common_d_5e7f_rag_d64_d256_v1 as parent
 from . import knn_build_rag_microbatch_m64_d4f7_v1 as m128_parent

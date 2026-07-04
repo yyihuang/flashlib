@@ -15,7 +15,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define LOOM_INF CUDART_INF_F
-#define TMEM_NCOLS 64
+#define TMEM_NCOLS 128
 #define TMEM_CROSS_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_QUERY_OFF 1024
@@ -360,11 +360,11 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
 
     __syncthreads();
 
-    // TMEM alloc (64 columns, 64 used)
+    // TMEM alloc (128 columns, 128 used)
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 48);
     if (warp == 0) {
         int _tmem_hold = smem + 48;
-        asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
+        asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(128) : "memory");
     }
 
     asm volatile("barrier.cluster.arrive.release.aligned;");
@@ -381,13 +381,11 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: compute ----
     if (warp <= 3) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int work_idx = cluster_id; work_idx < total_work; work_idx += num_clusters) {
@@ -397,7 +395,7 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                 int q_tile_pair = query_work % num_q_tile_pairs;
                 int q_tile = q_tile_pair * 2 + cta_rank;
                 int off_q = q_tile * BLOCK_Q;
-                int q_idx = off_q + thread_row_idx;
+                int q_idx = off_q + (warp % 4 * 32 + lane);
                 float q_sq_val = query_sq[batch_idx * Q + q_idx];
                 float best_d[TOP_K_MAX];
                 int best_i[TOP_K_MAX];
@@ -411,14 +409,14 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                 for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
                     int db_tile = db_tile_start + local_db_tile;
                     int db_start = db_tile * BLOCK_M;
-                    int db_sq_idx = db_start + thread_row_idx;
-                    if (thread_row_idx < BLOCK_M) {
-                        smem_database_sq[thread_row_idx] = database_sq[batch_idx * M + db_sq_idx];
+                    int db_sq_idx = db_start + (warp % 4 * 32 + lane);
+                    if (warp % 4 * 32 + lane < BLOCK_M) {
+                        smem_database_sq[warp % 4 * 32 + lane] = database_sq[batch_idx * M + db_sq_idx];
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)(cta_rank * BLOCK_Q + tmem_row_addr_offset << 16);
+                    int cross_addr = taddr + (unsigned int)(cta_rank * BLOCK_Q + (warp % 4 * 32 << 16) << 16);
                     float _tmem_load_0[64];
                     asm volatile(
                         "tcgen05.ld.sync.aligned.32x32b.x64.b32"
@@ -687,8 +685,8 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                         mbarrier_wait(database_full_addr, _phase_database_full_0);
                         _phase_database_full_0 ^= 1;
                         asm volatile("tcgen05.fence::after_thread_sync;");
-                        int _mma_ss_a_lo_0 = (smem_query_addr >> 4) & 0x3FFF;
-                        int _mma_ss_b_lo_0 = (smem_database_addr >> 4) & 0x3FFF;
+                        int _mma_a_lo_0 = (smem_query_addr >> 4) & 0x3FFF;
+                        int _mma_b_lo_0 = (smem_database_addr >> 4) & 0x3FFF;
                         asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -742,7 +740,7 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(0));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(0));
                         elect_commit_cg2_multicast(score_full_addr, (uint16_t)(3));
                         elect_commit_cg2_multicast(database_empty_addr, (uint16_t)(3));
                     }
@@ -757,7 +755,7 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
     asm volatile("barrier.cluster.wait.acquire.aligned;");
 
     if (warp == 0) {
-        asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
         asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
     }
 }

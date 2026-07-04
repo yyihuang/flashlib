@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ._dispatch import knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1 as _dispatcher
@@ -9,7 +10,16 @@ SEMANTIC_ENTRYPOINT = (
 )
 
 
-def knn_build(
+@dataclass(frozen=True)
+class PreparedKNNBuild:
+    """Reusable inputs for the allocation- and preprocessing-free hot path."""
+
+    inputs: dict[str, Any]
+    selected_route: str
+    shape_label: str | None
+
+
+def prepare_knn_build(
     query: Any,
     database: Any,
     k: int,
@@ -17,15 +27,10 @@ def knn_build(
     build: bool = False,
     shape_label: str | None = None,
     out: tuple[Any, Any] | None = None,
-    arch: str | None = None,
-    stream: Any = None,
-    timeout_ms: float | None = None,
-    return_info: bool = False,
-):
-    """Run the frozen exact kNN build/search production dispatcher."""
+) -> PreparedKNNBuild:
+    """Validate and prepare norms, outputs, and dispatch metadata once."""
     import torch
 
-    del arch, stream, timeout_ms
     if not isinstance(query, torch.Tensor) or not query.is_cuda:
         raise TypeError("query must be a CUDA torch.Tensor")
     if not isinstance(database, torch.Tensor) or not database.is_cuda:
@@ -74,11 +79,48 @@ def knn_build(
         "out_dists": out_dists,
         "out_indices": out_indices,
     }
-    selected_route = _dispatcher.route_for_contract_inputs(inputs)
-    _dispatcher.launch_from_contract_inputs(inputs)
+    return PreparedKNNBuild(
+        inputs=inputs,
+        selected_route=_dispatcher.route_for_contract_inputs(inputs),
+        shape_label=shape_label,
+    )
+
+
+def knn_build_prepared(prepared: PreparedKNNBuild, *, return_info: bool = False):
+    """Launch a prepared KNN build/search without allocation or norm setup."""
+    if not isinstance(prepared, PreparedKNNBuild):
+        raise TypeError("prepared must be returned by prepare_knn_build")
+    _dispatcher.launch_from_contract_inputs(prepared.inputs)
+    out = (prepared.inputs["out_dists"], prepared.inputs["out_indices"])
     info = {
         "semantic_entrypoint": SEMANTIC_ENTRYPOINT,
-        "selected_route": selected_route,
-        "shape_label": shape_label,
+        "selected_route": prepared.selected_route,
+        "shape_label": prepared.shape_label,
     }
     return (out, info) if return_info else out
+
+
+def knn_build(
+    query: Any,
+    database: Any,
+    k: int,
+    *,
+    build: bool = False,
+    shape_label: str | None = None,
+    out: tuple[Any, Any] | None = None,
+    arch: str | None = None,
+    stream: Any = None,
+    timeout_ms: float | None = None,
+    return_info: bool = False,
+):
+    """Run the frozen exact kNN build/search production dispatcher."""
+    del arch, stream, timeout_ms
+    prepared = prepare_knn_build(
+        query,
+        database,
+        k,
+        build=build,
+        shape_label=shape_label,
+        out=out,
+    )
+    return knn_build_prepared(prepared, return_info=return_info)

@@ -256,11 +256,9 @@ kernel_knn_build_common_d_1438_rag_d64_m128_stage1(__nv_bfloat16* __restrict__ q
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
     unsigned int _phase_mma_done_0 = 0;
     #pragma unroll 1
     for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
@@ -380,6 +378,8 @@ kernel_knn_build_common_d_1438_rag_d64_m128_stage1(__nv_bfloat16* __restrict__ q
             asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
             __syncthreads();
             if (warp == 0) {
+                int _mma_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
+                int _mma_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
                 asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -413,7 +413,7 @@ kernel_knn_build_common_d_1438_rag_d64_m128_stage1(__nv_bfloat16* __restrict__ q
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
                 elect_commit(mma_done_addr);
             }
             mbarrier_wait(mma_done_addr, _phase_mma_done_0);

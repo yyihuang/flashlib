@@ -23,6 +23,14 @@ def _benchmark_module():
 BENCHMARK = _benchmark_module()
 
 
+def test_knn_build_prepared_api_is_exported():
+    from flashlib_cake_knn_build import knn_build, knn_build_prepared, prepare_knn_build
+
+    assert callable(knn_build)
+    assert callable(prepare_knn_build)
+    assert callable(knn_build_prepared)
+
+
 @pytest.mark.parametrize("name", list(BENCHMARK.SHAPES))
 def test_knn_build_matches_reference(name: str):
     torch = pytest.importorskip("torch")

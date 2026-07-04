@@ -224,7 +224,7 @@ def _below_flashlib_rows(report: dict[str, Any], route_trace: list[dict[str, Any
     rows = []
     for label, row in sorted(report.get('per_shape', {}).items()):
         ratio = row.get('ratio_vs_flashlib')
-        if not isinstance(ratio, (float, int)) or ratio >= floor:
+        if not isinstance(ratio, float | int) or ratio >= floor:
             continue
         trace_row = trace_by_label.get(label, {})
         rows.append({'shape_key': label, 'kernel_ms': row.get('kernel_ms'), 'flashlib_ms': row.get('flashlib_ms'), 'ratio_vs_flashlib': ratio, 'selected_route': trace_row.get('selected_route'), 'selected_seed': trace_row.get('selected_seed'), 'expected_seed': trace_row.get('expected_seed'), 'route_kind': trace_row.get('route_kind', 'unknown'), 'classification': trace_row.get('classification', 'unmeasured')})

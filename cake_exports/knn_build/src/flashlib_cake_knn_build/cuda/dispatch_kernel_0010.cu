@@ -15,7 +15,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 }
 
 #define LOOM_INF CUDART_INF_F
-#define TMEM_NCOLS 64
+#define TMEM_NCOLS 128
 #define TMEM_CROSS_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_QUERY_OFF 1024
@@ -360,11 +360,11 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
 
     __syncthreads();
 
-    // TMEM alloc (64 columns, 64 used)
+    // TMEM alloc (128 columns, 128 used)
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 48);
     if (warp == 0) {
         int _tmem_hold = smem + 48;
-        asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
+        asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(128) : "memory");
     }
 
     asm volatile("barrier.cluster.arrive.release.aligned;");
@@ -381,7 +381,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: load ----
     if (warp == 0) {
@@ -448,8 +448,8 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
                         mbarrier_wait(database_full_addr, _phase_database_full_0);
                         _phase_database_full_0 ^= 1;
                         asm volatile("tcgen05.fence::after_thread_sync;");
-                        int _mma_ss_a_lo_0 = (smem_query_addr >> 4) & 0x3FFF;
-                        int _mma_ss_b_lo_0 = (smem_database_addr >> 4) & 0x3FFF;
+                        int _mma_a_lo_0 = (smem_query_addr >> 4) & 0x3FFF;
+                        int _mma_b_lo_0 = (smem_database_addr >> 4) & 0x3FFF;
                         asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -503,7 +503,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::2.kind::f16 [%2], da, db, id, {m0, m1, m2, m3, m4, m5, m6, m7}, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(0));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(0));
                         elect_commit_cg2_multicast(score_full_addr, (uint16_t)(3));
                         elect_commit_cg2_multicast(database_empty_addr, (uint16_t)(3));
                     }
@@ -514,8 +514,6 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
     // ---- Role: compute ----
     } else if (warp >= 2 && warp <= 5) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int work_idx_2 = cluster_id; work_idx_2 < total_work; work_idx_2 += num_clusters) {
@@ -525,7 +523,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
                 int q_tile_pair_1 = query_work_1 % num_q_tile_pairs;
                 int q_tile_1 = q_tile_pair_1 * 2 + cta_rank;
                 int off_q_1 = q_tile_1 * BLOCK_Q;
-                int q_idx = off_q_1 + thread_row_idx;
+                int q_idx = off_q_1 + (warp % 4 * 32 + lane);
                 int valid_q = ((q_idx < Q) ? 1 : 0);
                 float q_sq_val = 0.0f;
                 if (valid_q != 0) {
@@ -543,18 +541,18 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
                 for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
                     int db_tile_1 = db_tile_start_1 + local_db_tile_1;
                     int db_start = db_tile_1 * BLOCK_M;
-                    int db_sq_idx = db_start + thread_row_idx;
-                    if (thread_row_idx < BLOCK_M) {
+                    int db_sq_idx = db_start + (warp % 4 * 32 + lane);
+                    if (warp % 4 * 32 + lane < BLOCK_M) {
                         if (db_sq_idx < M) {
-                            smem_database_sq[thread_row_idx] = database_sq[batch_idx_1 * M + db_sq_idx];
+                            smem_database_sq[warp % 4 * 32 + lane] = database_sq[batch_idx_1 * M + db_sq_idx];
                         } else {
-                            smem_database_sq[thread_row_idx] = 0.0f;
+                            smem_database_sq[warp % 4 * 32 + lane] = 0.0f;
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)(cta_rank * BLOCK_Q + tmem_row_addr_offset << 16);
+                    int cross_addr = taddr + (unsigned int)(cta_rank * BLOCK_Q + (warp % 4 * 32 << 16) << 16);
                     float _tmem_load_0[64];
                     asm volatile(
                         "tcgen05.ld.sync.aligned.32x32b.x64.b32"
@@ -648,7 +646,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k12split(const void* __restrict
     asm volatile("barrier.cluster.wait.acquire.aligned;");
 
     if (warp == 0) {
-        asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
         asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;");
     }
 }

@@ -1,11 +1,20 @@
 # Correctness And Performance Results
 
+## Validated B200 result
+
+- Correctness: `112/112`; route fidelity: `112/112`
+- Public speedup: min `0.2314x`, geomean `0.7296x`, max `2.0338x`
+- Prepared speedup: min `0.8233x`, geomean `2.0137x`, max `4.2444x`
+- Prepared shapes above baseline: `111/112`
+- Public/prepared GPU-span ratio: `2.7601x` geomean
+- Result payload: [`BENCHMARK_RESULTS.json`](BENCHMARK_RESULTS.json)
+
 ## Export Provenance
 
 - Package: `flashlib_cake_knn_build`
-- Source repository: `ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git`
-- Source commit: `59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d`
-- Generated at: `2026-07-04T07:30:04.274644+00:00`
+- Source repository: `https://gitlab-master.nvidia.com/cake/cake.git`
+- Source commit: `90083f7caff1734b740c24083f944615d7fab15e`
+- Generated at: `2026-07-04T09:10:13.861460+00:00`
 
 ## Latest Recorded Results
 

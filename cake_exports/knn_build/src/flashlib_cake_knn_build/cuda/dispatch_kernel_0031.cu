@@ -17,6 +17,24 @@ typedef short int          int16_t;
 #define SMEM_SMEM_DATABASE_OFF 82944
 #define SMEM_SMEM_DATABASE_STAGE_BYTES 40960
 #define SMEM_SMEM_DATABASE_STRIDE 40960
+#define SMEM_SMEM_QUERY_LO_OFF 1024
+#define SMEM_SMEM_QUERY_LO_STAGE_BYTES 32768
+#define SMEM_SMEM_QUERY_LO_STRIDE 32768
+#define SMEM_SMEM_QUERY_MID_OFF 33792
+#define SMEM_SMEM_QUERY_MID_STAGE_BYTES 32768
+#define SMEM_SMEM_QUERY_MID_STRIDE 32768
+#define SMEM_SMEM_QUERY_TAIL_OFF 66560
+#define SMEM_SMEM_QUERY_TAIL_STAGE_BYTES 16384
+#define SMEM_SMEM_QUERY_TAIL_STRIDE 16384
+#define SMEM_SMEM_DATABASE_LO_OFF 82944
+#define SMEM_SMEM_DATABASE_LO_STAGE_BYTES 16384
+#define SMEM_SMEM_DATABASE_LO_STRIDE 16384
+#define SMEM_SMEM_DATABASE_MID_OFF 99328
+#define SMEM_SMEM_DATABASE_MID_STAGE_BYTES 16384
+#define SMEM_SMEM_DATABASE_MID_STRIDE 16384
+#define SMEM_SMEM_DATABASE_TAIL_OFF 115712
+#define SMEM_SMEM_DATABASE_TAIL_STAGE_BYTES 8192
+#define SMEM_SMEM_DATABASE_TAIL_STRIDE 8192
 #define SMEM_SMEM_DATABASE_SQ_OFF 123904
 #define SMEM_SMEM_DATABASE_SQ_STAGE_BYTES 256
 #define SMEM_SMEM_DATABASE_SQ_STRIDE 256
@@ -313,6 +331,18 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
     const int smem_query_addr = smem + 1024;
     __nv_bfloat16* smem_database = reinterpret_cast<__nv_bfloat16*>(smem_raw + 82944);
     const int smem_database_addr = smem + 82944;
+    __nv_bfloat16* smem_query_lo = reinterpret_cast<__nv_bfloat16*>(smem_raw + 1024);
+    const int smem_query_lo_addr = smem + 1024;
+    __nv_bfloat16* smem_query_mid = reinterpret_cast<__nv_bfloat16*>(smem_raw + 33792);
+    const int smem_query_mid_addr = smem + 33792;
+    __nv_bfloat16* smem_query_tail = reinterpret_cast<__nv_bfloat16*>(smem_raw + 66560);
+    const int smem_query_tail_addr = smem + 66560;
+    __nv_bfloat16* smem_database_lo = reinterpret_cast<__nv_bfloat16*>(smem_raw + 82944);
+    const int smem_database_lo_addr = smem + 82944;
+    __nv_bfloat16* smem_database_mid = reinterpret_cast<__nv_bfloat16*>(smem_raw + 99328);
+    const int smem_database_mid_addr = smem + 99328;
+    __nv_bfloat16* smem_database_tail = reinterpret_cast<__nv_bfloat16*>(smem_raw + 115712);
+    const int smem_database_tail_addr = smem + 115712;
     float* smem_database_sq = reinterpret_cast<float*>(smem_raw + 123904);
     const int smem_database_sq_addr = smem + 123904;
 
@@ -358,7 +388,7 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: load ----
     if (warp == 0) {
@@ -397,10 +427,6 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
     // ---- Role: mma ----
     } else if (warp == 1) {
         { // mma_main
-            int _desc_lo_0 = make_warp_uniform((smem_query_addr + 32768 >> 4) & 0x3FFF);
-            int _desc_lo_1 = make_warp_uniform((smem_query_addr + 65536 >> 4) & 0x3FFF);
-            int _desc_lo_2 = make_warp_uniform((smem_database_addr + 16384 >> 4) & 0x3FFF);
-            int _desc_lo_3 = make_warp_uniform((smem_database_addr + 32768 >> 4) & 0x3FFF);
             unsigned int _phase_query_full_0 = 0;
             unsigned int _phase_score_empty_0 = 1;
             unsigned int _phase_database_full_0 = 0;
@@ -415,8 +441,8 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                     mbarrier_wait(database_full_addr, _phase_database_full_0);
                     _phase_database_full_0 ^= 1;
                     asm volatile("tcgen05.fence::after_thread_sync;");
-                    int _mma_ss_a_lo_4 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-                    int _mma_ss_b_lo_4 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                    int _mma_a_lo_0 = make_warp_uniform((smem_query_lo_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_0 = make_warp_uniform((smem_database_lo_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -470,8 +496,10 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_4), "r"(_mma_ss_b_lo_4), "r"(taddr), "r"(0));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(0));
                     asm volatile("tcgen05.fence::after_thread_sync;");
+                    int _mma_a_lo_1 = make_warp_uniform((smem_query_mid_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_1 = make_warp_uniform((smem_database_mid_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -525,8 +553,10 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_desc_lo_0), "r"(_desc_lo_2), "r"(taddr), "r"(1));
+                    :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_cross), "r"(1));
                     asm volatile("tcgen05.fence::after_thread_sync;");
+                    int _mma_a_lo_2 = make_warp_uniform((smem_query_tail_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_2 = make_warp_uniform((smem_database_tail_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -560,7 +590,7 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_desc_lo_1), "r"(_desc_lo_3), "r"(taddr), "r"(1));
+                    :: "r"(_mma_a_lo_2), "r"(_mma_b_lo_2), "r"(tmem_cross), "r"(1));
                     elect_commit(score_full_addr);
                     elect_commit(database_empty_addr);
                 }
@@ -570,8 +600,6 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
     // ---- Role: compute ----
     } else if (warp >= 2 && warp <= 5) {
         { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
             unsigned int _phase_score_full_0 = 0;
             #pragma unroll 1
             for (unsigned int work_idx_2 = bid; work_idx_2 < total_work; work_idx_2 += num_bids) {
@@ -580,7 +608,7 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                 int batch_idx_1 = query_work_1 / num_q_tiles;
                 int q_tile_1 = query_work_1 % num_q_tiles;
                 int off_q_1 = q_tile_1 * BLOCK_Q;
-                int q_idx = off_q_1 + thread_row_idx;
+                int q_idx = off_q_1 + (warp % 4 * 32 + lane);
                 int valid_q = ((q_idx < Q) ? 1 : 0);
                 float q_sq_val = 0.0f;
                 if (valid_q != 0) {
@@ -598,18 +626,18 @@ kernel_knn_build_non128_frontier_8227_d320tail_stage1(const void* __restrict__ t
                 for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
                     int db_tile_1 = db_tile_start_1 + local_db_tile_1;
                     int db_start = db_tile_1 * BLOCK_M;
-                    int db_sq_idx = db_start + thread_row_idx;
-                    if (thread_row_idx < BLOCK_M) {
+                    int db_sq_idx = db_start + (warp % 4 * 32 + lane);
+                    if (warp % 4 * 32 + lane < BLOCK_M) {
                         if (db_sq_idx < M) {
-                            smem_database_sq[thread_row_idx] = database_sq[batch_idx_1 * M + db_sq_idx];
+                            smem_database_sq[warp % 4 * 32 + lane] = database_sq[batch_idx_1 * M + db_sq_idx];
                         } else {
-                            smem_database_sq[thread_row_idx] = 0.0f;
+                            smem_database_sq[warp % 4 * 32 + lane] = 0.0f;
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
                     _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)tmem_row_addr_offset;
+                    int cross_addr = taddr + (unsigned int)(warp % 4 * 32 << 16);
                     float _tmem_load_0[64];
                     tmem_ld_x32(&_tmem_load_0[0], cross_addr);
                     tmem_ld_x32(&_tmem_load_0[32], cross_addr + 32);

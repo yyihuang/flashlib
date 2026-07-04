@@ -296,7 +296,7 @@ kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1(co
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_cross = tmem_addr_storage[0];
+    const int tmem_cross = taddr;
 
     // ---- Role: compute ----
     if (warp <= 1) {
@@ -542,8 +542,8 @@ kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1(co
                     mbarrier_wait(database_full_addr, _phase_database_full_0);
                     _phase_database_full_0 ^= 1;
                     asm volatile("tcgen05.fence::after_thread_sync;");
-                    int _mma_ss_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
-                    int _mma_ss_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
+                    int _mma_a_lo_0 = make_warp_uniform((smem_query_addr >> 4) & 0x3FFF);
+                    int _mma_b_lo_0 = make_warp_uniform((smem_database_addr >> 4) & 0x3FFF);
                     asm volatile(
                     "{\n\t"
                     ".reg .pred leader, p0, p1;\n\t"
@@ -597,7 +597,7 @@ kernel_knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1(co
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "}\n"
-                    :: "r"(_mma_ss_a_lo_0), "r"(_mma_ss_b_lo_0), "r"(taddr), "r"(0));
+                    :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_cross), "r"(0));
                     elect_commit(score_full_addr);
                     elect_commit(database_empty_addr);
                 }
