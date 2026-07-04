@@ -20,6 +20,7 @@ class KernelSpec:
     launch_mode: str
     parameters: tuple[dict[str, str], ...]
     specializations: dict[str, int | str]
+    compile_options: tuple[str, ...]
 
     @staticmethod
     def from_manifest(entry: dict[str, Any]) -> "KernelSpec":
@@ -33,6 +34,7 @@ class KernelSpec:
             launch_mode=entry["launch_mode"],
             parameters=tuple(entry["parameters"]),
             specializations=dict(entry.get("specializations", {})),
+            compile_options=tuple(str(option) for option in entry.get("compile_options", ())),
         )
 
 
@@ -50,12 +52,18 @@ class ExportedKernel:
         return resources.files(package).joinpath(self.spec.source).read_text(encoding="utf-8")
 
     def compile(self, *, arch: str | None = None, options: list[str] | None = None) -> "CUDAKernel":
-        key = (arch, tuple(options or ()))
+        effective_options = tuple(dict.fromkeys((*self.spec.compile_options, *(options or ()))))
+        key = (arch, effective_options)
         kernel = self._compiled.get(key)
         if kernel is None:
             from ._runtime import CUDAKernel, compile_cuda
 
-            cubin = compile_cuda(self.source_text(), arch=arch, name=f"{self.spec.name}.cu", options=options)
+            cubin = compile_cuda(
+                self.source_text(),
+                arch=arch,
+                name=f"{self.spec.name}.cu",
+                options=list(effective_options),
+            )
             kernel = CUDAKernel(cubin, self.spec.symbol)
             self._compiled[key] = kernel
         return kernel

@@ -677,7 +677,7 @@
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-04T07:12:56.163940+00:00",
+  "generated_at_utc": "2026-07-04T07:31:37.699267+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -686,6 +686,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_self_k5_direct_v1",
       "launch_mode": "standard",
@@ -745,6 +748,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_tile_reduce_partial_v1",
       "launch_mode": "standard",
@@ -809,6 +815,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_tile_reduce_merge_v1",
       "launch_mode": "standard",
@@ -878,6 +887,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -953,6 +965,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1026,6 +1041,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -1101,6 +1119,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1175,6 +1196,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1238,6 +1262,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_merge_stream_v1",
       "launch_mode": "standard",
@@ -1303,6 +1330,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1366,6 +1396,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_merge_q4096_pairlocal_v1",
       "launch_mode": "standard",
@@ -1431,6 +1464,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q1_irregular_m_tail_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1494,6 +1530,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_tile_reduce_merge_v1",
       "launch_mode": "standard",
@@ -1564,6 +1603,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1608,6 +1650,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1646,6 +1691,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
       "launch_mode": "standard",
@@ -1716,6 +1764,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1780,6 +1831,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1838,6 +1892,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -1898,6 +1955,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -1956,6 +2016,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -2031,6 +2094,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2094,6 +2160,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -2169,6 +2238,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k20k30_q128_split148_guarded_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2232,6 +2304,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -2307,6 +2382,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k20k30_q128_split148_guarded_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2370,6 +2448,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -2445,6 +2526,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2504,6 +2588,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2557,6 +2644,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
@@ -2632,6 +2722,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_margin_0614_r93_merge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2695,6 +2788,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "launch_mode": "standard",
@@ -2770,6 +2866,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2834,6 +2933,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -2892,6 +2994,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -2952,6 +3057,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3010,6 +3118,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -3085,6 +3196,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3148,6 +3262,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -3223,6 +3340,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3287,6 +3407,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3345,6 +3468,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -3405,6 +3531,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3463,6 +3592,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -3523,6 +3655,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3581,6 +3716,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -3641,6 +3779,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3699,6 +3840,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_k64_twotile_partial_0614_50cc_v1",
       "launch_mode": "standard",
@@ -3779,6 +3923,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_highq_merge32_0614_50cc_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3843,6 +3990,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3902,6 +4052,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -3955,6 +4108,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
       "launch_mode": "standard",
@@ -4030,6 +4186,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4089,6 +4248,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4142,6 +4304,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1",
       "launch_mode": "standard",
@@ -4202,6 +4367,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4240,6 +4408,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -4300,6 +4471,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4358,6 +4532,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -4418,6 +4595,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4476,6 +4656,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -4536,6 +4719,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4594,6 +4780,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -4669,6 +4858,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4728,6 +4920,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4781,6 +4976,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
@@ -4856,6 +5054,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4920,6 +5121,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -4978,6 +5182,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -5038,6 +5245,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5096,6 +5306,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -5156,6 +5369,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5214,6 +5430,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -5274,6 +5493,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5318,6 +5540,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5356,6 +5581,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d128_q4096_m20000_k3_e8f1_k3partial_v1",
       "launch_mode": "standard",
@@ -5431,6 +5659,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d128_q4096_m20000_k3_e8f1_k3partial_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5494,6 +5725,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -5569,6 +5803,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k31k32_q128_split148_static_lateidx_merge_r68_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5632,6 +5869,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_blocker_k32_q4096_m32768_split128_k34scratch_partial_v1",
       "launch_mode": "standard",
@@ -5707,6 +5947,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_80a5_blocker_k32_q4096_m32768_split128_k34scratch_merge16_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5770,6 +6013,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
       "launch_mode": "standard",
@@ -5845,6 +6091,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5909,6 +6158,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q1_irregular_m_tail_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -5972,6 +6224,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_flashdecode_merge128_0614_r92_v1",
       "launch_mode": "standard",
@@ -6042,6 +6297,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_dispatch0610_r3_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6105,6 +6363,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_dispatch0610_r3_v1",
       "launch_mode": "standard",
@@ -6175,6 +6436,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6238,6 +6502,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1",
       "launch_mode": "standard",
@@ -6307,6 +6574,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d256_mma_split_partial_0612_r34_v1",
       "launch_mode": "standard",
@@ -6382,6 +6652,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6445,6 +6718,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d384_mma_split_partial_0612_r34_v1",
       "launch_mode": "standard",
@@ -6520,6 +6796,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6583,6 +6862,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_blocker_k64_q256_m65536_twotile_partial_v1",
       "launch_mode": "standard",
@@ -6658,6 +6940,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6717,6 +7002,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6770,6 +7058,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1",
       "launch_mode": "standard",
@@ -6845,6 +7136,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6904,6 +7198,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -6957,6 +7254,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -7017,6 +7317,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7075,6 +7378,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -7135,6 +7441,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7193,6 +7502,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -7253,6 +7565,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7311,6 +7626,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -7371,6 +7689,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7429,6 +7750,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -7489,6 +7813,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7547,6 +7874,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -7607,6 +7937,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7665,6 +7998,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -7725,6 +8061,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7783,6 +8122,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -7843,6 +8185,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -7901,6 +8246,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -7961,6 +8309,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8019,6 +8370,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_warp_split_partial_v1",
       "launch_mode": "standard",
@@ -8084,6 +8438,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_warp_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8142,6 +8499,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_warp_direct_v1",
       "launch_mode": "standard",
@@ -8202,6 +8562,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8260,6 +8623,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -8320,6 +8686,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8378,6 +8747,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -8438,6 +8810,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8496,6 +8871,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -8556,6 +8934,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8614,6 +8995,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -8674,6 +9058,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8732,6 +9119,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -8792,6 +9182,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8850,6 +9243,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -8910,6 +9306,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -8968,6 +9367,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -9028,6 +9430,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9086,6 +9491,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
       "launch_mode": "standard",
@@ -9161,6 +9569,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9220,6 +9631,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9273,6 +9687,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_ext_k_capacity_truncate64_to_k_0618_28ec_v1",
       "launch_mode": "standard",
@@ -9328,6 +9745,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k_capacity_q4096_m49152_merge24_0618_28ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9367,6 +9787,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k_capacity_q4096_m49152_partial_0618_28ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9405,6 +9828,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -9465,6 +9891,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9523,6 +9952,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -9583,6 +10015,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9641,6 +10076,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -9701,6 +10139,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9759,6 +10200,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
@@ -9819,6 +10263,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9877,6 +10324,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
@@ -9937,6 +10387,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -9995,6 +10448,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_scalar_capacity_merge_v1",
       "launch_mode": "standard",
@@ -10055,6 +10511,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_scalar_capacity_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10113,6 +10572,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_partial_885d_hmerge8_v1",
       "launch_mode": "standard",
@@ -10188,6 +10650,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_groupmerge_885d_hmerge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10247,6 +10712,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_finalmerge_885d_hmerge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10300,6 +10768,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1",
       "launch_mode": "standard",
@@ -10375,6 +10846,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10434,6 +10908,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10487,6 +10964,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -10562,6 +11042,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10625,6 +11108,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -10700,6 +11186,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_groupmerge64_fanin8cta_blockm64_891a_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10759,6 +11248,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10812,6 +11304,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1",
       "launch_mode": "standard",
@@ -10887,6 +11382,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -10951,6 +11449,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11014,6 +11515,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0627_d768_q64_m65536_k64_partial_6472_v2",
       "launch_mode": "standard",
@@ -11094,6 +11598,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d768_q64_m65536_k64_merge_6472_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11157,6 +11664,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1",
       "launch_mode": "standard",
@@ -11232,6 +11742,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11295,6 +11808,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q8_blockm256_two_stripe_tmem_8d4fe4ead6cd_v1",
       "launch_mode": "standard",
@@ -11370,6 +11886,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11434,6 +11953,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11497,6 +12019,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d768d1024_q32q16_tcgen05_partial_0618_9286_v1",
       "launch_mode": "standard",
@@ -11572,6 +12097,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11636,6 +12164,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_partial_67ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11674,6 +12205,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d1024_q32_m65536_k64_group_merge16_9571_v2",
       "launch_mode": "standard",
@@ -11714,6 +12248,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d1024_q32_m65536_k64_final_merge16_9571_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11752,6 +12289,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1",
       "launch_mode": "standard",
@@ -11822,6 +12362,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -11885,6 +12428,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_partial_qreuse_v1",
       "launch_mode": "standard",
@@ -11955,6 +12501,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d4096_q4_m32768_k10_merge128_r221_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12018,6 +12567,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -12088,6 +12640,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_merge_0623_5ff7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12151,6 +12706,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1",
       "launch_mode": "standard",
@@ -12216,6 +12774,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "group_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12275,6 +12836,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "final_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12328,6 +12892,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_irregular_m_tail_partial_v1",
       "launch_mode": "standard",
@@ -12392,6 +12959,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_tile_reduce_merge_v1",
       "launch_mode": "standard",
@@ -12462,6 +13032,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q1_tile_reduce_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12525,6 +13098,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_tile_reduce_merge_v1",
       "launch_mode": "standard",
@@ -12594,6 +13170,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -12669,6 +13248,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12732,6 +13314,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_warp_split_partial_v1",
       "launch_mode": "standard",
@@ -12797,6 +13382,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_warp_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12856,6 +13444,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_warp_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -12914,6 +13505,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -12989,6 +13583,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13062,6 +13659,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -13137,6 +13737,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13211,6 +13814,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13274,6 +13880,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_merge_stream_v1",
       "launch_mode": "standard",
@@ -13339,6 +13948,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13402,6 +14014,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_merge_q4096_pairlocal_v1",
       "launch_mode": "standard",
@@ -13467,6 +14082,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_dispatch0610_r8_blockm512_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13530,6 +14148,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_dispatch0610_r8_blockm512_v1",
       "launch_mode": "standard",
@@ -13600,6 +14221,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_dispatch0610_r3_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13663,6 +14287,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_dispatch0610_r3_v1",
       "launch_mode": "standard",
@@ -13732,6 +14359,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -13807,6 +14437,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13871,6 +14504,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k_capacity_truncate64_to_k_0618_28ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13925,6 +14561,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k_capacity_q4096_m49152_merge24_0618_28ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -13964,6 +14603,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k_capacity_q4096_m49152_partial_0618_28ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14002,6 +14644,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
       "launch_mode": "standard",
@@ -14077,6 +14722,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14136,6 +14784,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14189,6 +14840,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1",
       "launch_mode": "standard",
@@ -14264,6 +14918,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14327,6 +14984,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -14402,6 +15062,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_stable_merge_0612_r23_4e96_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14465,6 +15128,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -14540,6 +15206,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14603,6 +15272,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
       "launch_mode": "standard",
@@ -14678,6 +15350,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14741,6 +15416,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -14816,6 +15494,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -14879,6 +15560,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1",
       "launch_mode": "standard",
@@ -14954,6 +15638,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15017,6 +15704,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -15092,6 +15782,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15155,6 +15848,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -15230,6 +15926,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15293,6 +15992,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -15368,6 +16070,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15431,6 +16136,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
       "launch_mode": "standard",
@@ -15506,6 +16214,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15569,6 +16280,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -15644,6 +16358,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15703,6 +16420,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15756,6 +16476,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -15831,6 +16554,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15890,6 +16616,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_0613_r43_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -15943,6 +16672,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -16018,6 +16750,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split256_merge1024_0613_r37_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16081,6 +16816,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -16156,6 +16894,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_indexfast_0614_r24_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16215,6 +16956,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_indexfast_0614_r24_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16268,6 +17012,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
       "launch_mode": "standard",
@@ -16343,6 +17090,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16402,6 +17152,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16455,6 +17208,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_k64_twotile_partial_0614_50cc_v1",
       "launch_mode": "standard",
@@ -16535,6 +17291,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_highq_merge32_0614_50cc_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16599,6 +17358,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16658,6 +17420,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16711,6 +17476,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1",
       "launch_mode": "standard",
@@ -16786,6 +17554,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16850,6 +17621,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d3_tile_reduce_partial_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -16913,6 +17687,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2",
       "launch_mode": "standard",
@@ -16983,6 +17760,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17036,6 +17816,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
       "launch_mode": "standard",
@@ -17116,6 +17899,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17179,6 +17965,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -17254,6 +18043,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17317,6 +18109,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1",
       "launch_mode": "standard",
@@ -17382,6 +18177,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowd_dbscan_direct_dispatch0610_r1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17440,6 +18238,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1",
       "launch_mode": "standard",
@@ -17500,6 +18301,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17558,6 +18362,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1",
       "launch_mode": "standard",
@@ -17633,6 +18440,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17696,6 +18506,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
       "launch_mode": "standard",
@@ -17771,6 +18584,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17835,6 +18651,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -17888,6 +18707,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
       "launch_mode": "standard",
@@ -17968,6 +18790,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18032,6 +18857,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18090,6 +18918,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1",
       "launch_mode": "standard",
@@ -18165,6 +18996,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18228,6 +19062,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
       "launch_mode": "standard",
@@ -18303,6 +19140,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18366,6 +19206,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
       "launch_mode": "standard",
@@ -18441,6 +19284,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18505,6 +19351,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18568,6 +19417,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "launch_mode": "standard",
@@ -18643,6 +19495,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18706,6 +19561,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "launch_mode": "standard",
@@ -18781,6 +19639,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18845,6 +19706,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -18908,6 +19772,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -18983,6 +19850,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19046,6 +19916,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1",
       "launch_mode": "standard",
@@ -19121,6 +19994,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19184,6 +20060,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
       "launch_mode": "standard",
@@ -19249,6 +20128,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19313,6 +20195,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19376,6 +20261,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
       "launch_mode": "standard",
@@ -19446,6 +20334,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19510,6 +20401,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_self_k5_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19568,6 +20462,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
@@ -19643,6 +20540,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_merge_0614_r2_3ff5_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19706,6 +20606,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1",
       "launch_mode": "standard",
@@ -19781,6 +20684,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19845,6 +20751,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -19868,6 +20777,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1",
       "launch_mode": "standard",
@@ -19937,6 +20849,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1",
       "launch_mode": "standard",
@@ -20012,6 +20927,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20075,6 +20993,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "launch_mode": "standard",
@@ -20150,6 +21071,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20218,6 +21142,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "launch_mode": "standard",
@@ -20293,6 +21220,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20357,6 +21287,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20380,6 +21313,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1",
       "launch_mode": "standard",
@@ -20449,6 +21385,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
@@ -20524,6 +21463,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20587,6 +21529,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -20662,6 +21607,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20721,6 +21669,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20775,6 +21726,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -20813,6 +21767,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1",
       "launch_mode": "standard",
@@ -20872,6 +21829,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -20947,6 +21907,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21006,6 +21969,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21059,6 +22025,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k1_top1_margin_qfull_partial_0614_r93_v1",
       "launch_mode": "standard",
@@ -21134,6 +22103,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_margin_0614_r93_merge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21197,6 +22169,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
@@ -21272,6 +22247,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_margin_0614_r93_merge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21335,6 +22313,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k1_top1_margin_qfull_partial_0614_r93_v1",
       "launch_mode": "standard",
@@ -21410,6 +22391,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_margin_qfull_merge_0614_r93_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21473,6 +22457,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d256_mma_split_partial_0612_r34_v1",
       "launch_mode": "standard",
@@ -21548,6 +22535,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21612,6 +22602,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_0614_r10_e864_blockm640_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21675,6 +22668,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_0614_r10_e864_blockm640_v1",
       "launch_mode": "standard",
@@ -21745,6 +22741,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_0615_196e_blockm640_tailguard_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -21808,6 +22807,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_0614_r10_e864_blockm640_v1",
       "launch_mode": "standard",
@@ -21877,6 +22879,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_partial_0615_r5_9a85_v1",
       "launch_mode": "standard",
@@ -21952,6 +22957,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix5_rowflag_fusedcert_merge_0615_r5_9a85_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22021,6 +23029,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22065,6 +23076,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22103,6 +23117,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
@@ -22148,6 +23165,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_m131072_exact_0617_cc76_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22186,6 +23206,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_partial_0614_r11_e864_blockm896_v1",
       "launch_mode": "standard",
@@ -22250,6 +23273,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_lowq_tile_reduce_merge_0614_r11_e864_blockm896_v1",
       "launch_mode": "standard",
@@ -22320,6 +23346,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q1_irregular_m_tail_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22383,6 +23412,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q1_flashdecode_merge128_0614_r92_v1",
       "launch_mode": "standard",
@@ -22452,6 +23484,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_b2_q128m65536_k64_twotile_partial_74f4_v1",
       "launch_mode": "standard",
@@ -22527,6 +23562,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22586,6 +23624,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22639,6 +23680,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_blocker_k32_q4096_m32768_split128_k34scratch_partial_v1",
       "launch_mode": "standard",
@@ -22714,6 +23758,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_80a5_blocker_k32_q4096_m32768_split128_k34scratch_merge16_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22777,6 +23824,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_80a5_blocker_k64_q256_m65536_twotile_partial_v1",
       "launch_mode": "standard",
@@ -22852,6 +23902,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22911,6 +23964,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -22964,6 +24020,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d384_mma_split_partial_0612_r34_v1",
       "launch_mode": "standard",
@@ -23039,6 +24098,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23102,6 +24164,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "launch_mode": "standard",
@@ -23177,6 +24242,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096m20000_prefixcert_fused_merge_0615_576b_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23246,6 +24314,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23269,6 +24340,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -23344,6 +24418,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_groupmerge64_fanin8cta_blockm64_891a_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23403,6 +24480,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23456,6 +24536,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -23531,6 +24614,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_groupmerge64_fanin4cta_814e_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23590,6 +24676,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23643,6 +24732,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -23718,6 +24810,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_ownerless_7ce6_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23777,6 +24872,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23830,6 +24928,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -23905,6 +25006,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_ownerless_7ce6_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -23964,6 +25068,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24017,6 +25124,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24092,6 +25202,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_tile64_d51ts_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24151,6 +25264,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24204,6 +25320,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24279,6 +25398,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_warp3136_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24338,6 +25460,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24391,6 +25516,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24466,6 +25594,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_warp3136_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24525,6 +25656,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24578,6 +25712,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24653,6 +25790,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_groupmerge64_hier9c25_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24712,6 +25852,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_finalmerge8_hier9c25_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24765,6 +25908,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24840,6 +25986,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_split256_rows8_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -24903,6 +26052,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -24978,6 +26130,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d256_localcta_rows8_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25041,6 +26196,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -25116,6 +26274,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25179,6 +26340,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d130_q64_k64_directpad_partial_0625_4b95_v1",
       "launch_mode": "standard",
@@ -25254,6 +26418,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25317,6 +26484,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d768_q64_m65536_k10_partial_0623_e35f_v1",
       "launch_mode": "standard",
@@ -25387,6 +26557,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25451,6 +26624,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_lowd_d1_warpmerge_0624_05a2_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25509,6 +26685,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_lowd_direct_0624_3676_v1",
       "launch_mode": "standard",
@@ -25574,6 +26753,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_lowd_d1_serialmerge_0624_3676_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25632,6 +26814,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target_d4096_q8_m16384_k10_tcgen05_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -25702,6 +26887,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25765,6 +26953,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d512_q64_tcgen05_partial_0618_9286_v1",
       "launch_mode": "standard",
@@ -25835,6 +27026,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -25898,6 +27092,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
@@ -25973,6 +27170,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_q128_split148_merge_0622_4201_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26036,6 +27236,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k1_top1_pairq_partial_0622_598a_v1",
       "launch_mode": "standard",
@@ -26111,6 +27314,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_merge16_d212_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26174,6 +27380,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
@@ -26249,6 +27458,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k1_top1_merge16_d212_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26313,6 +27525,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_m32768_k32_prefix8_merge_3053_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26351,6 +27566,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1",
       "launch_mode": "standard",
@@ -26391,6 +27609,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_q4096_m32768_prefix8_merge_5132_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26429,6 +27650,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1",
       "launch_mode": "standard",
@@ -26469,6 +27693,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d512_q32_k64_distonlymerge_merge_177e_r121_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26507,6 +27734,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d512_q32_k64_mergefast_partial_83da_r121_v1",
       "launch_mode": "standard",
@@ -26547,6 +27777,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d512_q32_k64_mergefast_merge_83da_r121_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26585,6 +27818,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1",
       "launch_mode": "standard",
@@ -26625,6 +27861,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d512_q32_k64_q32active_merge_abaf_r120_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26663,6 +27902,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d512_q32_k64_q64tile_partial_6bea_r119_v1",
       "launch_mode": "standard",
@@ -26743,6 +27985,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d512_q32_k64_q64tile_merge_6bea_r119_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26807,6 +28052,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ivf_q12_m100_d64_k20_direct_6bea_r118_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26866,6 +28114,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d3_dbscan_q4096_k32_direct_9d5c_r117_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -26924,6 +28175,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
       "launch_mode": "standard",
@@ -26999,6 +28253,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_lowk_k3_k5partial_a79b_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27063,6 +28320,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d3_k32_self_tile_0620_9d5c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27122,6 +28382,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k64_highq_prefix8_partial_0618_c2e0_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27161,6 +28424,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k64_highq_prefix8_merge_0618_c2e0_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27199,6 +28465,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_ext_k64_q4096_m49152_split192_partial_0618_28ec_v2",
       "launch_mode": "standard",
@@ -27254,6 +28523,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27308,6 +28580,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k64_q4096_m49152_merge24_0618_28ec_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27346,6 +28621,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_ext_k64_q4096_m49152_prefix6cert_merge_0618_28ec_v2",
       "launch_mode": "standard",
@@ -27391,6 +28669,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_ext_k64_q4096_m49152_certflag_init_0618_28ec_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27414,6 +28695,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d3_k10_self_tile_0621_4832_v1",
       "launch_mode": "standard",
@@ -27473,6 +28757,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1",
       "launch_mode": "standard",
@@ -27553,6 +28840,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_floor13_k80_prefix8_merge_0622_f3ce_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27616,6 +28906,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1",
       "launch_mode": "standard",
@@ -27696,6 +28989,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_floor13_k64_prefix8_merge_0622_f3ce_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27759,6 +29055,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_floor13_k80_prefix16_partial_0622_f3ce_v1",
       "launch_mode": "standard",
@@ -27839,6 +29138,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_floor13_k80_prefix16_merge_0622_f3ce_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27903,6 +29205,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -27941,6 +29246,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_floor13_k64_q384_prefix8_merge_0622_f3ce_v1",
       "launch_mode": "standard",
@@ -27981,6 +29289,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_m32769_k32_tailinsert_132_67a5_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28019,6 +29330,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_floor13_k80_prefix16_partial_0622_f3ce_v1",
       "launch_mode": "standard",
@@ -28099,6 +29413,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_floor13_k80_prefix16_merge_0622_f3ce_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28162,6 +29479,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -28232,6 +29552,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_merge_0623_5ff7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28295,6 +29618,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d64_q128_m131072_k64_partial_0623_e157_v1",
       "launch_mode": "standard",
@@ -28370,6 +29696,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28429,6 +29758,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28482,6 +29814,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d2048_q8_m16384_k10_partial_0623_6185_d51b_v1",
       "launch_mode": "standard",
@@ -28552,6 +29887,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d2048_q8_m16384_k10_merge_0623_6185_d51b_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28616,6 +29954,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_partial_67ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28654,6 +29995,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d1024_q32_k64_hiermerge8_group_f561_v2",
       "launch_mode": "standard",
@@ -28694,6 +30038,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d1024_q32_k64_hiermerge8_final_f561_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28732,6 +30079,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_partial_67ec_v1",
       "launch_mode": "standard",
@@ -28772,6 +30122,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_merge_67ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28810,6 +30163,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_dynamic_d3_self_q2048_r124_c16f_direct_v1",
       "launch_mode": "standard",
@@ -28870,6 +30226,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_d3_self_q2048_r123_7d2a_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28929,6 +30288,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_k48_q4096_m32768_prefix8_partial_0623_e36b_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -28967,6 +30329,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1",
       "launch_mode": "standard",
@@ -29007,6 +30372,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_blind_k64_q4096_m32768_prefix8_partial_5132_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29045,6 +30413,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_m32768_k32_prefix8_merge_tie_3c6e_v1",
       "launch_mode": "standard",
@@ -29085,6 +30456,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_m32768_k64_prefix8_merge_tie_3c6e_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29123,6 +30497,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_expanded_d1_tail_warpmerge_0624_025e_v1",
       "launch_mode": "standard",
@@ -29183,6 +30560,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_dynamic_self_d3_single_tile_0625_199f_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29241,6 +30621,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -29316,6 +30699,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29379,6 +30765,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q1_m65536_k10_partial_qcache_pipe_69ea_v1",
       "launch_mode": "standard",
@@ -29449,6 +30838,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29512,6 +30904,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q1_m65536_k10_partial_qcache_69ea_v1",
       "launch_mode": "standard",
@@ -29582,6 +30977,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29645,6 +31043,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q1_m65536_k10_partial_compactsmem_69ea_v1",
       "launch_mode": "standard",
@@ -29715,6 +31116,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29778,6 +31182,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q1_m65536_k10_partial_q1stage_v1",
       "launch_mode": "standard",
@@ -29848,6 +31255,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_merge_0623_5ff7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -29911,6 +31321,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -29981,6 +31394,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d4096_q4_m32768_k10_merge148_r217_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30044,6 +31460,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -30114,6 +31533,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d4096_q4_m32768_k10_merge256_3737_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30177,6 +31599,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1",
       "launch_mode": "standard",
@@ -30242,6 +31667,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "group_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30301,6 +31729,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "final_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30354,6 +31785,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1",
       "launch_mode": "standard",
@@ -30419,6 +31853,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_group16_merge_2ced_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30478,6 +31915,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_group16_final_2ced_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30531,6 +31971,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1",
       "launch_mode": "standard",
@@ -30596,6 +32039,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30655,6 +32101,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30708,6 +32157,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_7738_v1",
       "launch_mode": "standard",
@@ -30773,6 +32225,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target_highd_k64_group_merge_f505_hiermerge32_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30832,6 +32287,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target_highd_k64_final_merge_f505_hiermerge32_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30886,6 +32344,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_partial_67ec_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -30924,6 +32385,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d1024_q32_m65536_k64_group_merge16_9571_v2",
       "launch_mode": "standard",
@@ -30964,6 +32428,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d1024_q32_m65536_k64_final_merge16_9571_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31002,6 +32469,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d1024_q32_k64_targetd_partial_67ec_v1",
       "launch_mode": "standard",
@@ -31042,6 +32512,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d1024_q32_m65536_k64_merge_9571_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31080,6 +32553,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1",
       "launch_mode": "standard",
@@ -31155,6 +32631,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_dbaf_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31214,6 +32693,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_dbaf_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31267,6 +32749,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1",
       "launch_mode": "standard",
@@ -31342,6 +32827,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_groupmerge_e8f1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31401,6 +32889,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q512_m65536_k64_finalmerge_e8f1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31454,6 +32945,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_partial_885d_hmerge8_v1",
       "launch_mode": "standard",
@@ -31529,6 +33023,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_groupmerge_885d_hmerge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31588,6 +33085,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d64_q256_m131072_k10_finalmerge_885d_hmerge8_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31641,6 +33141,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "launch_mode": "standard",
@@ -31716,6 +33219,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31779,6 +33285,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d128_q4096_m20000_k3_e8f1_k3partial_v1",
       "launch_mode": "standard",
@@ -31854,6 +33363,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0628_d128_q4096_m20000_k3_e8f1_k3partial_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -31917,6 +33429,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0627_d768_q64_m65536_k64_partial_6472_v2",
       "launch_mode": "standard",
@@ -31997,6 +33512,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d768_q64_m65536_k64_merge_6472_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32060,6 +33578,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
@@ -32135,6 +33656,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32198,6 +33722,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_partial_qreuse_v1",
       "launch_mode": "standard",
@@ -32268,6 +33795,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d4096_q4_m32768_k10_merge128_r221_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32331,6 +33861,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1",
       "launch_mode": "standard",
@@ -32401,6 +33934,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0627_d4096_q4_m32768_k10_merge128_r221_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32464,6 +34000,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0628_d4096_q4_m8192_k64_partial_e750_v1",
       "launch_mode": "standard",
@@ -32529,6 +34068,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "group_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32588,6 +34130,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "final_merge_ir",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32641,6 +34186,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_d1024_q8_tcgen05_partial_16warp_b3fc_v1",
       "launch_mode": "standard",
@@ -32716,6 +34264,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_partial_qreuse_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32785,6 +34336,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_merge_independent_warp_q4tail237_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32848,6 +34402,9 @@
         1,
         1,
         1
+      ],
+      "compile_options": [
+        "--use_fast_math"
       ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_partial_qreuse_v1",
       "launch_mode": "standard",
@@ -32918,6 +34475,9 @@
         1,
         1
       ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
       "ir_name": "knn_search_target0630_d4096_q4_m32768_k10_merge_q4warp_d759_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
@@ -32982,7 +34542,7 @@
     "kernel_count": 520,
     "module_count": 366
   },
-  "source_commit": "5cd9927e73c978733e4152a77899dfc4d4ca4f84",
+  "source_commit": "59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
