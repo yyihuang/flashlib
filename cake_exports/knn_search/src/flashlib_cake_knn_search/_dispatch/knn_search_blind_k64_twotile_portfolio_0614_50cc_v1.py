@@ -71,7 +71,7 @@ ROUTE_PARENT = 'round27_k64_parent'
 SHAPE_DISPATCH_REGISTRY = _decode_capture(_json_loads('{"__tuple__": [{"__dict_items__": [["shape_key", "B1_Q64_M131072_D128_K64"], ["guard", "B == 1 and Q == 64 and M == 131072 and D == 128 and K == 64 and tcgen05_capable_arch"], ["route", "round19_50cc_q64_m131072_k64_twotile_hiermerge32"]]}, {"__dict_items__": [["shape_key", "B1_Q512_M65536_D128_K64"], ["guard", "B == 1 and Q == 512 and M == 65536 and D == 128 and K == 64 and tcgen05_capable_arch"], ["route", "round19_50cc_q512_m65536_k64_twotile_merge32"]]}, {"__dict_items__": [["shape_key", "B1_Q4096_M32768_D128_K64"], ["guard", "B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 64 and tcgen05_capable_arch"], ["route", "round19_50cc_q4096_m32768_k64_twotile_merge32"]]}]}'))
 
 def _compile_blind_k64_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0252"}, "partial": {"__kernel__": "dispatch_kernel_0251"}, "q64_final_merge": {"__kernel__": "dispatch_kernel_0254"}, "q64_group_merge": {"__kernel__": "dispatch_kernel_0253"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0315"}, "partial": {"__kernel__": "dispatch_kernel_0314"}, "q64_final_merge": {"__kernel__": "dispatch_kernel_0317"}, "q64_group_merge": {"__kernel__": "dispatch_kernel_0316"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_BLIND_K64_KERNELS:

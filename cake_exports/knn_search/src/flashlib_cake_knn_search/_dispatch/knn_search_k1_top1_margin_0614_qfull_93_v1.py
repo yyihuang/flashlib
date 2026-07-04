@@ -12,8 +12,8 @@ import math
 import os
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
-from . import knn_search_k1_top1_0614_375f_v1 as parent_seed
 from . import knn_search_highq_midm_k1k2_k5partial_split9_registered_0613_r51_48e9_v1 as registered
+from . import knn_search_k1_top1_0614_375f_v1 as parent_seed
 from . import knn_search_mma_split_v1 as mma
 THREADS = mma.THREADS
 MERGE_THREADS = mma.MERGE_THREADS

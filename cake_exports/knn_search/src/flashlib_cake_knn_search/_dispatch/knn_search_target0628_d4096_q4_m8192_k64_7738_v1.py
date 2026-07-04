@@ -8,10 +8,9 @@ tcgen05 MMA passes feed the existing hierarchical top-64 merge.
 from __future__ import annotations
 from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
-import math
 from typing import Any
-from . import knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1 as merge_seed
 from . import knn_search_target_highd_k64_neighbors_0623_26d2_v1 as producer_seed
+from . import knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1 as merge_seed
 THREADS = producer_seed.THREADS
 BLOCK_Q = producer_seed.BLOCK_Q
 BLOCK_M = producer_seed.BLOCK_M

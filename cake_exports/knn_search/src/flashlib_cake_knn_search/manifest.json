@@ -14,9 +14,12 @@
     },
     "name": "flashlib-knn-search-production",
     "package_exports": {
-      "knn_search": ".interface:knn_search"
+      "PreparedKNNSearch": ".interface:PreparedKNNSearch",
+      "knn_search": ".interface:knn_search",
+      "knn_search_prepared": ".interface:knn_search_prepared",
+      "prepare_knn_search": ".interface:prepare_knn_search"
     },
-    "sha256": "8f733a0a1525dc14e0b1f4d1b8f234246770535f8241f28b55299a0fde7ce78b",
+    "sha256": "c5efd327c117c06cfd3edbe17e0f8c8cfe37f9e3431c73732fd28ede7cc1d399",
     "validation": {
       "expected_routes": [
         {
@@ -677,7 +680,7 @@
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-04T07:31:37.699267+00:00",
+  "generated_at_utc": "2026-07-04T09:11:49.272673+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -14648,7 +14651,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
+      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0214",
@@ -14712,7 +14715,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0214.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
+      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
       "threads": 256
     },
     {
@@ -14725,7 +14728,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
+      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0215",
@@ -14743,12 +14746,12 @@
         {
           "ctype": "float*",
           "kind": "pointer",
-          "name": "group_distances"
+          "name": "out_distances"
         },
         {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "group_indices"
+          "name": "out_indices"
         },
         {
           "ctype": "int",
@@ -14768,13 +14771,18 @@
         {
           "ctype": "int",
           "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
           "name": "num_q_tiles"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0215.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
+      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "threads": 256
     },
     {
@@ -14787,10 +14795,1445 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
+      "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0216",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0216.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0217",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_stable_merge_0612_r23_4e96_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0217",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0217.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_stable_merge_0612_r23_4e96_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0218",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0218",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0218.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0219",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_merge_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0219",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0219.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_merge_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0220",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0220",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0220.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0221",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0221",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0221.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0222",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0222",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0222.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0223",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0223",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0223.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0224",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0224",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0224.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0225",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0225",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0225.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0226",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0226",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0226.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0227",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0227",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0227.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0228",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0228",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0228.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0229",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_merge_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0229",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0229.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_merge_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0230",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0230",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0230.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0231",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0231",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0231.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0232",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0232",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0232.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0233",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0233",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0233.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0234",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0234",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0234.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0235",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0235",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "group_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "group_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0235.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0236",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0236",
       "parameters": [
         {
           "ctype": "float*",
@@ -14829,1449 +16272,9 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0216.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0217",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0217",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0217.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0218",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0218",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0218.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0219",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0219",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0219.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0220",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_stable_merge_0612_r23_4e96_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0220",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0220.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_stable_merge_0612_r23_4e96_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0221",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0221",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0221.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0222",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0222",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0222.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0223",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0223",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0223.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0224",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0224",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0224.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0225",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0225",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0225.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0226",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0226",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0226.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0227",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0227",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0227.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0228",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0228",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0228.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0229",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0229",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0229.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0230",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0230",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0230.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0231",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0231",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0231.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0232",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k32_q128_split148_guarded_merge_r60_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0232",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0232.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0233",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0233",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0233.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0234",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0234",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0234.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0235",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0235",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0235.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0236",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0236",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0236.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1",
+      "symbol": "kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "threads": 256
     },
     {
@@ -17212,7 +17215,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_blind_k64_twotile_partial_0614_50cc_v1",
+      "ir_name": "knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0251",
@@ -17271,17 +17274,12 @@
           "ctype": "int",
           "kind": "value",
           "name": "tiles_per_split"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "partial_list_count"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0251.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1",
+      "symbol": "kernel_knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1",
       "threads": 256
     },
     {
@@ -17294,7 +17292,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_blind_k64_highq_merge32_0614_50cc_v1",
+      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0252",
@@ -17337,7 +17335,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "partial_list_count"
+          "name": "split_m"
         },
         {
           "ctype": "int",
@@ -17348,7 +17346,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0252.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_blind_k64_highq_merge32_0614_50cc_v1",
+      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
       "threads": 256
     },
     {
@@ -17361,273 +17359,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0253",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "group_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "group_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0253.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0254",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0254",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "group_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "group_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0254.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0255",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0255",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0255.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0256",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0256",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0256.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0257",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
       "ir_name": "knn_search_dynamic_d3_tile_reduce_partial_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0257",
+      "name": "dispatch_kernel_0253",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -17676,13 +17411,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0257.cu",
+      "source": "cuda/dispatch_kernel_0253.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_dynamic_d3_tile_reduce_partial_0618_c8b9_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0258",
+      "attr": "dispatch_kernel_0254",
       "cluster_dims": [
         1,
         1,
@@ -17694,7 +17429,7 @@
       "ir_name": "knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0258",
+      "name": "dispatch_kernel_0254",
       "parameters": [
         {
           "ctype": "float*",
@@ -17748,13 +17483,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0258.cu",
+      "source": "cuda/dispatch_kernel_0254.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0259",
+      "attr": "dispatch_kernel_0255",
       "cluster_dims": [
         1,
         1,
@@ -17766,7 +17501,7 @@
       "ir_name": "knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0259",
+      "name": "dispatch_kernel_0255",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -17805,9 +17540,302 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0259.cu",
+      "source": "cuda/dispatch_kernel_0255.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0256",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0256",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0256.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0257",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0257",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0257.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0258",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_partial_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0258",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0258.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0259",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_mma_split_merge_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0259",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0259.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_merge_v1",
       "threads": 256
     },
     {
@@ -17820,303 +17848,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0260",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "partial_list_count"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0260.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0261",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0261",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "partial_list_count"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0261.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0262",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_partial_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0262",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0262.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0263",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0263",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0263.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0264",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
       "ir_name": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0264",
+      "name": "dispatch_kernel_0260",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -18165,13 +17900,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0264.cu",
+      "source": "cuda/dispatch_kernel_0260.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_lowd_ivf_direct_dispatch0610_r2_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0265",
+      "attr": "dispatch_kernel_0261",
       "cluster_dims": [
         1,
         1,
@@ -18183,7 +17918,7 @@
       "ir_name": "knn_search_lowd_dbscan_direct_dispatch0610_r1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0265",
+      "name": "dispatch_kernel_0261",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -18227,9 +17962,277 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0265.cu",
+      "source": "cuda/dispatch_kernel_0261.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_lowd_dbscan_direct_dispatch0610_r1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0262",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0262",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0262.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0263",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0263",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0263.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0264",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0264",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0264.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0265",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0265",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0265.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
       "threads": 256
     },
     {
@@ -18242,7 +18245,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1",
+      "ir_name": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0266",
@@ -18260,12 +18263,12 @@
         {
           "ctype": "float*",
           "kind": "pointer",
-          "name": "out_distances"
+          "name": "partial_distances"
         },
         {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "out_indices"
+          "name": "partial_indices"
         },
         {
           "ctype": "int",
@@ -18285,13 +18288,28 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "K"
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0266.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1",
+      "symbol": "kernel_knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
       "threads": 256
     },
     {
@@ -18304,20 +18322,20 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1",
+      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0267",
       "parameters": [
         {
-          "ctype": "__nv_bfloat16*",
+          "ctype": "float*",
           "kind": "pointer",
-          "name": "queries"
+          "name": "partial_distances"
         },
         {
-          "ctype": "__nv_bfloat16*",
+          "ctype": "int*",
           "kind": "pointer",
-          "name": "database"
+          "name": "partial_indices"
         },
         {
           "ctype": "float*",
@@ -18342,18 +18360,23 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "M"
+          "name": "K"
         },
         {
           "ctype": "int",
           "kind": "value",
-          "name": "K"
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0267.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1",
+      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
       "threads": 256
     },
     {
@@ -18366,298 +18389,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0268",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0268.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0269",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0269",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0269.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0270",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0270",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0270.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0271",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0271",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0271.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0272",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
       "ir_name": "knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0272",
+      "name": "dispatch_kernel_0268",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -18696,13 +18431,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0272.cu",
+      "source": "cuda/dispatch_kernel_0268.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0273",
+      "attr": "dispatch_kernel_0269",
       "cluster_dims": [
         1,
         1,
@@ -18714,7 +18449,7 @@
       "ir_name": "knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0273",
+      "name": "dispatch_kernel_0269",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -18778,13 +18513,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0273.cu",
+      "source": "cuda/dispatch_kernel_0269.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0274",
+      "attr": "dispatch_kernel_0270",
       "cluster_dims": [
         1,
         1,
@@ -18796,7 +18531,7 @@
       "ir_name": "knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0274",
+      "name": "dispatch_kernel_0270",
       "parameters": [
         {
           "ctype": "float*",
@@ -18845,13 +18580,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0274.cu",
+      "source": "cuda/dispatch_kernel_0270.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0275",
+      "attr": "dispatch_kernel_0271",
       "cluster_dims": [
         1,
         1,
@@ -18863,7 +18598,7 @@
       "ir_name": "knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0275",
+      "name": "dispatch_kernel_0271",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -18907,9 +18642,297 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0275.cu",
+      "source": "cuda/dispatch_kernel_0271.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0272",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0272",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0272.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0273",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0273",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0273.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0274",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0274",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0274.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0275",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0275",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0275.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1",
       "threads": 256
     },
     {
@@ -18922,7 +18945,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1",
+      "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0276",
@@ -18986,7 +19009,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0276.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
       "threads": 256
     },
     {
@@ -18999,7 +19022,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1",
+      "ir_name": "knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0277",
@@ -19053,7 +19076,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0277.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1",
       "threads": 256
     },
     {
@@ -19066,21 +19089,11 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0278",
       "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
         {
           "ctype": "float*",
           "kind": "pointer",
@@ -19090,6 +19103,16 @@
           "ctype": "int*",
           "kind": "pointer",
           "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
         },
         {
           "ctype": "int",
@@ -19104,7 +19127,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "M"
+          "name": "K"
         },
         {
           "ctype": "int",
@@ -19115,22 +19138,12 @@
           "ctype": "int",
           "kind": "value",
           "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0278.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1",
       "threads": 256
     },
     {
@@ -19143,77 +19156,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0279",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0279.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0280",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0280",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -19272,13 +19218,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0280.cu",
+      "source": "cuda/dispatch_kernel_0279.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0281",
+      "attr": "dispatch_kernel_0280",
       "cluster_dims": [
         1,
         1,
@@ -19287,10 +19233,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0281",
+      "name": "dispatch_kernel_0280",
       "parameters": [
         {
           "ctype": "float*",
@@ -19339,9 +19285,86 @@
         }
       ],
       "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0280.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0281",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0281",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0281.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
       "threads": 256
     },
     {
@@ -19354,7 +19377,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0282",
@@ -19408,7 +19431,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0282.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "threads": 256
     },
     {
@@ -19421,21 +19444,11 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0283",
       "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
         {
           "ctype": "float*",
           "kind": "pointer",
@@ -19445,6 +19458,16 @@
           "ctype": "int*",
           "kind": "pointer",
           "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
         },
         {
           "ctype": "int",
@@ -19459,7 +19482,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "M"
+          "name": "K"
         },
         {
           "ctype": "int",
@@ -19470,22 +19493,12 @@
           "ctype": "int",
           "kind": "value",
           "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0283.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
       "threads": 256
     },
     {
@@ -19498,77 +19511,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1",
+      "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0284",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0284.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0285",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0285",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -19627,13 +19573,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0285.cu",
+      "source": "cuda/dispatch_kernel_0284.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1",
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0286",
+      "attr": "dispatch_kernel_0285",
       "cluster_dims": [
         1,
         1,
@@ -19642,10 +19588,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
+      "ir_name": "knn_search_mma_split_merge_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0286",
+      "name": "dispatch_kernel_0285",
       "parameters": [
         {
           "ctype": "float*",
@@ -19694,9 +19640,86 @@
         }
       ],
       "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0285.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_mma_split_merge_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0286",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0286",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0286.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1",
       "threads": 256
     },
     {
@@ -19709,7 +19732,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0287",
@@ -19763,7 +19786,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0287.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1",
+      "symbol": "kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1",
       "threads": 256
     },
     {
@@ -19776,21 +19799,11 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_mma_split_partial_v1",
+      "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0288",
       "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
         {
           "ctype": "float*",
           "kind": "pointer",
@@ -19800,6 +19813,16 @@
           "ctype": "int*",
           "kind": "pointer",
           "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
         },
         {
           "ctype": "int",
@@ -19814,7 +19837,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "M"
+          "name": "K"
         },
         {
           "ctype": "int",
@@ -19825,22 +19848,12 @@
           "ctype": "int",
           "kind": "value",
           "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0288.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "symbol": "kernel_knn_search_mma_split_merge_q4096_lowk_v1",
       "threads": 256
     },
     {
@@ -19853,7 +19866,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_mma_split_merge_v1",
+      "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0289",
@@ -19907,7 +19920,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0289.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_v1",
+      "symbol": "kernel_knn_search_mma_split_merge_q4096_lowk_v1",
       "threads": 256
     },
     {
@@ -19920,10 +19933,77 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1",
+      "ir_name": "knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0290",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0290.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0291",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0291",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -19974,84 +20054,12 @@
           "ctype": "int",
           "kind": "value",
           "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0290.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0291",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0291",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0291.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1",
+      "symbol": "kernel_knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
       "threads": 256
     },
     {
@@ -20064,7 +20072,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
+      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0292",
@@ -20118,7 +20126,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0292.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_q4096_lowk_v1",
+      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
       "threads": 256
     },
     {
@@ -20131,20 +20139,20 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_mma_split_merge_q4096_lowk_v1",
+      "ir_name": "knn_search_self_k5_direct_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0293",
       "parameters": [
         {
-          "ctype": "float*",
+          "ctype": "__nv_bfloat16*",
           "kind": "pointer",
-          "name": "partial_distances"
+          "name": "queries"
         },
         {
-          "ctype": "int*",
+          "ctype": "__nv_bfloat16*",
           "kind": "pointer",
-          "name": "partial_indices"
+          "name": "database"
         },
         {
           "ctype": "float*",
@@ -20169,23 +20177,18 @@
         {
           "ctype": "int",
           "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
           "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0293.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_q4096_lowk_v1",
+      "symbol": "kernel_knn_search_self_k5_direct_v1",
       "threads": 256
     },
     {
@@ -20198,278 +20201,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0294",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0294.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0295",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0295",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0295.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0296",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_mma_split_merge_q128_const148_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0296",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0296.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_merge_q128_const148_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0297",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_self_k5_direct_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0297",
-      "parameters": [
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0297.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_self_k5_direct_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0298",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0298",
+      "name": "dispatch_kernel_0294",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -20528,13 +20263,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0298.cu",
+      "source": "cuda/dispatch_kernel_0294.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0299",
+      "attr": "dispatch_kernel_0295",
       "cluster_dims": [
         1,
         1,
@@ -20546,7 +20281,7 @@
       "ir_name": "knn_search_q4096_lowk_k1partial_onestage_merge_0614_r2_3ff5_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0299",
+      "name": "dispatch_kernel_0295",
       "parameters": [
         {
           "ctype": "float*",
@@ -20595,9 +20330,252 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0299.cu",
+      "source": "cuda/dispatch_kernel_0295.cu",
       "specializations": {},
       "symbol": "kernel_knn_search_q4096_lowk_k1partial_onestage_merge_0614_r2_3ff5_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0296",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0296",
+      "parameters": [
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0296.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0297",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0297",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0297.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0298",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0298",
+      "parameters": [
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "overflow_flag"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0298.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0299",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0299",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "overflow_flag"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0299.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1",
       "threads": 256
     },
     {
@@ -20610,7 +20588,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0300",
@@ -20674,7 +20652,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0300.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1",
       "threads": 256
     },
     {
@@ -20687,7 +20665,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0301",
@@ -20730,7 +20708,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "partial_list_count"
+          "name": "split_m"
         },
         {
           "ctype": "int",
@@ -20741,7 +20719,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0301.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1",
       "threads": 256
     },
     {
@@ -20754,21 +20732,71 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0302",
       "parameters": [
         {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "queries"
+        },
+        {
+          "ctype": "__nv_bfloat16*",
+          "kind": "pointer",
+          "name": "database"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "overflow_flag"
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "M"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "split_m"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "total_m_tiles"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "tiles_per_split"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0302.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "threads": 256
     },
     {
@@ -20781,7 +20809,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0303",
@@ -20809,7 +20837,7 @@
         {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "overflow_flag"
+          "name": "overflow_rows"
         },
         {
           "ctype": "int",
@@ -20840,7 +20868,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0303.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1",
       "threads": 256
     },
     {
@@ -20853,7 +20881,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0304",
@@ -20917,7 +20945,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0304.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
       "threads": 256
     },
     {
@@ -20930,7 +20958,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0305",
@@ -20973,7 +21001,7 @@
         {
           "ctype": "int",
           "kind": "value",
-          "name": "split_m"
+          "name": "partial_list_count"
         },
         {
           "ctype": "int",
@@ -20984,7 +21012,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0305.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1",
       "threads": 256
     },
     {
@@ -20997,71 +21025,21 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0306",
       "parameters": [
         {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "queries"
-        },
-        {
-          "ctype": "__nv_bfloat16*",
-          "kind": "pointer",
-          "name": "database"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "M"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "split_m"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "total_m_tiles"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "tiles_per_split"
+          "name": "overflow_flag"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0306.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
       "threads": 256
     },
     {
@@ -21074,7 +21052,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1",
+      "ir_name": "knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0307",
@@ -21102,7 +21080,7 @@
         {
           "ctype": "int*",
           "kind": "pointer",
-          "name": "overflow_rows"
+          "name": "overflow_flag"
         },
         {
           "ctype": "int",
@@ -21133,7 +21111,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0307.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1",
+      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1",
       "threads": 256
     },
     {
@@ -21146,7 +21124,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
+      "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0308",
@@ -21210,7 +21188,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0308.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1",
+      "symbol": "kernel_knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
       "threads": 256
     },
     {
@@ -21223,7 +21201,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1",
+      "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0309",
@@ -21277,7 +21255,7 @@
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0309.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1",
+      "symbol": "kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
       "threads": 256
     },
     {
@@ -21290,109 +21268,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
+      "ir_name": "knn_search_mma_split_partial_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0310",
-      "parameters": [
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "overflow_flag"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0310.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0311",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0311",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "overflow_flag"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "B"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "Q"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "K"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "partial_list_count"
-        },
-        {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
-        }
-      ],
-      "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0311.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0312",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0312",
       "parameters": [
         {
           "ctype": "__nv_bfloat16*",
@@ -21451,13 +21330,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0312.cu",
+      "source": "cuda/dispatch_kernel_0310.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2",
+      "symbol": "kernel_knn_search_mma_split_partial_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0313",
+      "attr": "dispatch_kernel_0311",
       "cluster_dims": [
         1,
         1,
@@ -21466,10 +21345,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
+      "ir_name": "knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0313",
+      "name": "dispatch_kernel_0311",
       "parameters": [
         {
           "ctype": "float*",
@@ -21480,6 +21359,68 @@
           "ctype": "int*",
           "kind": "pointer",
           "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "group_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "group_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0311.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0312",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0312",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "group_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "group_indices"
         },
         {
           "ctype": "float*",
@@ -21505,22 +21446,54 @@
           "ctype": "int",
           "kind": "value",
           "name": "K"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0312.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0313",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0313",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
         },
         {
-          "ctype": "int",
-          "kind": "value",
-          "name": "partial_list_count"
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
         },
         {
-          "ctype": "int",
-          "kind": "value",
-          "name": "num_q_tiles"
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0313.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2",
+      "symbol": "kernel_knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
       "threads": 256
     },
     {
@@ -21533,7 +21506,7 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_mma_split_partial_v1",
+      "ir_name": "knn_search_blind_k64_twotile_partial_0614_50cc_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0314",
@@ -21592,12 +21565,17 @@
           "ctype": "int",
           "kind": "value",
           "name": "tiles_per_split"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
         }
       ],
       "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0314.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_mma_split_partial_v1",
+      "symbol": "kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1",
       "threads": 256
     },
     {
@@ -21610,10 +21588,77 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
+      "ir_name": "knn_search_blind_k64_highq_merge32_0614_50cc_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
       "name": "dispatch_kernel_0315",
+      "parameters": [
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "partial_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "partial_indices"
+        },
+        {
+          "ctype": "float*",
+          "kind": "pointer",
+          "name": "out_distances"
+        },
+        {
+          "ctype": "int*",
+          "kind": "pointer",
+          "name": "out_indices"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "B"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "Q"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "K"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "partial_list_count"
+        },
+        {
+          "ctype": "int",
+          "kind": "value",
+          "name": "num_q_tiles"
+        }
+      ],
+      "shared_mem_bytes": 0,
+      "source": "cuda/dispatch_kernel_0315.cu",
+      "specializations": {},
+      "symbol": "kernel_knn_search_blind_k64_highq_merge32_0614_50cc_v1",
+      "threads": 256
+    },
+    {
+      "attr": "dispatch_kernel_0316",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "compile_options": [
+        "--use_fast_math"
+      ],
+      "ir_name": "knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
+      "launch_mode": "standard",
+      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
+      "name": "dispatch_kernel_0316",
       "parameters": [
         {
           "ctype": "float*",
@@ -21657,13 +21702,13 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0315.cu",
+      "source": "cuda/dispatch_kernel_0316.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1",
+      "symbol": "kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1",
       "threads": 256
     },
     {
-      "attr": "dispatch_kernel_0316",
+      "attr": "dispatch_kernel_0317",
       "cluster_dims": [
         1,
         1,
@@ -21672,10 +21717,10 @@
       "compile_options": [
         "--use_fast_math"
       ],
-      "ir_name": "knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1",
+      "ir_name": "knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "launch_mode": "standard",
       "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0316",
+      "name": "dispatch_kernel_0317",
       "parameters": [
         {
           "ctype": "float*",
@@ -21714,51 +21759,9 @@
         }
       ],
       "shared_mem_bytes": 0,
-      "source": "cuda/dispatch_kernel_0316.cu",
-      "specializations": {},
-      "symbol": "kernel_knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1",
-      "threads": 256
-    },
-    {
-      "attr": "dispatch_kernel_0317",
-      "cluster_dims": [
-        1,
-        1,
-        1
-      ],
-      "compile_options": [
-        "--use_fast_math"
-      ],
-      "ir_name": "knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
-      "launch_mode": "standard",
-      "module": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1",
-      "name": "dispatch_kernel_0317",
-      "parameters": [
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "partial_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "partial_indices"
-        },
-        {
-          "ctype": "float*",
-          "kind": "pointer",
-          "name": "out_distances"
-        },
-        {
-          "ctype": "int*",
-          "kind": "pointer",
-          "name": "out_indices"
-        }
-      ],
-      "shared_mem_bytes": 0,
       "source": "cuda/dispatch_kernel_0317.cu",
       "specializations": {},
-      "symbol": "kernel_knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1",
+      "symbol": "kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1",
       "threads": 256
     },
     {
@@ -34542,8 +34545,8 @@
     "kernel_count": 520,
     "module_count": 366
   },
-  "source_commit": "59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
+  "source_commit": "90083f7caff1734b740c24083f944615d7fab15e",
+  "source_repo": "https://gitlab-master.nvidia.com/cake/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_search",

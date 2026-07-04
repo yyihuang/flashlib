@@ -62,7 +62,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1", "arg_keys": ["queries", "database", "partial_distances", "partial_indices", "B", "Q", "M", "split_m", "num_q_tiles", "total_m_tiles", "tiles_per_split"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
 
 def _compile_k64_distanceonly_stagingunrolled_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0224"}, "partial": {"__kernel__": "dispatch_kernel_0223"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0215"}, "partial": {"__kernel__": "dispatch_kernel_0214"}}'))
 
 def _use_q4096_k64_distanceonly_stagingunrolled(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and base._tcgen05_capable_arch()

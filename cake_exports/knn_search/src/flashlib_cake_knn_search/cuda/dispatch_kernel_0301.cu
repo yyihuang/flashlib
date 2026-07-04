@@ -18,15 +18,14 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
 #define K_MAX_ 64
-#define K_PREFIX_READ_ 8
-#define K_STRIDE_ 9
+#define K_PREFIX_ 8
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int partial_list_count, int num_q_tiles)
+kernel_knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -51,8 +50,12 @@ kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1(float*
         head_k[slot] = 0;
         head_d[slot] = LOOM_INF;
         head_i[slot] = -1;
-        if (split_id < partial_list_count) {
-            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 316 + split_id) * 128 + q_local) * K_STRIDE_);
+        int valid_slot = 1;
+        if (slot == 9) {
+            valid_slot = ((lane < 28) ? 1 : 0);
+        }
+        if (valid_slot != 0) {
+            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 316 + split_id) * 128 + q_local) * K_PREFIX_);
             head_d[slot] = partial_distances[partial_base];
             head_i[slot] = partial_indices[partial_base];
         }
@@ -155,9 +158,13 @@ kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1(float*
                     head_k[slot_2] = next_head;
                     head_d[slot_2] = LOOM_INF;
                     head_i[slot_2] = -1;
-                    if (next_head < K_PREFIX_READ_) {
-                        if (split_id_1 < partial_list_count) {
-                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 316 + split_id_1) * 128 + q_local) * K_STRIDE_ + next_head);
+                    if (next_head < K_PREFIX_) {
+                        int valid_slot_1 = 1;
+                        if (slot_2 == 9) {
+                            valid_slot_1 = ((lane < 28) ? 1 : 0);
+                        }
+                        if (valid_slot_1 != 0) {
+                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * 316 + split_id_1) * 128 + q_local) * K_PREFIX_ + next_head);
                             head_d[slot_2] = partial_distances[partial_base_1];
                             head_i[slot_2] = partial_indices[partial_base_1];
                         }

@@ -95,7 +95,7 @@ def _run_shape(
     benchmark: bool,
 ) -> dict[str, Any]:
     import torch
-    from flashlib_cake_knn_search import knn_search
+    from flashlib_cake_knn_search import knn_search, knn_search_prepared, prepare_knn_search
 
     query, database = _make_inputs(shape)
     k = int(shape["K"])
@@ -126,16 +126,26 @@ def _run_shape(
         )
 
     if benchmark:
-        timing = bench_gpu_time(lambda: knn_search(query, database, k, arch=arch), cold_l2=True)
-        result["kernel_ms"] = timing.median_ms
-        result["timing_backend"] = timing.backend
-        result["bench_iters"] = len(timing.times_ms)
+        prepared = prepare_knn_search(query, database, k)
+        public_timing = bench_gpu_time(lambda: knn_search(query, database, k, arch=arch), cold_l2=True)
+        prepared_timing = bench_gpu_time(lambda: knn_search_prepared(prepared), cold_l2=True)
+        result["kernel_ms"] = public_timing.median_ms
+        result["public_gpu_span_ms"] = public_timing.median_gpu_span_ms
+        result["public_kernel_sum_ms"] = public_timing.median_kernel_sum_ms
+        result["public_inter_kernel_gap_ms"] = public_timing.median_inter_kernel_gap_ms
+        result["prepared_gpu_span_ms"] = prepared_timing.median_gpu_span_ms
+        result["prepared_kernel_sum_ms"] = prepared_timing.median_kernel_sum_ms
+        result["prepared_inter_kernel_gap_ms"] = prepared_timing.median_inter_kernel_gap_ms
+        result["public_over_prepared"] = public_timing.median_ms / prepared_timing.median_ms
+        result["timing_backend"] = public_timing.backend
+        result["bench_iters"] = len(public_timing.times_ms)
         flops = 2.0 * int(shape["B"]) * int(shape["Q"]) * int(shape["M"]) * int(shape["D"])
-        result["tflops"] = flops / timing.median_ms / 1e9
-        result["qps"] = int(shape["B"]) * int(shape["Q"]) / (timing.median_ms / 1000.0)
+        result["tflops"] = flops / public_timing.median_ms / 1e9
+        result["qps"] = int(shape["B"]) * int(shape["Q"]) / (public_timing.median_ms / 1000.0)
         result["baseline_name"] = shape["recorded"]["baseline_name"]
         result["baseline_ms"] = float(shape["recorded"]["baseline_ms"])
-        result["speedup_vs_baseline"] = result["baseline_ms"] / timing.median_ms
+        result["speedup_vs_baseline"] = result["baseline_ms"] / public_timing.median_ms
+        result["prepared_speedup_vs_baseline"] = result["baseline_ms"] / prepared_timing.median_ms
 
     return result
 

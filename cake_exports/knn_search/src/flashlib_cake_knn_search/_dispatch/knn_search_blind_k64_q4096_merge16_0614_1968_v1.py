@@ -34,7 +34,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_q4096_m
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1", "arg_keys": ["partial_distances", "partial_indices", "out_distances", "out_indices"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64], ["PARTIAL_LISTS_", 512], ["SPLITS_PER_LANE_", 16]], "cta_group": 1, "threads": 32}'))
 
 def _compile_q4096_merge16_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0317"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0313"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_MERGE16_KERNELS:

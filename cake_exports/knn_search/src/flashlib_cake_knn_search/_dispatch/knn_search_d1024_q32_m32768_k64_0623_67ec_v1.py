@@ -11,9 +11,9 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
-from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as sort_parent
 from . import knn_search_lowd_d256_mma64_over48e9_0612_r34_48e9_v1 as d256_k64
+from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
 THREADS = 256
 BLOCK_Q = 64
 BLOCK_M = 64

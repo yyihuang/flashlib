@@ -81,10 +81,10 @@ def _use_dynamic_d257_q64_k64(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q64_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIGINAL) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and d256_k64._tcgen05_capable_arch()
 
 def _compile_pack_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0259"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0255"}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0261"}, "partial": {"__kernel__": "dispatch_kernel_0260"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0257"}, "partial": {"__kernel__": "dispatch_kernel_0256"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _DYNAMIC_D_K64_KERNELS:

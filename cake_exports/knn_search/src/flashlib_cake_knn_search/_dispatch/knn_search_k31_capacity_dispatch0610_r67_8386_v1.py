@@ -22,7 +22,7 @@ _KNN_SEARCH_K31_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K31_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k31_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0230"}, "partial": {"__kernel__": "dispatch_kernel_0229"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0225"}, "partial": {"__kernel__": "dispatch_kernel_0224"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

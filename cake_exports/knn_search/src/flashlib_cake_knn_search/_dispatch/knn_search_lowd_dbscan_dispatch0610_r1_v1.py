@@ -28,7 +28,7 @@ knn_search_lowd_dbscan_direct_dispatch0610_r1_v1 = _decode_capture(_json_loads('
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_direct_dispatch0610_r1_v1", "arg_keys": ["queries", "database", "out_distances", "out_indices", "B", "Q", "M", "K"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 16512, "constants": [["D_", 2], ["K_MAX_", 64], ["LOCAL_LIST_CAP_", 8], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0265"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0261"}}'))
 
 def _use_lowd_capacity(inputs: dict[str, Any]) -> bool:
     return int(inputs['D']) == D_STATIC and int(inputs['Q']) % 4 == 0 and (int(inputs['M']) % 4 == 0) and (int(inputs['M']) <= M_MAX) and (int(inputs['K']) <= K_MAX)

@@ -60,7 +60,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k5_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0281"}, "partial_k5": {"__kernel__": "dispatch_kernel_0280"}}'))
+    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0277"}, "partial_k5": {"__kernel__": "dispatch_kernel_0276"}}'))
 
 def _scratch_k5(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

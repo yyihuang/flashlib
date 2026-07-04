@@ -342,12 +342,9 @@ kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1(__nv_bfloat16* __restri
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
-    int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
     int work_id = bid;
     int split_id = work_id - work_id / split_m * split_m;
     int q_tile = work_id / split_m;
@@ -547,6 +544,8 @@ kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1(__nv_bfloat16* __restri
     int second_m_start = second_m_tile * 128;
     int has_second_tile = ((second_m_tile < tile_end) ? 1 : 0);
     if (warp == 0) {
+        int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -600,7 +599,7 @@ kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1(__nv_bfloat16* __restri
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
         elect_commit(mma_done_first_addr);
     }
     if (has_second_tile != 0) {
@@ -795,6 +794,8 @@ kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1(__nv_bfloat16* __restri
     unsigned int _phase_mma_done_second_0 = 0;
     if (has_second_tile != 0) {
         if (warp == 0) {
+            int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+            int _mma_b_lo_1 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
             asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -848,7 +849,7 @@ kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1(__nv_bfloat16* __restri
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_2), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(0));
             elect_commit(mma_done_second_addr);
         }
         mbarrier_wait(mma_done_second_addr, _phase_mma_done_second_0);

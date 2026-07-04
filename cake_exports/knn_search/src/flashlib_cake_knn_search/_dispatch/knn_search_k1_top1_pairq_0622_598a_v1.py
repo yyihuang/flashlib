@@ -13,8 +13,8 @@ import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_k1_top1_merge16_d212_v1 as parent_seed
-from . import knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1 as k1_base
 from . import knn_search_mma_split_v1 as mma
+from . import knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1 as k1_base
 THREADS = k1_base.THREADS
 MERGE_THREADS = parent_seed.MERGE_THREADS
 MERGE_ROWS_PER_CTA = parent_seed.MERGE_ROWS_PER_CTA

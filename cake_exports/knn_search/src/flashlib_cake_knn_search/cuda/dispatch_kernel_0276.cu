@@ -36,11 +36,11 @@ typedef short int          int16_t;
 #define SMEM_SMEM_Q_NORM_PART_STAGE_BYTES 4096
 #define SMEM_SMEM_Q_NORM_PART_STRIDE 4096
 #define SMEM_SMEM_COHORT_TOPK_D_OFF 33792
-#define SMEM_SMEM_COHORT_TOPK_D_STAGE_BYTES 2048
-#define SMEM_SMEM_COHORT_TOPK_D_STRIDE 2048
-#define SMEM_SMEM_COHORT_TOPK_I_OFF 35840
-#define SMEM_SMEM_COHORT_TOPK_I_STAGE_BYTES 2048
-#define SMEM_SMEM_COHORT_TOPK_I_STRIDE 2048
+#define SMEM_SMEM_COHORT_TOPK_D_STAGE_BYTES 10240
+#define SMEM_SMEM_COHORT_TOPK_D_STRIDE 10240
+#define SMEM_SMEM_COHORT_TOPK_I_OFF 44032
+#define SMEM_SMEM_COHORT_TOPK_I_STAGE_BYTES 10240
+#define SMEM_SMEM_COHORT_TOPK_I_STRIDE 10240
 #define SMEM_TOTAL 108800
 #define THREADS 640
 
@@ -286,7 +286,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(640) void
-kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
+kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -318,8 +318,8 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
     const int smem_q_norm_part_addr = smem + 99328;
     float* smem_cohort_topk_d = reinterpret_cast<float*>(smem_raw + 33792);
     const int smem_cohort_topk_d_addr = smem + 33792;
-    int* smem_cohort_topk_i = reinterpret_cast<int*>(smem_raw + 35840);
-    const int smem_cohort_topk_i_addr = smem + 35840;
+    int* smem_cohort_topk_i = reinterpret_cast<int*>(smem_raw + 44032);
+    const int smem_cohort_topk_i_addr = smem + 44032;
 
     // Mbarrier init (1 groups, 1 barriers)
     // Mbarriers at smem_raw[0..8)
@@ -348,12 +348,9 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
-    int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
     int work_id = bid;
     int split_id = work_id % split_m;
     int q_tile_linear = work_id / split_m;
@@ -365,10 +362,13 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
     int q_local = row_base_tmem + lane;
     int q_global = q_start + q_local;
     float q_norm = 0.0f;
-    float best_d[1];
-    int best_i[1];
-    best_d[0] = LOOM_INF;
-    best_i[0] = -1;
+    float best_d[5];
+    int best_i[5];
+    #pragma unroll
+    for (int kk = 0; kk < 5; kk++) {
+        best_d[kk] = LOOM_INF;
+        best_i[kk] = -1;
+    }
     #pragma unroll 1
     for (int e_vec = tid; e_vec < 1024; e_vec += 640) {
         int q_elem = e_vec * 16;
@@ -499,6 +499,8 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
         int db_stage_phase = rel_tile - rel_tile / 2 * 2;
         if (db_stage_phase == 0) {
             if (warp == 0) {
+                int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+                int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
                 asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -552,10 +554,12 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
                 elect_commit(mma_done_addr);
             }
         } else if (warp == 0) {
+            int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+            int _mma_b_lo_1 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
             asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -609,7 +613,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_2), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(0));
             elect_commit(mma_done_addr);
         }
         int next_m_tile = m_tile + 1;
@@ -779,6 +783,8 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         int take01 = ((dist01 < dist00) ? 1 : 0);
                         float cand00_d = ((take01 != 0) ? dist01 : dist00);
                         int cand00_i = ((take01 != 0) ? m_abs01 : m_abs00);
+                        float cand01_d = ((take01 != 0) ? dist00 : dist01);
+                        int cand01_i = ((take01 != 0) ? m_abs00 : m_abs01);
                         int j_base1 = j_base0 + 2;
                         float dist_pair1[2];
                         float norm_pair1[2];
@@ -802,6 +808,8 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         int take11 = ((dist11 < dist10) ? 1 : 0);
                         float cand10_d = ((take11 != 0) ? dist11 : dist10);
                         int cand10_i = ((take11 != 0) ? m_abs11 : m_abs10);
+                        float cand11_d = ((take11 != 0) ? dist10 : dist11);
+                        int cand11_i = ((take11 != 0) ? m_abs10 : m_abs11);
                         int j_base2 = j_base0 + 4;
                         float dist_pair2[2];
                         float norm_pair2[2];
@@ -825,6 +833,8 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         int take21 = ((dist21 < dist20) ? 1 : 0);
                         float cand20_d = ((take21 != 0) ? dist21 : dist20);
                         int cand20_i = ((take21 != 0) ? m_abs21 : m_abs20);
+                        float cand21_d = ((take21 != 0) ? dist20 : dist21);
+                        int cand21_i = ((take21 != 0) ? m_abs20 : m_abs21);
                         int j_base3 = j_base0 + 6;
                         float dist_pair3[2];
                         float norm_pair3[2];
@@ -848,43 +858,160 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         int take31 = ((dist31 < dist30) ? 1 : 0);
                         float cand30_d = ((take31 != 0) ? dist31 : dist30);
                         int cand30_i = ((take31 != 0) ? m_abs31 : m_abs30);
-                        if (cand00_d < best_d[0]) {
-                            best_d[0] = cand00_d;
-                            best_i[0] = cand00_i;
+                        float cand31_d = ((take31 != 0) ? dist30 : dist31);
+                        int cand31_i = ((take31 != 0) ? m_abs30 : m_abs31);
+                        if (cand00_d < best_d[4]) {
+                            best_d[4] = cand00_d;
+                            best_i[4] = cand00_i;
+                            #pragma unroll
+                            for (int kk_1 = 4; kk_1 >= 1; kk_1--) {
+                                float lower_d = best_d[kk_1];
+                                int lower_i = best_i[kk_1];
+                                float upper_d = best_d[kk_1 - 1];
+                                int upper_i = best_i[kk_1 - 1];
+                                int swap_up = ((lower_d < upper_d) ? 1 : 0);
+                                best_d[kk_1 - 1] = ((swap_up != 0) ? lower_d : upper_d);
+                                best_i[kk_1 - 1] = ((swap_up != 0) ? lower_i : upper_i);
+                                best_d[kk_1] = ((swap_up != 0) ? upper_d : lower_d);
+                                best_i[kk_1] = ((swap_up != 0) ? upper_i : lower_i);
+                            }
                         }
-                        if (cand10_d < best_d[0]) {
-                            best_d[0] = cand10_d;
-                            best_i[0] = cand10_i;
+                        if (cand01_d < best_d[4]) {
+                            best_d[4] = cand01_d;
+                            best_i[4] = cand01_i;
+                            #pragma unroll
+                            for (int kk_2 = 4; kk_2 >= 1; kk_2--) {
+                                float lower_d_1 = best_d[kk_2];
+                                int lower_i_1 = best_i[kk_2];
+                                float upper_d_1 = best_d[kk_2 - 1];
+                                int upper_i_1 = best_i[kk_2 - 1];
+                                int swap_up_1 = ((lower_d_1 < upper_d_1) ? 1 : 0);
+                                best_d[kk_2 - 1] = ((swap_up_1 != 0) ? lower_d_1 : upper_d_1);
+                                best_i[kk_2 - 1] = ((swap_up_1 != 0) ? lower_i_1 : upper_i_1);
+                                best_d[kk_2] = ((swap_up_1 != 0) ? upper_d_1 : lower_d_1);
+                                best_i[kk_2] = ((swap_up_1 != 0) ? upper_i_1 : lower_i_1);
+                            }
                         }
-                        if (cand20_d < best_d[0]) {
-                            best_d[0] = cand20_d;
-                            best_i[0] = cand20_i;
+                        if (cand10_d < best_d[4]) {
+                            best_d[4] = cand10_d;
+                            best_i[4] = cand10_i;
+                            #pragma unroll
+                            for (int kk_3 = 4; kk_3 >= 1; kk_3--) {
+                                float lower_d_2 = best_d[kk_3];
+                                int lower_i_2 = best_i[kk_3];
+                                float upper_d_2 = best_d[kk_3 - 1];
+                                int upper_i_2 = best_i[kk_3 - 1];
+                                int swap_up_2 = ((lower_d_2 < upper_d_2) ? 1 : 0);
+                                best_d[kk_3 - 1] = ((swap_up_2 != 0) ? lower_d_2 : upper_d_2);
+                                best_i[kk_3 - 1] = ((swap_up_2 != 0) ? lower_i_2 : upper_i_2);
+                                best_d[kk_3] = ((swap_up_2 != 0) ? upper_d_2 : lower_d_2);
+                                best_i[kk_3] = ((swap_up_2 != 0) ? upper_i_2 : lower_i_2);
+                            }
                         }
-                        if (cand30_d < best_d[0]) {
-                            best_d[0] = cand30_d;
-                            best_i[0] = cand30_i;
+                        if (cand11_d < best_d[4]) {
+                            best_d[4] = cand11_d;
+                            best_i[4] = cand11_i;
+                            #pragma unroll
+                            for (int kk_4 = 4; kk_4 >= 1; kk_4--) {
+                                float lower_d_3 = best_d[kk_4];
+                                int lower_i_3 = best_i[kk_4];
+                                float upper_d_3 = best_d[kk_4 - 1];
+                                int upper_i_3 = best_i[kk_4 - 1];
+                                int swap_up_3 = ((lower_d_3 < upper_d_3) ? 1 : 0);
+                                best_d[kk_4 - 1] = ((swap_up_3 != 0) ? lower_d_3 : upper_d_3);
+                                best_i[kk_4 - 1] = ((swap_up_3 != 0) ? lower_i_3 : upper_i_3);
+                                best_d[kk_4] = ((swap_up_3 != 0) ? upper_d_3 : lower_d_3);
+                                best_i[kk_4] = ((swap_up_3 != 0) ? upper_i_3 : lower_i_3);
+                            }
+                        }
+                        if (cand20_d < best_d[4]) {
+                            best_d[4] = cand20_d;
+                            best_i[4] = cand20_i;
+                            #pragma unroll
+                            for (int kk_5 = 4; kk_5 >= 1; kk_5--) {
+                                float lower_d_4 = best_d[kk_5];
+                                int lower_i_4 = best_i[kk_5];
+                                float upper_d_4 = best_d[kk_5 - 1];
+                                int upper_i_4 = best_i[kk_5 - 1];
+                                int swap_up_4 = ((lower_d_4 < upper_d_4) ? 1 : 0);
+                                best_d[kk_5 - 1] = ((swap_up_4 != 0) ? lower_d_4 : upper_d_4);
+                                best_i[kk_5 - 1] = ((swap_up_4 != 0) ? lower_i_4 : upper_i_4);
+                                best_d[kk_5] = ((swap_up_4 != 0) ? upper_d_4 : lower_d_4);
+                                best_i[kk_5] = ((swap_up_4 != 0) ? upper_i_4 : lower_i_4);
+                            }
+                        }
+                        if (cand21_d < best_d[4]) {
+                            best_d[4] = cand21_d;
+                            best_i[4] = cand21_i;
+                            #pragma unroll
+                            for (int kk_6 = 4; kk_6 >= 1; kk_6--) {
+                                float lower_d_5 = best_d[kk_6];
+                                int lower_i_5 = best_i[kk_6];
+                                float upper_d_5 = best_d[kk_6 - 1];
+                                int upper_i_5 = best_i[kk_6 - 1];
+                                int swap_up_5 = ((lower_d_5 < upper_d_5) ? 1 : 0);
+                                best_d[kk_6 - 1] = ((swap_up_5 != 0) ? lower_d_5 : upper_d_5);
+                                best_i[kk_6 - 1] = ((swap_up_5 != 0) ? lower_i_5 : upper_i_5);
+                                best_d[kk_6] = ((swap_up_5 != 0) ? upper_d_5 : lower_d_5);
+                                best_i[kk_6] = ((swap_up_5 != 0) ? upper_i_5 : lower_i_5);
+                            }
+                        }
+                        if (cand30_d < best_d[4]) {
+                            best_d[4] = cand30_d;
+                            best_i[4] = cand30_i;
+                            #pragma unroll
+                            for (int kk_7 = 4; kk_7 >= 1; kk_7--) {
+                                float lower_d_6 = best_d[kk_7];
+                                int lower_i_6 = best_i[kk_7];
+                                float upper_d_6 = best_d[kk_7 - 1];
+                                int upper_i_6 = best_i[kk_7 - 1];
+                                int swap_up_6 = ((lower_d_6 < upper_d_6) ? 1 : 0);
+                                best_d[kk_7 - 1] = ((swap_up_6 != 0) ? lower_d_6 : upper_d_6);
+                                best_i[kk_7 - 1] = ((swap_up_6 != 0) ? lower_i_6 : upper_i_6);
+                                best_d[kk_7] = ((swap_up_6 != 0) ? upper_d_6 : lower_d_6);
+                                best_i[kk_7] = ((swap_up_6 != 0) ? upper_i_6 : lower_i_6);
+                            }
+                        }
+                        if (cand31_d < best_d[4]) {
+                            best_d[4] = cand31_d;
+                            best_i[4] = cand31_i;
+                            #pragma unroll
+                            for (int kk_8 = 4; kk_8 >= 1; kk_8--) {
+                                float lower_d_7 = best_d[kk_8];
+                                int lower_i_7 = best_i[kk_8];
+                                float upper_d_7 = best_d[kk_8 - 1];
+                                int upper_i_7 = best_i[kk_8 - 1];
+                                int swap_up_7 = ((lower_d_7 < upper_d_7) ? 1 : 0);
+                                best_d[kk_8 - 1] = ((swap_up_7 != 0) ? lower_d_7 : upper_d_7);
+                                best_i[kk_8 - 1] = ((swap_up_7 != 0) ? lower_i_7 : upper_i_7);
+                                best_d[kk_8] = ((swap_up_7 != 0) ? upper_d_7 : lower_d_7);
+                                best_i[kk_8] = ((swap_up_7 != 0) ? upper_i_7 : lower_i_7);
+                            }
                         }
                     }
                 }
             }
         }
     }
-    int scratch_base = q_local;
+    int scratch_base = q_local * 5;
     if (col_chunk < 4) {
         if (q_local < 128) {
-            const int cohort_scratch_base = col_chunk * 128;
-            smem_cohort_topk_d[cohort_scratch_base + scratch_base] = best_d[0];
-            smem_cohort_topk_i[cohort_scratch_base + scratch_base] = best_i[0];
+            const int cohort_scratch_base = col_chunk * 128 * 5;
+            #pragma unroll
+            for (int kk_9 = 0; kk_9 < 5; kk_9++) {
+                smem_cohort_topk_d[cohort_scratch_base + scratch_base + kk_9] = best_d[kk_9];
+                smem_cohort_topk_i[cohort_scratch_base + scratch_base + kk_9] = best_i[kk_9];
+            }
         }
     }
     __syncthreads();
-    unsigned long long partial_base = (unsigned long long)(((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local);
-    int pair_scratch_base = q_local;
+    unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local) * 5);
+    int pair_scratch_base = q_local * 5;
     if (col_chunk == 0) {
         if (q_local < 128) {
             if (q_global < Q) {
                 const int cohort0_base = 0;
-                const int cohort1_base = 128;
+                const int cohort1_base = 640;
                 int head0_k = 0;
                 int head1_k = 0;
                 float head0_d = smem_cohort_topk_d[cohort0_base + scratch_base];
@@ -892,7 +1019,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                 int head0_i = smem_cohort_topk_i[cohort0_base + scratch_base];
                 int head1_i = smem_cohort_topk_i[cohort1_base + scratch_base];
                 #pragma unroll
-                for (int out_k = 0; out_k < 1; out_k++) {
+                for (int out_k = 0; out_k < 5; out_k++) {
                     int take1 = ((head1_d < head0_d) ? 1 : 0);
                     best_d[out_k] = ((take1 != 0) ? head1_d : head0_d);
                     best_i[out_k] = ((take1 != 0) ? head1_i : head0_i);
@@ -900,7 +1027,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         head0_k += 1;
                         head0_d = LOOM_INF;
                         head0_i = -1;
-                        if (head0_k < 1) {
+                        if (head0_k < 5) {
                             int head0_next = cohort0_base + scratch_base + head0_k;
                             head0_d = smem_cohort_topk_d[head0_next];
                             head0_i = smem_cohort_topk_i[head0_next];
@@ -910,23 +1037,26 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         head1_k += 1;
                         head1_d = LOOM_INF;
                         head1_i = -1;
-                        if (head1_k < 1) {
+                        if (head1_k < 5) {
                             int head1_next = cohort1_base + scratch_base + head1_k;
                             head1_d = smem_cohort_topk_d[head1_next];
                             head1_i = smem_cohort_topk_i[head1_next];
                         }
                     }
                 }
-                smem_cohort_topk_d[cohort0_base + pair_scratch_base] = best_d[0];
-                smem_cohort_topk_i[cohort0_base + pair_scratch_base] = best_i[0];
+                #pragma unroll
+                for (int kk_10 = 0; kk_10 < 5; kk_10++) {
+                    smem_cohort_topk_d[cohort0_base + pair_scratch_base + kk_10] = best_d[kk_10];
+                    smem_cohort_topk_i[cohort0_base + pair_scratch_base + kk_10] = best_i[kk_10];
+                }
             }
         }
     }
     if (col_chunk == 2) {
         if (q_local < 128) {
             if (q_global < Q) {
-                const int cohort2_base = 256;
-                const int cohort3_base = 384;
+                const int cohort2_base = 1280;
+                const int cohort3_base = 1920;
                 int head0_k_1 = 0;
                 int head1_k_1 = 0;
                 float head0_d_1 = smem_cohort_topk_d[cohort2_base + scratch_base];
@@ -934,7 +1064,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                 int head0_i_1 = smem_cohort_topk_i[cohort2_base + scratch_base];
                 int head1_i_1 = smem_cohort_topk_i[cohort3_base + scratch_base];
                 #pragma unroll
-                for (int out_k_1 = 0; out_k_1 < 1; out_k_1++) {
+                for (int out_k_1 = 0; out_k_1 < 5; out_k_1++) {
                     int take1_1 = ((head1_d_1 < head0_d_1) ? 1 : 0);
                     best_d[out_k_1] = ((take1_1 != 0) ? head1_d_1 : head0_d_1);
                     best_i[out_k_1] = ((take1_1 != 0) ? head1_i_1 : head0_i_1);
@@ -942,7 +1072,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         head0_k_1 += 1;
                         head0_d_1 = LOOM_INF;
                         head0_i_1 = -1;
-                        if (head0_k_1 < 1) {
+                        if (head0_k_1 < 5) {
                             int head0_next_1 = cohort2_base + scratch_base + head0_k_1;
                             head0_d_1 = smem_cohort_topk_d[head0_next_1];
                             head0_i_1 = smem_cohort_topk_i[head0_next_1];
@@ -952,15 +1082,18 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                         head1_k_1 += 1;
                         head1_d_1 = LOOM_INF;
                         head1_i_1 = -1;
-                        if (head1_k_1 < 1) {
+                        if (head1_k_1 < 5) {
                             int head1_next_1 = cohort3_base + scratch_base + head1_k_1;
                             head1_d_1 = smem_cohort_topk_d[head1_next_1];
                             head1_i_1 = smem_cohort_topk_i[head1_next_1];
                         }
                     }
                 }
-                smem_cohort_topk_d[cohort2_base + pair_scratch_base] = best_d[0];
-                smem_cohort_topk_i[cohort2_base + pair_scratch_base] = best_i[0];
+                #pragma unroll
+                for (int kk_11 = 0; kk_11 < 5; kk_11++) {
+                    smem_cohort_topk_d[cohort2_base + pair_scratch_base + kk_11] = best_d[kk_11];
+                    smem_cohort_topk_i[cohort2_base + pair_scratch_base + kk_11] = best_i[kk_11];
+                }
             }
         }
     }
@@ -970,7 +1103,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
             if (q_local < 64) {
                 if (q_global < Q) {
                     const int pair01_base = 0;
-                    const int pair23_base = 256;
+                    const int pair23_base = 1280;
                     int head0_k_2 = 0;
                     int head1_k_2 = 0;
                     float head0_d_2 = smem_cohort_topk_d[pair01_base + pair_scratch_base];
@@ -978,7 +1111,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                     int head0_i_2 = smem_cohort_topk_i[pair01_base + pair_scratch_base];
                     int head1_i_2 = smem_cohort_topk_i[pair23_base + pair_scratch_base];
                     #pragma unroll
-                    for (int out_k_2 = 0; out_k_2 < 1; out_k_2++) {
+                    for (int out_k_2 = 0; out_k_2 < 5; out_k_2++) {
                         int take1_2 = ((head1_d_2 < head0_d_2) ? 1 : 0);
                         best_d[out_k_2] = ((take1_2 != 0) ? head1_d_2 : head0_d_2);
                         best_i[out_k_2] = ((take1_2 != 0) ? head1_i_2 : head0_i_2);
@@ -986,7 +1119,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                             head0_k_2 += 1;
                             head0_d_2 = LOOM_INF;
                             head0_i_2 = -1;
-                            if (head0_k_2 < 1) {
+                            if (head0_k_2 < 5) {
                                 int head0_next_2 = pair01_base + pair_scratch_base + head0_k_2;
                                 head0_d_2 = smem_cohort_topk_d[head0_next_2];
                                 head0_i_2 = smem_cohort_topk_i[head0_next_2];
@@ -996,18 +1129,24 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                             head1_k_2 += 1;
                             head1_d_2 = LOOM_INF;
                             head1_i_2 = -1;
-                            if (head1_k_2 < 1) {
+                            if (head1_k_2 < 5) {
                                 int head1_next_2 = pair23_base + pair_scratch_base + head1_k_2;
                                 head1_d_2 = smem_cohort_topk_d[head1_next_2];
                                 head1_i_2 = smem_cohort_topk_i[head1_next_2];
                             }
                         }
                     }
-                    partial_distances[partial_base] = best_d[0];
-                    partial_indices[partial_base] = best_i[0];
+                    #pragma unroll
+                    for (int kk_12 = 0; kk_12 < 5; kk_12++) {
+                        partial_distances[partial_base + (unsigned long long)kk_12] = best_d[kk_12];
+                        partial_indices[partial_base + (unsigned long long)kk_12] = best_i[kk_12];
+                    }
                 } else {
-                    partial_distances[partial_base] = LOOM_INF;
-                    partial_indices[partial_base] = -1;
+                    #pragma unroll
+                    for (int kk_13 = 0; kk_13 < 5; kk_13++) {
+                        partial_distances[partial_base + (unsigned long long)kk_13] = LOOM_INF;
+                        partial_indices[partial_base + (unsigned long long)kk_13] = -1;
+                    }
                 }
             }
         }
@@ -1017,7 +1156,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
             if (q_local >= 64) {
                 if (q_global < Q) {
                     const int pair01_base_1 = 0;
-                    const int pair23_base_1 = 256;
+                    const int pair23_base_1 = 1280;
                     int head0_k_3 = 0;
                     int head1_k_3 = 0;
                     float head0_d_3 = smem_cohort_topk_d[pair01_base_1 + pair_scratch_base];
@@ -1025,7 +1164,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                     int head0_i_3 = smem_cohort_topk_i[pair01_base_1 + pair_scratch_base];
                     int head1_i_3 = smem_cohort_topk_i[pair23_base_1 + pair_scratch_base];
                     #pragma unroll
-                    for (int out_k_3 = 0; out_k_3 < 1; out_k_3++) {
+                    for (int out_k_3 = 0; out_k_3 < 5; out_k_3++) {
                         int take1_3 = ((head1_d_3 < head0_d_3) ? 1 : 0);
                         best_d[out_k_3] = ((take1_3 != 0) ? head1_d_3 : head0_d_3);
                         best_i[out_k_3] = ((take1_3 != 0) ? head1_i_3 : head0_i_3);
@@ -1033,7 +1172,7 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                             head0_k_3 += 1;
                             head0_d_3 = LOOM_INF;
                             head0_i_3 = -1;
-                            if (head0_k_3 < 1) {
+                            if (head0_k_3 < 5) {
                                 int head0_next_3 = pair01_base_1 + pair_scratch_base + head0_k_3;
                                 head0_d_3 = smem_cohort_topk_d[head0_next_3];
                                 head0_i_3 = smem_cohort_topk_i[head0_next_3];
@@ -1043,18 +1182,24 @@ kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1(__nv
                             head1_k_3 += 1;
                             head1_d_3 = LOOM_INF;
                             head1_i_3 = -1;
-                            if (head1_k_3 < 1) {
+                            if (head1_k_3 < 5) {
                                 int head1_next_3 = pair23_base_1 + pair_scratch_base + head1_k_3;
                                 head1_d_3 = smem_cohort_topk_d[head1_next_3];
                                 head1_i_3 = smem_cohort_topk_i[head1_next_3];
                             }
                         }
                     }
-                    partial_distances[partial_base] = best_d[0];
-                    partial_indices[partial_base] = best_i[0];
+                    #pragma unroll
+                    for (int kk_14 = 0; kk_14 < 5; kk_14++) {
+                        partial_distances[partial_base + (unsigned long long)kk_14] = best_d[kk_14];
+                        partial_indices[partial_base + (unsigned long long)kk_14] = best_i[kk_14];
+                    }
                 } else {
-                    partial_distances[partial_base] = LOOM_INF;
-                    partial_indices[partial_base] = -1;
+                    #pragma unroll
+                    for (int kk_15 = 0; kk_15 < 5; kk_15++) {
+                        partial_distances[partial_base + (unsigned long long)kk_15] = LOOM_INF;
+                        partial_indices[partial_base + (unsigned long long)kk_15] = -1;
+                    }
                 }
             }
         }

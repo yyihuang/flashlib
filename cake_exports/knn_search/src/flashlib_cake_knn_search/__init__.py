@@ -2094,5 +2094,8 @@ __all__ = [
 ]
 
 # Semantic exports generated from export_plan.package_exports.
+from .interface import PreparedKNNSearch as PreparedKNNSearch
 from .interface import knn_search as knn_search
-__all__ = [*globals().get('__all__', []), 'knn_search']
+from .interface import knn_search_prepared as knn_search_prepared
+from .interface import prepare_knn_search as prepare_knn_search
+__all__ = [*globals().get('__all__', []), 'PreparedKNNSearch', 'knn_search', 'knn_search_prepared', 'prepare_knn_search']

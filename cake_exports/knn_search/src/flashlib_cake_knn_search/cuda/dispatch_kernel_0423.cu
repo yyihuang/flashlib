@@ -343,12 +343,9 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
-    int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
     int work_id = bid;
     int split_id = work_id - work_id / 192 * 192;
     int q_tile = work_id / 192;
@@ -589,6 +586,8 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
         smem_db_norm_next[tid] = db_norm_1;
     }
     if (warp == 0) {
+        int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -642,7 +641,7 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
         elect_commit(mma_done_first_addr);
     }
     unsigned int _phase_mma_done_first_0 = 0;
@@ -744,6 +743,8 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
         best_i[j_rel + 7] = m_abs31;
     }
     if (warp == 0) {
+        int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_1 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -797,7 +798,7 @@ kernel_knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2(__nv_bfloat1
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_2), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(0));
         elect_commit(mma_done_second_addr);
     }
     unsigned int _phase_mma_done_second_0 = 0;

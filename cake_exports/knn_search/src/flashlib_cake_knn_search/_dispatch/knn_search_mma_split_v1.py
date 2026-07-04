@@ -11,10 +11,11 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import math
 import os
 from typing import Any
-from .knn_search_q1_tile_reduce_v1 import BLOCK_M as Q1_TILE_BLOCK_M
-from .knn_search_lowq_tile_reduce_dispatch0610_r3_v1 import BLOCK_M as LOWQ_TILE_BLOCK_M, launch_for_eval as _lowq_launch_for_eval
+from .knn_search_lowq_tile_reduce_dispatch0610_r3_v1 import BLOCK_M as LOWQ_TILE_BLOCK_M
+from .knn_search_lowq_tile_reduce_dispatch0610_r3_v1 import launch_for_eval as _lowq_launch_for_eval
 from .knn_search_lowq_tile_reduce_dispatch0610_r8_blockm512_v1 import launch_for_eval as _lowq_blockm512_launch_for_eval
 from .knn_search_q1_irregular_m_tail_v1 import launch_for_eval as _q1_irregular_launch_for_eval
+from .knn_search_q1_tile_reduce_v1 import BLOCK_M as Q1_TILE_BLOCK_M
 from .knn_search_q1_tile_reduce_v1 import launch_for_eval as _q1_launch_for_eval
 from .knn_search_warp_split_v1 import launch_for_eval as _scalar_launch_for_eval
 THREADS = 640

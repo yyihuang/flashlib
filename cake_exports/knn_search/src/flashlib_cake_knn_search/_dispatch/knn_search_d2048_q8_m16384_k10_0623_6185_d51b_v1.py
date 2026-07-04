@@ -13,8 +13,8 @@ import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_d4096_q4q8_m8192m16384_k10_0623_5ff7_v1 as parent
-from . import knn_search_mma_split_v1 as mma
 from . import knn_search_lowq_row16_mma_dispatch0610_r18_d14a_vec16_bguard_v1 as row16
+from . import knn_search_mma_split_v1 as mma
 THREADS = 512
 MERGE_THREADS = mma.MERGE_THREADS
 BLOCK_Q = 64

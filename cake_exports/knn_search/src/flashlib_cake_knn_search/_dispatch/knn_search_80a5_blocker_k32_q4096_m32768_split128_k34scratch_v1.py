@@ -13,8 +13,8 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
-from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_dispatch0617_default_afe6_v1 as parent
+from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as q4096_k64
 from . import knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_0612_r31_11c1_v1 as producer_parent
 K64_MAX = q4096_k64.K64_MAX

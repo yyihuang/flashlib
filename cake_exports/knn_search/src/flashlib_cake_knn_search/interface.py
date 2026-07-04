@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ._dispatch import knn_search_dispatch0701_k11_d128_guard_repair_v1 as _dispatcher
@@ -7,21 +8,24 @@ from ._dispatch import knn_search_dispatch0701_k11_d128_guard_repair_v1 as _disp
 SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval"
 
 
-def knn_search(
+@dataclass(frozen=True)
+class PreparedKNNSearch:
+    """Reusable validated inputs and output buffers for the hot path."""
+
+    inputs: dict[str, Any]
+    selected_route: str
+
+
+def prepare_knn_search(
     query: Any,
     database: Any,
     k: int,
     *,
     out: tuple[Any, Any] | None = None,
-    arch: str | None = None,
-    stream: Any = None,
-    timeout_ms: float | None = None,
-    return_info: bool = False,
-):
-    """Run exact squared-L2 kNN with the frozen production dispatcher."""
+) -> PreparedKNNSearch:
+    """Validate tensors and prepare outputs and dispatch metadata once."""
     import torch
 
-    del arch, stream, timeout_ms
     if not all(isinstance(item, torch.Tensor) and item.is_cuda for item in (query, database)):
         raise TypeError("query and database must be CUDA torch.Tensor objects")
     if query.dtype is not torch.bfloat16 or database.dtype is not torch.bfloat16:
@@ -57,7 +61,31 @@ def knn_search(
         "out_distances": out_distances,
         "out_indices": out_indices,
     }
-    selected_route = _dispatcher.selected_route(inputs)
-    _dispatcher.launch_for_eval(inputs)
-    info = {"semantic_entrypoint": SEMANTIC_ENTRYPOINT, "selected_route": selected_route}
+    return PreparedKNNSearch(inputs=inputs, selected_route=_dispatcher.selected_route(inputs))
+
+
+def knn_search_prepared(prepared: PreparedKNNSearch, *, return_info: bool = False):
+    """Launch a prepared exact KNN search without setup or allocation."""
+    if not isinstance(prepared, PreparedKNNSearch):
+        raise TypeError("prepared must be returned by prepare_knn_search")
+    _dispatcher.launch_for_eval(prepared.inputs)
+    out = (prepared.inputs["out_distances"], prepared.inputs["out_indices"])
+    info = {"semantic_entrypoint": SEMANTIC_ENTRYPOINT, "selected_route": prepared.selected_route}
     return (out, info) if return_info else out
+
+
+def knn_search(
+    query: Any,
+    database: Any,
+    k: int,
+    *,
+    out: tuple[Any, Any] | None = None,
+    arch: str | None = None,
+    stream: Any = None,
+    timeout_ms: float | None = None,
+    return_info: bool = False,
+):
+    """Run exact squared-L2 kNN with the frozen production dispatcher."""
+    del arch, stream, timeout_ms
+    prepared = prepare_knn_search(query, database, k, out=out)
+    return knn_search_prepared(prepared, return_info=return_info)

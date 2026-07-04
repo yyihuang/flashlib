@@ -15,8 +15,8 @@ import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k64_q128split512_hiermerge32_kexact_0614_r25_k64thin_v1 as parent
-from . import knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_0612_r31_11c1_v1 as q4096_producer
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as q4096_active
+from . import knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_0612_r31_11c1_v1 as q4096_producer
 K64_MAX = parent.K64_MAX
 Q128_ROWS = parent.Q128_ROWS
 Q128_M_ROWS = parent.Q128_M_ROWS
@@ -55,7 +55,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_twotil
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = parent.K64_THIN_MARGIN_SHAPES
 
 def _compile_q128_split512_twotile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0216"}, "group_merge": {"__kernel__": "dispatch_kernel_0215"}, "partial": {"__kernel__": "dispatch_kernel_0214"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0236"}, "group_merge": {"__kernel__": "dispatch_kernel_0235"}, "partial": {"__kernel__": "dispatch_kernel_0234"}}'))
 
 def _use_q128_k64_split512_twotile(inputs: dict[str, Any]) -> bool:
     return parent._use_q128_k64_split512_indexfast(inputs)

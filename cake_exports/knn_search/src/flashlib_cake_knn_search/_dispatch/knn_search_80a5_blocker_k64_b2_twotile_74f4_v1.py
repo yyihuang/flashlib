@@ -14,8 +14,8 @@ from .._dispatch_runtime import select_named_shapes
 from . import knn_search_dispatch0617_default_afe6_v1 as parent
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
 from . import knn_search_k64_q128m65536_twotileproducer_kexact_0614_r27_k64thin_v1 as b1_parent
-from . import knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_0612_r31_11c1_v1 as q4096_producer
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as q4096_active
+from . import knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_0612_r31_11c1_v1 as q4096_producer
 K64_MAX = b1_parent.K64_MAX
 Q128_ROWS = b1_parent.Q128_ROWS
 Q128_M65536_ROWS = b1_parent.Q128_M65536_ROWS

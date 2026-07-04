@@ -38,7 +38,7 @@ typedef short int          int16_t;
 #define SMEM_TOTAL 165120
 #define THREADS 512
 #define K_MAX_ 64
-#define K_PREFIX_ 8
+#define K_PREFIX_ 7
 
 #include <math_constants.h>
 
@@ -282,7 +282,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
+kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -343,12 +343,9 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
-    int _desc_lo_2 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
     int work_id = bid;
     int split_id = work_id % 79;
     int q_tile = work_id / 79;
@@ -536,6 +533,8 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
     int second_m_start = second_m_tile * 128;
     int has_second_tile = ((second_m_tile < tile_end) ? 1 : 0);
     if (warp == 0) {
+        int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -589,7 +588,7 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
         elect_commit(mma_done_first_addr);
     }
     if (has_second_tile != 0) {
@@ -784,6 +783,8 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
     unsigned int _phase_mma_done_second_0 = 0;
     if (has_second_tile != 0) {
         if (warp == 0) {
+            int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+            int _mma_b_lo_1 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
             asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -837,7 +838,7 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_2), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(0));
             elect_commit(mma_done_second_addr);
         }
         mbarrier_wait(mma_done_second_addr, _phase_mma_done_second_0);
@@ -5830,18 +5831,9 @@ kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1(__nv_bfl
     best_i[62] = ((swap_2719 != 0) ? left_i_2717 : right_i_2718);
     {
         #pragma unroll
-        for (int kk_1 = 0; kk_1 < K_PREFIX_; kk_1 += 2) {
-            {
-                float2 _v2 = make_float2(best_d[kk_1 + 0], best_d[kk_1 + 1]);
-                *reinterpret_cast<float2*>(partial_distances + partial_col_base + (unsigned long long)kk_1) = _v2;
-            }
-        }
-        #pragma unroll
-        for (int kk_2 = 0; kk_2 < K_PREFIX_; kk_2 += 2) {
-            {
-                int2 _iv2 = make_int2(best_i[kk_2 + 0], best_i[kk_2 + 1]);
-                *reinterpret_cast<int2*>(partial_indices + partial_col_base + (unsigned long long)kk_2) = _iv2;
-            }
+        for (int kk_1 = 0; kk_1 < K_PREFIX_; kk_1++) {
+            partial_distances[partial_col_base + (unsigned long long)kk_1] = best_d[kk_1];
+            partial_indices[partial_col_base + (unsigned long long)kk_1] = best_i[kk_1];
         }
     }
 

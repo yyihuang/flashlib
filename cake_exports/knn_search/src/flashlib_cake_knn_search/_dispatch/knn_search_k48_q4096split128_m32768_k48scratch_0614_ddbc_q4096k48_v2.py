@@ -57,7 +57,7 @@ K48_Q4096_EVAL_SHAPES = [*K48_Q4096_SPLIT128_M32768_SHAPES, *K48_Q4096_PRESERVE_
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'ddbc_q4096_m32768_d128_k48_split128_k48scratch_merge', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 48 and tcgen05', 'route': 'round98_q4096_k48_split128_k48scratch_merge'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_q4096_k48_split128_k48scratch_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0313"}, "partial": {"__kernel__": "dispatch_kernel_0312"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0309"}, "partial": {"__kernel__": "dispatch_kernel_0308"}}'))
 
 def _use_q4096_k48_split128_k48scratch(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q4096_ROWS and (int(inputs['M']) == Q4096_M32768_ROWS) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K48_TARGET) and base._tcgen05_capable_arch()

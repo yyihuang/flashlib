@@ -275,11 +275,9 @@ kernel_knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1(__nv_bfloat16* __r
     const int taddr = tmem_addr_storage[0];
 
     // Kernel post-init ops
-    const int tmem_acc = tmem_addr_storage[0];
+    const int tmem_acc = taddr;
 
     // === Task calls (dependency order) ===
-    int _desc_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-    int _desc_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
     int split_id = bid;
     int row_top = 0;
     int row_bot = 0;
@@ -413,6 +411,8 @@ kernel_knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1(__nv_bfloat16* __r
     }
     __syncthreads();
     if (warp == 0) {
+        int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -506,7 +506,7 @@ kernel_knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1(__nv_bfloat16* __r
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(0));
+            :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
         elect_commit(mma_done0_addr);
     }
     unsigned int _phase_mma_done0_0 = 0;
@@ -604,6 +604,8 @@ kernel_knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1(__nv_bfloat16* __r
     }
     __syncthreads();
     if (warp == 0) {
+        int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+        int _mma_b_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
         asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
@@ -697,7 +699,7 @@ kernel_knn_search_d512_q32_k64_q32active_partial_abaf_r120_v1(__nv_bfloat16* __r
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_desc_lo_0), "r"(_desc_lo_1), "r"(taddr), "r"(1));
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(1));
         elect_commit(mma_done1_addr);
     }
     unsigned int _phase_mma_done1_0 = 0;

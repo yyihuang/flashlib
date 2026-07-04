@@ -33,7 +33,7 @@ _D256_K10_KERNELS: dict[str, Any] = {}
 _D256_K10_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k10_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0289"}, "partial": {"__kernel__": "dispatch_kernel_0288"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0285"}, "partial": {"__kernel__": "dispatch_kernel_0284"}}'))
 
 def _scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

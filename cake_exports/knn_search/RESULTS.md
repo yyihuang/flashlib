@@ -1,11 +1,19 @@
 # Correctness And Performance Results
 
+## Validated B200 result
+
+- Correctness: `163/163`; route fidelity: `163/163`
+- Public speedup: min `0.0090x`, geomean `0.5886x`, max `8.3657x`
+- Prepared speedup: min `0.0090x`, geomean `0.5894x`, max `8.3498x`
+- Public/prepared GPU-span ratio: `1.0013x` geomean
+- Result payload: [`BENCHMARK_RESULTS.json`](BENCHMARK_RESULTS.json)
+
 ## Export Provenance
 
 - Package: `flashlib_cake_knn_search`
-- Source repository: `ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git`
-- Source commit: `59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d`
-- Generated at: `2026-07-04T07:31:37.699267+00:00`
+- Source repository: `https://gitlab-master.nvidia.com/cake/cake.git`
+- Source commit: `90083f7caff1734b740c24083f944615d7fab15e`
+- Generated at: `2026-07-04T09:11:49.272673+00:00`
 
 ## Latest Recorded Results
 
@@ -251,29 +259,29 @@ CUPTI-backed, cold-L2 timing.
 | `dispatch_kernel_0211` | `kernel_knn_search_ext_k_capacity_truncate64_to_k_0618_28ec_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0212` | `kernel_knn_search_ext_k_capacity_q4096_m49152_merge24_0618_28ec_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0213` | `kernel_knn_search_ext_k_capacity_q4096_m49152_partial_0618_28ec_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0214` | `kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0215` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0216` | `kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0217` | `kernel_knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0218` | `kernel_knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0219` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0220` | `kernel_knn_search_k64_stable_merge_0612_r23_4e96_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0221` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0222` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0223` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0224` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0225` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0226` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0227` | `kernel_knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0228` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0229` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0230` | `kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0231` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0232` | `kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0233` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0234` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0235` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0236` | `kernel_knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0214` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0215` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0216` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0217` | `kernel_knn_search_k64_stable_merge_0612_r23_4e96_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0218` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0219` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0220` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0221` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0222` | `kernel_knn_search_k64_q4096split80_twotile_partial_0612_r25_4e2c_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0223` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0224` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0225` | `kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0226` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0227` | `kernel_knn_search_k32_q128_split148_guarded_merge_r60_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0228` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0229` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0230` | `kernel_knn_search_k64_q4096split79_twotile_oddevensort_partial_0612_r34_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0231` | `kernel_knn_search_k64_q4096split79_indexfastmerge10_guarded_0612_r34_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0232` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_stagingunrolled_partial_0612_r31_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0233` | `kernel_knn_search_k64_q4096split80_indexfastmerge10_0612_r32_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0234` | `kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0235` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0236` | `kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0237` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0238` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0239` | `kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
@@ -288,73 +296,73 @@ CUPTI-backed, cold-L2 timing.
 | `dispatch_kernel_0248` | `kernel_knn_search_k64_q128split512_twotile_partial_0614_r26_k64thin_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0249` | `kernel_knn_search_k64_q128m65536_groupmerge64_kexact_0614_r27_k64thin_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0250` | `kernel_knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0251` | `kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0252` | `kernel_knn_search_blind_k64_highq_merge32_0614_50cc_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0253` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0254` | `kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0255` | `kernel_knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0256` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0257` | `kernel_knn_search_dynamic_d3_tile_reduce_partial_0618_c8b9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0258` | `kernel_knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2` | `standard` | 256 | 0 |
-| `dispatch_kernel_0259` | `kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0260` | `kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0261` | `kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0262` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0263` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0264` | `kernel_knn_search_lowd_ivf_direct_dispatch0610_r2_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0265` | `kernel_knn_search_lowd_dbscan_direct_dispatch0610_r1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0266` | `kernel_knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0267` | `kernel_knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0268` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0269` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0270` | `kernel_knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0271` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0272` | `kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0273` | `kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0274` | `kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0275` | `kernel_knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0276` | `kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0277` | `kernel_knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0278` | `kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0279` | `kernel_knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0280` | `kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0281` | `kernel_knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0282` | `kernel_knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0283` | `kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0284` | `kernel_knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0285` | `kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0286` | `kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0287` | `kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0288` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0289` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0290` | `kernel_knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0291` | `kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0292` | `kernel_knn_search_mma_split_merge_q4096_lowk_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0293` | `kernel_knn_search_mma_split_merge_q4096_lowk_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0294` | `kernel_knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0295` | `kernel_knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0296` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0297` | `kernel_knn_search_self_k5_direct_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0298` | `kernel_knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0299` | `kernel_knn_search_q4096_lowk_k1partial_onestage_merge_0614_r2_3ff5_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0300` | `kernel_knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0301` | `kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0302` | `kernel_knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0303` | `kernel_knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0304` | `kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0305` | `kernel_knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0306` | `kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0307` | `kernel_knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0308` | `kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0309` | `kernel_knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0310` | `kernel_knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0311` | `kernel_knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0312` | `kernel_knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2` | `standard` | 256 | 0 |
-| `dispatch_kernel_0313` | `kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2` | `standard` | 256 | 0 |
-| `dispatch_kernel_0314` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0315` | `kernel_knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0316` | `kernel_knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1` | `standard` | 256 | 0 |
-| `dispatch_kernel_0317` | `kernel_knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0251` | `kernel_knn_search_dynamic_d_d384_q32_m131072_exact_tcgen05_partial_0618_5847_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0252` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0253` | `kernel_knn_search_dynamic_d3_tile_reduce_partial_0618_c8b9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0254` | `kernel_knn_search_lowd_non128_tile_reduce_merge_0615_7d36_v2` | `standard` | 256 | 0 |
+| `dispatch_kernel_0255` | `kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0256` | `kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0257` | `kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0258` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0259` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0260` | `kernel_knn_search_lowd_ivf_direct_dispatch0610_r2_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0261` | `kernel_knn_search_lowd_dbscan_direct_dispatch0610_r1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0262` | `kernel_knn_search_lowd_dbscan_d2_coopmerge_0612_r23_6e85_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0263` | `kernel_knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0264` | `kernel_knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_partial_0612_r30_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0265` | `kernel_knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0266` | `kernel_knn_search_blind_d384_tcgen05_partial_dispatch0610_r2_f94e_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0267` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0268` | `kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0269` | `kernel_knn_search_dynamic_d257_k64_q64_partial_0618_ccef_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0270` | `kernel_knn_search_dynamic_d257_k64_q64_merge_0618_ccef_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0271` | `kernel_knn_search_lowd_dbscan_d2_t128_m1536_0613_r56_cd72_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0272` | `kernel_knn_search_q4096_lowk_k1partial_minpair_0613_r46_48e9_lowk_k1top1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0273` | `kernel_knn_search_q4096_lowk_k1partial_minpair_merge_0613_r46_48e9_lowk_k1top1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0274` | `kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0275` | `kernel_knn_search_q4096_lowk_k5partial_split9_merge_0613_r51_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0276` | `kernel_knn_search_q4096_lowk_k5partial_0613_r49_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0277` | `kernel_knn_search_q4096_lowk_k5partial_merge_0613_r49_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0278` | `kernel_knn_search_q4096_lowk_k5_stride10_merge_0613_r48_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0279` | `kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0280` | `kernel_knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0281` | `kernel_knn_search_q4096_lowk_k2partial_0613_r45_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0282` | `kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0283` | `kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0284` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0285` | `kernel_knn_search_mma_split_merge_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0286` | `kernel_knn_search_q4096_lowk_k1partial_0613_r44_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0287` | `kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0288` | `kernel_knn_search_mma_split_merge_q4096_lowk_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0289` | `kernel_knn_search_mma_split_merge_q4096_lowk_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0290` | `kernel_knn_search_q4096_lowk_k8_stride10_out8_merge_0613_r52_48e9_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0291` | `kernel_knn_search_lowq_row16_mma_partial_dispatch0610_r18_d14a_vec16_bguard_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0292` | `kernel_knn_search_mma_split_merge_q128_const148_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0293` | `kernel_knn_search_self_k5_direct_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0294` | `kernel_knn_search_q4096_lowk_k1partial_onestage_0614_r2_3ff5_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0295` | `kernel_knn_search_q4096_lowk_k1partial_onestage_merge_0614_r2_3ff5_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0296` | `kernel_knn_search_k64_q4096split79_localprefix9_partial_0615_r32_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0297` | `kernel_knn_search_k64_q4096split79_localprefix_certmerge_0615_r32_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0298` | `kernel_knn_search_k64_q4096split79_localprefix_certflag_init_0615_r32_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0299` | `kernel_knn_search_k64_q4096split79_localprefix_cert_0615_r32_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0300` | `kernel_knn_search_k64_q4096split79_localprefix_partial_0614_r36_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0301` | `kernel_knn_search_k64_q4096split79_localprefix_merge_0614_r36_edd7_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0302` | `kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0303` | `kernel_knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_merge_0615_r36_e4cb_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0304` | `kernel_knn_search_k64_q4096split79_localprefix7_partial_0615_245d_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0305` | `kernel_knn_search_k64_q4096split79_localprefix6_certmerge_0615_245d_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0306` | `kernel_knn_search_k64_q4096split79_localprefix6_certflag_init_0615_245d_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0307` | `kernel_knn_search_k64_q4096split79_localprefix6_cert_0615_245d_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0308` | `kernel_knn_search_k48_q4096split128_m32768_k48scratch_partial_0614_ddbc_q4096k48_v2` | `standard` | 256 | 0 |
+| `dispatch_kernel_0309` | `kernel_knn_search_k48_q4096split128_m32768_k48scratch_merge16_0614_ddbc_q4096k48_v2` | `standard` | 256 | 0 |
+| `dispatch_kernel_0310` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0311` | `kernel_knn_search_k64_q128split512_groupmerge64_0613_r43_11c1_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0312` | `kernel_knn_search_k48_q128split512_finalmerge32_strided_0614_ddbc_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0313` | `kernel_knn_search_blind_k64_q4096_m32768_merge16_0614_1968_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0314` | `kernel_knn_search_blind_k64_twotile_partial_0614_50cc_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0315` | `kernel_knn_search_blind_k64_highq_merge32_0614_50cc_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0316` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
+| `dispatch_kernel_0317` | `kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0318` | `kernel_knn_search_blind_k64_q128m262144_groupmerge64_0614_r19_6389_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0319` | `kernel_knn_search_mma_split_partial_v1` | `standard` | 256 | 0 |
 | `dispatch_kernel_0320` | `kernel_knn_search_k64_q128split512_groupmerge64_kexact_0614_r25_k64thin_v1` | `standard` | 256 | 0 |
