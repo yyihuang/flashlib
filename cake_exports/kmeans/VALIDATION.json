@@ -1,32 +1,15 @@
 {
-  "benchmark_command": [
-    "/workspace/venv/bin/python",
-    "benchmarks/benchmark.py",
-    "--no-correctness",
-    "--json",
-    "BENCHMARK_RESULTS.json"
-  ],
   "benchmark_passed": 228,
-  "correctness_command": [
-    "/workspace/venv/bin/python",
-    "-m",
-    "pytest",
-    "tests/test_correctness.py",
-    "-q"
-  ],
   "correctness_passed": 228,
-  "hardware": {
-    "arch": "sm_100a",
-    "device": "NVIDIA B200"
-  },
-  "measured_at_utc": "2026-07-04T05:13:22+00:00",
+  "hardware": {"arch": "sm_100a", "device": "NVIDIA B200"},
+  "measured_at_utc": "2026-07-04T07:43:00+00:00",
   "route_count": 228,
   "semantic_entrypoint": "loom.examples.weave.flash_kmeans_assign_dispatcher:launch_for_eval",
   "shape_count": 228,
   "speedup_vs_baseline": {
-    "geomean": 19.70843603857376,
-    "max": 1566.350777664457,
-    "min": 2.235451689910793
+    "geomean": 0.864180839530946,
+    "max": 12.736044337606836,
+    "min": 0.11032028469750889
   },
   "status": "passed",
   "timing_backend": "cupti"

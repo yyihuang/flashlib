@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -17,11 +18,28 @@ from flash_kmeans_shapes import (  # noqa: E402
     FLASH_KMEANS_EVOLUTION_SUMMARY,
     FLASH_KMEANS_SHAPES,
 )
+from flash_kmeans_triton_h200 import euclid_assign_triton_h200  # noqa: E402
 from flashlib_cake_kmeans._benchmark import bench_gpu_time, require_cupti  # noqa: E402
 
 ROUTE_MANIFEST = json.loads((Path(__file__).with_name("expected_routes.json")).read_text(encoding="utf-8"))
 EXPECTED_ROUTES = {row["shape"]: row["selected_route"] for row in ROUTE_MANIFEST}
 SEMANTIC_ENTRYPOINT = "loom.examples.weave.flash_kmeans_assign_dispatcher:launch_for_eval"
+BASELINE_NAME = "triton_h200_07cf"
+BASELINE_COMMIT = "07cf2a27928aacf6790c950a265d8b8dc83c87cf"
+WARMUP_MS = 20.0
+BENCH_MS = 100.0
+
+
+def _bench_original_07cf_window(fn):
+    """Match the 07cf adaptive 20 ms warmup / 100 ms CUPTI window."""
+    probe = bench_gpu_time(fn, warmup_iters=5, bench_iters=20, cold_l2=True)
+    estimate = probe.median_ms
+    return bench_gpu_time(
+        fn,
+        warmup_iters=max(1, math.ceil(WARMUP_MS / estimate)),
+        bench_iters=max(1, math.ceil(BENCH_MS / estimate)),
+        cold_l2=True,
+    )
 
 
 def _label_seed(label: str) -> int:
@@ -121,6 +139,14 @@ def _run_shape(
     x_sq = (x.float() ** 2).sum(-1).contiguous()
     c_sq = (centroids.float() ** 2).sum(-1).contiguous()
     out = torch.empty((int(row["B"]), int(row["N"])), dtype=torch.int32, device=x.device)
+    baseline_out = torch.empty_like(out)
+    baseline_out, baseline_config = euclid_assign_triton_h200(
+        x,
+        centroids,
+        x_sq,
+        c_sq,
+        out=baseline_out,
+    )
     cluster_ids, route_info = flash_kmeans_assign(
         x,
         centroids,
@@ -150,11 +176,17 @@ def _run_shape(
         "evolution_flashlib_ms": row["evolution_flashlib_ms"],
         "evolution_tflops": row["evolution_tflops"],
         "evolution_speedup": row["evolution_speedup"],
+        "baseline_name": BASELINE_NAME,
+        "baseline_commit": BASELINE_COMMIT,
+        "triton_h200_config": baseline_config,
     }
 
     if correctness:
         ref = _reference_assign(x, centroids, chunk_rows=reference_chunk_rows)
         torch.cuda.synchronize()
+        baseline_matches = baseline_out == ref
+        result["triton_h200_correct"] = bool(baseline_matches.all().item())
+        result["triton_h200_mismatch_count"] = int((~baseline_matches).sum().item())
         matches = cluster_ids == ref
         result["match_rate"] = float(matches.float().mean().item())
         result["mismatch_count"] = int((~matches).sum().item())
@@ -176,7 +208,16 @@ def _run_shape(
             result["tie_inclusive_match_rate"] = float(tie_ok.float().mean().item())
 
     if benchmark:
-        timing = bench_gpu_time(
+        baseline_timing = _bench_original_07cf_window(
+            lambda: euclid_assign_triton_h200(
+                x,
+                centroids,
+                x_sq,
+                c_sq,
+                out=baseline_out,
+            )
+        )
+        timing = _bench_original_07cf_window(
             lambda: flash_kmeans_assign(
                 x,
                 centroids,
@@ -184,18 +225,18 @@ def _run_shape(
                 x_sq=x_sq,
                 c_sq=c_sq,
                 arch=arch,
-            ),
-            cold_l2=True,
+            )
         )
+        result["triton_h200_07cf_ms"] = baseline_timing.median_ms
+        result["triton_h200_07cf_timing_backend"] = baseline_timing.backend
+        result["triton_h200_07cf_bench_iters"] = len(baseline_timing.times_ms)
         result["kernel_ms"] = timing.median_ms
         result["timing_backend"] = timing.backend
         result["bench_iters"] = len(timing.times_ms)
         flops = 2.0 * int(row["B"]) * int(row["N"]) * int(row["K"]) * int(row["D"])
         result["tflops"] = flops / timing.median_ms / 1e9
-        result["speedup_vs_evolution_flashlib_ms"] = row["evolution_flashlib_ms"] / timing.median_ms
-        result["baseline_name"] = "Cake-recorded FlashLib baseline"
-        result["baseline_ms"] = row["evolution_flashlib_ms"]
-        result["speedup_vs_baseline"] = result["speedup_vs_evolution_flashlib_ms"]
+        result["baseline_ms"] = baseline_timing.median_ms
+        result["speedup_vs_baseline"] = baseline_timing.median_ms / timing.median_ms
 
     return result
 
@@ -242,7 +283,10 @@ def main() -> int:
     payload: dict[str, Any] = {
         "api": "flashlib_cake_kmeans.flash_kmeans_assign",
         "semantic_entrypoint": SEMANTIC_ENTRYPOINT,
-        "baseline_name": "Cake-recorded FlashLib baseline",
+        "baseline_name": BASELINE_NAME,
+        "baseline_commit": BASELINE_COMMIT,
+        "speedup_convention": "triton_h200_07cf_ms / exported_cake_ms",
+        "timing_window_ms": {"warmup_ms": WARMUP_MS, "bench_ms": BENCH_MS},
         "artifact": FLASH_KMEANS_EVOLUTION_ARTIFACT,
         "evolution_summary": FLASH_KMEANS_EVOLUTION_SUMMARY,
         "selected_row_count": len(rows),

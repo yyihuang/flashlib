@@ -5,11 +5,21 @@ _KERNEL_ALIAS_BY_REQUEST = {'{"computed_smem_bytes":0,"constants":[],"ir_name":"
 import json
 import ctypes
 import importlib
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as _dataclass_replace
 from importlib import resources
 from types import SimpleNamespace
 
 from .kernels import get_kernel
+
+
+def _replace(value, /, **changes):
+    replacer = getattr(value, "__replace__", None)
+    if callable(replacer):
+        return replacer(**changes)
+    return _dataclass_replace(value, **changes)
+
+
+dc = SimpleNamespace(replace=_replace)
 
 
 def _import_dispatch_module(short_name):
