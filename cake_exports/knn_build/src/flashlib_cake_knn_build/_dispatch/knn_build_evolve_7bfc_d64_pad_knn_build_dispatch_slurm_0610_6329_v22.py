@@ -26,7 +26,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_d64_tcgen05_base", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "out_dists", "out_indices", "B", "Q", "M", "K", "num_q_tiles", "num_db_tiles", "total_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25600, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_d64_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0153"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0155"}'))
 
 def _eligible_d64_padded_base(inputs: dict[str, Any]) -> bool:
     top_k = int(inputs['K'])

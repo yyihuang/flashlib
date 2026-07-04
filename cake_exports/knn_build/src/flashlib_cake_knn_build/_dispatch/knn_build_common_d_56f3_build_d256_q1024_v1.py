@@ -15,7 +15,7 @@ import os
 from collections.abc import Callable
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dim_midk_df2f_v1 as d256_parent
 from . import knn_build_dispatch_e3de_9138_bcb3_4247_v1 as default_dispatcher

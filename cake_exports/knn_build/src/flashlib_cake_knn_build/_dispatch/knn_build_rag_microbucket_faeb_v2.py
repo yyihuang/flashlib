@@ -18,7 +18,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_e3de_8712_bcb3_2cfd_v1 as base_dispatcher
 from . import knn_build_rag_frontier_7399_v1 as k32_frontier

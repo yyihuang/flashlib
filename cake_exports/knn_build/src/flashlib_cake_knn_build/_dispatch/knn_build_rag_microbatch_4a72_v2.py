@@ -14,7 +14,7 @@ import os
 from collections.abc import Callable
 from functools import cache, lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_selected_portfolio_4a72_v1 as current_dispatcher
 from . import knn_build_rag_frontier_7399_v1 as parent_7399
@@ -78,7 +78,7 @@ def _compile_ir(ir_obj: Any):
     return CUDAKernel(cubin, f'kernel_{ir_obj.symbol}')
 
 def _compiled_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0085"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0086"}'))
 
 @cache
 def _compiled_fused_merge(split_count: int, group_count: int):

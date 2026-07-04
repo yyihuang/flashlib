@@ -35,7 +35,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tile_pairs", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0134"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0136"}'))
 
 def _use_cg2_path(inputs: dict[str, Any]) -> bool:
     return str(inputs['query'].dtype) == 'torch.bfloat16' and str(inputs['database'].dtype) == 'torch.bfloat16' and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) <= TOP_K_MAX) and (int(inputs['M']) >= 100000) and (int(inputs['Q']) >= 10000)

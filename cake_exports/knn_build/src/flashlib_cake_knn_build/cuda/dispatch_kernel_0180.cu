@@ -16,16 +16,16 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 64
-#define TOP_K_MAX 10
-#define SPLIT_COUNT 16
+#define THREADS 32
+#define TOP_K_MAX 28
+#define SPLIT_COUNT 8
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(64, 1) void
-kernel_knn_build_rect_d64_cf49_s16_cached_merge(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+__global__ __launch_bounds__(32, 1) void
+kernel_knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_bad5k28s8(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,8 +36,8 @@ kernel_knn_build_rect_d64_cf49_s16_cached_merge(float* __restrict__ partial_dist
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int start_row = bid * 64 + tid;
-    int stride = num_bids * 64;
+    int start_row = bid * 32 + tid;
+    int stride = num_bids * 32;
     #pragma unroll 1
     for (int row = start_row; row < total_queries; row += stride) {
         int base_row = row * TOP_K_MAX;

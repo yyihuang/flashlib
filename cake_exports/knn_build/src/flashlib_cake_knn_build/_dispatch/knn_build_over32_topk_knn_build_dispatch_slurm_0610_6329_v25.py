@@ -12,7 +12,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24 as parent_v24
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v20 as parent_v20
 from . import knn_build_evolve_7bfc_split_v1 as parent_split

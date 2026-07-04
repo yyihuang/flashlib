@@ -12,15 +12,16 @@ typedef short int          int16_t;
 #define TMEM_CROSS_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_QUERY_OFF 1024
-#define SMEM_SMEM_QUERY_STAGE_BYTES 16384
-#define SMEM_SMEM_QUERY_STRIDE 16384
-#define SMEM_SMEM_DATABASE_OFF 17408
-#define SMEM_SMEM_DATABASE_STAGE_BYTES 8192
-#define SMEM_SMEM_DATABASE_STRIDE 8192
-#define SMEM_TOTAL 25600
+#define SMEM_SMEM_QUERY_STAGE_BYTES 32768
+#define SMEM_SMEM_QUERY_STRIDE 32768
+#define SMEM_SMEM_DATABASE_OFF 33792
+#define SMEM_SMEM_DATABASE_STAGE_BYTES 16384
+#define SMEM_SMEM_DATABASE_STRIDE 16384
+#define SMEM_TOTAL 50176
 #define THREADS 192
 #define BLOCK_Q 128
 #define BLOCK_M 64
+#define FEAT_D 128
 #define TOP_K_MAX 10
 
 #include <math_constants.h>
@@ -223,7 +224,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_evolve_7bfc_d64_tcgen05_base(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ out_dists, int* __restrict__ out_indices, int B, int Q, int M, int K, int num_q_tiles, int num_db_tiles, int total_tiles)
+kernel_knn_build_evolve_7bfc_fp16_d128_base(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ out_dists, int* __restrict__ out_indices, int B, int Q, int M, int K, int num_q_tiles, int num_db_tiles, int total_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -237,10 +238,10 @@ kernel_knn_build_evolve_7bfc_d64_tcgen05_base(const void* __restrict__ tmap_quer
     const int num_bids = gridDim.x;
 
     // Kernel setup ops
-    __nv_bfloat16* smem_query = reinterpret_cast<__nv_bfloat16*>(smem_raw + 1024);
+    __half* smem_query = reinterpret_cast<__half*>(smem_raw + 1024);
     const int smem_query_addr = smem + 1024;
-    __nv_bfloat16* smem_database = reinterpret_cast<__nv_bfloat16*>(smem_raw + 17408);
-    const int smem_database_addr = smem + 17408;
+    __half* smem_database = reinterpret_cast<__half*>(smem_raw + 33792);
+    const int smem_database_addr = smem + 33792;
 
     // Mbarrier init (6 groups, 6 barriers)
     // Mbarriers at smem_raw[0..48)
@@ -301,7 +302,7 @@ kernel_knn_build_evolve_7bfc_d64_tcgen05_base(const void* __restrict__ tmap_quer
                         int global_q = batch_idx * Q + off_q;
                         mbarrier_wait(query_empty_addr, _phase_query_empty_0);
                         _phase_query_empty_0 ^= 1;
-                        mbarrier_arrive_expect_tx(query_full_addr, 16384);
+                        mbarrier_arrive_expect_tx(query_full_addr, 32768);
                         tma_3d_gmem2smem(smem_query_addr, tmap_query, 0, global_q, 0, query_full_addr);
                         #pragma unroll 1
                         for (int db_tile = 0; db_tile < num_db_tiles; db_tile++) {
@@ -309,7 +310,7 @@ kernel_knn_build_evolve_7bfc_d64_tcgen05_base(const void* __restrict__ tmap_quer
                             int global_m = batch_idx * M + off_m;
                             mbarrier_wait(database_empty_addr, _phase_database_empty_0);
                             _phase_database_empty_0 ^= 1;
-                            mbarrier_arrive_expect_tx(database_full_addr, 8192);
+                            mbarrier_arrive_expect_tx(database_full_addr, 16384);
                             tma_3d_gmem2smem(smem_database_addr, tmap_database, 0, global_m, 0, database_full_addr);
                         }
                     }
@@ -346,12 +347,32 @@ kernel_knn_build_evolve_7bfc_d64_tcgen05_base(const void* __restrict__ tmap_quer
                     ""
                     "mov.b32 adhi, 0x40004040;\n\t"
                     "mov.b32 bdhi, 0x40004040;\n\t"
-                    "mov.b32 id, 135267472;\n\t"
+                    "mov.b32 id, 135266320;\n\t"
                     "mov.b32 alo, %0;\n\t"
                     "mov.b32 blo, %1;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p0;\n\t"
+                    "add.u32 alo, alo, 2;\n\t"
+                    "add.u32 blo, blo, 2;\n\t"
+                    "mov.b64 da, {alo, adhi};\n\t"
+                    "mov.b64 db, {blo, bdhi};\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
+                    "add.u32 alo, alo, 2;\n\t"
+                    "add.u32 blo, blo, 2;\n\t"
+                    "mov.b64 da, {alo, adhi};\n\t"
+                    "mov.b64 db, {blo, bdhi};\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
+                    "add.u32 alo, alo, 2;\n\t"
+                    "add.u32 blo, blo, 2;\n\t"
+                    "mov.b64 da, {alo, adhi};\n\t"
+                    "mov.b64 db, {blo, bdhi};\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
+                    "add.u32 alo, alo, 1018;\n\t"
+                    "add.u32 blo, blo, 506;\n\t"
+                    "mov.b64 da, {alo, adhi};\n\t"
+                    "mov.b64 db, {blo, bdhi};\n\t"
+                    "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
                     "add.u32 alo, alo, 2;\n\t"
                     "add.u32 blo, blo, 2;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"

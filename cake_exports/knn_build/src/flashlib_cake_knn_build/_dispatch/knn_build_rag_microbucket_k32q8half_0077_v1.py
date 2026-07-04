@@ -15,7 +15,7 @@ import json
 import os
 from functools import lru_cache
 from typing import Any, Callable
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32rowld1warp_0077_v1 as parent
 from . import knn_build_rag_microbucket_k32warpmerge_0077_v1 as warpmerge_parent
@@ -67,7 +67,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32q8half_0077_v1_stage1_q8_k32_m64_halfrow_q8half_0077_v1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 42240, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 8]], "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_q8_k32_m64_halfrow():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0100"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0101"}'))
 
 def _launch_q8_half_warpmerge(inputs: dict[str, Any], *, split_count: int) -> None:
     warpmerge_parent._launch_stage1_then_warp_merge(inputs, split_count=split_count, stage1_kernel_fn=_compiled_stage1_q8_k32_m64_halfrow, stage1_ir=_stage1_q8_half_ir(), stage1_threads=Q8_HALF_STAGE1_THREADS, block_q=Q8_HALF_BLOCK_Q, block_m=Q8_HALF_BLOCK_M)

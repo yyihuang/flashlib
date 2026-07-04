@@ -44,7 +44,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_0cb5_q31tail_v2_stage1_q31exact_0cb5_v2", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 31]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q31_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0206"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0208"}'))
 
 def _eligible_q31tail_v2(inputs: dict[str, Any]) -> bool:
     return parent.uneven.base._is_bf16_d128_nonbuild(inputs) and int(inputs.get('Q', -1)) == 31 and (int(inputs.get('M', -1)) == 100000) and (int(inputs.get('K', -1)) == parent.uneven.K32_TOP_K_MAX)

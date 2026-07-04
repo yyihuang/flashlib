@@ -13,7 +13,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_combined_k20rag_weave_evolve_knn_build_c454_v1 as c454_dispatcher
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v20 as parent_k32
@@ -48,7 +48,7 @@ def _compile_ir(ir_obj: Any):
     return CUDAKernel(cubin, f'kernel_{ir_obj.symbol}')
 
 def _compiled_merge_k10_s64_cache():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0131"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0133"}'))
 
 def _eligible_rag_online_stream_split64(inputs: dict[str, Any]) -> bool:
     return baseline_pair._eligible_rag_online_stream(inputs)

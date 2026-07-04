@@ -17,14 +17,15 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
 #define THREADS 128
-#define TOP_K_MAX 20
+#define TOP_K_MAX 10
+#define SPLIT_COUNT 74
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(128, 1) void
-kernel_knn_build_k20_large_lowfanout_s2_warp_select(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+kernel_knn_build_d128_rag_q128_k10_s74_warp_merge_rowld_s74_1bed_v1(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -38,18 +39,30 @@ kernel_knn_build_k20_large_lowfanout_s2_warp_select(float* __restrict__ partial_
     int row = bid * 4 + warp;
     int base_row = row * TOP_K_MAX;
     int split_stride = total_queries * TOP_K_MAX;
-    int cand_k = lane;
+    int lane_idx = lane;
     if (row < total_queries) {
-        float d0 = 3.4e+38f;
+        int split0 = lane_idx;
+        int base0 = base_row + split0 * split_stride;
+        int pos0 = 0;
+        float d0 = partial_dists[base0];
+        int i0 = partial_indices[base0];
+        int split1 = lane_idx + 32;
+        int base1 = base_row + split1 * split_stride;
+        int pos1 = 0;
         float d1 = 3.4e+38f;
-        int i0 = -1;
         int i1 = -1;
-        if (cand_k < TOP_K_MAX) {
-            d0 = partial_dists[base_row + cand_k];
-            i0 = partial_indices[base_row + cand_k];
-            int base1 = base_row + split_stride;
-            d1 = partial_dists[base1 + cand_k];
-            i1 = partial_indices[base1 + cand_k];
+        if (split1 < SPLIT_COUNT) {
+            d1 = partial_dists[base1];
+            i1 = partial_indices[base1];
+        }
+        int split2 = lane_idx + 64;
+        int base2 = base_row + split2 * split_stride;
+        int pos2 = 0;
+        float d2 = 3.4e+38f;
+        int i2 = -1;
+        if (split2 < SPLIT_COUNT) {
+            d2 = partial_dists[base2];
+            i2 = partial_indices[base2];
         }
         #pragma unroll
         for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
@@ -60,6 +73,11 @@ kernel_knn_build_k20_large_lowfanout_s2_warp_select(float* __restrict__ partial_
                 winner_d = d1;
                 winner_i = i1;
                 winner_src = 1;
+            }
+            if (d2 < winner_d) {
+                winner_d = d2;
+                winner_i = i2;
+                winner_src = 2;
             }
             float warp_min = winner_d;
             float _warp_reduce_0 = warp_min;
@@ -81,9 +99,26 @@ kernel_knn_build_k20_large_lowfanout_s2_warp_select(float* __restrict__ partial_
             }
             if (lane == winner_lane) {
                 if (winner_src == 0) {
-                    d0 = 3.4e+38f;
+                    pos0 = pos0 + 1;
+                    if (out_k + 1 < TOP_K_MAX) {
+                        int next_addr0 = base0 + pos0;
+                        d0 = partial_dists[next_addr0];
+                        i0 = partial_indices[next_addr0];
+                    }
+                } else if (winner_src == 1) {
+                    pos1 = pos1 + 1;
+                    if (out_k + 1 < TOP_K_MAX) {
+                        int next_addr1 = base1 + pos1;
+                        d1 = partial_dists[next_addr1];
+                        i1 = partial_indices[next_addr1];
+                    }
                 } else {
-                    d1 = 3.4e+38f;
+                    pos2 = pos2 + 1;
+                    if (out_k + 1 < TOP_K_MAX) {
+                        int next_addr2 = base2 + pos2;
+                        d2 = partial_dists[next_addr2];
+                        i2 = partial_indices[next_addr2];
+                    }
                 }
             }
         }

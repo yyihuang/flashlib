@@ -14,7 +14,7 @@ import os
 from collections.abc import Callable
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_split72_4e09_de1a_3dc7_v48 as current_dispatcher
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v20 as parent_k32
@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k30_merge_s8_rowbase_cache_k32s32_4b5c", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 32]], "cta_group": 1, "threads": 32}'))
 
 def _compiled_merge_k32_s32_cache():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0161"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0163"}'))
 
 def _is_bf16_d128_nonbuild(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('build', False)) and str(inputs['query'].dtype) == 'torch.bfloat16' and (str(inputs['database'].dtype) == 'torch.bfloat16') and (int(inputs['D']) == FEAT_D)

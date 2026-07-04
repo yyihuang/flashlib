@@ -149,7 +149,7 @@ def _launch_k20_mergeown(inputs: dict[str, Any]) -> None:
     _launch_split4_q4096_path(inputs, merge_mode=merge_mode)
 
 def _compiled_merge_k20_s4_rowbase_lane():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0156"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0158"}'))
 
 def _merge_k20_warp8_ir_for_split_count(split_count: int) -> Any:
     if split_count == TAIL_SPLIT_COUNT:

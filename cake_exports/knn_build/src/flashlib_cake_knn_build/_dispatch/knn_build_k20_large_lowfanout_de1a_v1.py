@@ -104,7 +104,7 @@ def _launch_k20_large_lowfanout(inputs: dict[str, Any]) -> None:
     merge_kernel.launch(grid=(merge_grid, 1, 1), block=(K20_MERGE_THREADS, 1, 1), args=[partial_dists, partial_indices, inputs['out_dists'], inputs['out_indices'], bsz * n_query], shared_mem=merge_k20_s2_warp_select_ir.computed_smem_bytes)
 
 def _compiled_merge_k20_s2_warp_select():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0084"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0085"}'))
 
 def launch_from_contract_inputs(inputs: dict[str, Any]) -> None:
     if _eligible_k20_large_lowfanout(inputs):

@@ -49,7 +49,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_q4096_k8_fd9b_merge_s4_unordered_warp_select", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 8], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_k8_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0217"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0219"}'))
 
 def _compiled_stage1_k8_exact_prefill():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0015"}'))

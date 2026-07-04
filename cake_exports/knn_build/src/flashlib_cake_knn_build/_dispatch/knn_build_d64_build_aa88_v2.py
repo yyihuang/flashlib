@@ -11,7 +11,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_d64_build_aa88_v1 as parent_aa88
 from .._dispatch_runtime import pack_kernel_args
 TOP_K_MAX = parent_aa88.TOP_K_MAX

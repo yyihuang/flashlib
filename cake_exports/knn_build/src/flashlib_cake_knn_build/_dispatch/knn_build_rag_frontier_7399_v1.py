@@ -56,10 +56,10 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_7399_k32_fused_group_final_merge", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 2048, "constants": [["TOP_K_MAX", 32], ["GROUP_COUNT", 8], ["GROUP_SPLITS", 9]], "cta_group": 1, "threads": 32}'))
 
 def _compiled_stage1_sort4earlystop():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0159"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0161"}'))
 
 def _compiled_fused_merge():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0160"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0162"}'))
 
 def _eligible_k10_rag_frontier(inputs: dict[str, Any]) -> bool:
     return v5._eligible_k10_rag_frontier(inputs)

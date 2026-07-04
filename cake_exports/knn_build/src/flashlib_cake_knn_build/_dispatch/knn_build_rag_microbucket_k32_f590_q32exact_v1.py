@@ -16,7 +16,7 @@ import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32_f590_q32split153_v1 as split153
 MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32_f590_q32exact_v1'
@@ -67,7 +67,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32_f590_q32exact_v1_stage1_q32exact_f590_v1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32], ["ROWS_COVERED", 32]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q32_exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0202"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0204"}'))
 
 def _eligible_q32_exact(inputs: dict[str, Any]) -> bool:
     return split153._eligible_q32_split153(inputs)

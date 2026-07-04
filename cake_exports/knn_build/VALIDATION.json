@@ -1,32 +1,18 @@
 {
-  "benchmark_command": [
-    "/workspace/venv/bin/python",
-    "benchmarks/benchmark.py",
-    "--no-correctness",
-    "--json",
-    "BENCHMARK_RESULTS.json"
-  ],
   "benchmark_passed": 112,
-  "correctness_command": [
-    "/workspace/venv/bin/python",
-    "-m",
-    "pytest",
-    "tests/test_correctness.py",
-    "-q"
-  ],
   "correctness_passed": 112,
   "hardware": {
     "arch": "sm_100a",
     "device": "NVIDIA B200"
   },
-  "measured_at_utc": "2026-07-04T05:09:20+00:00",
+  "measured_at_utc": "2026-07-04T07:32:00+00:00",
   "route_count": 112,
   "semantic_entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs",
   "shape_count": 112,
   "speedup_vs_baseline": {
-    "geomean": 0.7078901901078357,
-    "max": 2.0665099977554524,
-    "min": 0.0025188872908568825
+    "geomean": 0.7450161494473775,
+    "max": 2.085360114483655,
+    "min": 0.23161770879209093
   },
   "status": "passed",
   "timing_backend": "cupti"

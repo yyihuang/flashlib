@@ -16,7 +16,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_evolve_7bfc_split_v1 as split_parent
 from . import knn_build_non128_frontier_4be7_d96exact_v1 as d96exact

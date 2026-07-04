@@ -32,7 +32,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define BLOCK_Q 128
 #define BLOCK_M 64
 #define FEAT_D 128
-#define TOP_K_MAX 96
+#define TOP_K_MAX 64
 
 #include <math_constants.h>
 
@@ -311,7 +311,7 @@ __device__ __forceinline__ void tcgen05_commit_cg2_multicast(int mbar_addr, uint
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_k64_stage1_tailinf_k64over32tailinfsplitgrid(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -398,14 +398,53 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                 int q_tile = q_tile_pair * 2 + cta_rank;
                 int off_q = q_tile * BLOCK_Q;
                 int q_idx = off_q + thread_row_idx;
-                float q_sq_val = query_sq[batch_idx * Q + q_idx];
-                float best_d[TOP_K_MAX];
-                int best_i[TOP_K_MAX];
-                float chunk_worst_d[24];
-                int chunk_worst_pos[24];
+                int valid_q = ((q_idx < Q) ? 1 : 0);
+                float q_sq_val = 0.0f;
+                if (valid_q != 0) {
+                    q_sq_val = query_sq[batch_idx * Q + q_idx];
+                }
+                float best_d[64];
+                int best_i[64];
+                #pragma unroll
+                for (int kk = 0; kk < 64; kk++) {
+                    best_d[kk] = 3.4e+38f;
+                    best_i[kk] = -1;
+                }
                 float worst_d = 3.4e+38f;
                 int worst_pos = 0;
                 int worst_chunk = 0;
+                float c0_worst_d = 3.4e+38f;
+                int c0_worst_pos = 0;
+                float c1_worst_d = 3.4e+38f;
+                int c1_worst_pos = 4;
+                float c2_worst_d = 3.4e+38f;
+                int c2_worst_pos = 8;
+                float c3_worst_d = 3.4e+38f;
+                int c3_worst_pos = 12;
+                float c4_worst_d = 3.4e+38f;
+                int c4_worst_pos = 16;
+                float c5_worst_d = 3.4e+38f;
+                int c5_worst_pos = 20;
+                float c6_worst_d = 3.4e+38f;
+                int c6_worst_pos = 24;
+                float c7_worst_d = 3.4e+38f;
+                int c7_worst_pos = 28;
+                float c8_worst_d = 3.4e+38f;
+                int c8_worst_pos = 32;
+                float c9_worst_d = 3.4e+38f;
+                int c9_worst_pos = 36;
+                float c10_worst_d = 3.4e+38f;
+                int c10_worst_pos = 40;
+                float c11_worst_d = 3.4e+38f;
+                int c11_worst_pos = 44;
+                float c12_worst_d = 3.4e+38f;
+                int c12_worst_pos = 48;
+                float c13_worst_d = 3.4e+38f;
+                int c13_worst_pos = 52;
+                float c14_worst_d = 3.4e+38f;
+                int c14_worst_pos = 56;
+                float c15_worst_d = 3.4e+38f;
+                int c15_worst_pos = 60;
                 int db_tile_start = split_idx * db_tiles_per_split;
                 #pragma unroll 1
                 for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
@@ -413,7 +452,11 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                     int db_start = db_tile * BLOCK_M;
                     int db_sq_idx = db_start + thread_row_idx;
                     if (thread_row_idx < BLOCK_M) {
-                        smem_database_sq[thread_row_idx] = database_sq[batch_idx * M + db_sq_idx];
+                        if (db_sq_idx < M) {
+                            smem_database_sq[thread_row_idx] = database_sq[batch_idx * M + db_sq_idx];
+                        } else {
+                            smem_database_sq[thread_row_idx] = 3.4e+38f;
+                        }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                     mbarrier_wait(score_full_addr, _phase_score_full_0);
@@ -433,192 +476,526 @@ kernel_knn_build_k96_stage1_exact_prefill_q1024_k96over64exactprefillq1024_e5db(
                             "mbarrier.arrive.release.cta.shared::cluster.b64 _, [%0];"
                             :: "r"((score_empty_addr) & 0xFEFFFFFF) : "memory");
                     }
-                    #pragma unroll 1
-                    for (int col_base = 0; col_base < 64; col_base += 4) {
-                        float dist_vec[4];
-                        dist_vec[0] = _tmem_load_0[col_base];
-                        dist_vec[1] = _tmem_load_0[col_base + 1];
-                        dist_vec[2] = _tmem_load_0[col_base + 2];
-                        dist_vec[3] = _tmem_load_0[col_base + 3];
-                        const float2 _fma_b2_0 = {-2.0f, -2.0f};
-                        const float2 _fma_c2_1 = {q_sq_val, q_sq_val};
-                        #pragma unroll
-                        for (int _lf = 0; _lf < 2; _lf++)
-                            fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_vec)[_lf], _fma_b2_0, _fma_c2_1);
-                        float db_sq_vec[4];
-                        db_sq_vec[0] = smem_database_sq[col_base];
-                        db_sq_vec[1] = smem_database_sq[col_base + 1];
-                        db_sq_vec[2] = smem_database_sq[col_base + 2];
-                        db_sq_vec[3] = smem_database_sq[col_base + 3];
-                        float _t0[4];
-                        #pragma unroll
-                        for (int _la = 0; _la < 2; _la++)
-                            reinterpret_cast<float2*>(_t0)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_vec)[_la], reinterpret_cast<const float2*>(db_sq_vec)[_la]);
-                        int prefill_group = 0;
-                        if (local_db_tile == 0) {
-                            prefill_group = 1;
-                        }
-                        if (local_db_tile == 1) {
-                            if (col_base < 32) {
-                                prefill_group = 1;
-                            }
-                        }
-                        if (prefill_group != 0) {
-                            int slot_base = local_db_tile * 64 + col_base;
-                            best_d[slot_base] = _t0[0];
-                            best_i[slot_base] = db_start + col_base;
-                            best_d[slot_base + 1] = _t0[1];
-                            best_i[slot_base + 1] = db_start + col_base + 1;
-                            best_d[slot_base + 2] = _t0[2];
-                            best_i[slot_base + 2] = db_start + col_base + 2;
-                            best_d[slot_base + 3] = _t0[3];
-                            best_i[slot_base + 3] = db_start + col_base + 3;
-                            if (local_db_tile == 1) {
-                                if (col_base == 28) {
+                    if (valid_q != 0) {
+                        #pragma unroll 1
+                        for (int col_base = 0; col_base < 64; col_base += 4) {
+                            float dist_vec[4];
+                            dist_vec[0] = _tmem_load_0[col_base];
+                            dist_vec[1] = _tmem_load_0[col_base + 1];
+                            dist_vec[2] = _tmem_load_0[col_base + 2];
+                            dist_vec[3] = _tmem_load_0[col_base + 3];
+                            const float2 _fma_b2_0 = {-2.0f, -2.0f};
+                            const float2 _fma_c2_1 = {q_sq_val, q_sq_val};
+                            #pragma unroll
+                            for (int _lf = 0; _lf < 2; _lf++)
+                                fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_vec)[_lf], _fma_b2_0, _fma_c2_1);
+                            float db_sq_vec[4];
+                            db_sq_vec[0] = smem_database_sq[col_base];
+                            db_sq_vec[1] = smem_database_sq[col_base + 1];
+                            db_sq_vec[2] = smem_database_sq[col_base + 2];
+                            db_sq_vec[3] = smem_database_sq[col_base + 3];
+                            float _t0[4];
+                            #pragma unroll
+                            for (int _la = 0; _la < 2; _la++)
+                                reinterpret_cast<float2*>(_t0)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_vec)[_la], reinterpret_cast<const float2*>(db_sq_vec)[_la]);
+                            if (local_db_tile == 0) {
+                                #pragma unroll
+                                for (int vec_col = 0; vec_col < 4; vec_col++) {
+                                    int db_idx = db_start + col_base + vec_col;
+                                    int slot = col_base + vec_col;
+                                    best_d[slot] = _t0[vec_col];
+                                    best_i[slot] = db_idx;
+                                }
+                            } else {
+                                float group_min = _t0[0];
+                                if (_t0[1] < group_min) {
+                                    group_min = _t0[1];
+                                }
+                                if (_t0[2] < group_min) {
+                                    group_min = _t0[2];
+                                }
+                                if (_t0[3] < group_min) {
+                                    group_min = _t0[3];
+                                }
+                                if (group_min < worst_d) {
+                                    float sort_d0 = _t0[0];
+                                    float sort_d1 = _t0[1];
+                                    float sort_d2 = _t0[2];
+                                    float sort_d3 = _t0[3];
+                                    int sort_col0 = 0;
+                                    int sort_col1 = 1;
+                                    int sort_col2 = 2;
+                                    int sort_col3 = 3;
+                                    float tmp_d = 0.0f;
+                                    int tmp_col = 0;
+                                    if (sort_d1 < sort_d0) {
+                                        tmp_d = sort_d0;
+                                        sort_d0 = sort_d1;
+                                        sort_d1 = tmp_d;
+                                        tmp_col = sort_col0;
+                                        sort_col0 = sort_col1;
+                                        sort_col1 = tmp_col;
+                                    }
+                                    if (sort_d3 < sort_d2) {
+                                        tmp_d = sort_d2;
+                                        sort_d2 = sort_d3;
+                                        sort_d3 = tmp_d;
+                                        tmp_col = sort_col2;
+                                        sort_col2 = sort_col3;
+                                        sort_col3 = tmp_col;
+                                    }
+                                    if (sort_d2 < sort_d0) {
+                                        tmp_d = sort_d0;
+                                        sort_d0 = sort_d2;
+                                        sort_d2 = tmp_d;
+                                        tmp_col = sort_col0;
+                                        sort_col0 = sort_col2;
+                                        sort_col2 = tmp_col;
+                                    }
+                                    if (sort_d3 < sort_d1) {
+                                        tmp_d = sort_d1;
+                                        sort_d1 = sort_d3;
+                                        sort_d3 = tmp_d;
+                                        tmp_col = sort_col1;
+                                        sort_col1 = sort_col3;
+                                        sort_col3 = tmp_col;
+                                    }
+                                    if (sort_d2 < sort_d1) {
+                                        tmp_d = sort_d1;
+                                        sort_d1 = sort_d2;
+                                        sort_d2 = tmp_d;
+                                        tmp_col = sort_col1;
+                                        sort_col1 = sort_col2;
+                                        sort_col2 = tmp_col;
+                                    }
                                     #pragma unroll
-                                    for (int chunk = 0; chunk < 24; chunk++) {
-                                        int chunk_base = chunk * 4;
-                                        chunk_worst_d[chunk] = best_d[chunk_base];
-                                        chunk_worst_pos[chunk] = chunk_base;
+                                    for (int visit = 0; visit < 4; visit++) {
+                                        int vec_col_1 = sort_col0;
+                                        float dist = sort_d0;
+                                        if (visit == 1) {
+                                            vec_col_1 = sort_col1;
+                                            dist = sort_d1;
+                                        }
+                                        if (visit == 2) {
+                                            vec_col_1 = sort_col2;
+                                            dist = sort_d2;
+                                        }
+                                        if (visit == 3) {
+                                            vec_col_1 = sort_col3;
+                                            dist = sort_d3;
+                                        }
+                                        if (dist >= worst_d) {
+                                            break;
+                                        }
+                                        int db_idx_1 = db_start + col_base + vec_col_1;
+                                        best_d[worst_pos] = dist;
+                                        best_i[worst_pos] = db_idx_1;
+                                        int refresh_base = worst_chunk * 4;
+                                        float refresh_worst_d = best_d[refresh_base];
+                                        int refresh_worst_pos = refresh_base;
                                         #pragma unroll
                                         for (int offset = 1; offset < 4; offset++) {
-                                            int scan_pos = chunk_base + offset;
-                                            if (best_d[scan_pos] > chunk_worst_d[chunk]) {
-                                                chunk_worst_d[chunk] = best_d[scan_pos];
-                                                chunk_worst_pos[chunk] = scan_pos;
+                                            int scan_pos = refresh_base + offset;
+                                            if (best_d[scan_pos] > refresh_worst_d) {
+                                                refresh_worst_d = best_d[scan_pos];
+                                                refresh_worst_pos = scan_pos;
                                             }
                                         }
-                                    }
-                                    worst_d = chunk_worst_d[0];
-                                    worst_pos = chunk_worst_pos[0];
-                                    worst_chunk = 0;
-                                    #pragma unroll
-                                    for (int chunk_1 = 1; chunk_1 < 24; chunk_1++) {
-                                        if (worst_d < chunk_worst_d[chunk_1]) {
-                                            worst_d = chunk_worst_d[chunk_1];
-                                            worst_pos = chunk_worst_pos[chunk_1];
-                                            worst_chunk = chunk_1;
+                                        if (worst_chunk == 0) {
+                                            c0_worst_d = refresh_worst_d;
+                                            c0_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 1) {
+                                            c1_worst_d = refresh_worst_d;
+                                            c1_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 2) {
+                                            c2_worst_d = refresh_worst_d;
+                                            c2_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 3) {
+                                            c3_worst_d = refresh_worst_d;
+                                            c3_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 4) {
+                                            c4_worst_d = refresh_worst_d;
+                                            c4_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 5) {
+                                            c5_worst_d = refresh_worst_d;
+                                            c5_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 6) {
+                                            c6_worst_d = refresh_worst_d;
+                                            c6_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 7) {
+                                            c7_worst_d = refresh_worst_d;
+                                            c7_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 8) {
+                                            c8_worst_d = refresh_worst_d;
+                                            c8_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 9) {
+                                            c9_worst_d = refresh_worst_d;
+                                            c9_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 10) {
+                                            c10_worst_d = refresh_worst_d;
+                                            c10_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 11) {
+                                            c11_worst_d = refresh_worst_d;
+                                            c11_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 12) {
+                                            c12_worst_d = refresh_worst_d;
+                                            c12_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 13) {
+                                            c13_worst_d = refresh_worst_d;
+                                            c13_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 14) {
+                                            c14_worst_d = refresh_worst_d;
+                                            c14_worst_pos = refresh_worst_pos;
+                                        }
+                                        if (worst_chunk == 15) {
+                                            c15_worst_d = refresh_worst_d;
+                                            c15_worst_pos = refresh_worst_pos;
+                                        }
+                                        worst_d = c0_worst_d;
+                                        worst_pos = c0_worst_pos;
+                                        worst_chunk = 0;
+                                        if (c1_worst_d > worst_d) {
+                                            worst_d = c1_worst_d;
+                                            worst_pos = c1_worst_pos;
+                                            worst_chunk = 1;
+                                        }
+                                        if (c2_worst_d > worst_d) {
+                                            worst_d = c2_worst_d;
+                                            worst_pos = c2_worst_pos;
+                                            worst_chunk = 2;
+                                        }
+                                        if (c3_worst_d > worst_d) {
+                                            worst_d = c3_worst_d;
+                                            worst_pos = c3_worst_pos;
+                                            worst_chunk = 3;
+                                        }
+                                        if (c4_worst_d > worst_d) {
+                                            worst_d = c4_worst_d;
+                                            worst_pos = c4_worst_pos;
+                                            worst_chunk = 4;
+                                        }
+                                        if (c5_worst_d > worst_d) {
+                                            worst_d = c5_worst_d;
+                                            worst_pos = c5_worst_pos;
+                                            worst_chunk = 5;
+                                        }
+                                        if (c6_worst_d > worst_d) {
+                                            worst_d = c6_worst_d;
+                                            worst_pos = c6_worst_pos;
+                                            worst_chunk = 6;
+                                        }
+                                        if (c7_worst_d > worst_d) {
+                                            worst_d = c7_worst_d;
+                                            worst_pos = c7_worst_pos;
+                                            worst_chunk = 7;
+                                        }
+                                        if (c8_worst_d > worst_d) {
+                                            worst_d = c8_worst_d;
+                                            worst_pos = c8_worst_pos;
+                                            worst_chunk = 8;
+                                        }
+                                        if (c9_worst_d > worst_d) {
+                                            worst_d = c9_worst_d;
+                                            worst_pos = c9_worst_pos;
+                                            worst_chunk = 9;
+                                        }
+                                        if (c10_worst_d > worst_d) {
+                                            worst_d = c10_worst_d;
+                                            worst_pos = c10_worst_pos;
+                                            worst_chunk = 10;
+                                        }
+                                        if (c11_worst_d > worst_d) {
+                                            worst_d = c11_worst_d;
+                                            worst_pos = c11_worst_pos;
+                                            worst_chunk = 11;
+                                        }
+                                        if (c12_worst_d > worst_d) {
+                                            worst_d = c12_worst_d;
+                                            worst_pos = c12_worst_pos;
+                                            worst_chunk = 12;
+                                        }
+                                        if (c13_worst_d > worst_d) {
+                                            worst_d = c13_worst_d;
+                                            worst_pos = c13_worst_pos;
+                                            worst_chunk = 13;
+                                        }
+                                        if (c14_worst_d > worst_d) {
+                                            worst_d = c14_worst_d;
+                                            worst_pos = c14_worst_pos;
+                                            worst_chunk = 14;
+                                        }
+                                        if (c15_worst_d > worst_d) {
+                                            worst_d = c15_worst_d;
+                                            worst_pos = c15_worst_pos;
+                                            worst_chunk = 15;
                                         }
                                     }
                                 }
                             }
-                        } else {
-                            float group_min = _t0[0];
-                            if (_t0[1] < group_min) {
-                                group_min = _t0[1];
+                        }
+                        if (local_db_tile == 0) {
+                            c0_worst_d = best_d[0];
+                            c0_worst_pos = 0;
+                            #pragma unroll
+                            for (int offset_1 = 1; offset_1 < 4; offset_1++) {
+                                if (c0_worst_d < best_d[offset_1]) {
+                                    c0_worst_d = best_d[offset_1];
+                                    c0_worst_pos = offset_1;
+                                }
                             }
-                            if (_t0[2] < group_min) {
-                                group_min = _t0[2];
+                            c1_worst_d = best_d[4];
+                            c1_worst_pos = 4;
+                            #pragma unroll
+                            for (int offset_2 = 1; offset_2 < 4; offset_2++) {
+                                int scan_pos_1 = 4 + offset_2;
+                                if (best_d[scan_pos_1] > c1_worst_d) {
+                                    c1_worst_d = best_d[scan_pos_1];
+                                    c1_worst_pos = scan_pos_1;
+                                }
                             }
-                            if (_t0[3] < group_min) {
-                                group_min = _t0[3];
+                            c2_worst_d = best_d[8];
+                            c2_worst_pos = 8;
+                            #pragma unroll
+                            for (int offset_3 = 1; offset_3 < 4; offset_3++) {
+                                int scan_pos_2 = 8 + offset_3;
+                                if (best_d[scan_pos_2] > c2_worst_d) {
+                                    c2_worst_d = best_d[scan_pos_2];
+                                    c2_worst_pos = scan_pos_2;
+                                }
                             }
-                            if (group_min < worst_d) {
-                                float sort_d0 = _t0[0];
-                                float sort_d1 = _t0[1];
-                                float sort_d2 = _t0[2];
-                                float sort_d3 = _t0[3];
-                                int sort_col0 = 0;
-                                int sort_col1 = 1;
-                                int sort_col2 = 2;
-                                int sort_col3 = 3;
-                                float tmp_d = 0.0f;
-                                int tmp_col = 0;
-                                if (sort_d1 < sort_d0) {
-                                    tmp_d = sort_d0;
-                                    sort_d0 = sort_d1;
-                                    sort_d1 = tmp_d;
-                                    tmp_col = sort_col0;
-                                    sort_col0 = sort_col1;
-                                    sort_col1 = tmp_col;
+                            c3_worst_d = best_d[12];
+                            c3_worst_pos = 12;
+                            #pragma unroll
+                            for (int offset_4 = 1; offset_4 < 4; offset_4++) {
+                                int scan_pos_3 = 12 + offset_4;
+                                if (best_d[scan_pos_3] > c3_worst_d) {
+                                    c3_worst_d = best_d[scan_pos_3];
+                                    c3_worst_pos = scan_pos_3;
                                 }
-                                if (sort_d3 < sort_d2) {
-                                    tmp_d = sort_d2;
-                                    sort_d2 = sort_d3;
-                                    sort_d3 = tmp_d;
-                                    tmp_col = sort_col2;
-                                    sort_col2 = sort_col3;
-                                    sort_col3 = tmp_col;
+                            }
+                            c4_worst_d = best_d[16];
+                            c4_worst_pos = 16;
+                            #pragma unroll
+                            for (int offset_5 = 1; offset_5 < 4; offset_5++) {
+                                int scan_pos_4 = 16 + offset_5;
+                                if (best_d[scan_pos_4] > c4_worst_d) {
+                                    c4_worst_d = best_d[scan_pos_4];
+                                    c4_worst_pos = scan_pos_4;
                                 }
-                                if (sort_d2 < sort_d0) {
-                                    tmp_d = sort_d0;
-                                    sort_d0 = sort_d2;
-                                    sort_d2 = tmp_d;
-                                    tmp_col = sort_col0;
-                                    sort_col0 = sort_col2;
-                                    sort_col2 = tmp_col;
+                            }
+                            c5_worst_d = best_d[20];
+                            c5_worst_pos = 20;
+                            #pragma unroll
+                            for (int offset_6 = 1; offset_6 < 4; offset_6++) {
+                                int scan_pos_5 = 20 + offset_6;
+                                if (best_d[scan_pos_5] > c5_worst_d) {
+                                    c5_worst_d = best_d[scan_pos_5];
+                                    c5_worst_pos = scan_pos_5;
                                 }
-                                if (sort_d3 < sort_d1) {
-                                    tmp_d = sort_d1;
-                                    sort_d1 = sort_d3;
-                                    sort_d3 = tmp_d;
-                                    tmp_col = sort_col1;
-                                    sort_col1 = sort_col3;
-                                    sort_col3 = tmp_col;
+                            }
+                            c6_worst_d = best_d[24];
+                            c6_worst_pos = 24;
+                            #pragma unroll
+                            for (int offset_7 = 1; offset_7 < 4; offset_7++) {
+                                int scan_pos_6 = 24 + offset_7;
+                                if (best_d[scan_pos_6] > c6_worst_d) {
+                                    c6_worst_d = best_d[scan_pos_6];
+                                    c6_worst_pos = scan_pos_6;
                                 }
-                                if (sort_d2 < sort_d1) {
-                                    tmp_d = sort_d1;
-                                    sort_d1 = sort_d2;
-                                    sort_d2 = tmp_d;
-                                    tmp_col = sort_col1;
-                                    sort_col1 = sort_col2;
-                                    sort_col2 = tmp_col;
+                            }
+                            c7_worst_d = best_d[28];
+                            c7_worst_pos = 28;
+                            #pragma unroll
+                            for (int offset_8 = 1; offset_8 < 4; offset_8++) {
+                                int scan_pos_7 = 28 + offset_8;
+                                if (best_d[scan_pos_7] > c7_worst_d) {
+                                    c7_worst_d = best_d[scan_pos_7];
+                                    c7_worst_pos = scan_pos_7;
                                 }
-                                #pragma unroll
-                                for (int visit = 0; visit < 4; visit++) {
-                                    int vec_col = sort_col0;
-                                    float dist = sort_d0;
-                                    if (visit == 1) {
-                                        vec_col = sort_col1;
-                                        dist = sort_d1;
-                                    }
-                                    if (visit == 2) {
-                                        vec_col = sort_col2;
-                                        dist = sort_d2;
-                                    }
-                                    if (visit == 3) {
-                                        vec_col = sort_col3;
-                                        dist = sort_d3;
-                                    }
-                                    if (dist >= worst_d) {
-                                        break;
-                                    }
-                                    int db_idx = db_start + col_base + vec_col;
-                                    best_d[worst_pos] = dist;
-                                    best_i[worst_pos] = db_idx;
-                                    int refresh_base = worst_chunk * 4;
-                                    chunk_worst_d[worst_chunk] = best_d[refresh_base];
-                                    chunk_worst_pos[worst_chunk] = refresh_base;
-                                    #pragma unroll
-                                    for (int offset_1 = 1; offset_1 < 4; offset_1++) {
-                                        int scan_pos_1 = refresh_base + offset_1;
-                                        if (best_d[scan_pos_1] > chunk_worst_d[worst_chunk]) {
-                                            chunk_worst_d[worst_chunk] = best_d[scan_pos_1];
-                                            chunk_worst_pos[worst_chunk] = scan_pos_1;
-                                        }
-                                    }
-                                    worst_d = chunk_worst_d[0];
-                                    worst_pos = chunk_worst_pos[0];
-                                    worst_chunk = 0;
-                                    #pragma unroll
-                                    for (int chunk_2 = 1; chunk_2 < 24; chunk_2++) {
-                                        if (worst_d < chunk_worst_d[chunk_2]) {
-                                            worst_d = chunk_worst_d[chunk_2];
-                                            worst_pos = chunk_worst_pos[chunk_2];
-                                            worst_chunk = chunk_2;
-                                        }
-                                    }
+                            }
+                            c8_worst_d = best_d[32];
+                            c8_worst_pos = 32;
+                            #pragma unroll
+                            for (int offset_9 = 1; offset_9 < 4; offset_9++) {
+                                int scan_pos_8 = 32 + offset_9;
+                                if (best_d[scan_pos_8] > c8_worst_d) {
+                                    c8_worst_d = best_d[scan_pos_8];
+                                    c8_worst_pos = scan_pos_8;
                                 }
+                            }
+                            c9_worst_d = best_d[36];
+                            c9_worst_pos = 36;
+                            #pragma unroll
+                            for (int offset_10 = 1; offset_10 < 4; offset_10++) {
+                                int scan_pos_9 = 36 + offset_10;
+                                if (best_d[scan_pos_9] > c9_worst_d) {
+                                    c9_worst_d = best_d[scan_pos_9];
+                                    c9_worst_pos = scan_pos_9;
+                                }
+                            }
+                            c10_worst_d = best_d[40];
+                            c10_worst_pos = 40;
+                            #pragma unroll
+                            for (int offset_11 = 1; offset_11 < 4; offset_11++) {
+                                int scan_pos_10 = 40 + offset_11;
+                                if (best_d[scan_pos_10] > c10_worst_d) {
+                                    c10_worst_d = best_d[scan_pos_10];
+                                    c10_worst_pos = scan_pos_10;
+                                }
+                            }
+                            c11_worst_d = best_d[44];
+                            c11_worst_pos = 44;
+                            #pragma unroll
+                            for (int offset_12 = 1; offset_12 < 4; offset_12++) {
+                                int scan_pos_11 = 44 + offset_12;
+                                if (best_d[scan_pos_11] > c11_worst_d) {
+                                    c11_worst_d = best_d[scan_pos_11];
+                                    c11_worst_pos = scan_pos_11;
+                                }
+                            }
+                            c12_worst_d = best_d[48];
+                            c12_worst_pos = 48;
+                            #pragma unroll
+                            for (int offset_13 = 1; offset_13 < 4; offset_13++) {
+                                int scan_pos_12 = 48 + offset_13;
+                                if (best_d[scan_pos_12] > c12_worst_d) {
+                                    c12_worst_d = best_d[scan_pos_12];
+                                    c12_worst_pos = scan_pos_12;
+                                }
+                            }
+                            c13_worst_d = best_d[52];
+                            c13_worst_pos = 52;
+                            #pragma unroll
+                            for (int offset_14 = 1; offset_14 < 4; offset_14++) {
+                                int scan_pos_13 = 52 + offset_14;
+                                if (best_d[scan_pos_13] > c13_worst_d) {
+                                    c13_worst_d = best_d[scan_pos_13];
+                                    c13_worst_pos = scan_pos_13;
+                                }
+                            }
+                            c14_worst_d = best_d[56];
+                            c14_worst_pos = 56;
+                            #pragma unroll
+                            for (int offset_15 = 1; offset_15 < 4; offset_15++) {
+                                int scan_pos_14 = 56 + offset_15;
+                                if (best_d[scan_pos_14] > c14_worst_d) {
+                                    c14_worst_d = best_d[scan_pos_14];
+                                    c14_worst_pos = scan_pos_14;
+                                }
+                            }
+                            c15_worst_d = best_d[60];
+                            c15_worst_pos = 60;
+                            #pragma unroll
+                            for (int offset_16 = 1; offset_16 < 4; offset_16++) {
+                                int scan_pos_15 = 60 + offset_16;
+                                if (best_d[scan_pos_15] > c15_worst_d) {
+                                    c15_worst_d = best_d[scan_pos_15];
+                                    c15_worst_pos = scan_pos_15;
+                                }
+                            }
+                            worst_d = c0_worst_d;
+                            worst_pos = c0_worst_pos;
+                            worst_chunk = 0;
+                            if (c1_worst_d > worst_d) {
+                                worst_d = c1_worst_d;
+                                worst_pos = c1_worst_pos;
+                                worst_chunk = 1;
+                            }
+                            if (c2_worst_d > worst_d) {
+                                worst_d = c2_worst_d;
+                                worst_pos = c2_worst_pos;
+                                worst_chunk = 2;
+                            }
+                            if (c3_worst_d > worst_d) {
+                                worst_d = c3_worst_d;
+                                worst_pos = c3_worst_pos;
+                                worst_chunk = 3;
+                            }
+                            if (c4_worst_d > worst_d) {
+                                worst_d = c4_worst_d;
+                                worst_pos = c4_worst_pos;
+                                worst_chunk = 4;
+                            }
+                            if (c5_worst_d > worst_d) {
+                                worst_d = c5_worst_d;
+                                worst_pos = c5_worst_pos;
+                                worst_chunk = 5;
+                            }
+                            if (c6_worst_d > worst_d) {
+                                worst_d = c6_worst_d;
+                                worst_pos = c6_worst_pos;
+                                worst_chunk = 6;
+                            }
+                            if (c7_worst_d > worst_d) {
+                                worst_d = c7_worst_d;
+                                worst_pos = c7_worst_pos;
+                                worst_chunk = 7;
+                            }
+                            if (c8_worst_d > worst_d) {
+                                worst_d = c8_worst_d;
+                                worst_pos = c8_worst_pos;
+                                worst_chunk = 8;
+                            }
+                            if (c9_worst_d > worst_d) {
+                                worst_d = c9_worst_d;
+                                worst_pos = c9_worst_pos;
+                                worst_chunk = 9;
+                            }
+                            if (c10_worst_d > worst_d) {
+                                worst_d = c10_worst_d;
+                                worst_pos = c10_worst_pos;
+                                worst_chunk = 10;
+                            }
+                            if (c11_worst_d > worst_d) {
+                                worst_d = c11_worst_d;
+                                worst_pos = c11_worst_pos;
+                                worst_chunk = 11;
+                            }
+                            if (c12_worst_d > worst_d) {
+                                worst_d = c12_worst_d;
+                                worst_pos = c12_worst_pos;
+                                worst_chunk = 12;
+                            }
+                            if (c13_worst_d > worst_d) {
+                                worst_d = c13_worst_d;
+                                worst_pos = c13_worst_pos;
+                                worst_chunk = 13;
+                            }
+                            if (c14_worst_d > worst_d) {
+                                worst_d = c14_worst_d;
+                                worst_pos = c14_worst_pos;
+                                worst_chunk = 14;
+                            }
+                            if (c15_worst_d > worst_d) {
+                                worst_d = c15_worst_d;
+                                worst_pos = c15_worst_pos;
+                                worst_chunk = 15;
                             }
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
                 }
-                int out_base = ((split_idx * B + batch_idx) * Q + q_idx) * K;
-                #pragma unroll
-                for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-                    *((float*)(partial_dists + (out_base + out_k))) = best_d[out_k];
-                    *((int*)(partial_indices + (out_base + out_k))) = best_i[out_k];
+                if (valid_q != 0) {
+                    int out_base = ((split_idx * B + batch_idx) * Q + q_idx) * K;
+                    #pragma unroll
+                    for (int out_k = 0; out_k < 64; out_k++) {
+                        *((float*)(partial_dists + (out_base + out_k))) = best_d[out_k];
+                        *((int*)(partial_indices + (out_base + out_k))) = best_i[out_k];
+                    }
                 }
             }
         }

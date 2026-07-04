@@ -16,97 +16,124 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 128
+#define SMEM_GROUP_DISTS_OFF 0
+#define SMEM_GROUP_DISTS_STAGE_BYTES 1024
+#define SMEM_GROUP_DISTS_STRIDE 1024
+#define SMEM_GROUP_INDICES_OFF 1024
+#define SMEM_GROUP_INDICES_STAGE_BYTES 1024
+#define SMEM_GROUP_INDICES_STRIDE 1024
+#define SMEM_TOTAL 2048
+#define THREADS 32
 #define TOP_K_MAX 32
-#define SPLIT_COUNT 72
-#define SPLITS_PER_LANE 3
-#define ROWS_PER_CTA 1
+#define GROUP_COUNT 8
+#define GROUP_SPLITS 9
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(128, 1) void
-kernel_knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s72_0077_v1(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+__global__ __launch_bounds__(32, 1) void
+kernel_knn_build_rag_frontier_7399_k32_fused_group_final_merge_k32s72g8_4fbf_v6(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
     const int lane = tid % 32;
 
+    extern __shared__ __align__(1024) char smem_raw[];
+    int smem;
+    smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
 
+    // Kernel setup ops
+    float* group_dists = reinterpret_cast<float*>(smem_raw + 0);
+    const int group_dists_addr = smem + 0;
+    int* group_indices = reinterpret_cast<int*>(smem_raw + 1024);
+    const int group_indices_addr = smem + 1024;
+
     // === Task calls (dependency order) ===
-    int row = bid * ROWS_PER_CTA + warp;
-    int base_row = row * TOP_K_MAX;
-    int split_stride = total_queries * TOP_K_MAX;
-    if (warp < ROWS_PER_CTA && row < total_queries) {
-        int split_pos[SPLITS_PER_LANE];
-        int split_id_for_slot[SPLITS_PER_LANE];
-        float cand_d[SPLITS_PER_LANE];
-        int cand_i[SPLITS_PER_LANE];
-        #pragma unroll
-        for (int slot = 0; slot < SPLITS_PER_LANE; slot++) {
-            int split_id = slot * 32 + lane;
-            split_id_for_slot[slot] = split_id;
-            split_pos[slot] = 0;
-            cand_d[slot] = 3.4e+38f;
-            cand_i[slot] = -1;
-            if (split_id < SPLIT_COUNT) {
-                int source_addr = base_row + split_id * split_stride;
-                cand_d[slot] = partial_dists[source_addr];
-                cand_i[slot] = partial_indices[source_addr];
-            }
-        }
-        #pragma unroll
-        for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-            float lane_best_d = cand_d[0];
-            int lane_best_i = cand_i[0];
-            int lane_best_slot = 0;
+    int split_pos[GROUP_SPLITS];
+    int split_base[GROUP_SPLITS];
+    float group_cand_d[GROUP_SPLITS];
+    int group_cand_i[GROUP_SPLITS];
+    int final_pos[GROUP_COUNT];
+    float final_cand_d[GROUP_COUNT];
+    int final_cand_i[GROUP_COUNT];
+    #pragma unroll 1
+    for (int row = bid; row < total_queries; row += num_bids) {
+        int base_row = row * TOP_K_MAX;
+        int split_stride = total_queries * TOP_K_MAX;
+        if (tid < GROUP_COUNT) {
+            int group_idx = tid;
+            int source_split0 = group_idx * GROUP_SPLITS;
+            int shared_base = group_idx * TOP_K_MAX;
             #pragma unroll
-            for (int slot_1 = 1; slot_1 < SPLITS_PER_LANE; slot_1++) {
-                if (lane_best_d > cand_d[slot_1]) {
-                    lane_best_d = cand_d[slot_1];
-                    lane_best_i = cand_i[slot_1];
-                    lane_best_slot = slot_1;
-                }
+            for (int local_split = 0; local_split < GROUP_SPLITS; local_split++) {
+                split_pos[local_split] = 0;
+                int split_id = source_split0 + local_split;
+                split_base[local_split] = base_row + split_id * split_stride;
+                group_cand_d[local_split] = partial_dists[split_base[local_split]];
+                group_cand_i[local_split] = partial_indices[split_base[local_split]];
             }
-            float warp_min = lane_best_d;
-            float _warp_reduce_0 = warp_min;
             #pragma unroll
-            for (int offset = 16; offset > 0; offset >>= 1)
-                _warp_reduce_0 = fminf(_warp_reduce_0, __shfl_xor_sync(0xFFFFFFFF, _warp_reduce_0, offset));
-            warp_min = _warp_reduce_0;
-            unsigned int _vote_0 = __ballot_sync(0xFFFFFFFF, lane_best_d == warp_min);
-            int owner_ballot = _vote_0;
-            int _ffs_0 = __ffs(owner_ballot);
-            int winner_lane = _ffs_0 - 1;
-            int _shfl_0 = __shfl_sync(0xFFFFFFFF, lane_best_i, winner_lane);
-            int winner_i = _shfl_0;
-            int _shfl_1 = __shfl_sync(0xFFFFFFFF, lane_best_slot, winner_lane);
-            int winner_slot = _shfl_1;
-            if (lane == 0) {
-                *((float*)(out_dists + (base_row + out_k))) = warp_min;
-                *((int*)(out_indices + (base_row + out_k))) = winner_i;
-            }
-            if (lane == winner_lane) {
+            for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
+                float best_d = group_cand_d[0];
+                int best_i = group_cand_i[0];
+                int best_split = 0;
                 #pragma unroll
-                for (int slot_2 = 0; slot_2 < SPLITS_PER_LANE; slot_2++) {
-                    if (winner_slot == slot_2) {
-                        int next_pos = split_pos[slot_2] + 1;
-                        split_pos[slot_2] = next_pos;
-                        cand_d[slot_2] = 3.4e+38f;
-                        cand_i[slot_2] = -1;
-                        if (next_pos < TOP_K_MAX) {
-                            int next_addr = base_row + split_id_for_slot[slot_2] * split_stride + next_pos;
-                            cand_d[slot_2] = partial_dists[next_addr];
-                            cand_i[slot_2] = partial_indices[next_addr];
-                        }
+                for (int local_split_1 = 1; local_split_1 < GROUP_SPLITS; local_split_1++) {
+                    if (best_d > group_cand_d[local_split_1]) {
+                        best_d = group_cand_d[local_split_1];
+                        best_i = group_cand_i[local_split_1];
+                        best_split = local_split_1;
                     }
                 }
+                group_dists[shared_base + out_k] = best_d;
+                group_indices[shared_base + out_k] = best_i;
+                split_pos[best_split] = split_pos[best_split] + 1;
+                if (out_k + 1 < TOP_K_MAX) {
+                    int next_pos = split_pos[best_split];
+                    int next_addr = split_base[best_split] + next_pos;
+                    group_cand_d[best_split] = partial_dists[next_addr];
+                    group_cand_i[best_split] = partial_indices[next_addr];
+                }
             }
         }
+        __syncthreads();
+        if (tid == 0) {
+            #pragma unroll
+            for (int group_idx_1 = 0; group_idx_1 < GROUP_COUNT; group_idx_1++) {
+                final_pos[group_idx_1] = 0;
+                int group_base = group_idx_1 * TOP_K_MAX;
+                final_cand_d[group_idx_1] = group_dists[group_base];
+                final_cand_i[group_idx_1] = group_indices[group_base];
+            }
+            #pragma unroll
+            for (int out_k_1 = 0; out_k_1 < TOP_K_MAX; out_k_1++) {
+                float best_d_1 = final_cand_d[0];
+                int best_i_1 = final_cand_i[0];
+                int best_group = 0;
+                #pragma unroll
+                for (int group_idx_2 = 1; group_idx_2 < GROUP_COUNT; group_idx_2++) {
+                    if (best_d_1 > final_cand_d[group_idx_2]) {
+                        best_d_1 = final_cand_d[group_idx_2];
+                        best_i_1 = final_cand_i[group_idx_2];
+                        best_group = group_idx_2;
+                    }
+                }
+                *((float*)(out_dists + (base_row + out_k_1))) = best_d_1;
+                *((int*)(out_indices + (base_row + out_k_1))) = best_i_1;
+                final_pos[best_group] = final_pos[best_group] + 1;
+                if (out_k_1 + 1 < TOP_K_MAX) {
+                    int next_pos_1 = final_pos[best_group];
+                    int next_addr_1 = best_group * TOP_K_MAX + next_pos_1;
+                    final_cand_d[best_group] = group_dists[next_addr_1];
+                    final_cand_i[best_group] = group_indices[next_addr_1];
+                }
+            }
+        }
+        __syncthreads();
     }
 }
 

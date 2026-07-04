@@ -16,16 +16,19 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 32
+#define THREADS 128
 #define TOP_K_MAX 10
-#define SPLIT_COUNT 6
+#define SPLIT_COUNT 8
+#define GROUP_COUNT 4
+#define GROUP_SPLITS 2
+#define GROUPS_PER_CTA 4
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(32, 1) void
-kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+__global__ __launch_bounds__(128, 1) void
+kernel_knn_build_d64_q4096_c271_twostage_group_reduce(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ reduced_dists, int* __restrict__ reduced_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,44 +39,51 @@ kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6(float* __rest
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int start_row = bid * 32 + tid;
-    int stride = num_bids * 32;
-    #pragma unroll 1
-    for (int row = start_row; row < total_queries; row += stride) {
+    int group_linear = bid * GROUPS_PER_CTA + warp;
+    int total_groups = total_queries * GROUP_COUNT;
+    if (warp < GROUPS_PER_CTA && group_linear < total_groups) {
+        int row = group_linear / GROUP_COUNT;
+        int group_idx = group_linear - row * GROUP_COUNT;
         int base_row = row * TOP_K_MAX;
         int split_stride = total_queries * TOP_K_MAX;
-        int split_pos[SPLIT_COUNT];
-        int split_base[SPLIT_COUNT];
-        float cand_d[SPLIT_COUNT];
-        int cand_i[SPLIT_COUNT];
-        #pragma unroll
-        for (int split_idx = 0; split_idx < SPLIT_COUNT; split_idx++) {
-            split_pos[split_idx] = 0;
-            split_base[split_idx] = base_row + split_idx * split_stride;
-            cand_d[split_idx] = partial_dists[split_base[split_idx]];
-            cand_i[split_idx] = partial_indices[split_base[split_idx]];
+        int source_split0 = group_idx * GROUP_SPLITS;
+        int out_base = base_row + group_idx * split_stride;
+        int split_pos = 0;
+        int split_id = source_split0 + lane;
+        float cand_d = 3.4e+38f;
+        int cand_i = -1;
+        if (lane < GROUP_SPLITS) {
+            int source_addr = base_row + split_id * split_stride;
+            cand_d = partial_dists[source_addr];
+            cand_i = partial_indices[source_addr];
         }
         #pragma unroll
         for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-            float best_d = cand_d[0];
-            int best_i = cand_i[0];
-            int best_split = 0;
+            float warp_min = cand_d;
+            float _warp_reduce_0 = warp_min;
             #pragma unroll
-            for (int split_idx_1 = 1; split_idx_1 < SPLIT_COUNT; split_idx_1++) {
-                if (best_d > cand_d[split_idx_1]) {
-                    best_d = cand_d[split_idx_1];
-                    best_i = cand_i[split_idx_1];
-                    best_split = split_idx_1;
-                }
+            for (int offset = 16; offset > 0; offset >>= 1)
+                _warp_reduce_0 = fminf(_warp_reduce_0, __shfl_xor_sync(0xFFFFFFFF, _warp_reduce_0, offset));
+            warp_min = _warp_reduce_0;
+            unsigned int _vote_0 = __ballot_sync(0xFFFFFFFF, cand_d == warp_min);
+            int owner_ballot = _vote_0;
+            int _ffs_0 = __ffs(owner_ballot);
+            int winner_lane = _ffs_0 - 1;
+            int _shfl_0 = __shfl_sync(0xFFFFFFFF, cand_i, winner_lane);
+            int winner_i = _shfl_0;
+            if (lane == 0) {
+                *((float*)(reduced_dists + (out_base + out_k))) = warp_min;
+                *((int*)(reduced_indices + (out_base + out_k))) = winner_i;
             }
-            *((float*)(out_dists + (base_row + out_k))) = best_d;
-            *((int*)(out_indices + (base_row + out_k))) = best_i;
-            split_pos[best_split] = split_pos[best_split] + 1;
-            if (out_k + 1 < TOP_K_MAX) {
-                int next_pos = split_pos[best_split];
-                int next_addr = split_base[best_split] + next_pos;
-                cand_d[best_split] = partial_dists[next_addr];
-                cand_i[best_split] = partial_indices[next_addr];
+            if (lane == winner_lane) {
+                split_pos = split_pos + 1;
+                cand_d = 3.4e+38f;
+                cand_i = -1;
+                if (split_pos < TOP_K_MAX) {
+                    int next_addr = base_row + split_id * split_stride + split_pos;
+                    cand_d = partial_dists[next_addr];
+                    cand_i = partial_indices[next_addr];
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ import os
 from collections.abc import Callable
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_online_stream_split72_4e09_v1 as split72
 from . import knn_build_ragonline_mbucket_aa88_v1 as round25
@@ -67,10 +67,10 @@ def _compile_ir(ir_obj: Any):
     return CUDAKernel(cubin, f'kernel_{ir_obj.symbol}')
 
 def _compiled_coop_merge_s72_k10():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0181"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0183"}'))
 
 def _compiled_coop_merge_s74_k10():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0182"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0184"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     dtype = str(getattr(inputs.get('query'), 'dtype', inputs.get('dtype', '')))

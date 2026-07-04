@@ -65,10 +65,10 @@ def _compile_ir(ir_obj):
     return CUDAKernel(cubin, f'kernel_{ir_obj.symbol}')
 
 def _compiled_merge_k10_s4():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0135"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0137"}'))
 
 def _compiled_merge_k10_s7():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0136"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0138"}'))
 
 def _specialized_merge_kernel(top_k: int, split_count: int):
     if top_k != TOP_K_MAX:

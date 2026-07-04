@@ -32,7 +32,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define BLOCK_Q 128
 #define BLOCK_M 64
 #define FEAT_D 128
-#define TOP_K_MAX 32
+#define TOP_K_MAX 96
 
 #include <math_constants.h>
 
@@ -311,7 +311,7 @@ __device__ __forceinline__ void tcgen05_commit_cg2_multicast(int mbar_addr, uint
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_rag_frontier_b6d4_stage1_k32_chunked(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_k32_unordered_k96over64(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -538,17 +538,8 @@ kernel_knn_build_rag_frontier_b6d4_stage1_k32_chunked(const void* __restrict__ t
                     best_d[kk] = 3.4e+38f;
                     best_i[kk] = -1;
                 }
-                float chunk_worst_d[4];
-                int chunk_worst_pos[4];
-                #pragma unroll
-                for (int chunk = 0; chunk < 4; chunk++) {
-                    int chunk_base = chunk * 8;
-                    chunk_worst_d[chunk] = 3.4e+38f;
-                    chunk_worst_pos[chunk] = chunk_base;
-                }
                 float worst_d = 3.4e+38f;
                 int worst_pos = 0;
-                int worst_chunk = 0;
                 int db_tile_start_1 = split_idx_1 * db_tiles_per_split;
                 #pragma unroll 1
                 for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
@@ -621,26 +612,13 @@ kernel_knn_build_rag_frontier_b6d4_stage1_k32_chunked(const void* __restrict__ t
                                         if (dist < worst_d) {
                                             best_d[worst_pos] = dist;
                                             best_i[worst_pos] = db_idx;
-                                            int refresh_base = worst_chunk * 8;
-                                            chunk_worst_d[worst_chunk] = best_d[refresh_base];
-                                            chunk_worst_pos[worst_chunk] = refresh_base;
+                                            worst_d = best_d[0];
+                                            worst_pos = 0;
                                             #pragma unroll
-                                            for (int offset = 1; offset < 8; offset++) {
-                                                int scan_pos = refresh_base + offset;
-                                                if (best_d[scan_pos] > chunk_worst_d[worst_chunk]) {
-                                                    chunk_worst_d[worst_chunk] = best_d[scan_pos];
-                                                    chunk_worst_pos[worst_chunk] = scan_pos;
-                                                }
-                                            }
-                                            worst_d = chunk_worst_d[0];
-                                            worst_pos = chunk_worst_pos[0];
-                                            worst_chunk = 0;
-                                            #pragma unroll
-                                            for (int chunk_1 = 1; chunk_1 < 4; chunk_1++) {
-                                                if (worst_d < chunk_worst_d[chunk_1]) {
-                                                    worst_d = chunk_worst_d[chunk_1];
-                                                    worst_pos = chunk_worst_pos[chunk_1];
-                                                    worst_chunk = chunk_1;
+                                            for (int scan_pos = 1; scan_pos < TOP_K_MAX; scan_pos++) {
+                                                if (worst_d < best_d[scan_pos]) {
+                                                    worst_d = best_d[scan_pos];
+                                                    worst_pos = scan_pos;
                                                 }
                                             }
                                         }
@@ -655,22 +633,8 @@ kernel_knn_build_rag_frontier_b6d4_stage1_k32_chunked(const void* __restrict__ t
                     int out_base = ((split_idx_1 * B + batch_idx_1) * Q + q_idx) * K;
                     #pragma unroll
                     for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-                        float best_out_d = best_d[0];
-                        int best_out_i = best_i[0];
-                        int best_out_pos = 0;
-                        #pragma unroll
-                        for (int scan_pos_1 = 1; scan_pos_1 < TOP_K_MAX; scan_pos_1++) {
-                            if (best_out_d > best_d[scan_pos_1]) {
-                                best_out_d = best_d[scan_pos_1];
-                                best_out_i = best_i[scan_pos_1];
-                                best_out_pos = scan_pos_1;
-                            }
-                        }
-                        if (out_k < K) {
-                            *((float*)(partial_dists + (out_base + out_k))) = best_out_d;
-                            *((int*)(partial_indices + (out_base + out_k))) = best_out_i;
-                        }
-                        best_d[best_out_pos] = 3.4e+38f;
+                        *((float*)(partial_dists + (out_base + out_k))) = best_d[out_k];
+                        *((int*)(partial_indices + (out_base + out_k))) = best_i[out_k];
                     }
                 }
             }

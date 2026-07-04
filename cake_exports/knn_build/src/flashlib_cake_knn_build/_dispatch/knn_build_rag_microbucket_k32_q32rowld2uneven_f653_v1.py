@@ -17,7 +17,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32_q32rowld2_f653_v1 as parent
 from .._dispatch_runtime import pack_kernel_args
@@ -68,7 +68,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32uneven_s141r4_f653_v1", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 141], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q32_rowld2uneven():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0204"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0206"}'))
 
 @cache
 def _compiled_rows4_warp_merge(split_count: int):

@@ -24,10 +24,10 @@ knn_build_common_d_generic_direct_v1 = _decode_capture(_json_loads('{"__ir__": "
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_generic_direct_v1", "arg_keys": ["query", "database", "out_dists", "out_indices", "B", "Q", "M", "K", "D"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 20480, "constants": [["K_MAX_", 10], ["THREADS_", 256]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0224"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0226"}'))
 
 def _compiled_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0225"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0227"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

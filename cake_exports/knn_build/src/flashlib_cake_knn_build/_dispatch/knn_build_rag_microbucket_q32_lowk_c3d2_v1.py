@@ -18,7 +18,7 @@ from collections.abc import Callable
 from functools import cache
 from pathlib import Path
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_v11_common_d_seed_portfolio_a4ec_v1 as dispatch_v11
 from . import knn_build_rag_microbucket_q32rowld_e5db_v1 as e5db

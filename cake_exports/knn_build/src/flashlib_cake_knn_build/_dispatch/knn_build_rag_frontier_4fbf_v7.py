@@ -12,7 +12,7 @@ import os
 from collections.abc import Callable
 from functools import cache, lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_frontier_4b5c_v3 as v3
 from . import knn_build_rag_frontier_4fbf_v6 as parent_v6
@@ -81,7 +81,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_frontier_4fbf_v7_stage1_k32_sort4earlystop_tailinf", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tile_pairs", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_tailinf():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0173"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0175"}'))
 
 @cache
 def _compiled_group_merge(split_count: int, group_count: int):

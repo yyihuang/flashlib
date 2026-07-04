@@ -15,7 +15,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32warpmerge_0077_v1 as base
 from .._dispatch_runtime import pack_kernel_args

@@ -12,7 +12,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_d64_build_aa88_v1 as parent_aa88_v1
 from . import knn_build_d64_build_aa88_v2 as parent_aa88
 from .._dispatch_runtime import pack_kernel_args
@@ -58,13 +58,13 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_d64_q4096_c271_stage1_syncdrop", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 25856, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_syncdrop():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0221"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0223"}'))
 
 def _compiled_merge_k10_s5():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0222"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0224"}'))
 
 def _compiled_merge_k10_s6():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0223"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0225"}'))
 
 def _eligible_exact_q4096_d64(inputs: dict[str, Any]) -> bool:
     n_query = int(inputs['Q'])

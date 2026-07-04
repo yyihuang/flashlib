@@ -269,7 +269,7 @@
   },
   {
     "shape": "rag_online_irregular_b1_q1_m524287_d128_k10",
-    "selected_route": "loom.examples.weave.knn_build_dispatch_split72_4e09_de1a_3dc7_v48"
+    "selected_route": "rag_online_mbucket_206_q1m524_n128_s147_g7_exacttile"
   },
   {
     "shape": "rag_stream_b1_q128_m100000_d128_k10",
@@ -349,7 +349,7 @@
   },
   {
     "shape": "rag_microbatch_largek_b1_q32_m100000_d128_k32",
-    "selected_route": "rag_microbucket_k32_b3e0_mix_v1_q32_m100000_k32_rows4_s144_warpmerge"
+    "selected_route": "rag_microbucket_k32_q32rowld2exact_s141_72d1_v1_q32_m100000_k32_row16x256b2warp_exact_s141_r4_warpmerge"
   },
   {
     "shape": "rag_microbatch_largek_b1_q16_m131071_d128_k32",

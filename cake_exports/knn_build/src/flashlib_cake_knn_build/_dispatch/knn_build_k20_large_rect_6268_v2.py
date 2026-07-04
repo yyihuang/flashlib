@@ -101,7 +101,7 @@ def _launch_split23_path(inputs: dict[str, Any], *, split_count: int) -> None:
     merge_kernel.launch(grid=(merge_grid, 1, 1), block=(K20_MERGE_THREADS, 1, 1), args=[partial_dists, partial_indices, inputs['out_dists'], inputs['out_indices'], bsz * n_query], shared_mem=merge_ir.computed_smem_bytes)
 
 def _compiled_merge_k20_s3_warp_select():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0157"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0159"}'))
 
 def _launch_k20_large_rect(inputs: dict[str, Any]) -> None:
     split_count = _split_count_for_inputs(inputs)

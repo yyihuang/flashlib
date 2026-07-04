@@ -17,7 +17,7 @@ from collections.abc import Callable
 from functools import cache, lru_cache
 from pathlib import Path
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_d128_rag_q128_k10_df0f_warpmerge_v1 as df0f
 from . import knn_build_rag_microbucket_q32rowld_e5db_v1 as rowld_seed
@@ -84,7 +84,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_stream_k10_q128_1bed_rowld_stage1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 54528, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0082"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0083"}'))
 
 @cache
 def _compiled_merge(split_count: int):

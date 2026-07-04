@@ -38,7 +38,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2 as parent
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_v1 as parent_lowk
 from . import knn_build_evolve_7bfc_split_cg2_u2_v1 as parent_u2
@@ -200,7 +200,7 @@ def _compiled_stage1_for_bucket(top_k_bucket: int):
     return _compile_ir(_stage1_ir_for_bucket(top_k_bucket))
 
 def _compiled_stage1_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0211"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0213"}'))
 
 @lru_cache(maxsize=4)
 def _compiled_stage1_unordered_for_exact_k(top_k: int):
@@ -211,26 +211,26 @@ def _compiled_merge_for_bucket(top_k_bucket: int):
     return _compile_ir(_merge_ir_for_bucket(top_k_bucket))
 
 def _compiled_merge_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0212"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0214"}'))
 
 @lru_cache(maxsize=4)
 def _compiled_merge_unordered_for_exact_k(top_k: int):
     return _compile_ir(_merge_unordered_ir_for_exact_k(top_k))
 
 def _compiled_merge_k30_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0213"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0215"}'))
 
 def _compiled_merge_k12_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0214"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0216"}'))
 
 def _compiled_merge_k20_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0040"}'))
 
 def _compiled_merge_k8_s7():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0215"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0217"}'))
 
 def _compiled_merge_k8_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0216"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0218"}'))
 
 def _compiled_merge_k20_s16():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0013"}'))

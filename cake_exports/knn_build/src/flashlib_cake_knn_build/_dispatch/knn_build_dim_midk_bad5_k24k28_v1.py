@@ -73,19 +73,19 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k24s8", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tile_pairs", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 24]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k24_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0175"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0177"}'))
 
 def _compiled_stage1_k28_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0176"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0178"}'))
 
 def _compiled_stage1_k28_unordered():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0055"}'))
 
 def _compiled_merge_k24_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0177"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0179"}'))
 
 def _compiled_merge_k28_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0178"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0180"}'))
 
 def _compiled_merge_k28_unordered():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0056"}'))

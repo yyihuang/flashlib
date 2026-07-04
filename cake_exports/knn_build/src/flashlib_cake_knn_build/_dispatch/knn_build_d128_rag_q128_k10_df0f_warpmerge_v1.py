@@ -15,7 +15,7 @@ from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_6998_ragk10_direct_split72_v1 as direct_split72
 from . import knn_build_evolve_7bfc_split_v1 as parent_split
@@ -61,7 +61,7 @@ def _compiled_stage1():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0002"}'))
 
 def _compiled_merge_k10_s74_warp():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0189"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0191"}'))
 
 def _select_contract_shapes(shape_labels) -> list[dict[str, Any]]:
     return direct_split72._select_contract_shapes(shape_labels)

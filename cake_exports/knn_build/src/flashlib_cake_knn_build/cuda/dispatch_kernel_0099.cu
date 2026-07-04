@@ -33,7 +33,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32, 1) void
-kernel_knn_build_rag_microbatch_4a72_k10_fused_group_final_merge_s128g8_4a72_v1(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+kernel_knn_build_non128_frontier_4be7_d768fused_merge_s128g8_4be7_d768fused_v1(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);

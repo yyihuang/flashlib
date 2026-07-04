@@ -17,7 +17,7 @@ from collections.abc import Callable
 from functools import cache, lru_cache
 from pathlib import Path
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32_q16irreg2warp_a444_v2 as q16_2warp
 from . import knn_build_rag_microbucket_k32warpmerge_0077_v1 as warpmerge
@@ -73,7 +73,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d128_q16_k48_dd2b_v1_stage1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 60672, "constants": [["BLOCK_Q_CONST", 64], ["BLOCK_M_CONST", 64], ["FEAT_D_CONST", 128], ["TOP_K_MAX", 48], ["ROWS_COVERED_CONST", 16]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_k48():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0128"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0130"}'))
 
 @cache
 def _compiled_warp_merge_k48(split_count: int):

@@ -22,7 +22,7 @@ typedef short int          int16_t;
 #define SMEM_SMEM_DATABASE_SQ_STRIDE 256
 #define SMEM_TOTAL 50432
 #define THREADS 192
-#define FEATURE_CHUNKS 32
+#define FEATURE_CHUNKS 8
 
 #include <math_constants.h>
 
@@ -287,7 +287,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_common_d768_build_eeff_m64split_stage1_d4096_be66_search_v1(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_common_d768_build_eeff_m64split_stage1_d1024_be66_search_v1(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);

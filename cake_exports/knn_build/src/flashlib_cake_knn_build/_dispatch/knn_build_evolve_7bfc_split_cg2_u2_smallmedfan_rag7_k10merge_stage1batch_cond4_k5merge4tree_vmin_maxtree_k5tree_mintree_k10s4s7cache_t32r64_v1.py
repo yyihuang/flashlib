@@ -52,16 +52,16 @@ merge_k10_s7_cache_ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolv
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k10_merge_s4_rowbase_cache", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 10], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 32}'))
 
 def _compiled_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0137"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0139"}'))
 
 def _compiled_merge_k5_s4():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0138"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0140"}'))
 
 def _compiled_merge_k10_s4_cache():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0006"}'))
 
 def _compiled_merge_k10_s7_cache():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0139"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0141"}'))
 
 def _launch_cg2_split_path(inputs: dict[str, Any], *, split_count: int) -> None:
     query = inputs['query']

@@ -13,7 +13,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_evolve_7bfc_fp16_d128_knn_build_dispatch_slurm_0610_6329_v24 as parent_v24
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2_k32split_v20 as parent_v20
 from . import knn_build_evolve_7bfc_split_v1 as parent_split
@@ -53,10 +53,10 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_k96_stage1_sort4_chunked_k96over64sort4chunked", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tile_pairs", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [2, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 96]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_k96():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0186"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0188"}'))
 
 def _compiled_merge_k96():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0187"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0189"}'))
 
 def _eligible_over64_k96_build(inputs: dict[str, Any]) -> bool:
     return bool(inputs.get('build', False)) and str(inputs['query'].dtype) == 'torch.bfloat16' and (str(inputs['database'].dtype) == 'torch.bfloat16') and (int(inputs['D']) == FEAT_D) and (int(inputs['K']) == OVER64_TOP_K) and (int(inputs['Q']) == OVER64_QM) and (int(inputs['M']) == OVER64_QM) and (int(inputs['B']) == 1)

@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_v12_d256_k32_tail_59fe_v1_stage1_rowld", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 99584, "constants": [["BLOCK_Q", 64], ["BLOCK_M", 64], ["K_TILE", 128], ["FEATURE_CHUNKS", 2], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1_d256_k32_rowld():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0126"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0128"}'))
 
 def _dtype_name(inputs: dict[str, Any], tensor_name: str='query') -> str:
     tensor = inputs.get(tensor_name)

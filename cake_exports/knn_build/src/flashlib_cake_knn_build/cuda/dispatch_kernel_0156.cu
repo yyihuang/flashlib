@@ -16,7 +16,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 32
+#define THREADS 128
 #define TOP_K_MAX 20
 #define SPLIT_COUNT 4
 
@@ -24,8 +24,8 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 extern "C" {
 
-__global__ __launch_bounds__(32, 1) void
-kernel_knn_build_k20_mergeown_08ec_s4_rowbase_lane(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+__global__ __launch_bounds__(128, 1) void
+kernel_knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,47 +36,112 @@ kernel_knn_build_k20_mergeown_08ec_s4_rowbase_lane(float* __restrict__ partial_d
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int start_row = bid * 32 + lane;
-    int stride = num_bids * 32;
-    #pragma unroll 1
-    for (int row = start_row; row < total_queries; row += stride) {
-        int base_row = row * TOP_K_MAX;
-        int split_stride = total_queries * TOP_K_MAX;
-        float best_d[TOP_K_MAX];
-        int best_i[TOP_K_MAX];
-        #pragma unroll
-        for (int kk = 0; kk < TOP_K_MAX; kk++) {
-            best_d[kk] = 3.4e+38f;
-            best_i[kk] = -1;
-        }
-        float worst_d = 3.4e+38f;
-        int worst_pos = 0;
-        #pragma unroll
-        for (int split_idx = 0; split_idx < SPLIT_COUNT; split_idx++) {
-            int partial_base = base_row + split_idx * split_stride;
-            #pragma unroll
-            for (int cand_k = 0; cand_k < TOP_K_MAX; cand_k++) {
-                float cand_d = partial_dists[partial_base + cand_k];
-                int cand_i = partial_indices[partial_base + cand_k];
-                if (cand_d < worst_d) {
-                    best_d[worst_pos] = cand_d;
-                    best_i[worst_pos] = cand_i;
-                    worst_d = best_d[0];
-                    worst_pos = 0;
-                    #pragma unroll
-                    for (int scan_pos = 1; scan_pos < TOP_K_MAX; scan_pos++) {
-                        if (worst_d < best_d[scan_pos]) {
-                            worst_d = best_d[scan_pos];
-                            worst_pos = scan_pos;
-                        }
-                    }
-                }
-            }
+    int row = bid * 4 + warp;
+    int base_row = row * TOP_K_MAX;
+    int split_stride = total_queries * TOP_K_MAX;
+    int cand_k = lane;
+    if (row < total_queries) {
+        float d0 = 3.4e+38f;
+        float d1 = 3.4e+38f;
+        float d2 = 3.4e+38f;
+        float d3 = 3.4e+38f;
+        int i0 = -1;
+        int i1 = -1;
+        int i2 = -1;
+        int i3 = -1;
+        if (cand_k < TOP_K_MAX) {
+            d0 = partial_dists[base_row + cand_k];
+            i0 = partial_indices[base_row + cand_k];
+            int base1 = base_row + split_stride;
+            d1 = partial_dists[base1 + cand_k];
+            i1 = partial_indices[base1 + cand_k];
+            int base2 = base1 + split_stride;
+            d2 = partial_dists[base2 + cand_k];
+            i2 = partial_indices[base2 + cand_k];
+            int base3 = base2 + split_stride;
+            d3 = partial_dists[base3 + cand_k];
+            i3 = partial_indices[base3 + cand_k];
         }
         #pragma unroll
         for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-            *((float*)(out_dists + (base_row + out_k))) = best_d[out_k];
-            *((int*)(out_indices + (base_row + out_k))) = best_i[out_k];
+            float winner_d = d0;
+            int winner_i = i0;
+            int winner_src = 0;
+            if (d1 < winner_d) {
+                winner_d = d1;
+                winner_i = i1;
+                winner_src = 1;
+            }
+            if (d2 < winner_d) {
+                winner_d = d2;
+                winner_i = i2;
+                winner_src = 2;
+            }
+            if (d3 < winner_d) {
+                winner_d = d3;
+                winner_i = i3;
+                winner_src = 3;
+            }
+            float warp_min = winner_d;
+            float _warp_reduce_0 = warp_min;
+            #pragma unroll
+            for (int offset = 16; offset > 0; offset >>= 1)
+                _warp_reduce_0 = fminf(_warp_reduce_0, __shfl_xor_sync(0xFFFFFFFF, _warp_reduce_0, offset));
+            warp_min = _warp_reduce_0;
+            int src0_owner = 0;
+            int src1_owner = 0;
+            int src2_owner = 0;
+            int src3_owner = 0;
+            if (winner_d == warp_min) {
+                if (winner_src == 0) {
+                    src0_owner = 1;
+                } else if (winner_src == 1) {
+                    src1_owner = 1;
+                } else {
+                    if (winner_src == 2) {
+                        src2_owner = 1;
+                    } else {
+                        src3_owner = 1;
+                    }
+                }
+            }
+            unsigned int _vote_0 = __ballot_sync(0xFFFFFFFF, src0_owner != 0);
+            int owner_ballot = _vote_0;
+            if (owner_ballot == 0) {
+                unsigned int _vote_1 = __ballot_sync(0xFFFFFFFF, src1_owner != 0);
+                owner_ballot = _vote_1;
+                if (owner_ballot == 0) {
+                    unsigned int _vote_2 = __ballot_sync(0xFFFFFFFF, src2_owner != 0);
+                    owner_ballot = _vote_2;
+                    if (owner_ballot == 0) {
+                        unsigned int _vote_3 = __ballot_sync(0xFFFFFFFF, src3_owner != 0);
+                        owner_ballot = _vote_3;
+                    }
+                }
+            }
+            int _clz_0 = __clz(owner_ballot);
+            int winner_lane = 31 - _clz_0;
+            int _shfl_0 = __shfl_sync(0xFFFFFFFF, winner_i, winner_lane);
+            winner_i = _shfl_0;
+            int _shfl_1 = __shfl_sync(0xFFFFFFFF, winner_src, winner_lane);
+            winner_src = _shfl_1;
+            if (lane == 0) {
+                *((float*)(out_dists + (base_row + out_k))) = warp_min;
+                *((int*)(out_indices + (base_row + out_k))) = winner_i;
+            }
+            if (lane == winner_lane) {
+                if (winner_src == 0) {
+                    d0 = 3.4e+38f;
+                } else if (winner_src == 1) {
+                    d1 = 3.4e+38f;
+                } else {
+                    if (winner_src == 2) {
+                        d2 = 3.4e+38f;
+                    } else {
+                        d3 = 3.4e+38f;
+                    }
+                }
+            }
         }
     }
 }

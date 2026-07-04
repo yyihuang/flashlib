@@ -16,7 +16,7 @@ import json
 import os
 from functools import lru_cache
 from typing import Any, Callable
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32warpmerge_0077_v1 as parent
 MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32rowld1warp_0077_v1'
@@ -82,10 +82,10 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32s144_0077_v1", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 144], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 1]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q16_k32_m64_rowld1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0196"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0198"}'))
 
 def _compiled_stage1_q32_k32_m64_rowld2():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0197"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0199"}'))
 
 def _launch_rowld1_warpmerge(inputs: dict[str, Any], *, split_count: int) -> None:
     parent._launch_stage1_then_warp_merge(inputs, split_count=split_count, stage1_kernel_fn=_compiled_stage1_q16_k32_m64_rowld1, stage1_ir=_stage1_rowld1_ir(), stage1_threads=Q16_ROWLD1_STAGE1_THREADS, block_q=Q16_ROWLD1_BLOCK_Q, block_m=Q16_ROWLD1_BLOCK_M)

@@ -12,7 +12,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_d64_build_aa88_v1 as parent_aa88_v1
 from . import knn_build_d64_build_aa88_v2 as parent_aa88
 from . import knn_build_d64_q4096_c271_prodaxis_v1 as parent_c271
@@ -76,13 +76,13 @@ def _compiled_stage1_unordered_syncdrop():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0019"}'))
 
 def _compiled_group_reduce_s8g4():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0218"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0220"}'))
 
 def _compiled_merge_k10_s5():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0219"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0221"}'))
 
 def _compiled_merge_k10_s6():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0220"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0222"}'))
 
 def _eligible_exact_q4096_d64(inputs: dict[str, Any]) -> bool:
     n_query = int(inputs['Q'])

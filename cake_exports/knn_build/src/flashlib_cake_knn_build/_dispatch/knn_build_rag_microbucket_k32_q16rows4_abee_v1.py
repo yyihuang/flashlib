@@ -14,7 +14,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_microbucket_k32_2e8e_q16split148_v1 as parent
 from . import knn_build_rag_microbucket_k32rowld1warp_0077_v1 as rowld1

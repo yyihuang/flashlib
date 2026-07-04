@@ -32,7 +32,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define BLOCK_Q 128
 #define BLOCK_M 64
 #define FEAT_D 128
-#define TOP_K_MAX 28
+#define TOP_K_MAX 32
 
 #include <math_constants.h>
 
@@ -311,7 +311,7 @@ __device__ __forceinline__ void tcgen05_commit_cg2_multicast(int mbar_addr, uint
 extern "C" {
 
 __global__ __launch_bounds__(192, 1) void
-kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k28s8(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
+kernel_knn_build_rag_frontier_4fbf_stage1_k32_sort4earlystop_tailinf(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tile_pairs, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -538,6 +538,17 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k28s8(const void* __restric
                     best_d[kk] = 3.4e+38f;
                     best_i[kk] = -1;
                 }
+                float chunk_worst_d[4];
+                int chunk_worst_pos[4];
+                #pragma unroll
+                for (int chunk = 0; chunk < 4; chunk++) {
+                    int chunk_base = chunk * 8;
+                    chunk_worst_d[chunk] = 3.4e+38f;
+                    chunk_worst_pos[chunk] = chunk_base;
+                }
+                float worst_d = 3.4e+38f;
+                int worst_pos = 0;
+                int worst_chunk = 0;
                 int db_tile_start_1 = split_idx_1 * db_tiles_per_split;
                 #pragma unroll 1
                 for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
@@ -548,7 +559,7 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k28s8(const void* __restric
                         if (db_sq_idx < M) {
                             smem_database_sq[thread_row_idx] = database_sq[batch_idx_1 * M + db_sq_idx];
                         } else {
-                            smem_database_sq[thread_row_idx] = 0.0f;
+                            smem_database_sq[thread_row_idx] = 3.4e+38f;
                         }
                     }
                     asm volatile("barrier.sync 8, %0;" :: "r"(128));
@@ -601,26 +612,99 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k28s8(const void* __restric
                             if (_t0[3] < group_min) {
                                 group_min = _t0[3];
                             }
-                            if (group_min < best_d[TOP_K_MAX - 1]) {
+                            if (group_min < worst_d) {
+                                float sort_d0 = _t0[0];
+                                float sort_d1 = _t0[1];
+                                float sort_d2 = _t0[2];
+                                float sort_d3 = _t0[3];
+                                int sort_col0 = 0;
+                                int sort_col1 = 1;
+                                int sort_col2 = 2;
+                                int sort_col3 = 3;
+                                float tmp_d = 0.0f;
+                                int tmp_col = 0;
+                                if (sort_d1 < sort_d0) {
+                                    tmp_d = sort_d0;
+                                    sort_d0 = sort_d1;
+                                    sort_d1 = tmp_d;
+                                    tmp_col = sort_col0;
+                                    sort_col0 = sort_col1;
+                                    sort_col1 = tmp_col;
+                                }
+                                if (sort_d3 < sort_d2) {
+                                    tmp_d = sort_d2;
+                                    sort_d2 = sort_d3;
+                                    sort_d3 = tmp_d;
+                                    tmp_col = sort_col2;
+                                    sort_col2 = sort_col3;
+                                    sort_col3 = tmp_col;
+                                }
+                                if (sort_d2 < sort_d0) {
+                                    tmp_d = sort_d0;
+                                    sort_d0 = sort_d2;
+                                    sort_d2 = tmp_d;
+                                    tmp_col = sort_col0;
+                                    sort_col0 = sort_col2;
+                                    sort_col2 = tmp_col;
+                                }
+                                if (sort_d3 < sort_d1) {
+                                    tmp_d = sort_d1;
+                                    sort_d1 = sort_d3;
+                                    sort_d3 = tmp_d;
+                                    tmp_col = sort_col1;
+                                    sort_col1 = sort_col3;
+                                    sort_col3 = tmp_col;
+                                }
+                                if (sort_d2 < sort_d1) {
+                                    tmp_d = sort_d1;
+                                    sort_d1 = sort_d2;
+                                    sort_d2 = tmp_d;
+                                    tmp_col = sort_col1;
+                                    sort_col1 = sort_col2;
+                                    sort_col2 = tmp_col;
+                                }
                                 #pragma unroll
-                                for (int vec_col = 0; vec_col < 4; vec_col++) {
+                                for (int visit = 0; visit < 4; visit++) {
+                                    int vec_col = sort_col0;
+                                    float dist = sort_d0;
+                                    if (visit == 1) {
+                                        vec_col = sort_col1;
+                                        dist = sort_d1;
+                                    }
+                                    if (visit == 2) {
+                                        vec_col = sort_col2;
+                                        dist = sort_d2;
+                                    }
+                                    if (visit == 3) {
+                                        vec_col = sort_col3;
+                                        dist = sort_d3;
+                                    }
+                                    if (dist >= worst_d) {
+                                        break;
+                                    }
                                     int db_idx = db_start + col_base + vec_col;
-                                    if (db_idx < M) {
-                                        float dist = _t0[vec_col];
-                                        if (dist < best_d[TOP_K_MAX - 1]) {
-                                            best_d[TOP_K_MAX - 1] = dist;
-                                            best_i[TOP_K_MAX - 1] = db_idx;
-                                            #pragma unroll
-                                            for (int pos = TOP_K_MAX - 1; pos >= 1; pos--) {
-                                                if (best_d[pos] < best_d[pos - 1]) {
-                                                    float tmp_d = best_d[pos - 1];
-                                                    int tmp_i = best_i[pos - 1];
-                                                    best_d[pos - 1] = best_d[pos];
-                                                    best_i[pos - 1] = best_i[pos];
-                                                    best_d[pos] = tmp_d;
-                                                    best_i[pos] = tmp_i;
-                                                }
-                                            }
+                                    best_d[worst_pos] = dist;
+                                    best_i[worst_pos] = db_idx;
+                                    int refresh_base = worst_chunk * 8;
+                                    chunk_worst_d[worst_chunk] = best_d[refresh_base];
+                                    chunk_worst_pos[worst_chunk] = refresh_base;
+                                    #pragma unroll
+                                    for (int offset = 1; offset < 8; offset++) {
+                                        int scan_pos = refresh_base + offset;
+                                        if (best_d[scan_pos] > chunk_worst_d[worst_chunk]) {
+                                            chunk_worst_d[worst_chunk] = best_d[scan_pos];
+                                            chunk_worst_pos[worst_chunk] = scan_pos;
+                                        }
+                                    }
+                                    worst_d = chunk_worst_d[0];
+                                    worst_pos = chunk_worst_pos[0];
+                                    worst_chunk = 0;
+                                    #pragma unroll
+                                    for (int chunk_1 = 1; chunk_1 < 4; chunk_1++) {
+                                        if (worst_d < chunk_worst_d[chunk_1]) {
+                                            worst_d = chunk_worst_d[chunk_1];
+                                            worst_pos = chunk_worst_pos[chunk_1];
+                                            worst_chunk = chunk_1;
                                         }
                                     }
                                 }
@@ -633,10 +717,22 @@ kernel_knn_build_evolve_7bfc_split_cg2_u2_stage1_bad5k28s8(const void* __restric
                     int out_base = ((split_idx_1 * B + batch_idx_1) * Q + q_idx) * K;
                     #pragma unroll
                     for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-                        if (out_k < K) {
-                            *((float*)(partial_dists + (out_base + out_k))) = best_d[out_k];
-                            *((int*)(partial_indices + (out_base + out_k))) = best_i[out_k];
+                        float best_out_d = best_d[0];
+                        int best_out_i = best_i[0];
+                        int best_out_pos = 0;
+                        #pragma unroll
+                        for (int scan_pos_1 = 1; scan_pos_1 < TOP_K_MAX; scan_pos_1++) {
+                            if (best_out_d > best_d[scan_pos_1]) {
+                                best_out_d = best_d[scan_pos_1];
+                                best_out_i = best_i[scan_pos_1];
+                                best_out_pos = scan_pos_1;
+                            }
                         }
+                        if (out_k < K) {
+                            *((float*)(partial_dists + (out_base + out_k))) = best_out_d;
+                            *((int*)(partial_indices + (out_base + out_k))) = best_out_i;
+                        }
+                        best_d[best_out_pos] = 3.4e+38f;
                     }
                 }
             }

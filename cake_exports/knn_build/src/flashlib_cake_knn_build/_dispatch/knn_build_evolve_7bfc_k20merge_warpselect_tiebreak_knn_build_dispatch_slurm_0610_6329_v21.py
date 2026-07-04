@@ -38,7 +38,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_k20_merge_s4_unordered_warp_select_splitmajor", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 20], ["SPLIT_COUNT", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_merge_k20_unordered_warp_select_splitmajor():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0154"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0156"}'))
 
 def _eligible_k20_q4096_warpselect_splitmajor(inputs: dict[str, Any]) -> bool:
     return parent_v20._eligible_k32_split_build(inputs) and int(inputs['K']) == TOP_K_K20 and (int(inputs['Q']) == 4096) and (int(inputs['M']) == 4096)

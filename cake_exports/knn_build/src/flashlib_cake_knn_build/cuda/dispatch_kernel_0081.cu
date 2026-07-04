@@ -8,21 +8,28 @@ typedef short int          int16_t;
 #include <cuda_bf16.h>
 
 #define LOOM_INF CUDART_INF_F
-#define TMEM_NCOLS 64
+#define TMEM_NCOLS 128
 #define TMEM_CROSS_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_QUERY_OFF 1024
-#define SMEM_SMEM_QUERY_STAGE_BYTES 32768
-#define SMEM_SMEM_QUERY_STRIDE 32768
-#define SMEM_SMEM_DATABASE_OFF 33792
-#define SMEM_SMEM_DATABASE_STAGE_BYTES 16384
-#define SMEM_SMEM_DATABASE_STRIDE 16384
-#define SMEM_TOTAL 50176
-#define THREADS 192
-#define BLOCK_Q 128
-#define BLOCK_M 64
+#define SMEM_SMEM_QUERY_STAGE_BYTES 16384
+#define SMEM_SMEM_QUERY_STRIDE 16384
+#define SMEM_SMEM_DATABASE_OFF 17408
+#define SMEM_SMEM_DATABASE_STAGE_BYTES 32768
+#define SMEM_SMEM_DATABASE_STRIDE 32768
+#define SMEM_SMEM_LOCAL_D_OFF 50432
+#define SMEM_SMEM_LOCAL_D_STAGE_BYTES 1280
+#define SMEM_SMEM_LOCAL_D_STRIDE 1280
+#define SMEM_SMEM_LOCAL_I_OFF 51712
+#define SMEM_SMEM_LOCAL_I_STAGE_BYTES 1280
+#define SMEM_SMEM_LOCAL_I_STRIDE 1280
+#define SMEM_TOTAL 52992
+#define THREADS 96
+#define BLOCK_Q 64
+#define BLOCK_M 128
 #define FEAT_D 128
 #define TOP_K_MAX 10
+#define ROWS_COVERED 1
 
 #include <math_constants.h>
 
@@ -223,8 +230,8 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 
 extern "C" {
 
-__global__ __launch_bounds__(192, 1) void
-kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ out_dists, int* __restrict__ out_indices, int B, int Q, int M, int K, int num_q_tiles, int num_db_tiles, int total_tiles)
+__global__ __launch_bounds__(96, 1) void
+kernel_knn_build_ragonline_mbucket_ea43_q1m524_n128_stage1(const void* __restrict__ tmap_query, const void* __restrict__ tmap_database, float* __restrict__ query_sq, float* __restrict__ database_sq, float* __restrict__ partial_dists, int* __restrict__ partial_indices, int B, int Q, int M, int K, int num_q_tiles, int db_tiles_per_split, int split_count, int total_work)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -240,8 +247,12 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
     // Kernel setup ops
     __nv_bfloat16* smem_query = reinterpret_cast<__nv_bfloat16*>(smem_raw + 1024);
     const int smem_query_addr = smem + 1024;
-    __nv_bfloat16* smem_database = reinterpret_cast<__nv_bfloat16*>(smem_raw + 33792);
-    const int smem_database_addr = smem + 33792;
+    __nv_bfloat16* smem_database = reinterpret_cast<__nv_bfloat16*>(smem_raw + 17408);
+    const int smem_database_addr = smem + 17408;
+    float* smem_local_d = reinterpret_cast<float*>(smem_raw + 50432);
+    const int smem_local_d_addr = smem + 50432;
+    int* smem_local_i = reinterpret_cast<int*>(smem_raw + 51712);
+    const int smem_local_i_addr = smem + 51712;
 
     // Mbarrier init (6 groups, 6 barriers)
     // Mbarriers at smem_raw[0..48)
@@ -258,18 +269,18 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
         mbarrier_init_pred(smem + 24, 1, leader);
         // score_full: 1 barriers, init_count=1
         mbarrier_init_pred(smem + 32, 1, leader);
-        // score_empty: 1 barriers, init_count=128
-        mbarrier_init_pred(smem + 40, 128, leader);
+        // score_empty: 1 barriers, init_count=1
+        mbarrier_init_pred(smem + 40, 1, leader);
         asm volatile("fence.mbarrier_init.release.cluster;");
     }
 
     __syncthreads();
 
-    // TMEM alloc (64 columns, 64 used)
+    // TMEM alloc (128 columns, 128 used)
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 48);
     if (warp == 0) {
         int _tmem_hold = smem + 48;
-        asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
+        asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(128) : "memory");
     }
 
     __syncthreads();
@@ -287,30 +298,248 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
     // Kernel post-init ops
     const int tmem_cross = tmem_addr_storage[0];
 
-    // ---- Role: load ----
+    // ---- Role: compute ----
     if (warp == 0) {
+        { // compute_main
+            unsigned int _phase_score_full_0 = 0;
+            #pragma unroll 1
+            for (unsigned int work_idx = bid; work_idx < total_work; work_idx += num_bids) {
+                int split_idx = work_idx % (unsigned int)split_count;
+                int query_work = work_idx / (unsigned int)split_count;
+                int batch_idx = query_work / num_q_tiles;
+                int q_tile = query_work % num_q_tiles;
+                int off_q = q_tile * BLOCK_Q;
+                int row = lane / 4;
+                int lane_col = lane % 4;
+                int slot = lane_col;
+                int q_idx = off_q + row;
+                int valid_row = ((q_idx < Q) ? 1 : 0);
+                float q_sq_val = 0.0f;
+                if (valid_row != 0) {
+                    q_sq_val = query_sq[batch_idx * Q + q_idx];
+                }
+                float best_d[TOP_K_MAX];
+                int best_i[TOP_K_MAX];
+                #pragma unroll
+                for (int kk = 0; kk < TOP_K_MAX; kk++) {
+                    best_d[kk] = 3.4e+38f;
+                    best_i[kk] = -1;
+                }
+                int db_tile_start = split_idx * db_tiles_per_split;
+                #pragma unroll 1
+                for (int local_db_tile = 0; local_db_tile < db_tiles_per_split; local_db_tile++) {
+                    int db_tile = db_tile_start + local_db_tile;
+                    int db_start = db_tile * BLOCK_M;
+                    mbarrier_wait(score_full_addr, _phase_score_full_0);
+                    _phase_score_full_0 ^= 1;
+                    float _tmem_load_0[32];
+                    asm volatile(
+                        "tcgen05.ld.sync.aligned.16x256b.x8.b32"
+                        " {%0, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31}, [%32];"
+                        : "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[0])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[1])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[2])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[3])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[4])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[5])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[6])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[7])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[8])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[9])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[10])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[11])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[12])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[13])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[14])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[15])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[16])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[17])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[18])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[19])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[20])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[21])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[22])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[23])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[24])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[25])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[26])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[27])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[28])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[29])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[30])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[31]))
+                        : "r"(taddr)
+                        : "memory");
+                    float _tmem_load_1[32];
+                    asm volatile(
+                        "tcgen05.ld.sync.aligned.16x256b.x8.b32"
+                        " {%0, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31}, [%32];"
+                        : "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[0])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[1])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[2])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[3])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[4])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[5])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[6])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[7])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[8])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[9])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[10])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[11])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[12])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[13])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[14])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[15])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[16])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[17])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[18])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[19])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[20])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[21])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[22])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[23])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[24])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[25])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[26])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[27])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[28])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[29])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[30])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_1[31]))
+                        : "r"(taddr + 64)
+                        : "memory");
+                    asm volatile("tcgen05.wait::ld.sync.aligned;" ::: "memory");
+                    if (elect_sync()) {
+                        mbarrier_arrive(score_empty_addr);
+                    }
+                    #pragma unroll
+                    for (int repeat = 0; repeat < 8; repeat++) {
+                        const int reg_base = repeat * 4;
+                        int col_base = repeat * 8 + lane_col * 2;
+                        int db_idx0 = db_start + col_base;
+                        int db_idx1 = db_idx0 + 1;
+                        float cand0_d = 3.4e+38f;
+                        float cand1_d = 3.4e+38f;
+                        float dot0 = _tmem_load_0[reg_base];
+                        float dot1 = _tmem_load_0[reg_base + 1];
+                        if (valid_row != 0 && db_idx0 < M) {
+                            float _max_0 = max_noftz(q_sq_val + database_sq[batch_idx * M + db_idx0] - 2.0f * dot0, 0.0f);
+                            cand0_d = _max_0;
+                        }
+                        if (valid_row != 0 && db_idx1 < M) {
+                            float _max_1 = max_noftz(q_sq_val + database_sq[batch_idx * M + db_idx1] - 2.0f * dot1, 0.0f);
+                            cand1_d = _max_1;
+                        }
+                        int take1 = ((cand1_d < cand0_d) ? 1 : 0);
+                        if (best_d[9] > ((take1 != 0) ? cand1_d : cand0_d)) {
+                            best_d[9] = ((take1 != 0) ? cand1_d : cand0_d);
+                            best_i[9] = ((take1 != 0) ? db_idx1 : db_idx0);
+                            #pragma unroll
+                            for (int kk_1 = 8; kk_1 >= 0; kk_1--) {
+                                float lower0_d = best_d[kk_1 + 1];
+                                int lower0_i = best_i[kk_1 + 1];
+                                float upper0_d = best_d[kk_1];
+                                int upper0_i = best_i[kk_1];
+                                int swap0_up = ((lower0_d < upper0_d) ? 1 : 0);
+                                best_d[kk_1] = ((swap0_up != 0) ? lower0_d : upper0_d);
+                                best_i[kk_1] = ((swap0_up != 0) ? lower0_i : upper0_i);
+                                best_d[kk_1 + 1] = ((swap0_up != 0) ? upper0_d : lower0_d);
+                                best_i[kk_1 + 1] = ((swap0_up != 0) ? upper0_i : lower0_i);
+                            }
+                            if (best_d[9] > ((take1 != 0) ? cand0_d : cand1_d)) {
+                                best_d[9] = ((take1 != 0) ? cand0_d : cand1_d);
+                                best_i[9] = ((take1 != 0) ? db_idx0 : db_idx1);
+                                #pragma unroll
+                                for (int kk_2 = 8; kk_2 >= 0; kk_2--) {
+                                    float lower1_d = best_d[kk_2 + 1];
+                                    int lower1_i = best_i[kk_2 + 1];
+                                    float upper1_d = best_d[kk_2];
+                                    int upper1_i = best_i[kk_2];
+                                    int swap1_up = ((lower1_d < upper1_d) ? 1 : 0);
+                                    best_d[kk_2] = ((swap1_up != 0) ? lower1_d : upper1_d);
+                                    best_i[kk_2] = ((swap1_up != 0) ? lower1_i : upper1_i);
+                                    best_d[kk_2 + 1] = ((swap1_up != 0) ? upper1_d : lower1_d);
+                                    best_i[kk_2 + 1] = ((swap1_up != 0) ? upper1_i : lower1_i);
+                                }
+                            }
+                        }
+                    }
+                    #pragma unroll
+                    for (int repeat_hi = 0; repeat_hi < 8; repeat_hi++) {
+                        const int reg_base_hi = repeat_hi * 4;
+                        int col_base_hi = 64 + repeat_hi * 8 + lane_col * 2;
+                        int db_idx_hi0 = db_start + col_base_hi;
+                        int db_idx_hi1 = db_idx_hi0 + 1;
+                        float cand_hi0_d = 3.4e+38f;
+                        float cand_hi1_d = 3.4e+38f;
+                        float dot_hi0 = _tmem_load_1[reg_base_hi];
+                        float dot_hi1 = _tmem_load_1[reg_base_hi + 1];
+                        if (valid_row != 0 && db_idx_hi0 < M) {
+                            float _max_2 = max_noftz(q_sq_val + database_sq[batch_idx * M + db_idx_hi0] - 2.0f * dot_hi0, 0.0f);
+                            cand_hi0_d = _max_2;
+                        }
+                        if (valid_row != 0 && db_idx_hi1 < M) {
+                            float _max_3 = max_noftz(q_sq_val + database_sq[batch_idx * M + db_idx_hi1] - 2.0f * dot_hi1, 0.0f);
+                            cand_hi1_d = _max_3;
+                        }
+                        int take_hi1 = ((cand_hi1_d < cand_hi0_d) ? 1 : 0);
+                        if (best_d[9] > ((take_hi1 != 0) ? cand_hi1_d : cand_hi0_d)) {
+                            best_d[9] = ((take_hi1 != 0) ? cand_hi1_d : cand_hi0_d);
+                            best_i[9] = ((take_hi1 != 0) ? db_idx_hi1 : db_idx_hi0);
+                            #pragma unroll
+                            for (int kk_3 = 8; kk_3 >= 0; kk_3--) {
+                                float lower0_d_1 = best_d[kk_3 + 1];
+                                int lower0_i_1 = best_i[kk_3 + 1];
+                                float upper0_d_1 = best_d[kk_3];
+                                int upper0_i_1 = best_i[kk_3];
+                                int swap0_up_1 = ((lower0_d_1 < upper0_d_1) ? 1 : 0);
+                                best_d[kk_3] = ((swap0_up_1 != 0) ? lower0_d_1 : upper0_d_1);
+                                best_i[kk_3] = ((swap0_up_1 != 0) ? lower0_i_1 : upper0_i_1);
+                                best_d[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_d_1 : lower0_d_1);
+                                best_i[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_i_1 : lower0_i_1);
+                            }
+                            if (best_d[9] > ((take_hi1 != 0) ? cand_hi0_d : cand_hi1_d)) {
+                                best_d[9] = ((take_hi1 != 0) ? cand_hi0_d : cand_hi1_d);
+                                best_i[9] = ((take_hi1 != 0) ? db_idx_hi0 : db_idx_hi1);
+                                #pragma unroll
+                                for (int kk_4 = 8; kk_4 >= 0; kk_4--) {
+                                    float lower1_d_1 = best_d[kk_4 + 1];
+                                    int lower1_i_1 = best_i[kk_4 + 1];
+                                    float upper1_d_1 = best_d[kk_4];
+                                    int upper1_i_1 = best_i[kk_4];
+                                    int swap1_up_1 = ((lower1_d_1 < upper1_d_1) ? 1 : 0);
+                                    best_d[kk_4] = ((swap1_up_1 != 0) ? lower1_d_1 : upper1_d_1);
+                                    best_i[kk_4] = ((swap1_up_1 != 0) ? lower1_i_1 : upper1_i_1);
+                                    best_d[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_d_1 : lower1_d_1);
+                                    best_i[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_i_1 : lower1_i_1);
+                                }
+                            }
+                        }
+                    }
+                }
+                int slot_base = (row * 4 + slot) * TOP_K_MAX;
+                #pragma unroll
+                for (int kk_5 = 0; kk_5 < TOP_K_MAX; kk_5++) {
+                    smem_local_d[slot_base + kk_5] = best_d[kk_5];
+                    smem_local_i[slot_base + kk_5] = best_i[kk_5];
+                }
+                asm volatile("barrier.sync 8, %0;" :: "r"(32));
+                if (tid < ROWS_COVERED) {
+                    int out_row = tid;
+                    int out_q_idx = off_q + out_row;
+                    float head_d[4];
+                    int head_i[4];
+                    int head_k[4];
+                    #pragma unroll
+                    for (int slot_idx = 0; slot_idx < 4; slot_idx++) {
+                        int local_base = (out_row * 4 + slot_idx) * TOP_K_MAX;
+                        head_k[slot_idx] = 0;
+                        head_d[slot_idx] = smem_local_d[local_base];
+                        head_i[slot_idx] = smem_local_i[local_base];
+                    }
+                    int out_base = ((split_idx * B + batch_idx) * Q + out_q_idx) * K;
+                    #pragma unroll
+                    for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
+                        float winner_d = head_d[0];
+                        int winner_i = head_i[0];
+                        int winner_slot = 0;
+                        #pragma unroll
+                        for (int slot_idx_1 = 1; slot_idx_1 < 4; slot_idx_1++) {
+                            float cand_d = head_d[slot_idx_1];
+                            int take = ((cand_d < winner_d) ? 1 : 0);
+                            winner_d = ((take != 0) ? cand_d : winner_d);
+                            winner_i = ((take != 0) ? head_i[slot_idx_1] : winner_i);
+                            winner_slot = ((take != 0) ? slot_idx_1 : winner_slot);
+                        }
+                        if (out_q_idx < Q && out_k < K) {
+                            *((float*)(partial_dists + (out_base + out_k))) = winner_d;
+                            *((int*)(partial_indices + (out_base + out_k))) = winner_i;
+                        }
+                        #pragma unroll
+                        for (int slot_idx_2 = 0; slot_idx_2 < 4; slot_idx_2++) {
+                            if (winner_slot == slot_idx_2) {
+                                int next_head = head_k[slot_idx_2] + 1;
+                                head_k[slot_idx_2] = next_head;
+                                head_d[slot_idx_2] = 3.4e+38f;
+                                head_i[slot_idx_2] = -1;
+                                if (next_head < TOP_K_MAX) {
+                                    int local_base_1 = (out_row * 4 + slot_idx_2) * TOP_K_MAX;
+                                    head_d[slot_idx_2] = smem_local_d[local_base_1 + next_head];
+                                    head_i[slot_idx_2] = smem_local_i[local_base_1 + next_head];
+                                }
+                            }
+                        }
+                    }
+                }
+                asm volatile("barrier.sync 8, %0;" :: "r"(32));
+            }
+        }
+    // ---- Role: load ----
+    } else if (warp == 1) {
         { // load_main
             unsigned int _phase_query_empty_0 = 1;
             unsigned int _phase_database_empty_0 = 1;
-            if (warp == 0) {
+            if (warp == 1) {
                 if (elect_sync()) {
                     #pragma unroll 1
-                    for (unsigned int tile_idx = bid; tile_idx < total_tiles; tile_idx += num_bids) {
-                        int batch_idx = tile_idx / (unsigned int)num_q_tiles;
-                        int q_tile = tile_idx % (unsigned int)num_q_tiles;
-                        int off_q = q_tile * BLOCK_Q;
-                        int global_q = batch_idx * Q + off_q;
+                    for (unsigned int work_idx_1 = bid; work_idx_1 < total_work; work_idx_1 += num_bids) {
+                        int split_idx_1 = work_idx_1 % (unsigned int)split_count;
+                        int query_work_1 = work_idx_1 / (unsigned int)split_count;
+                        int batch_idx_1 = query_work_1 / num_q_tiles;
+                        int q_tile_1 = query_work_1 % num_q_tiles;
+                        int off_q_1 = q_tile_1 * BLOCK_Q;
+                        int global_q = batch_idx_1 * Q + off_q_1;
+                        int db_tile_start_1 = split_idx_1 * db_tiles_per_split;
                         mbarrier_wait(query_empty_addr, _phase_query_empty_0);
                         _phase_query_empty_0 ^= 1;
-                        mbarrier_arrive_expect_tx(query_full_addr, 32768);
+                        mbarrier_arrive_expect_tx(query_full_addr, 16384);
                         tma_3d_gmem2smem(smem_query_addr, tmap_query, 0, global_q, 0, query_full_addr);
                         #pragma unroll 1
-                        for (int db_tile = 0; db_tile < num_db_tiles; db_tile++) {
-                            int off_m = db_tile * BLOCK_M;
-                            int global_m = batch_idx * M + off_m;
+                        for (int local_db_tile_1 = 0; local_db_tile_1 < db_tiles_per_split; local_db_tile_1++) {
+                            int db_tile_1 = db_tile_start_1 + local_db_tile_1;
+                            int off_m = db_tile_1 * BLOCK_M;
+                            int global_m = batch_idx_1 * M + off_m;
                             mbarrier_wait(database_empty_addr, _phase_database_empty_0);
                             _phase_database_empty_0 ^= 1;
-                            mbarrier_arrive_expect_tx(database_full_addr, 16384);
+                            mbarrier_arrive_expect_tx(database_full_addr, 32768);
                             tma_3d_gmem2smem(smem_database_addr, tmap_database, 0, global_m, 0, database_full_addr);
                         }
                     }
@@ -318,17 +547,17 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
             }
         }
     // ---- Role: mma ----
-    } else if (warp == 1) {
+    } else if (warp == 2) {
         { // mma_main
             unsigned int _phase_query_full_0 = 0;
             unsigned int _phase_score_empty_0 = 1;
             unsigned int _phase_database_full_0 = 0;
             #pragma unroll 1
-            for (unsigned int tile_idx_1 = bid; tile_idx_1 < total_tiles; tile_idx_1 += num_bids) {
+            for (unsigned int work_idx_2 = bid; work_idx_2 < total_work; work_idx_2 += num_bids) {
                 mbarrier_wait(query_full_addr, _phase_query_full_0);
                 _phase_query_full_0 ^= 1;
                 #pragma unroll 1
-                for (int _db_tile = 0; _db_tile < num_db_tiles; _db_tile++) {
+                for (int _local_db_tile = 0; _local_db_tile < db_tiles_per_split; _local_db_tile++) {
                     mbarrier_wait(score_empty_addr, _phase_score_empty_0);
                     _phase_score_empty_0 ^= 1;
                     mbarrier_wait(database_full_addr, _phase_database_full_0);
@@ -347,7 +576,7 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
                     ""
                     "mov.b32 adhi, 0x40004040;\n\t"
                     "mov.b32 bdhi, 0x40004040;\n\t"
-                    "mov.b32 id, 135267472;\n\t"
+                    "mov.b32 id, 69207184;\n\t"
                     "mov.b32 alo, %0;\n\t"
                     "mov.b32 blo, %1;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
@@ -368,8 +597,8 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-                    "add.u32 alo, alo, 1018;\n\t"
-                    "add.u32 blo, blo, 506;\n\t"
+                    "add.u32 alo, alo, 506;\n\t"
+                    "add.u32 blo, blo, 1018;\n\t"
                     "mov.b64 da, {alo, adhi};\n\t"
                     "mov.b64 db, {blo, bdhi};\n\t"
                     "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
@@ -396,86 +625,13 @@ kernel_knn_build_evolve_7bfc_v1(const void* __restrict__ tmap_query, const void*
                 elect_commit(query_empty_addr);
             }
         }
-    // ---- Role: compute ----
-    } else if (warp >= 2 && warp <= 5) {
-        { // compute_main
-            int tmem_row_addr_offset = ((warp % 4) * 32) << 16;
-            int thread_row_idx = (warp % 4) * 32 + lane;
-            unsigned int _phase_score_full_0 = 0;
-            #pragma unroll 1
-            for (unsigned int tile_idx_2 = bid; tile_idx_2 < total_tiles; tile_idx_2 += num_bids) {
-                int batch_idx_1 = tile_idx_2 / (unsigned int)num_q_tiles;
-                int q_tile_1 = tile_idx_2 % (unsigned int)num_q_tiles;
-                int off_q_1 = q_tile_1 * BLOCK_Q;
-                int q_idx = off_q_1 + thread_row_idx;
-                int valid_q = ((q_idx < Q) ? 1 : 0);
-                float q_sq_val = 0.0f;
-                if (valid_q != 0) {
-                    q_sq_val = query_sq[batch_idx_1 * Q + q_idx];
-                }
-                float best_d[TOP_K_MAX];
-                int best_i[TOP_K_MAX];
-                #pragma unroll
-                for (int kk = 0; kk < TOP_K_MAX; kk++) {
-                    best_d[kk] = 3.4e+38f;
-                    best_i[kk] = -1;
-                }
-                #pragma unroll 1
-                for (int db_tile_1 = 0; db_tile_1 < num_db_tiles; db_tile_1++) {
-                    mbarrier_wait(score_full_addr, _phase_score_full_0);
-                    _phase_score_full_0 ^= 1;
-                    int cross_addr = taddr + (unsigned int)tmem_row_addr_offset;
-                    float _tmem_load_0[64];
-                    tmem_ld_x32(&_tmem_load_0[0], cross_addr);
-                    tmem_ld_x32(&_tmem_load_0[32], cross_addr + 32);
-                    asm volatile("tcgen05.wait::ld.sync.aligned;" ::: "memory");
-                    mbarrier_arrive(score_empty_addr);
-                    int db_start = db_tile_1 * BLOCK_M;
-                    #pragma unroll
-                    for (int col = 0; col < 64; col++) {
-                        int db_idx = db_start + col;
-                        if (valid_q != 0 && db_idx < M) {
-                            float db_sq_val = database_sq[batch_idx_1 * M + db_idx];
-                            float dist = q_sq_val + db_sq_val - 2.0f * _tmem_load_0[col];
-                            float _max_0 = max_noftz(dist, 0.0f);
-                            dist = _max_0;
-                            if (dist < best_d[TOP_K_MAX - 1]) {
-                                best_d[TOP_K_MAX - 1] = dist;
-                                best_i[TOP_K_MAX - 1] = db_idx;
-                                #pragma unroll
-                                for (int pos = TOP_K_MAX - 1; pos >= 1; pos--) {
-                                    if (best_d[pos] < best_d[pos - 1]) {
-                                        float tmp_d = best_d[pos - 1];
-                                        int tmp_i = best_i[pos - 1];
-                                        best_d[pos - 1] = best_d[pos];
-                                        best_i[pos - 1] = best_i[pos];
-                                        best_d[pos] = tmp_d;
-                                        best_i[pos] = tmp_i;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (valid_q != 0) {
-                    int out_base = (batch_idx_1 * Q + q_idx) * K;
-                    #pragma unroll
-                    for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
-                        if (out_k < K) {
-                            *((float*)(out_dists + (out_base + out_k))) = best_d[out_k];
-                            *((int*)(out_indices + (out_base + out_k))) = best_i[out_k];
-                        }
-                    }
-                }
-            }
-        }
     }
 
     // Cleanup
     __syncthreads(); // barrier before TMEM dealloc
 
     if (warp == 0) {
-        asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
         asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }

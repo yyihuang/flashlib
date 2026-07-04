@@ -14,7 +14,7 @@ import os
 from collections.abc import Callable
 from functools import cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_frontier_4b5c_v2 as v2
 from .._dispatch_runtime import pack_kernel_args

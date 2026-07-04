@@ -16,16 +16,16 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 32
-#define TOP_K_MAX 96
-#define SPLIT_COUNT 8
+#define THREADS 8
+#define TOP_K_MAX 10
+#define SPLIT_COUNT 16
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(32, 1) void
-kernel_knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s8chunkprefill(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+__global__ __launch_bounds__(8, 1) void
+kernel_knn_build_rect_d64_cf49_s16_cached_merge(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,85 +36,46 @@ kernel_knn_build_k96_merge_s8_unordered_chunkprefill_k96over64s8chunkprefill(flo
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int start_row = bid * 32 + tid;
-    int stride = num_bids * 32;
+    int start_row = bid * 8 + tid;
+    int stride = num_bids * 8;
     #pragma unroll 1
     for (int row = start_row; row < total_queries; row += stride) {
         int base_row = row * TOP_K_MAX;
         int split_stride = total_queries * TOP_K_MAX;
-        float best_d[96];
-        int best_i[96];
+        int out_base = base_row;
+        int split_pos[SPLIT_COUNT];
+        int split_base[SPLIT_COUNT];
+        float cand_d[SPLIT_COUNT];
+        int cand_i[SPLIT_COUNT];
         #pragma unroll
-        for (int cand_k = 0; cand_k < 96; cand_k++) {
-            best_d[cand_k] = partial_dists[base_row + cand_k];
-            best_i[cand_k] = partial_indices[base_row + cand_k];
+        for (int split_idx = 0; split_idx < SPLIT_COUNT; split_idx++) {
+            split_pos[split_idx] = 0;
+            split_base[split_idx] = base_row + split_idx * split_stride;
+            cand_d[split_idx] = partial_dists[split_base[split_idx]];
+            cand_i[split_idx] = partial_indices[split_base[split_idx]];
         }
-        float chunk_worst_d[12];
-        int chunk_worst_pos[12];
         #pragma unroll
-        for (int chunk = 0; chunk < 12; chunk++) {
-            int chunk_base = chunk * 8;
-            chunk_worst_d[chunk] = best_d[chunk_base];
-            chunk_worst_pos[chunk] = chunk_base;
+        for (int out_k = 0; out_k < TOP_K_MAX; out_k++) {
+            float best_d = cand_d[0];
+            int best_i = cand_i[0];
+            int best_split = 0;
             #pragma unroll
-            for (int offset = 1; offset < 8; offset++) {
-                int scan_pos = chunk_base + offset;
-                if (best_d[scan_pos] > chunk_worst_d[chunk]) {
-                    chunk_worst_d[chunk] = best_d[scan_pos];
-                    chunk_worst_pos[chunk] = scan_pos;
+            for (int split_idx_1 = 1; split_idx_1 < SPLIT_COUNT; split_idx_1++) {
+                if (best_d > cand_d[split_idx_1]) {
+                    best_d = cand_d[split_idx_1];
+                    best_i = cand_i[split_idx_1];
+                    best_split = split_idx_1;
                 }
             }
-        }
-        float worst_d = chunk_worst_d[0];
-        int worst_pos = chunk_worst_pos[0];
-        int worst_chunk = 0;
-        #pragma unroll
-        for (int chunk_1 = 1; chunk_1 < 12; chunk_1++) {
-            if (worst_d < chunk_worst_d[chunk_1]) {
-                worst_d = chunk_worst_d[chunk_1];
-                worst_pos = chunk_worst_pos[chunk_1];
-                worst_chunk = chunk_1;
+            *((float*)(out_dists + (out_base + out_k))) = best_d;
+            *((int*)(out_indices + (out_base + out_k))) = best_i;
+            split_pos[best_split] = split_pos[best_split] + 1;
+            if (out_k + 1 < TOP_K_MAX) {
+                int next_pos = split_pos[best_split];
+                int next_addr = split_base[best_split] + next_pos;
+                cand_d[best_split] = partial_dists[next_addr];
+                cand_i[best_split] = partial_indices[next_addr];
             }
-        }
-        #pragma unroll
-        for (int split_idx = 1; split_idx < SPLIT_COUNT; split_idx++) {
-            int partial_base = base_row + split_idx * split_stride;
-            #pragma unroll
-            for (int cand_k_1 = 0; cand_k_1 < 96; cand_k_1++) {
-                float cand_d = partial_dists[partial_base + cand_k_1];
-                int cand_i = partial_indices[partial_base + cand_k_1];
-                if (cand_d < worst_d) {
-                    best_d[worst_pos] = cand_d;
-                    best_i[worst_pos] = cand_i;
-                    int refresh_base = worst_chunk * 8;
-                    chunk_worst_d[worst_chunk] = best_d[refresh_base];
-                    chunk_worst_pos[worst_chunk] = refresh_base;
-                    #pragma unroll
-                    for (int offset_1 = 1; offset_1 < 8; offset_1++) {
-                        int scan_pos_1 = refresh_base + offset_1;
-                        if (best_d[scan_pos_1] > chunk_worst_d[worst_chunk]) {
-                            chunk_worst_d[worst_chunk] = best_d[scan_pos_1];
-                            chunk_worst_pos[worst_chunk] = scan_pos_1;
-                        }
-                    }
-                    worst_d = chunk_worst_d[0];
-                    worst_pos = chunk_worst_pos[0];
-                    worst_chunk = 0;
-                    #pragma unroll
-                    for (int chunk_2 = 1; chunk_2 < 12; chunk_2++) {
-                        if (worst_d < chunk_worst_d[chunk_2]) {
-                            worst_d = chunk_worst_d[chunk_2];
-                            worst_pos = chunk_worst_pos[chunk_2];
-                            worst_chunk = chunk_2;
-                        }
-                    }
-                }
-            }
-        }
-        #pragma unroll
-        for (int out_k = 0; out_k < 96; out_k++) {
-            *((float*)(out_dists + (base_row + out_k))) = best_d[out_k];
-            *((int*)(out_indices + (base_row + out_k))) = best_i[out_k];
         }
     }
 }

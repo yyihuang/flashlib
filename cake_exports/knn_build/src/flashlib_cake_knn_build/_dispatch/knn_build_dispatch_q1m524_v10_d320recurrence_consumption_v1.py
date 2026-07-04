@@ -31,19 +31,12 @@ SPEEDUP_FLOOR = 1.2
 def _eligible(inputs: dict[str, Any]) -> bool:
     return seed._is_target(inputs)
 
-def _requires_safe_fallback(inputs: dict[str, Any]) -> bool:
-    """Avoid the Q1/M524k workfeed merge that traps on current B200 cubins."""
-    key = (int(inputs['B']), int(inputs['Q']), int(inputs['M']), int(inputs['D']), int(inputs['K']))
-    return key in {(1, 1, 524287, 128, 10), (1, 32, 100000, 128, 32)}
-
 def route_for_contract_inputs(inputs: dict[str, Any], *, force_fallback: bool=False) -> str:
-    force_fallback = bool(force_fallback or _requires_safe_fallback(inputs))
     if not force_fallback and _eligible(inputs):
         return seed.route_for_contract_inputs(inputs)
     return base.route_for_contract_inputs(inputs, force_fallback=force_fallback)
 
 def launch_from_contract_inputs(inputs: dict[str, Any], *, force_fallback: bool=False) -> None:
-    force_fallback = bool(force_fallback or _requires_safe_fallback(inputs))
     if not force_fallback and _eligible(inputs):
         seed.launch_from_contract_inputs(inputs)
         return

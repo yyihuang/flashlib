@@ -63,7 +63,7 @@ def _compile_ir(ir_obj: Any, *, smem_bytes: int | None=None):
     return CUDAKernel(cubin, f'kernel_{ir_obj.symbol}')
 
 def _compiled_stage1_m64():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0087"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0088"}'))
 
 def _dtype_name(inputs: dict[str, Any]) -> str:
     query = inputs.get('query')

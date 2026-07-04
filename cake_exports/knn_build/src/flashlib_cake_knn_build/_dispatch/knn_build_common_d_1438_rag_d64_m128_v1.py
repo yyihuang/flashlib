@@ -58,7 +58,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d_1438_rag_d64_m128_stage1", "arg_keys": ["query", "database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 66816, "constants": [], "cta_group": 1, "threads": 512}'))
 
 def _compiled_stage1_d64_m128():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0091"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0092"}'))
 
 @lru_cache(maxsize=8)
 def _compiled_fused_merge(split_count: int, group_count: int):

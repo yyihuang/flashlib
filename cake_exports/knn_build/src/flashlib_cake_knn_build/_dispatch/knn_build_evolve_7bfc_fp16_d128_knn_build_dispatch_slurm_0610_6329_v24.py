@@ -30,7 +30,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_evolve_7bfc_fp16_d128_base", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "out_dists", "out_indices", "B", "Q", "M", "K", "num_q_tiles", "num_db_tiles", "total_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50176, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 10]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_fp16_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0151"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0153"}'))
 
 def _create_tensor_map_3d_fp16_oob_zero(data_ptr: int, global_height: int, shared_height: int, width: int, block_width: int):
     import torch

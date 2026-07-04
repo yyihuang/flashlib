@@ -18,14 +18,14 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
 #define TOP_K_MAX 10
-#define SPLIT_COUNT 5
+#define SPLIT_COUNT 6
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(32, 1) void
-kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s5(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
+kernel_knn_build_d64_build_aa88_k10_merge_s8_rowbase_cache_c271_s6(float* __restrict__ partial_dists, int* __restrict__ partial_indices, float* __restrict__ out_dists, int* __restrict__ out_indices, int total_queries)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);

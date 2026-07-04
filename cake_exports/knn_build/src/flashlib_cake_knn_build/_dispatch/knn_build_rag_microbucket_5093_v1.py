@@ -57,7 +57,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_5093_v1_stage1_k32_tailinf_cta1_compactwarp", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["BLOCK_Q", 128], ["BLOCK_M", 64], ["FEAT_D", 128], ["TOP_K_MAX", 32]], "cta_group": 1, "threads": 96}'))
 
 def _compiled_stage1_tailinf_cta1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0183"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0185"}'))
 
 def _eligible_q4_k10(inputs: dict[str, Any]) -> bool:
     return faeb._eligible_q4_k10(inputs)

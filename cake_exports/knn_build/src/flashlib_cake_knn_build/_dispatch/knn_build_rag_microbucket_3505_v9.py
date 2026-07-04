@@ -107,7 +107,7 @@ def _m64_route_name(inputs: dict[str, Any]) -> str:
     return f'rag_microbucket_3505_v9_inherit_v7_q{n_query}_k10_m64_s{faeb.M64_SPLIT_COUNT}_g{faeb.M64_GROUP_COUNT}'
 
 def _compiled_stage1_q8_k32_m64():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0188"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0190"}'))
 
 def _launch_q8_k32_m64(inputs: dict[str, Any], *, split_count: int=K32_SPLIT_COUNT, group_count: int=K32_GROUP_COUNT) -> None:
     compact_seed.q16_tailinf._validate_group_shape(split_count, group_count)

@@ -78,7 +78,7 @@ from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_pr
 import os
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_fixedbuild_dispatch_v2 as parent
 from . import knn_build_evolve_7bfc_split_cg2_u2_smallmedfan_rag7_k10merge_stage1batch_cond4_k5merge4tree_vmin_maxtree_k5tree_mintree_k10s4s7cache_t32r32_k10mintree_v1 as parent_lowk
 from . import knn_build_evolve_7bfc_split_cg2_u2_v1 as parent_u2
@@ -276,7 +276,7 @@ def _compiled_stage1_for_bucket(top_k_bucket: int):
     return _compile_ir(_stage1_ir_for_bucket(top_k_bucket))
 
 def _compiled_stage1_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0144"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0146"}'))
 
 @lru_cache(maxsize=5)
 def _compiled_stage1_unordered_for_exact_k(top_k: int):
@@ -287,7 +287,7 @@ def _compiled_merge_for_bucket(top_k_bucket: int):
     return _compile_ir(_merge_ir_for_bucket(top_k_bucket))
 
 def _compiled_merge_k32_unordered():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0145"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0147"}'))
 
 @lru_cache(maxsize=5)
 def _compiled_merge_unordered_for_exact_k(top_k: int):
@@ -300,25 +300,25 @@ def _compiled_merge_k20_unordered_warp_select():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0075"}'))
 
 def _compiled_merge_k30_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0146"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0148"}'))
 
 def _compiled_merge_k12_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0147"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0149"}'))
 
 def _compiled_merge_k12_s16():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0011"}'))
 
 def _compiled_merge_k20_s8():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0148"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0150"}'))
 
 def _compiled_merge_k8_s7():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0149"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0151"}'))
 
 def _compiled_merge_k8_s8():
     return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0005"}'))
 
 def _compiled_merge_k20_s16():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0150"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0152"}'))
 
 def _eligible_k32_split_build(inputs: dict[str, Any]) -> bool:
     top_k = int(inputs['K'])

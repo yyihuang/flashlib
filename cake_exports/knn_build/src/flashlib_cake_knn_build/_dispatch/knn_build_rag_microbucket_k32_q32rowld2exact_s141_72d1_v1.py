@@ -17,7 +17,8 @@ import os
 from functools import lru_cache
 from typing import Any, Callable
 from .. import _dispatch_runtime as eval_mod
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
+from .._dispatch_runtime import pack_kernel_args
 from . import knn_build_rag_microbucket_k32_q32rowld2_f653_v1 as parent
 MODULE = 'loom.examples.weave.knn_build_rag_microbucket_k32_q32rowld2exact_s141_72d1_v1'
 Q32_K32_SHAPE = parent.Q32_K32_SHAPE
@@ -71,7 +72,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_rag_microbucket_k32warpmerge_0077_v1_warp_row_merge_k32q32exact_s141r4_f653_v1", "arg_keys": ["partial_dists", "partial_indices", "out_dists", "out_indices", "total_queries"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["TOP_K_MAX", 32], ["SPLIT_COUNT", 141], ["SPLITS_PER_LANE", 5], ["ROWS_PER_CTA", 4]], "cta_group": 1, "threads": 128}'))
 
 def _compiled_stage1_q32_rowld2exact():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0230"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0108"}'))
 
 @lru_cache(maxsize=None)
 def _compiled_rows4_warp_merge(split_count: int):
@@ -115,9 +116,9 @@ def _launch_q32_rowld2exact_rows4_merge(inputs: dict[str, Any], *, split_count: 
     tmap_query = base.rowld_seed.compact_seed.q16_tailinf.parent_k32.base_v1._create_tensor_map_3d_oob_zero(query.data_ptr(), total_queries, block_q, dim, dim)
     tmap_database = base.rowld_seed.compact_seed.q16_tailinf.parent_k32.base_v1._create_tensor_map_3d_oob_zero(database.data_ptr(), bsz * n_database, block_m, dim, dim)
     stage1_ir = _stage1_q32_rowld2exact_ir()
-    _compiled_stage1_q32_rowld2exact().launch(grid=(stage1_grid, 1, 1), block=(Q32_ROWLD2EXACT_STAGE1_THREADS, 1, 1), args=[inputs['query_sq'], inputs['database_sq'], partial_dists, partial_indices, tmap_query, tmap_database, bsz, n_query, n_database, top_k, num_q_tiles, num_db_tiles, db_tiles_per_split, split_count, total_work], shared_mem=stage1_ir.computed_smem_bytes)
+    _compiled_stage1_q32_rowld2exact().launch(grid=(stage1_grid, 1, 1), block=(Q32_ROWLD2EXACT_STAGE1_THREADS, 1, 1), args=pack_kernel_args(stage1_ir, tmap_query=tmap_query, tmap_database=tmap_database, query_sq=inputs['query_sq'], database_sq=inputs['database_sq'], partial_dists=partial_dists, partial_indices=partial_indices, B=bsz, Q=n_query, M=n_database, K=top_k, num_q_tiles=num_q_tiles, num_db_tiles=num_db_tiles, db_tiles_per_split=db_tiles_per_split, split_count=split_count, total_work=total_work), shared_mem=stage1_ir.computed_smem_bytes)
     merge_ir = _warp_merge_ir(split_count)
-    _compiled_rows4_warp_merge(split_count).launch(grid=(merge_grid, 1, 1), block=(K32_ROWS4_MERGE_THREADS, 1, 1), args=[partial_dists, partial_indices, inputs['out_dists'], inputs['out_indices'], total_queries], shared_mem=merge_ir.computed_smem_bytes)
+    _compiled_rows4_warp_merge(split_count).launch(grid=(merge_grid, 1, 1), block=(K32_ROWS4_MERGE_THREADS, 1, 1), args=pack_kernel_args(merge_ir, partial_dists=partial_dists, partial_indices=partial_indices, out_dists=inputs['out_dists'], out_indices=inputs['out_indices'], total_queries=total_queries), shared_mem=merge_ir.computed_smem_bytes)
 
 def launch_from_contract_inputs(inputs: dict[str, Any], *, k32_q32_split_count: int=K32_Q32_SPLIT_COUNT) -> None:
     if _eligible_q32_rowld2exact(inputs):

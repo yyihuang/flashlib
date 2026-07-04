@@ -15,7 +15,7 @@ from json import loads as _json_loads
 from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .._dispatch_runtime import pack_kernel_args
 BLOCK_Q = 128
 BLOCK_M = 64
@@ -65,7 +65,7 @@ def _create_tensor_map_3d_oob_zero(data_ptr: int, global_height: int, shared_hei
     return cached
 
 def _compiled_kernel(top_k_max: int=TOP_K_MAX):
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0132"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0134"}'))
 
 def launch_from_contract_inputs(inputs: dict[str, Any]) -> None:
     query = inputs['query']

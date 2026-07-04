@@ -17,7 +17,7 @@ import os
 from collections.abc import Callable
 from functools import cache, lru_cache
 from typing import Any
-import tvm_ffi.dataclasses as dc
+from .._dispatch_runtime import dc as dc
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_common_d768_build_eeff_m64split_v1 as q128_parent
 from . import knn_build_evolve_7bfc_split_v1 as split_parent
@@ -59,7 +59,7 @@ def _verify_export_ir() -> Any:
 ir = _decode_capture(_json_loads('{"__ir__": "knn_build_common_d768_build_eeff_m64split_stage1_d256_q128_k10_59fe_v1", "arg_keys": ["tmap_query", "tmap_database", "query_sq", "database_sq", "partial_dists", "partial_indices", "B", "Q", "M", "K", "num_q_tiles", "db_tiles_per_split", "split_count", "total_work"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 50432, "constants": [["FEATURE_CHUNKS", 2]], "cta_group": 1, "threads": 192}'))
 
 def _compiled_stage1():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0121"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0123"}'))
 
 @cache
 def _compiled_fused_merge(split_count: int, group_count: int):
