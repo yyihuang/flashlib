@@ -1,0 +1,245 @@
+{
+  "capability": [
+    10,
+    0
+  ],
+  "device": "NVIDIA B200",
+  "dual_stream": {
+    "generic_scalar": {
+      "a": {
+        "max_abs_dist_error": 1.52587890625e-05,
+        "recall": 1.0
+      },
+      "b": {
+        "max_abs_dist_error": 1.52587890625e-05,
+        "recall": 1.0
+      },
+      "cross_stream_replay_rejected": true,
+      "exact_contract": true,
+      "plan_a_launch_count": 4,
+      "plan_b_launch_count": 4,
+      "scratch_distance_ptrs_distinct": true,
+      "scratch_index_ptrs_distinct": true,
+      "scratch_stream_keys_match": true,
+      "selected_route": "afe6_dynamic_d_scalar_capacity",
+      "stream_handles_distinct": true
+    },
+    "k11": {
+      "a": {
+        "max_abs_dist_error": 6.103515625e-05,
+        "recall": 1.0
+      },
+      "b": {
+        "max_abs_dist_error": 6.103515625e-05,
+        "recall": 1.0
+      },
+      "cross_stream_replay_rejected": true,
+      "exact_contract": true,
+      "plan_a_launch_count": 4,
+      "plan_b_launch_count": 4,
+      "selected_route": "k64_prefix_to_k11",
+      "stream_handles_distinct": true
+    },
+    "k64": {
+      "a": {
+        "max_abs_dist_error": 6.103515625e-05,
+        "recall": 1.0
+      },
+      "b": {
+        "max_abs_dist_error": 6.103515625e-05,
+        "recall": 1.0
+      },
+      "cross_stream_replay_rejected": true,
+      "exact_contract": true,
+      "plan_a_launch_count": 3,
+      "plan_b_launch_count": 3,
+      "selected_route": "round20_576b_q4096_m20000_k64_prefix6cert_fused",
+      "stream_handles_distinct": true
+    },
+    "ordinary_multi": {
+      "a": {
+        "max_abs_dist_error": 0.0001068115234375,
+        "recall": 1.0
+      },
+      "b": {
+        "max_abs_dist_error": 0.0001068115234375,
+        "recall": 1.0
+      },
+      "cross_stream_replay_rejected": true,
+      "exact_contract": true,
+      "plan_a_launch_count": 2,
+      "plan_b_launch_count": 2,
+      "selected_route": "round125_f4bc_self_q1024_m1024_d128_k10_split8",
+      "stream_handles_distinct": true
+    }
+  },
+  "mutation_replay": {
+    "k11": {
+      "exact_indices": true,
+      "info": {
+        "arch": "sm_100a",
+        "device_index": 0,
+        "exact_launch_plan": true,
+        "launch_entrypoint": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:_launch_k11_prefix",
+        "prepared_launch_count": 4,
+        "selected_route": "k64_prefix_to_k11",
+        "semantic_entrypoint": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval",
+        "stream_handle": 0
+      },
+      "max_abs_distance": 0.0
+    },
+    "k64": {
+      "exact_indices": true,
+      "info": {
+        "arch": "sm_100a",
+        "device_index": 0,
+        "exact_launch_plan": true,
+        "launch_entrypoint": "loom.examples.weave.knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1:launch_for_eval",
+        "prepared_launch_count": 3,
+        "selected_route": "round20_576b_q4096_m20000_k64_prefix6cert_fused",
+        "semantic_entrypoint": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval",
+        "stream_handle": 0
+      },
+      "max_abs_distance": 0.0
+    },
+    "ordinary_multi": {
+      "info": {
+        "arch": "sm_100a",
+        "device_index": 0,
+        "exact_launch_plan": true,
+        "launch_entrypoint": "loom.examples.weave.knn_search_self_k10_q1024_split8_0622_f4bc_v1:launch_for_eval",
+        "prepared_launch_count": 2,
+        "selected_route": "round125_f4bc_self_q1024_m1024_d128_k10_split8",
+        "semantic_entrypoint": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval",
+        "stream_handle": 0
+      },
+      "max_abs_dist_error": 0.0001220703125,
+      "recall": 1.0
+    },
+    "scalar_padding": {
+      "info": {
+        "arch": "sm_100a",
+        "device_index": 0,
+        "exact_launch_plan": false,
+        "launch_entrypoint": "loom.examples.weave.knn_search_scalar_capacity_0611_r22_4e96_v1:launch_scalar_capacity_for_eval",
+        "prepared_launch_count": 4,
+        "selected_route": "afe6_dynamic_d_scalar_capacity",
+        "semantic_entrypoint": "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval",
+        "stream_handle": 0
+      },
+      "max_abs_dist_error": 3.0517578125e-05,
+      "recall": 1.0
+    }
+  },
+  "source_commit": "0e96313db7754bc32e9e3e75ffe04a454ae44450",
+  "source_owner_dual_stream": {
+    "a": {
+      "max_abs_dist_error": 0.00018310546875,
+      "recall": 1.0
+    },
+    "b": {
+      "max_abs_dist_error": 0.00018310546875,
+      "recall": 1.0
+    },
+    "cache_key_count": 2,
+    "owner": "knn_search_blind_d384_tcgen05_dispatch0610_r1_v1",
+    "scratch_distance_ptrs_distinct": true,
+    "scratch_index_ptrs_distinct": true,
+    "selected_route": "dispatch0610_r1_blind_d384_padded_tcgen05",
+    "stream_handles_distinct": true
+  },
+  "timing": {
+    "k11": {
+      "expected_launch_count": 4,
+      "prepared": {
+        "active_union_ms": 35.4697675,
+        "activity_count": 4.0,
+        "gpu_span_ms": 35.4759765,
+        "host_enqueue_ms": 0.030711000000000002,
+        "inter_kernel_gap_ms": 0.0065285,
+        "kernel_sum_ms": 35.4697675,
+        "synchronized_e2e_ms": 35.4981565
+      },
+      "public": {
+        "active_union_ms": 35.524924999999996,
+        "activity_count": 4.0,
+        "gpu_span_ms": 35.53099,
+        "host_enqueue_ms": 0.5918505000000001,
+        "inter_kernel_gap_ms": 0.0064954999999999995,
+        "kernel_sum_ms": 35.524924999999996,
+        "synchronized_e2e_ms": 36.101941
+      },
+      "public_over_prepared_gpu_span": 1.0015507254606508,
+      "public_over_prepared_host_enqueue": 19.271612777180817
+    },
+    "k64": {
+      "expected_launch_count": 3,
+      "prepared": {
+        "active_union_ms": 35.4929045,
+        "activity_count": 3.0,
+        "gpu_span_ms": 35.497577,
+        "host_enqueue_ms": 0.0344285,
+        "inter_kernel_gap_ms": 0.003728,
+        "kernel_sum_ms": 35.4929045,
+        "synchronized_e2e_ms": 35.519995
+      },
+      "public": {
+        "active_union_ms": 35.4613545,
+        "activity_count": 3.0,
+        "gpu_span_ms": 35.4655305,
+        "host_enqueue_ms": 0.674491,
+        "inter_kernel_gap_ms": 0.004831500000000001,
+        "kernel_sum_ms": 35.4613545,
+        "synchronized_e2e_ms": 36.1154925
+      },
+      "public_over_prepared_gpu_span": 0.999097220072232,
+      "public_over_prepared_host_enqueue": 19.591065541629753
+    },
+    "ordinary_multi": {
+      "expected_launch_count": 2,
+      "prepared": {
+        "active_union_ms": 0.01864,
+        "activity_count": 2.0,
+        "gpu_span_ms": 0.021248,
+        "host_enqueue_ms": 0.0144095,
+        "inter_kernel_gap_ms": 0.002592,
+        "kernel_sum_ms": 0.01864,
+        "synchronized_e2e_ms": 0.0358455
+      },
+      "public": {
+        "active_union_ms": 0.018592499999999998,
+        "activity_count": 2.0,
+        "gpu_span_ms": 0.020527499999999997,
+        "host_enqueue_ms": 0.1979505,
+        "inter_kernel_gap_ms": 0.0019520000000000002,
+        "kernel_sum_ms": 0.018592499999999998,
+        "synchronized_e2e_ms": 0.2128575
+      },
+      "public_over_prepared_gpu_span": 0.9660909262048192,
+      "public_over_prepared_host_enqueue": 13.737499566258371
+    },
+    "scalar_padding": {
+      "expected_launch_count": 4,
+      "prepared": {
+        "active_union_ms": 0.11865500000000001,
+        "activity_count": 4.0,
+        "gpu_span_ms": 0.124624,
+        "host_enqueue_ms": 0.0229765,
+        "inter_kernel_gap_ms": 0.0060634999999999994,
+        "kernel_sum_ms": 0.11865500000000001,
+        "synchronized_e2e_ms": 0.138657
+      },
+      "public": {
+        "active_union_ms": 0.11892749999999999,
+        "activity_count": 4.0,
+        "gpu_span_ms": 0.12984,
+        "host_enqueue_ms": 0.8583315,
+        "inter_kernel_gap_ms": 0.0106885,
+        "kernel_sum_ms": 0.11892749999999999,
+        "synchronized_e2e_ms": 0.9680835000000001
+      },
+      "public_over_prepared_gpu_span": 1.0418538965207345,
+      "public_over_prepared_host_enqueue": 37.35692990664374
+    }
+  }
+}

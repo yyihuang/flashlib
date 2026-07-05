@@ -1,0 +1,49 @@
+{
+  "dispatch_module_count": 367,
+  "host_readback_sites": [
+    {
+      "function": "check_col4_partials",
+      "line": 80,
+      "method": "tolist",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1"
+    },
+    {
+      "function": "check_col4_partials",
+      "line": 80,
+      "method": "tolist",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1"
+    },
+    {
+      "function": "check_col4_partials",
+      "line": 80,
+      "method": "cpu",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1"
+    },
+    {
+      "function": "check_col4_partials",
+      "line": 80,
+      "method": "cpu",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1"
+    },
+    {
+      "function": "check_col4_partials",
+      "line": 80,
+      "method": "cpu",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_f1d4_col4_checked_partials_v1"
+    },
+    {
+      "function": "trace_real_scratch",
+      "line": 80,
+      "method": "cpu",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_repair_q4096_seed3_real_scratch_v1"
+    },
+    {
+      "function": "trace_real_scratch",
+      "line": 81,
+      "method": "cpu",
+      "module": "knn_search_rag_q4096_m20000_d128_k10_repair_q4096_seed3_real_scratch_v1"
+    }
+  ],
+  "synchronize_sites": [],
+  "unexpected_host_readback_sites": []
+}

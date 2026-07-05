@@ -1,0 +1,13 @@
+{
+  "below_1x": 40,
+  "cake_source_commit": "0e96313db7754bc32e9e3e75ffe04a454ae44450",
+  "cake_source_repository": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
+  "correctness_failures": [],
+  "correctness_passed": 163,
+  "prepared_speedup_geomean": 1.3086746741733308,
+  "prepared_speedup_max": 6.328855140186916,
+  "prepared_speedup_min": 0.024942748700768666,
+  "route_matches": 163,
+  "route_mismatches": [],
+  "shape_count": 163
+}
