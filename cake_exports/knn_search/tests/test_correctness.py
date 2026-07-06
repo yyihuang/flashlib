@@ -24,7 +24,7 @@ BENCHMARK = _benchmark_module()
 CORRECTNESS_CASES = [
     pytest.param(
         row["label"],
-        marks=() if row.get("runtime_coverage") is True else pytest.mark.export_validation_shape,
+        marks=pytest.mark.export_validation_shape,
         id=row["label"],
     )
     for row in BENCHMARK.SHAPE_RECORDS
@@ -208,6 +208,44 @@ def test_knn_search_runtime_reuses_shape_a_b_a():
         assert all(result["correct"] and result["route_matches_expected"] for result in results)
         assert results[-1]["first_shape_lookup_cache_hit"] is True
         assert runtime.cache_info()["size"] == 2
+    finally:
+        runtime.clear()
+
+
+def test_knn_search_runtime_cache_isolates_force_fallback() -> None:
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA GPU required for exported-kernel correctness")
+    from flashlib_cake_knn_search import init
+
+    label = "expanded_forced_fallback_d1_q128_m65536_k10"
+    shape = BENCHMARK.ALL_SHAPES[label]
+    query, database = BENCHMARK._make_inputs(shape)
+    runtime = init()
+    try:
+        runtime.compute(query, database, int(shape["K"]), force_fallback=False)
+        _, forced_info = runtime.compute(
+            query,
+            database,
+            int(shape["K"]),
+            force_fallback=True,
+            return_info=True,
+        )
+        outputs, restored_info = runtime.compute(
+            query,
+            database,
+            int(shape["K"]),
+            force_fallback=False,
+            return_info=True,
+        )
+        _, reference_indices = BENCHMARK._reference_topk(query, database, int(shape["K"]))
+        torch.cuda.synchronize()
+        assert forced_info["force_fallback"] is True
+        assert forced_info["runtime_cache_hit"] is False
+        assert restored_info["force_fallback"] is False
+        assert restored_info["runtime_cache_hit"] is True
+        assert runtime.cache_info()["size"] == 2
+        assert BENCHMARK._recall(outputs[1], reference_indices) >= float(shape["min_recall"])
     finally:
         runtime.clear()
 

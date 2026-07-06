@@ -62,7 +62,7 @@ def _group_scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     return _GROUP_SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0231"}, "group": {"__kernel__": "dispatch_kernel_0230"}, "partial": {"__kernel__": "dispatch_kernel_0229"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0261"}, "group": {"__kernel__": "dispatch_kernel_0260"}, "partial": {"__kernel__": "dispatch_kernel_0259"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

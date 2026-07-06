@@ -23,7 +23,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_direct_0
 DBSCAN_D2_SHAPES: list[dict[str, Any]] = [{'label': 'dbscan_lowd_self_q1500_m1500_d2_k32', 'params': {'B': 1, 'Q': 1500, 'M': 1500, 'D': 2, 'K': 32, 'dtype': 'bfloat16', 'seed': 610405, 'self_search': True, 'min_recall': 0.999}}, {'label': 'dbscan_lowd_self_q1500_m1500_d2_k64', 'params': {'B': 1, 'Q': 1500, 'M': 1500, 'D': 2, 'K': 64, 'dtype': 'bfloat16', 'seed': 610407, 'self_search': True, 'min_recall': 0.999}}]
 
 def _compile_lowd_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0269"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0299"}}'))
 
 def _use_d2_dbscan_direct(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['D']) == D_STATIC and (int(inputs['Q']) <= M_MAX) and (int(inputs['M']) <= M_MAX) and (int(inputs['K']) <= K_MAX)

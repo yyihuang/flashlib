@@ -35,7 +35,7 @@ tail_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q64_m_tail_plus_ex
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q64_m_tail_plus_extra_row_merge_ca90_v1", "arg_keys": ["queries", "database", "out_distances", "out_indices", "Q", "M"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _compile_tail_kernel() -> Any:
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0478"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0508"}'))
 
 def _valid_exact_abi(inputs: dict[str, Any]) -> bool:
     tensors = {'queries': inputs.get('queries'), 'database': inputs.get('database'), 'out_distances': inputs.get('out_distances'), 'out_indices': inputs.get('out_indices')}

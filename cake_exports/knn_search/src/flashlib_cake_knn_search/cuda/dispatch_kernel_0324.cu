@@ -16,14 +16,16 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 32
+#define THREADS 256
+#define D_ORIG_ 257
+#define D_PAD_ 512
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(32) void
-kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
+__global__ __launch_bounds__(256) void
+kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, __nv_bfloat16* __restrict__ padded_queries, __nv_bfloat16* __restrict__ padded_database, int B, int Q, int M)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -34,101 +36,29 @@ kernel_knn_search_q4096_lowk_k1partial_merge_0613_r44_48e9_v1(float* __restrict_
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid;
-    int batch_id = q_linear / Q;
-    int q_global = q_linear - batch_id * Q;
-    int q_tile = q_global / 128;
-    int q_local = q_global - q_tile * 128;
-    int split_lane = lane;
-    float head_d = LOOM_INF;
-    int head_i = -1;
-    if (split_lane < split_m) {
-        unsigned long long partial_base = (unsigned long long)(((batch_id * num_q_tiles + q_tile) * split_m + split_lane) * 128 + q_local);
-        head_d = partial_distances[partial_base];
-        head_i = partial_indices[partial_base];
-    }
-    float winner_d = head_d;
-    int winner_i = head_i;
-    int winner_lane = lane;
-    float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 16);
-    float peer_d = _shfl_xor_0;
-    int _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 16);
-    int peer_i = _shfl_xor_1;
-    int _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 16);
-    int peer_lane = _shfl_xor_2;
-    int take_peer = ((peer_d < winner_d) ? 1 : 0);
-    if (peer_d == winner_d) {
-        if (peer_lane < winner_lane) {
-            take_peer = 1;
+    int linear = bid * 256 + tid;
+    int total_q = B * Q * D_PAD_;
+    int total_db = B * M * D_PAD_;
+    int total = total_q + total_db;
+    if (linear < total) {
+        if (linear < total_q) {
+            int d_col = linear - linear / D_PAD_ * D_PAD_;
+            int row = linear / D_PAD_;
+            float value = 0.0f;
+            if (d_col < D_ORIG_) {
+                value = queries[row * D_ORIG_ + d_col];
+            }
+            *((__nv_bfloat16*)(padded_queries + linear)) = __float2bfloat16_rn(value);
+        } else {
+            int db_linear = linear - total_q;
+            int d_col_1 = db_linear - db_linear / D_PAD_ * D_PAD_;
+            int row_1 = db_linear / D_PAD_;
+            float value_1 = 0.0f;
+            if (d_col_1 < D_ORIG_) {
+                value_1 = database[row_1 * D_ORIG_ + d_col_1];
+            }
+            *((__nv_bfloat16*)(padded_database + db_linear)) = __float2bfloat16_rn(value_1);
         }
-    }
-    winner_d = ((take_peer != 0) ? peer_d : winner_d);
-    winner_i = ((take_peer != 0) ? peer_i : winner_i);
-    winner_lane = ((take_peer != 0) ? peer_lane : winner_lane);
-    float _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 8);
-    float peer_d_0 = _shfl_xor_3;
-    int _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 8);
-    int peer_i_1 = _shfl_xor_4;
-    int _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 8);
-    int peer_lane_2 = _shfl_xor_5;
-    int take_peer_3 = ((peer_d_0 < winner_d) ? 1 : 0);
-    if (peer_d_0 == winner_d) {
-        if (peer_lane_2 < winner_lane) {
-            take_peer_3 = 1;
-        }
-    }
-    winner_d = ((take_peer_3 != 0) ? peer_d_0 : winner_d);
-    winner_i = ((take_peer_3 != 0) ? peer_i_1 : winner_i);
-    winner_lane = ((take_peer_3 != 0) ? peer_lane_2 : winner_lane);
-    float _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
-    float peer_d_4 = _shfl_xor_6;
-    int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
-    int peer_i_5 = _shfl_xor_7;
-    int _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 4);
-    int peer_lane_6 = _shfl_xor_8;
-    int take_peer_7 = ((peer_d_4 < winner_d) ? 1 : 0);
-    if (peer_d_4 == winner_d) {
-        if (peer_lane_6 < winner_lane) {
-            take_peer_7 = 1;
-        }
-    }
-    winner_d = ((take_peer_7 != 0) ? peer_d_4 : winner_d);
-    winner_i = ((take_peer_7 != 0) ? peer_i_5 : winner_i);
-    winner_lane = ((take_peer_7 != 0) ? peer_lane_6 : winner_lane);
-    float _shfl_xor_9 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
-    float peer_d_8 = _shfl_xor_9;
-    int _shfl_xor_10 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
-    int peer_i_9 = _shfl_xor_10;
-    int _shfl_xor_11 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 2);
-    int peer_lane_10 = _shfl_xor_11;
-    int take_peer_11 = ((peer_d_8 < winner_d) ? 1 : 0);
-    if (peer_d_8 == winner_d) {
-        if (peer_lane_10 < winner_lane) {
-            take_peer_11 = 1;
-        }
-    }
-    winner_d = ((take_peer_11 != 0) ? peer_d_8 : winner_d);
-    winner_i = ((take_peer_11 != 0) ? peer_i_9 : winner_i);
-    winner_lane = ((take_peer_11 != 0) ? peer_lane_10 : winner_lane);
-    float _shfl_xor_12 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
-    float peer_d_12 = _shfl_xor_12;
-    int _shfl_xor_13 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
-    int peer_i_13 = _shfl_xor_13;
-    int _shfl_xor_14 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 1);
-    int peer_lane_14 = _shfl_xor_14;
-    int take_peer_15 = ((peer_d_12 < winner_d) ? 1 : 0);
-    if (peer_d_12 == winner_d) {
-        if (peer_lane_14 < winner_lane) {
-            take_peer_15 = 1;
-        }
-    }
-    winner_d = ((take_peer_15 != 0) ? peer_d_12 : winner_d);
-    winner_i = ((take_peer_15 != 0) ? peer_i_13 : winner_i);
-    winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
-    if (lane == 0) {
-        unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
-        out_distances[out_base] = winner_d;
-        out_indices[out_base] = winner_i;
     }
 }
 

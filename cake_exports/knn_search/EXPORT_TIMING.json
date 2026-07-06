@@ -1,12 +1,11 @@
 {
   "host_wall_phase_seconds": {
-    "benchmark": 23.02487398404628,
-    "correctness": 157.39986171619967,
-    "export": 0.0,
-    "validation_total": 180.42473570024595
+    "benchmark": 21.180334971053526,
+    "correctness": 232.90933444490656,
+    "validation_total": 254.0896694159601
   },
-  "recorded_at_utc": "2026-07-06T08:26:54+00:00",
+  "recorded_at_utc": "2026-07-06T10:36:34+00:00",
   "reportable_gpu_timing_source": "BENCHMARK_RESULTS.json:CUPTI",
   "schema": "loom-export-host-wall-phases-v1",
-  "validation_shard_count": 1
+  "validation_shard_count": 4
 }

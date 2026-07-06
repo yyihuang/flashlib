@@ -51,7 +51,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return {'route': route, 'selected_route': route, 'route_kind': 'unsupported', 'route_source': None, 'coverage_only': False, 'production_policy': 'weave_only', 'external_fallback': None, 'forced_fallback': bool(inputs.get('force_fallback', False)), 'missing_weave_route': True}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0445"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0475"}}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

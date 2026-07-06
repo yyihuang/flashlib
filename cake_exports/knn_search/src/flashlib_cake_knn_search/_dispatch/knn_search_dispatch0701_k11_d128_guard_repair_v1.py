@@ -13,6 +13,7 @@ from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture
 from typing import Any
 import torch
 from . import knn_search_dispatch0618_d128_k10_c08b_f828_synth_9d5c_v1 as d128_restored
+from . import knn_search_dispatch0622_current_portfolio_e472_v1 as floor13_restored
 from . import knn_search_dispatch0701_8ae1_q4096_exported_vertical_slice_consumption_v1 as base
 from . import knn_search_ext_k_capacity_0618_28ec_v1 as ext_k
 from . import knn_search_k64_q4096m20000_prefixcert_fused_0615_576b_v1 as k64_seed
@@ -36,6 +37,8 @@ _QTAIL = (1, 4095, 20001, 128, 10)
 _K64_REPAIR = (1, 4096, 20000, 128, 64)
 _D128_RESTORED_KEYS = frozenset({(1, 513, 98304, 128, 10, False), (1, 3072, 49152, 128, 10, False), (1, 3072, 3072, 128, 10, True)})
 _D128_RESTORED_ROUTES = frozenset({d128_restored.ROUTE_Q513_M98304_F828_SPLIT32, d128_restored.ROUTE_Q3072_M49152_C08B, d128_restored.ROUTE_SELF_Q3072_M3072_C08B})
+_FLOOR13_RESTORED_KEYS = frozenset({(1, 96, 131072, 128, 64, False), (1, 384, 98304, 128, 64, False), (1, 128, 65536, 128, 80, False), (1, 4096, 32768, 128, 80, False), (2, 256, 98304, 128, 64, False)})
+_FLOOR13_RESTORED_ROUTES = frozenset({floor13_restored.ROUTE_Q96_K64_EXACT, floor13_restored.ROUTE_Q384_K64_EXACT, floor13_restored.ROUTE_FLOOR13_K80_PREFIX8, floor13_restored.ROUTE_FLOOR13_K64_PREFIX8})
 _SELF_Q1024_RESTORED_KEY = (1, 1024, 1024, 128, 10, True)
 _K11_COPY_THREADS = 256
 _K11_COPY_WIDTH = 11
@@ -46,7 +49,7 @@ SHAPE_DISPATCH_REGISTRY = ({'shape_key': K11_GUARD_ID, 'route': 'k64_prefix_to_k
 knn_search_k64_prefix_to_k11_copy_0705_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_prefix_to_k11_copy_0705_v1", "arg_keys": ["source_distances", "source_indices", "out_distances", "out_indices", "B", "Q"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["SOURCE_K_", 64], ["OUTPUT_K_", 11]], "cta_group": 1, "threads": 256}'))
 
 def _compile_k11_copy_kernel() -> Any:
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0568"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0598"}'))
 
 def _key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int]:
     return tuple((int(inputs[name]) for name in ('B', 'Q', 'M', 'D', 'K')))
@@ -75,6 +78,12 @@ def _restored_d128_route(inputs: dict[str, Any]) -> str | None:
     route = d128_restored.selected_route(inputs)
     return route if route in _D128_RESTORED_ROUTES else None
 
+def _restored_floor13_route(inputs: dict[str, Any]) -> str | None:
+    if bool(inputs.get('force_fallback', False)) or _route_key_with_self(inputs) not in _FLOOR13_RESTORED_KEYS:
+        return None
+    route = floor13_restored.selected_route(inputs)
+    return route if route in _FLOOR13_RESTORED_ROUTES else None
+
 def _restored_self_q1024_route(inputs: dict[str, Any]) -> str | None:
     if _route_key_with_self(inputs) != _SELF_Q1024_RESTORED_KEY:
         return None
@@ -85,7 +94,7 @@ def _use_ext_k(inputs: dict[str, Any]) -> bool:
     return bool(ext_k._use_q128_m131072_k40(inputs) or ext_k._use_q128_m65536_k56(inputs) or ext_k._use_q4096_m49152_k64(inputs))
 
 def selected_route(inputs: dict[str, Any]) -> str:
-    restored_route = _restored_d128_route(inputs) or _restored_self_q1024_route(inputs)
+    restored_route = _restored_d128_route(inputs) or _restored_floor13_route(inputs) or _restored_self_q1024_route(inputs)
     if restored_route is not None:
         return restored_route
     if _use_k64_repair(inputs):
@@ -100,6 +109,10 @@ def selected_route_name(inputs: dict[str, Any]) -> str:
 def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     if _restored_d128_route(inputs) is not None:
         info = dict(d128_restored.route_info(inputs))
+        info['dispatcher_entrypoint'] = ENTRYPOINT
+        return info
+    if _restored_floor13_route(inputs) is not None:
+        info = dict(floor13_restored.route_info(inputs))
         info['dispatcher_entrypoint'] = ENTRYPOINT
         return info
     if _restored_self_q1024_route(inputs) is not None:
@@ -142,6 +155,8 @@ def _launch_k11_prefix(inputs: dict[str, Any]) -> dict[str, Any]:
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     if _restored_d128_route(inputs) is not None:
         return d128_restored.launch_for_eval(inputs)
+    if _restored_floor13_route(inputs) is not None:
+        return floor13_restored.launch_for_eval(inputs)
     if _restored_self_q1024_route(inputs) is not None:
         return self_q1024_restored.launch_for_eval(inputs)
     if _use_k64_repair(inputs):

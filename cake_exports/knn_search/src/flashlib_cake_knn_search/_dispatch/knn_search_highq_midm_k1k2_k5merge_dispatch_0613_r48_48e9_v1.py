@@ -54,7 +54,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k5_merge_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0315"}}'))
+    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0345"}}'))
 
 def _launch_q4096_k5(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

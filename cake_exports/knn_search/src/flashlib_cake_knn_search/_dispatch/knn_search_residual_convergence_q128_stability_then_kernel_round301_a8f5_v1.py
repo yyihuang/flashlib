@@ -60,7 +60,7 @@ def _group_scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     return _GROUP_SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0487"}, "group": {"__kernel__": "dispatch_kernel_0486"}, "partial": {"__kernel__": "dispatch_kernel_0485"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0517"}, "group": {"__kernel__": "dispatch_kernel_0516"}, "partial": {"__kernel__": "dispatch_kernel_0515"}}'))
 
 def _use_target(inputs: dict[str, Any]) -> bool:
     return base.selected_route(inputs) == base.ROUTE

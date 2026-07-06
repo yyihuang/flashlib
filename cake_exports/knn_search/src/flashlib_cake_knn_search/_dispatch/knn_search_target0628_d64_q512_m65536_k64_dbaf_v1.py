@@ -40,7 +40,7 @@ final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_target0628_d64_q512_m65536_k64_partial_e8f1_v1", "arg_keys": ["queries", "database", "partial_distances", "partial_indices", "B", "Q", "M", "split_m", "num_q_tiles", "total_m_tiles", "tiles_per_split"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 57600, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 512}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0530"}, "group_merge": {"__kernel__": "dispatch_kernel_0529"}, "partial": {"__kernel__": "dispatch_kernel_0528"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0560"}, "group_merge": {"__kernel__": "dispatch_kernel_0559"}, "partial": {"__kernel__": "dispatch_kernel_0558"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

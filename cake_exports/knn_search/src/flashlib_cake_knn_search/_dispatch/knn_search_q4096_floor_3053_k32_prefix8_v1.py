@@ -45,7 +45,7 @@ parent_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partia
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, Any], ...] = ({'shape_key': 'round124_3053_q4096_m32768_d128_k32_prefix8', 'label': 'blind_k32_q4096_m32768_d128_k32', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 32 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_K32_PREFIX8, 'entrypoint': 'loom.examples.weave.knn_search_q4096_floor_3053_k32_prefix8_v1:launch_for_eval', 'selected_seed': CONSUMED_K32_PREFIX8_SEED, 'source_task': 'weave-evolve-knn-search-3053', 'coverage_class': 'performance_probe_q4096_m32768_d128_k32_prefix8', 'route_source': 'shape-specific-seed'}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_k32_prefix8_merge_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0419"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0449"}}'))
 
 def _ensure_k32_prefix8_kernel() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_M32768_K32_PREFIX8_KERNELS:

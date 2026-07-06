@@ -59,7 +59,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k3_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k3": {"__kernel__": "dispatch_kernel_0540"}, "partial_k3": {"__kernel__": "dispatch_kernel_0539"}}'))
+    return _decode_capture(_json_loads('{"merge_k3": {"__kernel__": "dispatch_kernel_0570"}, "partial_k3": {"__kernel__": "dispatch_kernel_0569"}}'))
 
 def _scratch_k3(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -29,7 +29,7 @@ knn_search_self_k5_direct_v1 = _decode_capture(_json_loads('{"__ir__": "knn_sear
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_self_k5_direct_v1", "arg_keys": ["queries", "database", "out_distances", "out_indices", "B", "Q", "M", "K"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 384, "constants": [["D_", 128], ["K_MAX_", 5], ["NUM_WARPS_", 8]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0328"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0358"}}'))
 
 def _use_self_k5_direct(inputs: dict[str, Any]) -> bool:
     q_rows = int(inputs['Q'])

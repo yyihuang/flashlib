@@ -17,14 +17,14 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define K_MAX_ 64
+#define K_MAX_ 48
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1(float* __restrict__ group_distances, int* __restrict__ group_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K)
+kernel_knn_search_k64_q128split512_finalmerge32_kexact_0614_r25_k64thin_v1(float* __restrict__ group_distances, int* __restrict__ group_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -44,8 +44,8 @@ kernel_knn_search_k64_q128m65536_finalmerge16_kexact_0614_r27_k64thin_v1(float* 
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
         float head_d = LOOM_INF;
         int head_i = -1;
-        if (lane < 16) {
-            unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 16 + lane) * K_MAX_ + local_head);
+        if (lane < 32) {
+            unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 32 + lane) * K_MAX_ + local_head);
             head_d = group_distances[group_base];
             head_i = group_indices[group_base];
         }

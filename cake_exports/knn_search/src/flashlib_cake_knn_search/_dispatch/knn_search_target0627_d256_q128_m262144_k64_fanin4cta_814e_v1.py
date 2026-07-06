@@ -40,7 +40,7 @@ knn_search_d256_groupmerge64_fanin4cta_814e_v1 = _decode_capture(_json_loads('{"
 group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_groupmerge64_fanin4cta_814e_v1", "arg_keys": ["partial_distances", "partial_indices", "group_distances", "group_indices", "B", "Q", "K", "num_q_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 128}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0493"}, "group": {"__kernel__": "dispatch_kernel_0492"}, "partial": {"__kernel__": "dispatch_kernel_0491"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0523"}, "group": {"__kernel__": "dispatch_kernel_0522"}, "partial": {"__kernel__": "dispatch_kernel_0521"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     if not _KERNELS:

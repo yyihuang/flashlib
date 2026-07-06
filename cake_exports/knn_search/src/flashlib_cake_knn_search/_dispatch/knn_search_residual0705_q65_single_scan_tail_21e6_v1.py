@@ -43,7 +43,7 @@ knn_search_q65_rows8_bounded_finalmerge_21e6_v1 = _decode_capture(_json_loads('{
 final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q65_rows8_bounded_finalmerge_21e6_v1", "arg_keys": ["group_distances", "group_indices", "out_distances", "out_indices", "B", "Q", "K"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0564"}, "group": {"__kernel__": "dispatch_kernel_0563"}, "partial": {"__kernel__": "dispatch_kernel_0562"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0594"}, "group": {"__kernel__": "dispatch_kernel_0593"}, "partial": {"__kernel__": "dispatch_kernel_0592"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     if not _KERNELS:

@@ -29,7 +29,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerg
 DBSCAN_D2_SHAPES: list[dict[str, Any]] = parent.DBSCAN_D2_SHAPES
 
 def _compile_lowd_coop_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0268"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0298"}}'))
 
 def _use_d2_dbscan_coop(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['D']) == D_STATIC and (int(inputs['Q']) <= M_MAX) and (int(inputs['M']) <= M_MAX) and (int(inputs['K']) <= K_MAX)

@@ -81,6 +81,7 @@ def prepare_knn_search(
     arch: str | None = None,
     stream: Any = None,
     timeout_ms: float | None = None,
+    force_fallback: bool = False,
 ) -> PreparedKNNSearch:
     """Validate tensors and freeze one allocation-free direct launch sequence."""
     import torch
@@ -98,6 +99,8 @@ def prepare_knn_search(
         raise ValueError("query and database batch/feature dimensions and device must match")
     if not 0 < k <= m_rows:
         raise ValueError(f"k must be in [1, {m_rows}], got {k}")
+    if not isinstance(force_fallback, bool):
+        raise TypeError("force_fallback must be boolean")
     device_index = query.device.index
     if device_index is None:
         device_index = torch.cuda.current_device()
@@ -139,6 +142,7 @@ def prepare_knn_search(
                 "K": k,
                 "dtype": "bfloat16",
                 "self_search": query.data_ptr() == database.data_ptr(),
+                "force_fallback": force_fallback,
                 "queries": query,
                 "database": database,
                 "out_distances": out_distances,
@@ -256,6 +260,7 @@ def knn_search_prepared(
         "arch": prepared.arch,
         "device_index": prepared.device_index,
         "stream_handle": prepared.stream_handle,
+        "force_fallback": bool(prepared.inputs.get("force_fallback", False)),
     }
     return (out, info) if return_info else out
 
@@ -269,6 +274,7 @@ def knn_search(
     arch: str | None = None,
     stream: Any = None,
     timeout_ms: float | None = None,
+    force_fallback: bool = False,
     return_info: bool = False,
 ):
     """Run exact squared-L2 kNN with the frozen production dispatcher."""
@@ -280,6 +286,7 @@ def knn_search(
         arch=arch,
         stream=stream,
         timeout_ms=timeout_ms,
+        force_fallback=force_fallback,
     )
     return knn_search_prepared(prepared, arch=arch, return_info=return_info)
 
@@ -341,12 +348,15 @@ class KNNSearchRuntime:
         out: tuple[Any, Any] | None = None,
         stream: Any = None,
         timeout_ms: float | None = None,
+        force_fallback: bool = False,
         return_info: bool = False,
     ):
         """Compute exact squared-L2 KNN, reusing the slot for this shape/stream."""
         import torch
 
         shape = _validate_runtime_tensors(torch, query, database, k, self.device_index)
+        if not isinstance(force_fallback, bool):
+            raise TypeError("force_fallback must be boolean")
         bsz, q_rows, m_rows, dim, k = shape
         with torch.cuda.device(self.device_index):
             resolved_stream = torch.cuda.current_stream(self.device_index) if stream is None else stream
@@ -374,6 +384,7 @@ class KNNSearchRuntime:
                 "K": k,
                 "dtype": "bfloat16",
                 "self_search": self_search,
+                "force_fallback": force_fallback,
                 "queries": query,
                 "database": database,
                 "out_distances": out_distances,
@@ -390,6 +401,7 @@ class KNNSearchRuntime:
                 k,
                 query.dtype,
                 self_search,
+                force_fallback,
                 stream_handle,
             )
             with torch.cuda.stream(resolved_stream):
@@ -432,6 +444,7 @@ class KNNSearchRuntime:
             "arch": self.arch,
             "device_index": self.device_index,
             "stream_handle": stream_handle,
+            "force_fallback": force_fallback,
             "runtime_cache_hit": cache_hit,
         }
         return (outputs, info) if return_info else outputs

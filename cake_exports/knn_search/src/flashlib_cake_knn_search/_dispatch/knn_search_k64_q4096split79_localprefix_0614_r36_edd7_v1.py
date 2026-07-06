@@ -61,7 +61,7 @@ def _scratch_prefix(inputs: dict[str, Any], partial_list_count: int, num_q_tiles
     return cached
 
 def _compile_k64_q4096_localprefix_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0347"}, "partial": {"__kernel__": "dispatch_kernel_0346"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0377"}, "partial": {"__kernel__": "dispatch_kernel_0376"}}'))
 
 def _use_q4096_k64_localprefix(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and base._tcgen05_capable_arch()

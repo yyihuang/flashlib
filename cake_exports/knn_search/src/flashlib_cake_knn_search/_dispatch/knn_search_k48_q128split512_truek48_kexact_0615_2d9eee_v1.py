@@ -44,7 +44,7 @@ _KNN_SEARCH_K48_TRUEK48_PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int
 _KNN_SEARCH_K48_TRUEK48_GROUP_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_q128_k48_truek48_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0373"}, "group_merge": {"__kernel__": "dispatch_kernel_0372"}, "partial": {"__kernel__": "dispatch_kernel_0371"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0403"}, "group_merge": {"__kernel__": "dispatch_kernel_0402"}, "partial": {"__kernel__": "dispatch_kernel_0401"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

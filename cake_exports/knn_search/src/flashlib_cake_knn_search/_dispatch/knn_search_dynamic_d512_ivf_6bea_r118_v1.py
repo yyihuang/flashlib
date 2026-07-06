@@ -38,7 +38,7 @@ def _use_ivf_direct(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == IVF_Q and (int(inputs['M']) == IVF_M) and (int(inputs['D']) == IVF_D) and (int(inputs['K']) == IVF_K) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False)))
 
 def _compile_ivf_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0430"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0460"}'))
 
 def _ensure_ivf_kernel():
     kernel = _IVF_KERNEL.get('direct')

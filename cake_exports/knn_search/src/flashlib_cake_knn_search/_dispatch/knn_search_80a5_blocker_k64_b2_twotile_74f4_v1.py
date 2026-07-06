@@ -63,7 +63,7 @@ _B2_K64_ENTRY: dict[str, str] = {'shape_key': 'round80a5_b2_q128_m65536_d128_k64
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_B2_K64_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_b2_q128_m65536_k64_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0398"}, "group_merge": {"__kernel__": "dispatch_kernel_0397"}, "partial": {"__kernel__": "dispatch_kernel_0396"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0428"}, "group_merge": {"__kernel__": "dispatch_kernel_0427"}, "partial": {"__kernel__": "dispatch_kernel_0426"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

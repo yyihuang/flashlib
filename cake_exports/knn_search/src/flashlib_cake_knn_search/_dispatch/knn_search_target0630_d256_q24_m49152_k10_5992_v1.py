@@ -40,7 +40,7 @@ def _use_target(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('force_fallback', False)) and d256_k10.parent._tcgen05_capable_arch() and (_shape_key(inputs) == SHAPE_DISPATCH_REGISTRY[0]['shape'])
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0498"}, "partial": {"__kernel__": "dispatch_kernel_0497"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0528"}, "partial": {"__kernel__": "dispatch_kernel_0527"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

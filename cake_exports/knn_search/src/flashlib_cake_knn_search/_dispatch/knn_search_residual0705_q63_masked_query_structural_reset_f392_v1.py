@@ -47,7 +47,7 @@ _group_scratch = physical._group_scratch
 _KERNELS: dict[str, Any] = {}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0484"}, "group": {"__kernel__": "dispatch_kernel_0483"}, "partial": {"__kernel__": "dispatch_kernel_0482"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0514"}, "group": {"__kernel__": "dispatch_kernel_0513"}, "partial": {"__kernel__": "dispatch_kernel_0512"}}'))
 
 def _valid_contract_abi(inputs: dict[str, Any]) -> bool:
     required_scalars = ('B', 'Q', 'M', 'D', 'K')

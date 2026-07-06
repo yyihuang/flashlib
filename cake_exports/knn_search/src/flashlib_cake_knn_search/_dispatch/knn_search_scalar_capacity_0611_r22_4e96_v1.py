@@ -77,7 +77,7 @@ def _vec8_aligned_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     return aligned
 
 def _compile_pad_kernel() -> Any:
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0242"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0272"}'))
 
 def _use_scalar_capacity(inputs: dict[str, Any]) -> bool:
     d = int(inputs['D'])

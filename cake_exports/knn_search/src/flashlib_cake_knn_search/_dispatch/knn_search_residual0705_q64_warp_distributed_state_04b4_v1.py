@@ -73,7 +73,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_q64_warp_distributed_st
 _KERNELS: dict[str, Any] = {}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0481"}, "group": {"__kernel__": "dispatch_kernel_0480"}, "partial": {"__kernel__": "dispatch_kernel_0479"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0511"}, "group": {"__kernel__": "dispatch_kernel_0510"}, "partial": {"__kernel__": "dispatch_kernel_0509"}}'))
 
 def _use_target(inputs: dict[str, Any]) -> bool:
     return not bool(inputs.get('force_fallback', False)) and int(inputs['B']) == TARGET_PARAMS['B'] and (int(inputs['Q']) == TARGET_PARAMS['Q']) and (int(inputs['M']) == TARGET_PARAMS['M']) and (int(inputs['D']) == TARGET_PARAMS['D']) and (int(inputs['K']) == TARGET_PARAMS['K']) and (str(inputs['queries'].dtype) == 'torch.bfloat16') and (not bool(inputs.get('self_search', False)))

@@ -46,7 +46,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_lowk_merge_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0325"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0326"}}'))
+    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0355"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0356"}}'))
 
 def _launch_q4096_lowk(inputs: dict[str, Any]) -> dict[str, Any]:
     if not mma._KNN_SEARCH_KERNELS:

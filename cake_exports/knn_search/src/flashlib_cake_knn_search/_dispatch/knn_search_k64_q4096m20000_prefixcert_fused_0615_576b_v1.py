@@ -66,7 +66,7 @@ def _cert_rows_fused(inputs: dict[str, Any], row_count: int):
     return rows
 
 def _compile_k64_q4096_prefixcert_fused_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0570"}, "partial": {"__kernel__": "dispatch_kernel_0569"}, "repair": {"__kernel__": "dispatch_kernel_0571"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0600"}, "partial": {"__kernel__": "dispatch_kernel_0599"}, "repair": {"__kernel__": "dispatch_kernel_0601"}}'))
 
 def _use_q4096_k64_prefixcert_fused(inputs: dict[str, Any]) -> bool:
     return prefix6_parent._use_q4096_k64_prefix6cert(inputs)

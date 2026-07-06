@@ -16,15 +16,15 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define THREADS 32
-#define K_MAX_ 12
+#define THREADS 256
+#define K_MAX_ 64
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(32) void
-kernel_knn_search_mma_split_merge_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
+__global__ __launch_bounds__(256) void
+kernel_knn_search_d256_localcta_rows8_merge_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int partial_list_count, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -35,22 +35,22 @@ kernel_knn_search_mma_split_merge_v1(float* __restrict__ partial_distances, int*
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid;
+    int q_linear = bid * 8 + warp;
     int batch_id = q_linear / Q;
     int q_global = q_linear - batch_id * Q;
     int q_tile = q_global / 128;
     int q_local = q_global - q_tile * 128;
-    float head_d[19];
-    int head_i[19];
-    int head_k[19];
+    float head_d[8];
+    int head_i[8];
+    int head_k[8];
     #pragma unroll
-    for (int slot = 0; slot < 19; slot++) {
-        int split_id = lane + slot * 32;
+    for (int slot = 0; slot < 8; slot++) {
+        int partial_id = lane + slot * 32;
         head_k[slot] = 0;
         head_d[slot] = LOOM_INF;
         head_i[slot] = -1;
-        if (split_id < split_m) {
-            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local) * K_MAX_);
+        if (partial_id < partial_list_count) {
+            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + partial_id) * 128 + q_local) * K_MAX_);
             head_d[slot] = partial_distances[partial_base];
             head_i[slot] = partial_indices[partial_base];
         }
@@ -62,7 +62,7 @@ kernel_knn_search_mma_split_merge_v1(float* __restrict__ partial_distances, int*
         int local_best_i = -1;
         int local_best_slot = 0;
         #pragma unroll
-        for (int slot_1 = 0; slot_1 < 19; slot_1++) {
+        for (int slot_1 = 0; slot_1 < 8; slot_1++) {
             float cand_d = head_d[slot_1];
             int take = ((cand_d < local_best_d) ? 1 : 0);
             local_best_d = ((take != 0) ? cand_d : local_best_d);
@@ -130,16 +130,16 @@ kernel_knn_search_mma_split_merge_v1(float* __restrict__ partial_distances, int*
         }
         if (lane == winner_lane) {
             #pragma unroll
-            for (int slot_2 = 0; slot_2 < 19; slot_2++) {
+            for (int slot_2 = 0; slot_2 < 8; slot_2++) {
                 if (local_best_slot == slot_2) {
                     int next_head = head_k[slot_2] + 1;
-                    int split_id_1 = lane + slot_2 * 32;
+                    int partial_id_1 = lane + slot_2 * 32;
                     head_k[slot_2] = next_head;
                     head_d[slot_2] = LOOM_INF;
                     head_i[slot_2] = -1;
-                    if (split_id_1 < split_m) {
+                    if (partial_id_1 < partial_list_count) {
                         if (next_head < K_MAX_) {
-                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id_1) * 128 + q_local) * K_MAX_ + next_head);
+                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + partial_id_1) * 128 + q_local) * K_MAX_ + next_head);
                             head_d[slot_2] = partial_distances[partial_base_1];
                             head_i[slot_2] = partial_indices[partial_base_1];
                         }

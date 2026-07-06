@@ -17,15 +17,14 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
 #define THREADS 32
-#define K_MAX_ 48
-#define K_PREFIX_ 8
+#define K_MAX_ 64
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices)
+kernel_knn_search_ext_k64_q4096_m49152_merge24_0618_28ec_v2(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -39,14 +38,14 @@ kernel_knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1(float* __restrict_
     int q_global = bid;
     int q_tile = q_global / 128;
     int q_local = q_global - q_tile * 128;
-    float head_d[16];
-    int head_i[16];
-    int head_k[16];
+    float head_d[24];
+    int head_i[24];
+    int head_k[24];
     #pragma unroll
-    for (int slot = 0; slot < 16; slot++) {
+    for (int slot = 0; slot < 24; slot++) {
         int split_id = lane + slot * 32;
+        unsigned long long partial_base = (unsigned long long)(((q_tile * 768 + split_id) * 128 + q_local) * K_MAX_);
         head_k[slot] = 0;
-        unsigned long long partial_base = (unsigned long long)(((q_tile * 512 + split_id) * 128 + q_local) * K_PREFIX_);
         head_d[slot] = partial_distances[partial_base];
         head_i[slot] = partial_indices[partial_base];
     }
@@ -57,7 +56,7 @@ kernel_knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1(float* __restrict_
         int local_best_i = head_i[0];
         int local_best_slot = 0;
         #pragma unroll
-        for (int slot_1 = 1; slot_1 < 16; slot_1++) {
+        for (int slot_1 = 1; slot_1 < 24; slot_1++) {
             float cand_d = head_d[slot_1];
             int cand_i = head_i[slot_1];
             int take = ((cand_d < local_best_d) ? 1 : 0);
@@ -154,15 +153,15 @@ kernel_knn_search_k48_q4096_m32768_prefix8_merge_0623_e36b_v1(float* __restrict_
         }
         if (lane == winner_lane) {
             #pragma unroll
-            for (int slot_2 = 0; slot_2 < 16; slot_2++) {
+            for (int slot_2 = 0; slot_2 < 24; slot_2++) {
                 if (local_best_slot == slot_2) {
                     int next_head = head_k[slot_2] + 1;
                     int split_id_1 = lane + slot_2 * 32;
                     head_k[slot_2] = next_head;
                     head_d[slot_2] = LOOM_INF;
                     head_i[slot_2] = -1;
-                    if (next_head < K_PREFIX_) {
-                        unsigned long long partial_base_1 = (unsigned long long)(((q_tile * 512 + split_id_1) * 128 + q_local) * K_PREFIX_ + next_head);
+                    if (next_head < K_MAX_) {
+                        unsigned long long partial_base_1 = (unsigned long long)(((q_tile * 768 + split_id_1) * 128 + q_local) * K_MAX_ + next_head);
                         head_d[slot_2] = partial_distances[partial_base_1];
                         head_i[slot_2] = partial_indices[partial_base_1];
                     }

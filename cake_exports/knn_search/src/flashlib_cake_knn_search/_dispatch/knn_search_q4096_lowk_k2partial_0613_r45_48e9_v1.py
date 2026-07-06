@@ -60,7 +60,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_lowk_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0319"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0320"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0318"}}'))
+    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0349"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0350"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0348"}}'))
 
 def _scratch_lowk(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

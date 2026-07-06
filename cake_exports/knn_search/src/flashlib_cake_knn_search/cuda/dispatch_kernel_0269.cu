@@ -16,136 +16,134 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
-#define SMEM_SMEM_DIST_OFF 0
-#define SMEM_SMEM_DIST_STAGE_BYTES 8192
-#define SMEM_SMEM_DIST_STRIDE 8192
-#define SMEM_SMEM_IDX_OFF 8192
-#define SMEM_SMEM_IDX_STAGE_BYTES 8192
-#define SMEM_SMEM_IDX_STRIDE 8192
-#define SMEM_TOTAL 16384
-#define THREADS 128
-#define D_ 2
+#define THREADS 32
 #define K_MAX_ 64
-#define LOCAL_CAP_ 16
 
 #include <math_constants.h>
 
 extern "C" {
 
-__global__ __launch_bounds__(128) void
-kernel_knn_search_lowd_dbscan_d2_direct_0611_r22_6e85_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int M, int K)
+__global__ __launch_bounds__(32) void
+kernel_knn_search_mma_split_merge_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
     const int lane = tid % 32;
 
-    extern __shared__ __align__(1024) char smem_raw[];
-    int smem;
-    smem = (int)(unsigned long long)__cvta_generic_to_shared(smem_raw);
 
     const int bid = blockIdx.x;
     const int num_bids = gridDim.x;
 
-    // Kernel setup ops
-    float* smem_dist = reinterpret_cast<float*>(smem_raw + 0);
-    const int smem_dist_addr = smem + 0;
-    int* smem_idx = reinterpret_cast<int*>(smem_raw + 8192);
-    const int smem_idx_addr = smem + 8192;
-
     // === Task calls (dependency order) ===
-    int work_id = bid;
-    int batch_id = work_id / Q;
-    int q_row = work_id - batch_id * Q;
-    if (batch_id < B) {
-        unsigned long long q_base = (unsigned long long)((batch_id * Q + q_row) * D_);
-        float _vec_load_0[2];
-        {
-            const __nv_bfloat16* _bf16_ptr_0 = reinterpret_cast<const __nv_bfloat16*>(queries + q_base + 0);
-            _vec_load_0[0] = __bfloat162float(_bf16_ptr_0[0]);
-            _vec_load_0[0 + 1] = __bfloat162float(_bf16_ptr_0[1]);
+    int q_linear = bid;
+    int batch_id = q_linear / Q;
+    int q_global = q_linear - batch_id * Q;
+    int q_tile = q_global / 128;
+    int q_local = q_global - q_tile * 128;
+    float head_d[19];
+    int head_i[19];
+    int head_k[19];
+    #pragma unroll
+    for (int slot = 0; slot < 19; slot++) {
+        int split_id = lane + slot * 32;
+        head_k[slot] = 0;
+        head_d[slot] = LOOM_INF;
+        head_i[slot] = -1;
+        if (split_id < split_m) {
+            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + q_local) * K_MAX_);
+            head_d[slot] = partial_distances[partial_base];
+            head_i[slot] = partial_indices[partial_base];
         }
-        float q0 = _vec_load_0[0];
-        float q1 = _vec_load_0[1];
-        float local_d[16];
-        int local_i[16];
+    }
+    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    #pragma unroll
+    for (int out_k = 0; out_k < K_MAX_; out_k++) {
+        float local_best_d = LOOM_INF;
+        int local_best_i = -1;
+        int local_best_slot = 0;
         #pragma unroll
-        for (int kk = 0; kk < LOCAL_CAP_; kk++) {
-            local_d[kk] = LOOM_INF;
-            local_i[kk] = -1;
+        for (int slot_1 = 0; slot_1 < 19; slot_1++) {
+            float cand_d = head_d[slot_1];
+            int take = ((cand_d < local_best_d) ? 1 : 0);
+            local_best_d = ((take != 0) ? cand_d : local_best_d);
+            local_best_i = ((take != 0) ? head_i[slot_1] : local_best_i);
+            local_best_slot = ((take != 0) ? slot_1 : local_best_slot);
         }
-        #pragma unroll 1
-        for (int m_row = tid; m_row < M; m_row += 128) {
-            unsigned long long db_base = (unsigned long long)((batch_id * M + m_row) * D_);
-            float _vec_load_1[2];
-            {
-                const __nv_bfloat16* _bf16_ptr_1 = reinterpret_cast<const __nv_bfloat16*>(database + db_base + 0);
-                _vec_load_1[0] = __bfloat162float(_bf16_ptr_1[0]);
-                _vec_load_1[0 + 1] = __bfloat162float(_bf16_ptr_1[1]);
+        float winner_d = local_best_d;
+        int winner_i = local_best_i;
+        int winner_lane = lane;
+        float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 16);
+        float peer_d = _shfl_xor_0;
+        int _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 16);
+        int peer_i = _shfl_xor_1;
+        int _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 16);
+        int peer_lane = _shfl_xor_2;
+        int take_peer = ((peer_d < winner_d) ? 1 : 0);
+        winner_d = ((take_peer != 0) ? peer_d : winner_d);
+        winner_i = ((take_peer != 0) ? peer_i : winner_i);
+        winner_lane = ((take_peer != 0) ? peer_lane : winner_lane);
+        float _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 8);
+        float peer_d_0 = _shfl_xor_3;
+        int _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 8);
+        int peer_i_1 = _shfl_xor_4;
+        int _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 8);
+        int peer_lane_2 = _shfl_xor_5;
+        int take_peer_3 = ((peer_d_0 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_3 != 0) ? peer_d_0 : winner_d);
+        winner_i = ((take_peer_3 != 0) ? peer_i_1 : winner_i);
+        winner_lane = ((take_peer_3 != 0) ? peer_lane_2 : winner_lane);
+        float _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
+        float peer_d_4 = _shfl_xor_6;
+        int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
+        int peer_i_5 = _shfl_xor_7;
+        int _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 4);
+        int peer_lane_6 = _shfl_xor_8;
+        int take_peer_7 = ((peer_d_4 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_7 != 0) ? peer_d_4 : winner_d);
+        winner_i = ((take_peer_7 != 0) ? peer_i_5 : winner_i);
+        winner_lane = ((take_peer_7 != 0) ? peer_lane_6 : winner_lane);
+        float _shfl_xor_9 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
+        float peer_d_8 = _shfl_xor_9;
+        int _shfl_xor_10 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
+        int peer_i_9 = _shfl_xor_10;
+        int _shfl_xor_11 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 2);
+        int peer_lane_10 = _shfl_xor_11;
+        int take_peer_11 = ((peer_d_8 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_11 != 0) ? peer_d_8 : winner_d);
+        winner_i = ((take_peer_11 != 0) ? peer_i_9 : winner_i);
+        winner_lane = ((take_peer_11 != 0) ? peer_lane_10 : winner_lane);
+        float _shfl_xor_12 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
+        float peer_d_12 = _shfl_xor_12;
+        int _shfl_xor_13 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
+        int peer_i_13 = _shfl_xor_13;
+        int _shfl_xor_14 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 1);
+        int peer_lane_14 = _shfl_xor_14;
+        int take_peer_15 = ((peer_d_12 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_15 != 0) ? peer_d_12 : winner_d);
+        winner_i = ((take_peer_15 != 0) ? peer_i_13 : winner_i);
+        winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
+        if (lane == 0) {
+            if (out_k < K) {
+                out_distances[out_base + (unsigned long long)out_k] = winner_d;
+                out_indices[out_base + (unsigned long long)out_k] = winner_i;
             }
-            float diff0 = q0 - _vec_load_1[0];
-            float diff1 = q1 - _vec_load_1[1];
-            float dist = diff0 * diff0 + diff1 * diff1;
-            if (dist < local_d[LOCAL_CAP_ - 1]) {
-                float carry_d = dist;
-                int carry_i = m_row;
-                #pragma unroll
-                for (int kk_1 = 0; kk_1 < LOCAL_CAP_; kk_1++) {
-                    float old_d = local_d[kk_1];
-                    int old_i = local_i[kk_1];
-                    int take = ((carry_d < old_d) ? 1 : 0);
-                    local_d[kk_1] = ((take != 0) ? carry_d : old_d);
-                    local_i[kk_1] = ((take != 0) ? carry_i : old_i);
-                    carry_d = ((take != 0) ? old_d : carry_d);
-                    carry_i = ((take != 0) ? old_i : carry_i);
-                }
-            }
         }
-        #pragma unroll
-        for (int kk_2 = 0; kk_2 < LOCAL_CAP_; kk_2++) {
-            int smem_off = tid * LOCAL_CAP_ + kk_2;
-            smem_dist[smem_off] = local_d[kk_2];
-            smem_idx[smem_off] = local_i[kk_2];
-        }
-        __syncthreads();
-        if (tid == 0) {
-            float final_d[64];
-            int final_i[64];
+        if (lane == winner_lane) {
             #pragma unroll
-            for (int kk_3 = 0; kk_3 < K_MAX_; kk_3++) {
-                final_d[kk_3] = LOOM_INF;
-                final_i[kk_3] = -1;
-            }
-            #pragma unroll 1
-            for (int src_thread = 0; src_thread < 128; src_thread++) {
-                #pragma unroll
-                for (int src_k = 0; src_k < LOCAL_CAP_; src_k++) {
-                    int smem_off_1 = src_thread * LOCAL_CAP_ + src_k;
-                    int cand_i = smem_idx[smem_off_1];
-                    if (cand_i >= 0) {
-                        float cand_d = smem_dist[smem_off_1];
-                        if (cand_d < final_d[K_MAX_ - 1]) {
-                            float carry_d_1 = cand_d;
-                            int carry_i_1 = cand_i;
-                            #pragma unroll
-                            for (int kk_4 = 0; kk_4 < K_MAX_; kk_4++) {
-                                float old_d_1 = final_d[kk_4];
-                                int old_i_1 = final_i[kk_4];
-                                int take_1 = ((carry_d_1 < old_d_1) ? 1 : 0);
-                                final_d[kk_4] = ((take_1 != 0) ? carry_d_1 : old_d_1);
-                                final_i[kk_4] = ((take_1 != 0) ? carry_i_1 : old_i_1);
-                                carry_d_1 = ((take_1 != 0) ? old_d_1 : carry_d_1);
-                                carry_i_1 = ((take_1 != 0) ? old_i_1 : carry_i_1);
-                            }
+            for (int slot_2 = 0; slot_2 < 19; slot_2++) {
+                if (local_best_slot == slot_2) {
+                    int next_head = head_k[slot_2] + 1;
+                    int split_id_1 = lane + slot_2 * 32;
+                    head_k[slot_2] = next_head;
+                    head_d[slot_2] = LOOM_INF;
+                    head_i[slot_2] = -1;
+                    if (split_id_1 < split_m) {
+                        if (next_head < K_MAX_) {
+                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id_1) * 128 + q_local) * K_MAX_ + next_head);
+                            head_d[slot_2] = partial_distances[partial_base_1];
+                            head_i[slot_2] = partial_indices[partial_base_1];
                         }
                     }
-                }
-            }
-            unsigned long long out_base = (unsigned long long)((batch_id * Q + q_row) * K);
-            #pragma unroll
-            for (int kk_5 = 0; kk_5 < K_MAX_; kk_5++) {
-                if (kk_5 < K) {
-                    out_distances[out_base + (unsigned long long)kk_5] = final_d[kk_5];
-                    out_indices[out_base + (unsigned long long)kk_5] = final_i[kk_5];
                 }
             }
         }

@@ -35,12 +35,12 @@ ALL_SHAPES: dict[str, dict[str, Any]] = {
 }
 PERFORMANCE_LABELS = tuple(row["shape"] for row in ROUTE_MANIFEST)
 SHAPES: dict[str, dict[str, Any]] = {label: ALL_SHAPES[label] for label in PERFORMANCE_LABELS}
-if len(SHAPE_RECORDS) != 173 or len(ALL_SHAPES) != 173:
-    raise RuntimeError("KNN-search full correctness/runtime ledger must contain 173 unique shapes")
-if len(ROUTE_MANIFEST) != 11 or len(PERFORMANCE_LABELS) != len(set(PERFORMANCE_LABELS)):
-    raise RuntimeError("KNN-search performance route manifest must contain 11 unique shapes")
-if len(ALL_ROUTE_MANIFEST) != 173 or len(EXPECTED_ROUTES) != 173:
-    raise RuntimeError("KNN-search full route manifest must contain 173 unique shapes")
+if len(SHAPE_RECORDS) != 198 or len(ALL_SHAPES) != 198:
+    raise RuntimeError("KNN-search full contract union must contain 198 unique shapes")
+if len(ROUTE_MANIFEST) != 198 or len(PERFORMANCE_LABELS) != len(set(PERFORMANCE_LABELS)):
+    raise RuntimeError("KNN-search performance route manifest must contain 198 unique shapes")
+if len(ALL_ROUTE_MANIFEST) != 198 or len(EXPECTED_ROUTES) != 198:
+    raise RuntimeError("KNN-search full route manifest must contain 198 unique shapes")
 if tuple(row["shape"] for row in ALL_ROUTE_MANIFEST) != tuple(ALL_SHAPES):
     raise RuntimeError("KNN-search full route manifest must follow the full shape ledger")
 if any(label not in ALL_SHAPES for label in PERFORMANCE_LABELS):
@@ -288,9 +288,16 @@ def _run_shape(
     # public baseline/slot-miss lifecycle bracket.
     torch.cuda.synchronize()
     k = int(shape["K"])
+    force_fallback = bool(shape.get("force_fallback", False))
 
     def compute(query, database, *, return_info: bool = False):
-        return runtime.compute(query, database, k, return_info=return_info)
+        return runtime.compute(
+            query,
+            database,
+            k,
+            force_fallback=force_fallback,
+            return_info=return_info,
+        )
 
     baseline_out = None
     baseline_cold_first_call = None
@@ -320,7 +327,15 @@ def _run_shape(
             )
         if any(left.data_ptr() == right.data_ptr() for left, right in zip(first_out, out, strict=True)):
             raise RuntimeError("fresh-pointer KNN-search call reused the prior default output allocation")
-        prepared, prepare_cold_call = measure_host_call(lambda: prepare_knn_search(query_a, database_a, k, arch=arch))
+        prepared, prepare_cold_call = measure_host_call(
+            lambda: prepare_knn_search(
+                query_a,
+                database_a,
+                k,
+                arch=arch,
+                force_fallback=force_fallback,
+            )
+        )
         (_, prepared_route_info), prepared_cold_first_call = measure_host_call(
             lambda: knn_search_prepared(prepared, return_info=True)
         )
@@ -346,6 +361,7 @@ def _run_shape(
         "M": int(shape["M"]),
         "D": int(shape["D"]),
         "K": k,
+        "force_fallback": force_fallback,
         "semantic_entrypoint": route_info["semantic_entrypoint"],
         "selected_route": route_info["selected_route"],
         "launch_entrypoint": route_info["launch_entrypoint"],
@@ -630,6 +646,7 @@ def main() -> int:
                 int(SHAPES[name]["K"]),
                 str(SHAPES[name].get("dtype", "bfloat16")),
                 bool(SHAPES[name].get("self_search", False)),
+                bool(SHAPES[name].get("force_fallback", False)),
             )
             for name in selected
         }

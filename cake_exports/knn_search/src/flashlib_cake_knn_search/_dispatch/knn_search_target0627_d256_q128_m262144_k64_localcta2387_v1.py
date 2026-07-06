@@ -46,7 +46,7 @@ def _scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) 
     return _SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0235"}, "partial": {"__kernel__": "dispatch_kernel_0234"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0265"}, "partial": {"__kernel__": "dispatch_kernel_0264"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

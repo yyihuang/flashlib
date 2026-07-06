@@ -60,7 +60,7 @@ def _cert_flag(inputs: dict[str, Any]):
     return flag
 
 def _compile_k64_q4096_prefix6cert_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"cert": {"__kernel__": "dispatch_kernel_0353"}, "certflag_init": {"__kernel__": "dispatch_kernel_0352"}, "merge": {"__kernel__": "dispatch_kernel_0351"}, "partial": {"__kernel__": "dispatch_kernel_0350"}}'))
+    return _decode_capture(_json_loads('{"cert": {"__kernel__": "dispatch_kernel_0383"}, "certflag_init": {"__kernel__": "dispatch_kernel_0382"}, "merge": {"__kernel__": "dispatch_kernel_0381"}, "partial": {"__kernel__": "dispatch_kernel_0380"}}'))
 
 def _use_q4096_k64_prefix6cert(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and parent.prefix_parent.base._tcgen05_capable_arch()

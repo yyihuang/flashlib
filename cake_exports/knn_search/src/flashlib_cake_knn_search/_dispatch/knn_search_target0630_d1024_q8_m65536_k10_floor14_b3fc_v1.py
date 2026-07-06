@@ -41,7 +41,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return {'route': route, 'selected_route': route, 'route_kind': 'specialized' if route == TARGET_ROUTE else 'unsupported', 'route_source': 'bucket-specific-seed', 'coverage_only': False, 'production_policy': 'weave_only', 'arch_requirement': 'sm_100a', 'padding_tag': 'none', 'uses_materialized_padding': False, 'uses_kernel_padding': False, 'padding_overhead_timed': False, 'padded_D': parent.HIGH_D_MAX, 'workspace_reuse': 'producer partial scratch cache'}
 
 def _compile() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"partial": {"__kernel__": "dispatch_kernel_0552"}, "shared_mem": 143104}'))
+    return _decode_capture(_json_loads('{"partial": {"__kernel__": "dispatch_kernel_0582"}, "shared_mem": 143104}'))
 
 def launch_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     if selected_route(inputs) != TARGET_ROUTE:

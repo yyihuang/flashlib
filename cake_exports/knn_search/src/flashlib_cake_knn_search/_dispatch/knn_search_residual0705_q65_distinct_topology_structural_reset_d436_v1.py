@@ -120,7 +120,7 @@ def _tail_group_scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     return _TAIL_SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0559"}, "group": {"__kernel__": "dispatch_kernel_0558"}, "partial": {"__kernel__": "dispatch_kernel_0557"}, "tail_final": {"__kernel__": "dispatch_kernel_0561"}, "tail_group": {"__kernel__": "dispatch_kernel_0560"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0589"}, "group": {"__kernel__": "dispatch_kernel_0588"}, "partial": {"__kernel__": "dispatch_kernel_0587"}, "tail_final": {"__kernel__": "dispatch_kernel_0591"}, "tail_group": {"__kernel__": "dispatch_kernel_0590"}}'))
 
 def _valid_contract_abi(inputs: dict[str, Any]) -> bool:
     tensors = {'queries': inputs.get('queries'), 'database': inputs.get('database'), 'out_distances': inputs.get('out_distances'), 'out_indices': inputs.get('out_indices')}

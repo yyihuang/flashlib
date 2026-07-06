@@ -42,7 +42,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", 
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = q128_parent.K64_Q128_SPLIT512_HIERMERGE_SHAPES
 
 def _compile_q128_split512_indexfast_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0338"}, "group_merge": {"__kernel__": "dispatch_kernel_0337"}, "partial": {"__kernel__": "dispatch_kernel_0336"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0368"}, "group_merge": {"__kernel__": "dispatch_kernel_0367"}, "partial": {"__kernel__": "dispatch_kernel_0366"}}'))
 
 def _use_q128_k64_split512_indexfast(inputs: dict[str, Any]) -> bool:
     return q128_parent._use_q128_k64_split512_hiermerge(inputs)

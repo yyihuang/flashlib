@@ -33,7 +33,7 @@ knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1 = _decode_capture(_json_loa
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q4096split80_merge10_0612_r22_4e2c_v1", "arg_keys": ["partial_distances", "partial_indices", "out_distances", "out_indices", "B", "Q", "K", "split_m", "num_q_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
 
 def _compile_k64_merge10_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0277"}, "partial": {"__kernel__": "dispatch_kernel_0276"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0307"}, "partial": {"__kernel__": "dispatch_kernel_0306"}}'))
 
 def _use_q4096_k64_merge10(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and stable.base._tcgen05_capable_arch()

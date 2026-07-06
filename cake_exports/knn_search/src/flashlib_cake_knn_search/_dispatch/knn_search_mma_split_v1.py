@@ -99,7 +99,7 @@ def _select_split_m(q_rows: int, m_rows: int) -> int:
     return 1
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0256"}, "merge_q128_const148": {"__kernel__": "dispatch_kernel_0258"}, "merge_q4096_pairlocal": {"__kernel__": "dispatch_kernel_0259"}, "merge_stream": {"__kernel__": "dispatch_kernel_0257"}, "partial": {"__kernel__": "dispatch_kernel_0252"}, "partial_col4": {"__kernel__": "dispatch_kernel_0253"}, "partial_col4_full": {"__kernel__": "dispatch_kernel_0255"}, "partial_full": {"__kernel__": "dispatch_kernel_0254"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0286"}, "merge_q128_const148": {"__kernel__": "dispatch_kernel_0288"}, "merge_q4096_pairlocal": {"__kernel__": "dispatch_kernel_0289"}, "merge_stream": {"__kernel__": "dispatch_kernel_0287"}, "partial": {"__kernel__": "dispatch_kernel_0282"}, "partial_col4": {"__kernel__": "dispatch_kernel_0283"}, "partial_col4_full": {"__kernel__": "dispatch_kernel_0285"}, "partial_full": {"__kernel__": "dispatch_kernel_0284"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch
