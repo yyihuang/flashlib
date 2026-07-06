@@ -1,7 +1,7 @@
 {
   "benchmark_commands": [
     [
-      "/home/averyh/cake-export-venv-2505/bin/python",
+      "/usr/bin/python",
       "benchmarks/benchmark.py",
       "--no-correctness",
       "--json",
@@ -10,7 +10,7 @@
   ],
   "benchmark_passed": 11,
   "correctness_collection_command": [
-    "/home/averyh/cake-export-venv-2505/bin/python",
+    "/usr/bin/python",
     "-m",
     "pytest",
     "tests/test_correctness.py",
@@ -20,7 +20,7 @@
     "export_validation_shape"
   ],
   "correctness_command": [
-    "/home/averyh/cake-export-venv-2505/bin/python",
+    "/usr/bin/python",
     "-m",
     "pytest",
     "tests/test_correctness.py",
@@ -31,26 +31,189 @@
   "correctness_tests_passed": 180,
   "hardware": {
     "arch": "sm_100a",
-    "device": "NVIDIA GB200"
+    "device": "NVIDIA B200"
   },
-  "measured_at_utc": "2026-07-06T04:17:45+00:00",
+  "measured_at_utc": "2026-07-06T08:26:54+00:00",
   "minimum_speedup": 1.0,
   "performance_shape_count": 11,
   "performance_speedup_denominator_metric": "compute_synchronized_e2e_ms",
   "performance_speedup_metric": "compute_speedup_vs_baseline",
   "performance_speedup_numerator_metric": "baseline_synchronized_e2e_ms",
   "phase_seconds": {
-    "benchmark": 25.3274688529782,
-    "correctness": 155.0690014110878,
-    "validation_total": 180.396470264066
+    "benchmark": 23.02487398404628,
+    "correctness": 157.39986171619967,
+    "export": 0.0,
+    "validation_total": 180.42473570024595
   },
   "route_count": 11,
+  "runtime_lifecycle": {
+    "amortized_after_init_synchronized_e2e_speedup": {
+      "1": {
+        "geomean": 69.44410405240276,
+        "max": 795.7542712273544,
+        "median": 33.33963152018469,
+        "min": 11.381928972494133,
+        "p90": 349.3992506591985,
+        "sample_count": 11
+      },
+      "10": {
+        "geomean": 58.271887731089976,
+        "max": 579.2531862611232,
+        "median": 32.75695770150733,
+        "min": 11.19364355858482,
+        "p90": 274.06747208126046,
+        "sample_count": 11
+      },
+      "100": {
+        "geomean": 28.97267502991222,
+        "max": 156.75149582767673,
+        "median": 25.22285309465225,
+        "min": 9.650864753262956,
+        "p90": 87.68488340041777,
+        "sample_count": 11
+      },
+      "1000": {
+        "geomean": 8.042686937745156,
+        "max": 20.44354558717983,
+        "median": 7.156938220135715,
+        "min": 4.35844905308285,
+        "p90": 12.617186048623001,
+        "sample_count": 11
+      }
+    },
+    "amortized_including_init_synchronized_e2e_speedup": {
+      "1": {
+        "geomean": 4.884491533687939,
+        "max": 9.903518127603235,
+        "median": 5.194436876689618,
+        "min": 3.0615170215868592,
+        "p90": 7.111858881250767,
+        "sample_count": 11
+      },
+      "10": {
+        "geomean": 4.868082612511426,
+        "max": 9.865946715039863,
+        "median": 5.176949470147584,
+        "min": 3.051602000688827,
+        "p90": 7.096023269627212,
+        "sample_count": 11
+      },
+      "100": {
+        "geomean": 4.7145648211941475,
+        "max": 9.508575839900843,
+        "median": 5.0102769358106976,
+        "min": 2.960097544558749,
+        "p90": 6.94332380758337,
+        "sample_count": 11
+      },
+      "1000": {
+        "geomean": 3.782342863909549,
+        "max": 7.143290046933464,
+        "median": 3.8915815507012455,
+        "min": 2.459871363822168,
+        "p90": 5.828078182389646,
+        "sample_count": 11
+      }
+    },
+    "baseline_has_explicit_init": false,
+    "baseline_hot_public_synchronized_e2e_ms": {
+      "geomean": 0.30506150694268636,
+      "max": 0.5615675,
+      "median": 0.29882949999999997,
+      "min": 0.162529,
+      "p90": 0.5409075,
+      "sample_count": 11
+    },
+    "baseline_init_host_enqueue_ms": null,
+    "baseline_init_synchronized_e2e_ms": null,
+    "cache_policy": "synchronize_and_clear_after_each_completed_shape",
+    "candidate_first_compute_host_enqueue_ms": {
+      "geomean": 19.3634582011442,
+      "max": 108.458273,
+      "median": 47.439948,
+      "min": 2.922474,
+      "p90": 102.806076,
+      "sample_count": 11
+    },
+    "candidate_first_compute_synchronized_e2e_ms": {
+      "geomean": 19.576694846833345,
+      "max": 108.485405,
+      "median": 47.567888,
+      "min": 2.942948,
+      "p90": 102.927274,
+      "sample_count": 11
+    },
+    "candidate_hot_compute_gpu_span_ms": {
+      "geomean": 0.09403580566450584,
+      "max": 0.24161549999999998,
+      "median": 0.10033600000000001,
+      "min": 0.046736,
+      "p90": 0.170128,
+      "sample_count": 11
+    },
+    "candidate_hot_compute_host_enqueue_ms": {
+      "geomean": 0.09359570707511153,
+      "max": 0.0951365,
+      "median": 0.093833,
+      "min": 0.0925845,
+      "p90": 0.09454699999999999,
+      "sample_count": 11
+    },
+    "candidate_hot_compute_synchronized_e2e_ms": {
+      "geomean": 0.1711375918525024,
+      "max": 0.31204750000000003,
+      "median": 0.1699945,
+      "min": 0.117381,
+      "p90": 0.23954999999999999,
+      "sample_count": 11
+    },
+    "candidate_init_host_enqueue_ms": {
+      "geomean": 0.058245,
+      "max": 0.058245,
+      "median": 0.058245,
+      "min": 0.058245,
+      "p90": 0.058245,
+      "sample_count": 1
+    },
+    "candidate_init_synchronized_e2e_ms": {
+      "geomean": 233.524882,
+      "max": 233.524882,
+      "median": 233.524882,
+      "min": 233.524882,
+      "p90": 233.524882,
+      "sample_count": 1
+    },
+    "cold_order_policy": "deterministic_balanced_per_publication_contract_portfolio",
+    "hot_gpu_span_speedup": {
+      "geomean": 2.454741690118845,
+      "max": 4.378990499828826,
+      "median": 2.1862201365187715,
+      "min": 1.4767979588582363,
+      "p90": 4.190642255158385,
+      "sample_count": 11
+    },
+    "hot_synchronized_e2e_speedup": {
+      "geomean": 1.782551125328492,
+      "max": 2.3937766349450476,
+      "median": 1.797754213122539,
+      "min": 1.267755721508637,
+      "p90": 2.2580150281778337,
+      "sample_count": 11
+    },
+    "init_composition": "runtime_init_only",
+    "init_order_policy": "candidate_only_baseline_has_no_explicit_init",
+    "init_scope": "once_per_validation_shard_process_device_operator",
+    "resident_multi_shape_cache_benchmarked": false,
+    "schema": "loom-public-runtime-lifecycle-summary-v1",
+    "shape_count": 11,
+    "validation_shard_count": 1
+  },
   "semantic_entrypoint": "loom.examples.weave.knn_search_registry_b653_compat0701_v1:launch_for_eval",
   "shape_count": 11,
   "speedup_vs_baseline": {
-    "geomean": 1.6592902846793618,
-    "max": 1.8800342255297755,
-    "min": 1.2951078771974294
+    "geomean": 1.782551125328492,
+    "max": 2.3937766349450476,
+    "min": 1.267755721508637
   },
   "status": "passed",
   "timing_backend": "cupti",

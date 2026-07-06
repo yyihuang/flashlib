@@ -4,6 +4,7 @@ import bisect
 import ctypes
 import importlib
 import importlib.metadata
+import math
 import statistics
 import sys
 from collections.abc import Callable
@@ -241,6 +242,235 @@ def measure_host_call(fn: Callable[[], Any]) -> tuple[Any, HostCallTiming]:
         host_enqueue_ms=(submitted - start) / 1e6,
         synchronized_e2e_ms=(completed - start) / 1e6,
     )
+
+
+def _finite_timing(value: Any, *, name: str, positive: bool) -> float:
+    number = float(value)
+    if not math.isfinite(number) or (number <= 0.0 if positive else number < 0.0):
+        relation = "positive" if positive else "non-negative"
+        raise ValueError(f"{name} must be finite and {relation}, got {value!r}")
+    return number
+
+
+def _percentile(values: list[float], fraction: float) -> float:
+    if not values:
+        raise ValueError("percentile requires at least one value")
+    ordered = sorted(values)
+    rank = (len(ordered) - 1) * float(fraction)
+    lower = math.floor(rank)
+    upper = math.ceil(rank)
+    if lower == upper:
+        return ordered[lower]
+    weight = rank - lower
+    return ordered[lower] * (1.0 - weight) + ordered[upper] * weight
+
+
+def _timing_distribution(values: Any, *, name: str, positive: bool) -> dict[str, Any]:
+    if not isinstance(values, list) or not values:
+        raise ValueError(f"{name} must contain at least one timing sample")
+    samples = [_finite_timing(value, name=name, positive=positive) for value in values]
+    return {
+        "sample_count": len(samples),
+        "min": min(samples),
+        "median": float(statistics.median(samples)),
+        "p90": _percentile(samples, 0.90),
+        "max": max(samples),
+    }
+
+
+def _host_call_payload(timing: HostCallTiming, *, name: str) -> dict[str, Any]:
+    host_enqueue_ms = _finite_timing(timing.host_enqueue_ms, name=f"{name}.host_enqueue_ms", positive=False)
+    synchronized_e2e_ms = _finite_timing(
+        timing.synchronized_e2e_ms,
+        name=f"{name}.synchronized_e2e_ms",
+        positive=True,
+    )
+    if host_enqueue_ms > synchronized_e2e_ms:
+        raise ValueError(f"{name}.host_enqueue_ms cannot exceed synchronized_e2e_ms")
+    return {
+        "timing_class": "cupti_timestamp_host_diagnostic",
+        "host_enqueue_ms": host_enqueue_ms,
+        "synchronized_e2e_ms": synchronized_e2e_ms,
+    }
+
+
+def _hot_compute_payload(timing: BenchResult, *, name: str, cache_state: str) -> dict[str, Any]:
+    if timing.backend != "cupti":
+        raise ValueError(f"{name} must use CUPTI")
+    gpu_span = _timing_distribution(timing.times_ms, name=f"{name}.gpu_span_ms", positive=True)
+    host_enqueue = _timing_distribution(
+        timing.submission_times_ms,
+        name=f"{name}.host_enqueue_ms",
+        positive=False,
+    )
+    synchronized_e2e = _timing_distribution(
+        timing.synchronized_e2e_times_ms,
+        name=f"{name}.synchronized_e2e_ms",
+        positive=True,
+    )
+    sample_counts = {
+        gpu_span["sample_count"],
+        host_enqueue["sample_count"],
+        synchronized_e2e["sample_count"],
+    }
+    if len(sample_counts) != 1:
+        raise ValueError(f"{name} CUPTI/host timing sample counts must match")
+    for index, (enqueue_sample, e2e_sample) in enumerate(
+        zip(timing.submission_times_ms, timing.synchronized_e2e_times_ms, strict=True)
+    ):
+        if float(enqueue_sample) > float(e2e_sample):
+            raise ValueError(f"{name} host enqueue sample {index} cannot exceed its synchronized E2E sample")
+    return {
+        "timing_backend": "cupti",
+        "cache_state": cache_state,
+        "sample_count": gpu_span["sample_count"],
+        "gpu_span_ms": gpu_span,
+        "host_enqueue_ms": host_enqueue,
+        "synchronized_e2e_ms": synchronized_e2e,
+    }
+
+
+def runtime_lifecycle_metrics(
+    *,
+    api: str,
+    measurement_session_id: str,
+    timing_boundary: str,
+    output_policy: str,
+    init: HostCallTiming | None,
+    init_sample_id: str | None,
+    first_compute: HostCallTiming,
+    first_cache_state: str,
+    hot_compute: BenchResult,
+    hot_cache_state: str,
+    amortization_call_counts: tuple[int, ...] = (1, 10, 100, 1000),
+    code_cache_state: str = "process_order_dependent",
+) -> dict[str, Any]:
+    """Normalize init-once, first-signature, and repeated public-call evidence.
+
+    ``first_compute`` is intentionally a CUPTI-timestamp host diagnostic: route
+    selection, compilation, allocation, launch, and completion all belong to
+    its synchronized E2E bracket, but it is not mislabeled as GPU-only time.
+    ``hot_compute`` retains strict correlated CUPTI activity timing.
+    """
+
+    for field_name, value in (
+        ("api", api),
+        ("measurement_session_id", measurement_session_id),
+        ("timing_boundary", timing_boundary),
+        ("output_policy", output_policy),
+        ("first_cache_state", first_cache_state),
+        ("hot_cache_state", hot_cache_state),
+        ("code_cache_state", code_cache_state),
+    ):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"runtime lifecycle {field_name} must be a non-empty string")
+    if (
+        not amortization_call_counts
+        or any(isinstance(value, bool) or not isinstance(value, int) or value <= 0 for value in amortization_call_counts)
+        or tuple(amortization_call_counts) != tuple(sorted(set(amortization_call_counts)))
+    ):
+        raise ValueError("amortization_call_counts must be strictly increasing positive integers")
+
+    init_payload = _host_call_payload(init, name="init_once") if init is not None else None
+    if init_payload is not None:
+        if not isinstance(init_sample_id, str) or not init_sample_id.strip():
+            raise ValueError("init_sample_id is required when init timing is present")
+        init_payload = {"sample_id": init_sample_id, **init_payload}
+    elif init_sample_id is not None:
+        raise ValueError("init_sample_id requires init timing")
+    first_payload = {
+        "cache_state": first_cache_state,
+        "code_cache_state": code_cache_state,
+        **_host_call_payload(first_compute, name="first_compute"),
+        "gpu_span_ms": None,
+        "gpu_span_status": "not_collected_for_slot_miss_host_diagnostic",
+    }
+    hot_payload = _hot_compute_payload(hot_compute, name="hot_compute", cache_state=hot_cache_state)
+
+    first_enqueue = first_payload["host_enqueue_ms"]
+    first_e2e = first_payload["synchronized_e2e_ms"]
+    hot_enqueue = hot_payload["host_enqueue_ms"]["median"]
+    hot_e2e = hot_payload["synchronized_e2e_ms"]["median"]
+    init_enqueue = init_payload["host_enqueue_ms"] if init_payload is not None else 0.0
+    init_e2e = init_payload["synchronized_e2e_ms"] if init_payload is not None else 0.0
+    amortized: list[dict[str, Any]] = []
+    for call_count in amortization_call_counts:
+        repeated = call_count - 1
+        after_init_enqueue = (first_enqueue + repeated * hot_enqueue) / call_count
+        after_init_e2e = (first_e2e + repeated * hot_e2e) / call_count
+        amortized.append(
+            {
+                "public_call_count": call_count,
+                "after_init_host_enqueue_ms_per_call": after_init_enqueue,
+                "after_init_synchronized_e2e_ms_per_call": after_init_e2e,
+                "including_init_host_enqueue_ms_per_call": (
+                    (init_enqueue + first_enqueue + repeated * hot_enqueue) / call_count
+                ),
+                "including_init_synchronized_e2e_ms_per_call": (
+                    (init_e2e + first_e2e + repeated * hot_e2e) / call_count
+                ),
+            }
+        )
+
+    return {
+        "schema": "loom-public-runtime-lifecycle-v1",
+        "api": api,
+        "measurement_session_id": measurement_session_id,
+        "timing_boundary": timing_boundary,
+        "output_policy": output_policy,
+        "init_once": init_payload,
+        "first_compute": first_payload,
+        "hot_compute": hot_payload,
+        "amortization": {
+            "model": "observed_first_call_plus_repeated_hot_median",
+            "init_attribution": "one_init_sample_per_validation_shard_runtime",
+            "missing_init_policy": "zero_for_api_without_explicit_init",
+            "call_counts": amortized,
+        },
+    }
+
+
+def compare_runtime_lifecycles(candidate: dict[str, Any], baseline: dict[str, Any]) -> dict[str, Any]:
+    """Compare two normalized public-API lifecycle records."""
+
+    for name, lifecycle in (("candidate", candidate), ("baseline", baseline)):
+        if not isinstance(lifecycle, dict) or lifecycle.get("schema") != "loom-public-runtime-lifecycle-v1":
+            raise ValueError(f"{name} runtime lifecycle has an invalid schema")
+    candidate_hot = candidate["hot_compute"]
+    baseline_hot = baseline["hot_compute"]
+    candidate_rows = candidate["amortization"]["call_counts"]
+    baseline_rows = baseline["amortization"]["call_counts"]
+    candidate_counts = [row["public_call_count"] for row in candidate_rows]
+    baseline_counts = [row["public_call_count"] for row in baseline_rows]
+    if candidate_counts != baseline_counts:
+        raise ValueError("candidate and baseline amortization call counts must match")
+
+    amortized: list[dict[str, Any]] = []
+    for candidate_row, baseline_row in zip(candidate_rows, baseline_rows, strict=True):
+        candidate_after_init = candidate_row["after_init_synchronized_e2e_ms_per_call"]
+        baseline_after_init = baseline_row["after_init_synchronized_e2e_ms_per_call"]
+        candidate_including_init = candidate_row["including_init_synchronized_e2e_ms_per_call"]
+        baseline_including_init = baseline_row["including_init_synchronized_e2e_ms_per_call"]
+        amortized.append(
+            {
+                "public_call_count": candidate_row["public_call_count"],
+                "after_init_synchronized_e2e_speedup": baseline_after_init / candidate_after_init,
+                "including_init_synchronized_e2e_speedup": baseline_including_init / candidate_including_init,
+            }
+        )
+
+    return {
+        "schema": "loom-public-runtime-lifecycle-comparison-v1",
+        "speedup_convention": "baseline_latency_divided_by_candidate_latency",
+        "hot_synchronized_e2e_speedup": (
+            baseline_hot["synchronized_e2e_ms"]["median"]
+            / candidate_hot["synchronized_e2e_ms"]["median"]
+        ),
+        "hot_gpu_span_speedup": (
+            baseline_hot["gpu_span_ms"]["median"] / candidate_hot["gpu_span_ms"]["median"]
+        ),
+        "amortized": amortized,
+    }
 
 
 def _complete_l2_flush_before_bracket(flusher: Any, synchronize: Callable[[], None]) -> None:

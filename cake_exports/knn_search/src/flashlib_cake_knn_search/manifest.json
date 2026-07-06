@@ -26,7 +26,7 @@
       "knn_search_prepared": ".interface:knn_search_prepared",
       "prepare_knn_search": ".interface:prepare_knn_search"
     },
-    "sha256": "31f9b02b88d8c5caba61bb457d2a9b4e073ca46f945ad6bc653e5c6298043a5f",
+    "sha256": "e200b8b54055a779d2b6d6a35f8ea3577602dac920ec4e37cbd73fcaa4b60105",
     "tvm_ffi_exports": {
       "knn_search": ".interface:knn_search"
     },
@@ -90,12 +90,43 @@
       "performance_speedup_denominator_metric": "compute_synchronized_e2e_ms",
       "performance_speedup_metric": "compute_speedup_vs_baseline",
       "performance_speedup_numerator_metric": "baseline_synchronized_e2e_ms",
+      "runtime_lifecycle": {
+        "amortization_call_counts": [
+          1,
+          10,
+          100,
+          1000
+        ],
+        "baseline_api": "flashlib.flash_knn",
+        "baseline_code_cache_state": "process_order_dependent",
+        "baseline_first_cache_state": "first_public_call",
+        "baseline_has_explicit_init": false,
+        "baseline_hot_cache_state": "repeated_public_call",
+        "baseline_output_policy": "default_output_allocated_inside_flashlib_call",
+        "baseline_result_field": "baseline_runtime_lifecycle",
+        "baseline_timing_boundary": "raw_inputs_default_output_synchronized_e2e",
+        "cache_policy": "synchronize_and_clear_after_each_completed_shape",
+        "candidate_api": "flashlib_cake_knn_search.init().compute",
+        "candidate_code_cache_state": "process_order_dependent",
+        "candidate_first_cache_state": "shape_slot_miss",
+        "candidate_hot_cache_state": "fresh_pointer_shape_slot_hit",
+        "candidate_output_policy": "default_output_allocated_inside_compute",
+        "candidate_result_field": "candidate_runtime_lifecycle",
+        "candidate_timing_boundary": "raw_inputs_default_output_synchronized_e2e",
+        "cold_order_policy": "deterministic_balanced_per_publication_contract_portfolio",
+        "comparison_result_field": "runtime_lifecycle_comparison",
+        "init_composition": "runtime_init_only",
+        "init_order_policy": "candidate_only_baseline_has_no_explicit_init",
+        "init_scope": "once_per_validation_shard_process_device_operator",
+        "resident_multi_shape_cache_benchmarked": false,
+        "schema": "loom-public-runtime-lifecycle-v1"
+      },
       "semantic_entrypoint": "loom.examples.weave.knn_search_registry_b653_compat0701_v1:launch_for_eval",
       "shape_test_marker": "export_validation_shape"
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-06T04:27:48.640044+00:00",
+  "generated_at_utc": "2026-07-06T08:21:38.438416+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -37396,8 +37427,8 @@
     "module_count": 383,
     "route_decision_count": 173
   },
-  "source_commit": "5cd82900442c4c57a45d3af4a90da592d83e619c",
-  "source_repo": "https://gitlab-master.nvidia.com/cake/cake.git",
+  "source_commit": "e8f22be8547d4fe4b0d11f8d5614264061010e19",
+  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_search",

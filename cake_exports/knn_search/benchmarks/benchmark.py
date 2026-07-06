@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib
 import json
+import math
 import os
 import sys
 import uuid
@@ -18,15 +19,15 @@ if str(SRC) not in sys.path:
 
 from flashlib_cake_knn_search._benchmark import (  # noqa: E402
     bench_gpu_time,
+    compare_runtime_lifecycles,
     measure_host_call,
     require_cupti,
+    runtime_lifecycle_metrics,
 )
 
 SHAPE_RECORDS = json.loads((Path(__file__).with_name("shape_records.json")).read_text(encoding="utf-8"))
 ROUTE_MANIFEST = json.loads((Path(__file__).with_name("expected_routes.json")).read_text(encoding="utf-8"))
-ALL_ROUTE_MANIFEST = json.loads(
-    (Path(__file__).with_name("all_expected_routes.json")).read_text(encoding="utf-8")
-)
+ALL_ROUTE_MANIFEST = json.loads((Path(__file__).with_name("all_expected_routes.json")).read_text(encoding="utf-8"))
 EXPECTED_ROUTES = {row["shape"]: row["selected_route"] for row in ALL_ROUTE_MANIFEST}
 SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_registry_b653_compat0701_v1:launch_for_eval"
 ALL_SHAPES: dict[str, dict[str, Any]] = {
@@ -46,6 +47,10 @@ if any(label not in ALL_SHAPES for label in PERFORMANCE_LABELS):
     raise RuntimeError("KNN-search performance route manifest contains an unknown shape")
 BASELINE_NAME = "flashlib.flash_knn"
 MEASUREMENT_ORDER_SEED = "flashlib-knn-search-runtime-compute-paired-v2"
+_COLD_ORDERED_LABELS = tuple(
+    sorted(SHAPES, key=lambda label: hashlib.sha256(f"{MEASUREMENT_ORDER_SEED}:cold:{label}".encode()).digest())
+)
+_CANDIDATE_FIRST_COLD_LABELS = frozenset(_COLD_ORDERED_LABELS[::2])
 
 
 def _measurement_order(label: str) -> tuple[str, str, str]:
@@ -54,6 +59,12 @@ def _measurement_order(label: str) -> tuple[str, str, str]:
     orders = tuple(permutations(("baseline", "compute", "prepared")))
     digest = hashlib.sha256(f"{MEASUREMENT_ORDER_SEED}:{label}".encode()).digest()
     return orders[int.from_bytes(digest[:2], "little") % len(orders)]
+
+
+def _cold_measurement_order(label: str) -> tuple[str, str]:
+    """Counterbalance process-shared cold effects across contract shapes."""
+
+    return ("candidate", "baseline") if label in _CANDIDATE_FIRST_COLD_LABELS else ("baseline", "candidate")
 
 
 def _measurement_session_fields(measurement_session_id: str) -> dict[str, Any]:
@@ -273,6 +284,9 @@ def _run_shape(
     query_b, database_b = _make_inputs(shape, seed_offset=1_000_003)
     if database_a.data_ptr() == database_b.data_ptr() or query_a.data_ptr() == query_b.data_ptr():
         raise RuntimeError("fresh-pointer KNN-search input pair unexpectedly aliases")
+    # Random fixture creation is asynchronous. Exclude it from the first
+    # public baseline/slot-miss lifecycle bracket.
+    torch.cuda.synchronize()
     k = int(shape["K"])
 
     def compute(query, database, *, return_info: bool = False):
@@ -284,12 +298,16 @@ def _run_shape(
     fresh_pointer_hit_timing = None
     prepare_cold_call = None
     prepared_cold_first_call = None
+    cold_measurement_order = _cold_measurement_order(name)
     if benchmark:
         flash_knn = _load_flashlib_baseline()
-        baseline_out, baseline_cold_first_call = measure_host_call(lambda: flash_knn(query_b, database_b, k=k))
-        (first_out, first_route_info), first_shape_lookup_timing = measure_host_call(
-            lambda: compute(query_a, database_a, return_info=True)
-        )
+        for lane in cold_measurement_order:
+            if lane == "baseline":
+                baseline_out, baseline_cold_first_call = measure_host_call(lambda: flash_knn(query_b, database_b, k=k))
+            else:
+                (first_out, first_route_info), first_shape_lookup_timing = measure_host_call(
+                    lambda: compute(query_a, database_a, return_info=True)
+                )
         (out, route_info), fresh_pointer_hit_timing = measure_host_call(
             lambda: compute(query_b, database_b, return_info=True)
         )
@@ -345,8 +363,9 @@ def _run_shape(
     if benchmark:
         result.update(
             {
+                "cold_measurement_order": list(cold_measurement_order),
+                "cold_measurement_order_policy": "deterministic_balanced_per_publication_contract_portfolio",
                 "prepared_launch_count": route_info["prepared_launch_count"],
-                "cold_runtime_init": _host_call_diagnostics(runtime_init_timing),
                 "cold_baseline_call": _host_call_diagnostics(baseline_cold_first_call),
                 "cold_compute_first_shape_lookup": _host_call_diagnostics(first_shape_lookup_timing),
                 "cold_compute_fresh_pointer_hit": _host_call_diagnostics(fresh_pointer_hit_timing),
@@ -517,12 +536,47 @@ def _run_shape(
                     baseline_timing.median_gpu_span_ms / compute_timing.median_gpu_span_ms
                 ),
                 "compute_speedup_vs_baseline": baseline_e2e_ms / compute_e2e_ms,
-                "speedup_vs_baseline": (
-                    baseline_timing.median_gpu_span_ms / compute_timing.median_gpu_span_ms
-                ),
+                "speedup_vs_baseline": (baseline_timing.median_gpu_span_ms / compute_timing.median_gpu_span_ms),
                 "prepared_speedup_vs_baseline": (baseline_timing.median_ms / prepared_timing.median_ms),
             }
         )
+        candidate_lifecycle = runtime_lifecycle_metrics(
+            api="flashlib_cake_knn_search.init().compute",
+            measurement_session_id=session_id,
+            timing_boundary="raw_inputs_default_output_synchronized_e2e",
+            output_policy="default_output_allocated_inside_compute",
+            init=runtime_init_timing,
+            init_sample_id=session_id,
+            first_compute=first_shape_lookup_timing,
+            first_cache_state=("shape_slot_hit" if first_route_info.get("runtime_cache_hit") else "shape_slot_miss"),
+            hot_compute=compute_timing,
+            hot_cache_state="fresh_pointer_shape_slot_hit",
+            code_cache_state="process_order_dependent",
+        )
+        baseline_lifecycle = runtime_lifecycle_metrics(
+            api=BASELINE_NAME,
+            measurement_session_id=session_id,
+            timing_boundary="raw_inputs_default_output_synchronized_e2e",
+            output_policy="default_output_allocated_inside_flashlib_call",
+            init=None,
+            init_sample_id=None,
+            first_compute=baseline_cold_first_call,
+            first_cache_state="first_public_call",
+            hot_compute=baseline_timing,
+            hot_cache_state="repeated_public_call",
+            code_cache_state="process_order_dependent",
+        )
+        lifecycle_comparison = compare_runtime_lifecycles(candidate_lifecycle, baseline_lifecycle)
+        if not math.isclose(
+            lifecycle_comparison["hot_synchronized_e2e_speedup"],
+            result["compute_speedup_vs_baseline"],
+            rel_tol=1.0e-12,
+            abs_tol=0.0,
+        ):
+            raise RuntimeError("KNN-search lifecycle hot E2E speedup disagrees with publication speedup")
+        result["candidate_runtime_lifecycle"] = candidate_lifecycle
+        result["baseline_runtime_lifecycle"] = baseline_lifecycle
+        result["runtime_lifecycle_comparison"] = lifecycle_comparison
         flops = 2.0 * int(shape["B"]) * int(shape["Q"]) * int(shape["M"]) * int(shape["D"])
         result["gpu_tflops"] = flops / compute_timing.median_gpu_span_ms / 1e9
         result["tflops"] = flops / compute_e2e_ms / 1e9
@@ -614,11 +668,33 @@ def main() -> int:
             "resident_multi_shape_cache_benchmarked": False,
             "cache_policy": "synchronize_and_clear_after_each_completed_shape",
             "order_policy": "deterministic_sha256_per_shape_permutation",
+            "cold_order_policy": "deterministic_balanced_per_publication_contract_portfolio",
+            "init_composition": "runtime_init_only",
+            "init_order_policy": "candidate_only_baseline_has_no_explicit_init",
+            "baseline_has_explicit_init": False,
             "order_seed": MEASUREMENT_ORDER_SEED,
         },
         "runtime_cache_summary": {
             "selected_shape_count": len(selected),
             "unique_signature_count": unique_signature_count,
+        },
+        "runtime_lifecycle": {
+            "schema": "loom-public-runtime-lifecycle-v1",
+            "candidate_api": "flashlib_cake_knn_search.init().compute",
+            "baseline_api": BASELINE_NAME,
+            "candidate_timing_boundary": "raw_inputs_default_output_synchronized_e2e",
+            "baseline_timing_boundary": "raw_inputs_default_output_synchronized_e2e",
+            "init_scope": "once_per_validation_shard_process_device_operator",
+            "amortization_call_counts": [1, 10, 100, 1000],
+            "cache_policy": "synchronize_and_clear_after_each_completed_shape",
+            "cold_order_policy": "deterministic_balanced_per_publication_contract_portfolio",
+            "init_composition": "runtime_init_only",
+            "init_order_policy": "candidate_only_baseline_has_no_explicit_init",
+            "baseline_has_explicit_init": False,
+            "resident_multi_shape_cache_benchmarked": False,
+            "candidate_output_policy": "default_output_allocated_inside_compute",
+            "baseline_output_policy": "default_output_allocated_inside_flashlib_call",
+            "session": None,
         },
     }
     if args.metadata_only:
@@ -627,9 +703,11 @@ def main() -> int:
         import torch
         from flashlib_cake_knn_search import init
 
+        capability = torch.cuda.get_device_capability()
+        detected_arch = f"sm_{capability[0]}{capability[1]}" + ("" if capability[0] == 8 else "a")
         payload["hardware"] = {
             "device": torch.cuda.get_device_name(),
-            "arch": f"sm_{torch.cuda.get_device_capability()[0]}{torch.cuda.get_device_capability()[1]}a",
+            "arch": detected_arch,
         }
         if not args.no_benchmark:
             require_cupti()
@@ -654,14 +732,30 @@ def main() -> int:
             runtime.clear()
         payload["results"] = results
         payload["cold_runtime_init"] = _host_call_diagnostics(runtime_init_timing)
+        first_lookup_miss_count = sum(not bool(row["first_shape_lookup_cache_hit"]) for row in results)
+        fresh_pointer_hit_count = sum(bool(row["fresh_pointer_cache_hit"]) for row in results)
+        final_cache_info = runtime.cache_info()
         payload["runtime_cache_summary"].update(
             {
-                "first_lookup_miss_count": sum(not bool(row["first_shape_lookup_cache_hit"]) for row in results),
-                "fresh_pointer_hit_count": sum(bool(row["fresh_pointer_cache_hit"]) for row in results),
-                "final_cache_info": runtime.cache_info(),
+                "first_lookup_miss_count": first_lookup_miss_count,
+                "fresh_pointer_hit_count": fresh_pointer_hit_count,
+                "final_cache_info": final_cache_info,
                 "workspace_lifecycle": "synchronize_and_clear_after_each_completed_shape",
             }
         )
+        if args.no_benchmark:
+            payload.pop("runtime_lifecycle", None)
+        else:
+            payload["runtime_lifecycle"]["session"] = {
+                "id": measurement_session_id,
+                "init_measurement_order": ["candidate"],
+                "candidate_init": _host_call_diagnostics(runtime_init_timing),
+                "baseline_init": None,
+                "clear_count": len(results),
+                "first_lookup_miss_count": first_lookup_miss_count,
+                "fresh_pointer_hit_count": fresh_pointer_hit_count,
+                "final_candidate_cache_info": final_cache_info,
+            }
 
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.json is not None:
