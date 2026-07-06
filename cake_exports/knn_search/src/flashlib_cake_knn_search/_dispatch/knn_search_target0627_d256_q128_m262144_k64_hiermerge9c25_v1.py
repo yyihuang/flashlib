@@ -7,7 +7,7 @@ then writes the exact contract top-64 distances and indices.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -62,7 +62,7 @@ def _group_scratch(inputs: dict[str, Any]) -> tuple[Any, Any]:
     return _GROUP_SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0409"}, "group": {"__kernel__": "dispatch_kernel_0408"}, "partial": {"__kernel__": "dispatch_kernel_0407"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0231"}, "group": {"__kernel__": "dispatch_kernel_0230"}, "partial": {"__kernel__": "dispatch_kernel_0229"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

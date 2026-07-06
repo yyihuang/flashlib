@@ -1,106 +1,58 @@
 {
-  "benchmark": {
-    "baseline": "flashlib.flash_knn",
-    "measurement_order_policy": "deterministic_sha256_per_shape_permutation",
-    "official_gpu_metric": "cupti_correlated_gpu_span_ms",
-    "prepared_speedup": {
-      "below_1_2x": 43,
-      "below_1x": 40,
-      "geomean": 1.308674674173331,
-      "max": 6.328855140186916,
-      "median": 2.022568464144551,
-      "min": 0.024942748700768666
-    },
-    "public_speedup": {
-      "below_1_2x": 43,
-      "below_1x": 40,
-      "geomean": 1.3027742368987265,
-      "max": 6.247117158671587,
-      "median": 2.010095223620602,
-      "min": 0.024942624345736356
-    }
-  },
-  "cake_source_commit": "0e96313db7754bc32e9e3e75ffe04a454ae44450",
-  "cake_source_repository": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
-  "correctness": {
-    "baseline_passed": 163,
-    "candidate_passed": 163,
-    "exact_launch_plans": 163,
-    "expected_route_matches": 163,
-    "shape_count": 163
-  },
-  "evidence": {
-    "canonical_slurm_array": "729920_[0-3]",
-    "complete_diagnostic_rows": 163,
-    "evidence_artifact_sha256": "eac43b5428b7c42290d7c92bdbccaa71c19e59dd1350554019a73193fd0c0d2f",
-    "live_baseline_rows": 163,
-    "package_artifact_sha256": "f52e46daa0b8db39b97c4b1dec630014e7b8aa9e9b152e14887a172325c73413",
-    "same_session_rows": 163,
-    "timing_backend": "cupti"
-  },
+  "benchmark_commands": [
+    [
+      "/home/averyh/cake-export-venv-2505/bin/python",
+      "benchmarks/benchmark.py",
+      "--no-correctness",
+      "--json",
+      "BENCHMARK_RESULTS.shard-0000-of-0001.json"
+    ]
+  ],
+  "benchmark_passed": 11,
+  "correctness_collection_command": [
+    "/home/averyh/cake-export-venv-2505/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_correctness.py",
+    "--collect-only",
+    "-q",
+    "-m",
+    "export_validation_shape"
+  ],
+  "correctness_command": [
+    "/home/averyh/cake-export-venv-2505/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_correctness.py",
+    "-q"
+  ],
+  "correctness_passed": 21,
+  "correctness_shape_count": 21,
+  "correctness_tests_passed": 180,
   "hardware": {
     "arch": "sm_100a",
-    "device": "NVIDIA B200"
+    "device": "NVIDIA GB200"
   },
-  "host_latency_ms": {
-    "prepared_enqueue_median": 0.0129515,
-    "prepared_synchronized_e2e_median": 0.1471475,
-    "public_enqueue_median": 0.2105605,
-    "public_over_prepared_enqueue_geomean": 15.554253009770763,
-    "public_over_prepared_synchronized_e2e_geomean": 2.3292054590753373,
-    "public_synchronized_e2e_median": 0.372177
+  "measured_at_utc": "2026-07-06T04:17:45+00:00",
+  "minimum_speedup": 1.0,
+  "performance_shape_count": 11,
+  "performance_speedup_denominator_metric": "compute_synchronized_e2e_ms",
+  "performance_speedup_metric": "compute_speedup_vs_baseline",
+  "performance_speedup_numerator_metric": "baseline_synchronized_e2e_ms",
+  "phase_seconds": {
+    "benchmark": 25.3274688529782,
+    "correctness": 155.0690014110878,
+    "validation_total": 180.396470264066
   },
-  "public_over_prepared_gpu_span": {
-    "geomean": 1.0045291326060073,
-    "max": 1.0260410238688815,
-    "median": 1.0040540012503907,
-    "min": 0.9189743589743591
+  "route_count": 11,
+  "semantic_entrypoint": "loom.examples.weave.knn_search_registry_b653_compat0701_v1:launch_for_eval",
+  "shape_count": 11,
+  "speedup_vs_baseline": {
+    "geomean": 1.6592902846793618,
+    "max": 1.8800342255297755,
+    "min": 1.2951078771974294
   },
-  "residuals": {
-    "kernel_sum_below_1x": 39,
-    "non_scalar_below_1x": [
-      {
-        "route": "round34_application_wrapper",
-        "shape": "blind_ext_tail_q127_m131071_d128_k10",
-        "speedup": 0.10920215057585447
-      },
-      {
-        "route": "round7_28ec_q4096_m49152_k64_twotile_split192",
-        "shape": "blind_ext_k64_q4096_m49152_d128",
-        "speedup": 0.8850673141774138
-      },
-      {
-        "route": "round80a5_k1_top1_merge8_split9",
-        "shape": "ksweep_q4096_m20000_d128_k1",
-        "speedup": 0.9870149388319456
-      }
-    ],
-    "prepared_gap_fraction": 0.004814476685653919,
-    "prepared_gap_total_ms": 0.449401,
-    "prepared_span_total_ms": 93.343686,
-    "scalar_below_1x": 37
-  },
-  "runtime": {
-    "activity_count_compatibility_rows": 163,
-    "dispatch_module_count": 367,
-    "dual_stream_cases_passed": [
-      "generic_scalar",
-      "k11",
-      "k64",
-      "ordinary_multi",
-      "source_blind_d384"
-    ],
-    "generated_prepared_api_tests_passed": 3,
-    "gpu_e2e_tests_passed": 1,
-    "package_internal_synchronize_sites": 0,
-    "prepared_launch_count_matches": 163,
-    "source_tests_passed": 91,
-    "unexpected_host_readback_sites": 0
-  },
-  "source_integrity": {
-    "frozen_source_byte_match": true,
-    "kernel_count": 523,
-    "metadata_only_normalization": true
-  },
-  "status": "correctness_and_runtime_passed_performance_floor_open"
+  "status": "passed",
+  "timing_backend": "cupti",
+  "validation_shard_count": 1
 }

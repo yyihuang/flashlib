@@ -38,7 +38,6 @@ typedef short int          int16_t;
 #define SMEM_TOTAL 165120
 #define THREADS 512
 #define K_MAX_ 64
-#define K_PREFIX_ 8
 
 #include <math_constants.h>
 
@@ -284,7 +283,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices)
+kernel_knn_search_ext_k_capacity_q4096_m49152_partial_0618_28ec_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -349,8 +348,8 @@ kernel_knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* _
 
     // === Task calls (dependency order) ===
     int work_id = bid;
-    int split_id = work_id - work_id / 384 * 384;
-    int q_tile = work_id / 384;
+    int split_id = work_id - work_id / 192 * 192;
+    int q_tile = work_id / 192;
     int q_start = q_tile * 128;
     const int col_chunk = warp / 4;
     const int row_base_tmem = warp % 4 * 32;
@@ -899,7 +898,7 @@ kernel_knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* _
         best_i[32 + j_rel_1 + 7] = m_abs31_1;
     }
     int partial_split_id = split_id * 4 + col_chunk;
-    unsigned long long partial_col_base = (unsigned long long)(((q_tile * 1536 + partial_split_id) * 128 + q_local) * K_PREFIX_);
+    unsigned long long partial_col_base = (unsigned long long)(((q_tile * 768 + partial_split_id) * 128 + q_local) * K_MAX_);
     float left_d = best_d[0];
     float right_d = best_d[1];
     int left_i = best_i[0];
@@ -5789,14 +5788,14 @@ kernel_knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* _
     best_i[62] = ((swap_2734 != 0) ? left_i_2732 : right_i_2733);
     {
         #pragma unroll
-        for (int kk_1 = 0; kk_1 < K_PREFIX_; kk_1 += 2) {
+        for (int kk_1 = 0; kk_1 < K_MAX_; kk_1 += 2) {
             {
                 float2 _v2 = make_float2(best_d[kk_1 + 0], best_d[kk_1 + 1]);
                 *reinterpret_cast<float2*>(partial_distances + partial_col_base + (unsigned long long)kk_1) = _v2;
             }
         }
         #pragma unroll
-        for (int kk_2 = 0; kk_2 < K_PREFIX_; kk_2 += 2) {
+        for (int kk_2 = 0; kk_2 < K_MAX_; kk_2 += 2) {
             {
                 int2 _iv2 = make_int2(best_i[kk_2 + 0], best_i[kk_2 + 1]);
                 *reinterpret_cast<int2*>(partial_indices + partial_col_base + (unsigned long long)kk_2) = _iv2;

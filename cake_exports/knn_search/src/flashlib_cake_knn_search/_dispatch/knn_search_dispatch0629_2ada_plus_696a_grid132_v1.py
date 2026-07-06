@@ -5,7 +5,7 @@ Weave-only portfolio for all other shapes and for forced fallback calls.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0629_abf9_plus_0b00_39e9_4bc1_9571_3183_7738_v1 as parent
 from . import knn_search_target0629_d4096_q4_m8192_k64_696a_n64_g16_grid132_v1 as seed696a

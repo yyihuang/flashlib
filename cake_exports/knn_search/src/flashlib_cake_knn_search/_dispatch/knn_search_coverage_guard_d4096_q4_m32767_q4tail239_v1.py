@@ -7,7 +7,7 @@ and directly produce the contract-visible distances and indices.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import evaluate
 from . import knn_search_target0630_d4096_q4_m32768_k10_q4handoff_q4tail237_v1 as q4_handoff

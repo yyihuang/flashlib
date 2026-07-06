@@ -8,7 +8,7 @@ proven 1024-list / 16-group exact-K64 merge consumers.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
@@ -54,7 +54,7 @@ K64_Q256_M65536_SHAPES: list[dict[str, Any]] = [K64_Q256_M65536_SHAPE]
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'blind_post6912_k64_q256_m65536_d128', 'guard': 'B == 1 and Q == 256 and M == 65536 and D == 128 and K == 64 and not self_search and not forced_fallback and tcgen05', 'route': 'round115_80a5_q256_m65536_k64_split256_twotileproducer_hiermerge16'},)
 
 def _compile_q256_m65536_twotile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0353"}, "group_merge": {"__kernel__": "dispatch_kernel_0352"}, "partial": {"__kernel__": "dispatch_kernel_0351"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0403"}, "group_merge": {"__kernel__": "dispatch_kernel_0402"}, "partial": {"__kernel__": "dispatch_kernel_0401"}}'))
 
 def _use_q256_m65536_k64_twotile(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q256_ROWS and (int(inputs['M']) == Q256_M_ROWS) and (int(inputs['D']) == D_STATIC) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and base._tcgen05_capable_arch()

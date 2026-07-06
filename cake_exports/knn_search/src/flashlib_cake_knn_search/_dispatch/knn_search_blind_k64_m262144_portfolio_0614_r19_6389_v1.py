@@ -8,7 +8,7 @@ producer invariant by using split1024, merges 4096 partial lists through a
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_blind_k64_twotile_portfolio_0614_50cc_v1 as parent
 from . import knn_search_k64_q128split512_hiermerge32_0613_r43_11c1_v1 as q128_parent
@@ -36,7 +36,7 @@ ROUTE_Q128_M262144_K64 = 'round19_6389_q128_m262144_k64_twotile_hiermerge32'
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'B1_Q128_M262144_D128_K64', 'guard': 'B == 1 and Q == 128 and M == 262144 and D == 128 and K == 64 and tcgen05_capable_arch', 'route': ROUTE_Q128_M262144_K64}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_q128_m262144_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"q128_m262144_group_merge": {"__kernel__": "dispatch_kernel_0320"}}'))
+    return _decode_capture(_json_loads('{"q128_m262144_group_merge": {"__kernel__": "dispatch_kernel_0370"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_K64_M262144_KERNELS:

@@ -7,7 +7,7 @@ distance-tie ownership.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -34,7 +34,7 @@ knn_search_k64_stable_merge_0612_r23_4e96_v1 = _decode_capture(_json_loads('{"__
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_stable_merge_0612_r23_4e96_v1", "arg_keys": ["partial_distances", "partial_indices", "out_distances", "out_indices", "B", "Q", "K", "split_m", "num_q_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 32}'))
 
 def _compile_k64_stable_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0228"}, "partial": {"__kernel__": "dispatch_kernel_0227"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0273"}, "partial": {"__kernel__": "dispatch_kernel_0272"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

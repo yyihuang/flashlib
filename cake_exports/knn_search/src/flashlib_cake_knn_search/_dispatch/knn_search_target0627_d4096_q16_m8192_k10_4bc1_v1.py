@@ -8,7 +8,7 @@ dispatch.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_d4096_q4q8_m8192m16384_k10_0623_5ff7_v1 as d4096_seed
 from . import knn_search_dispatch0629_cd65_plus_104b_4b52_afe1_6c60_29d8_v1 as parent

@@ -6,7 +6,7 @@ live group heads and uses an 8-lane reduction plus winner broadcast.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -34,7 +34,7 @@ knn_search_d256_split256_rows8_finalmerge8compact_1056_v1 = _decode_capture(_jso
 final_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_split256_rows8_finalmerge8compact_1056_v1", "arg_keys": ["group_distances", "group_indices", "out_distances", "out_indices", "B", "Q", "K"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0403"}, "group": {"__kernel__": "dispatch_kernel_0402"}, "partial": {"__kernel__": "dispatch_kernel_0401"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0225"}, "group": {"__kernel__": "dispatch_kernel_0224"}, "partial": {"__kernel__": "dispatch_kernel_0223"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

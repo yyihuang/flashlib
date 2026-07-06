@@ -7,7 +7,7 @@ keeps three partial candidates per split for the exact contract top-3.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -59,7 +59,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k3_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k3": {"__kernel__": "dispatch_kernel_0506"}, "partial_k3": {"__kernel__": "dispatch_kernel_0505"}}'))
+    return _decode_capture(_json_loads('{"merge_k3": {"__kernel__": "dispatch_kernel_0540"}, "partial_k3": {"__kernel__": "dispatch_kernel_0539"}}'))
 
 def _scratch_k3(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -8,7 +8,7 @@ contract-visible merge without changing keyed scratch identity.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import evaluate
 from . import knn_search_target0629_d1024_q8_m65536_k10_root_q8stage_v1 as incumbent

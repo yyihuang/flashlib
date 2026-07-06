@@ -8,7 +8,7 @@ delegating all other shapes to the current 598a-integrated dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0618_6bea_plus_31af_bbab_9286dynamic_4832_ffc4residual_598a_k1_v1 as parent
 from . import knn_search_k1_top1_pairq_0622_598a_v1 as k1_pairq

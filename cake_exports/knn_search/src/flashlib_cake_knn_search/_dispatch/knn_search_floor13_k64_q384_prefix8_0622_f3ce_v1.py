@@ -8,7 +8,7 @@ All non-target shapes delegate to the current floor13 dispatcher unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -56,7 +56,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_floor13_k64_q384_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_floor13_k64_q384_prefix8_partial_0622_f3ce_v1", "arg_keys": ["queries", "database", "partial_distances", "partial_indices"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_PREFIX_", 8]], "cta_group": 1, "threads": 512}'))
 
 def _compile_prefix8_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0440"}, "partial": {"__kernel__": "dispatch_kernel_0439"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0453"}, "partial": {"__kernel__": "dispatch_kernel_0452"}}'))
 
 def _ensure_prefix8_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_FLOOR13_Q384_PREFIX8_KERNELS:

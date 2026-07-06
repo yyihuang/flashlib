@@ -24,7 +24,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_group_merge_ir(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ group_distances, int* __restrict__ group_indices, int B, int Q, int partial_list_count, int num_q_tiles)
+kernel_knn_search_target0628_d4096_q4_m8192_k64_group16_final_2ced_v1(float* __restrict__ group_distances, int* __restrict__ group_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -35,25 +35,18 @@ kernel_group_merge_ir(float* __restrict__ partial_distances, int* __restrict__ p
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int linear = bid;
-    int group_id = linear - linear / 8 * 8;
-    int q_linear = linear / 8;
+    int q_linear = bid;
     int batch_id = q_linear / Q;
     int q_global = q_linear - batch_id * Q;
-    int q_tile = q_global / 64;
-    int q_local = q_global - q_tile * 64;
-    int group_begin = group_id * partial_list_count / 8;
-    int group_end = (group_id + 1) * partial_list_count / 8;
+    int head_k = 0;
     float head_d = LOOM_INF;
     int head_i = -1;
-    int head_k = 0;
-    int split_id = group_begin + lane;
-    if (split_id < group_end) {
-        unsigned long long base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id) * 64 + q_local) * K_MAX_);
-        head_d = partial_distances[base];
-        head_i = partial_indices[base];
+    if (lane < 16) {
+        unsigned long long base = (unsigned long long)(((batch_id * Q + q_global) * 16 + lane) * K_MAX_);
+        head_d = group_distances[base];
+        head_i = group_indices[base];
     }
-    unsigned long long out_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + group_id) * K_MAX_);
+    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
         float winner_d = head_d;
@@ -144,18 +137,18 @@ kernel_group_merge_ir(float* __restrict__ partial_distances, int* __restrict__ p
         winner_d = ((take_15 != 0) ? peer_d_12 : winner_d);
         winner_i = ((take_15 != 0) ? peer_i_13 : winner_i);
         winner_lane = ((take_15 != 0) ? peer_lane_14 : winner_lane);
-        if (lane == 0) {
-            group_distances[out_base + (unsigned long long)out_k] = winner_d;
-            group_indices[out_base + (unsigned long long)out_k] = winner_i;
+        if (lane == 0 && out_k < K) {
+            out_distances[out_base + (unsigned long long)out_k] = winner_d;
+            out_indices[out_base + (unsigned long long)out_k] = winner_i;
         }
         if (lane == winner_lane) {
             head_k += 1;
             head_d = LOOM_INF;
             head_i = -1;
-            if (split_id < group_end && head_k < K_MAX_) {
-                unsigned long long next_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id) * 64 + q_local) * K_MAX_ + head_k);
-                head_d = partial_distances[next_base];
-                head_i = partial_indices[next_base];
+            if (head_k < K_MAX_ && lane < 16) {
+                unsigned long long next_base = (unsigned long long)(((batch_id * Q + q_global) * 16 + lane) * K_MAX_ + head_k);
+                head_d = group_distances[next_base];
+                head_i = group_indices[next_base];
             }
         }
     }

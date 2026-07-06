@@ -8,7 +8,7 @@ partial list.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -60,7 +60,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_lowk_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0269"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0270"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0268"}}'))
+    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0319"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0320"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0318"}}'))
 
 def _scratch_lowk(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

@@ -7,7 +7,7 @@ routes with repaired prefix8 final merges.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_blind_k64_q4096_m32768_prefix8_5132_v1 as k64_prefix
@@ -48,7 +48,7 @@ def __getattr__(name: str) -> Any:
     return getattr(parent, name)
 
 def _compile_repaired_prefix_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"k32_merge": {"__kernel__": "dispatch_kernel_0459"}, "k64_merge": {"__kernel__": "dispatch_kernel_0460"}, "partial": {"__kernel__": "dispatch_kernel_0458"}}'))
+    return _decode_capture(_json_loads('{"k32_merge": {"__kernel__": "dispatch_kernel_0474"}, "k64_merge": {"__kernel__": "dispatch_kernel_0475"}, "partial": {"__kernel__": "dispatch_kernel_0473"}}'))
 
 def _ensure_repaired_prefix_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_M32768_PREFIX_TIE_KERNELS:

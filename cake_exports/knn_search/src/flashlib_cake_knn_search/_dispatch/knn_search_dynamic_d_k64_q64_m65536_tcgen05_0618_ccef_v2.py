@@ -10,7 +10,7 @@ scalar-capacity parent route.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_dynamic_d_tiny_q128_tcgen05_0618_c8b9_v1 as tiny
@@ -82,10 +82,10 @@ def _use_dynamic_d257_q64_k64(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q64_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIGINAL) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and d256_k64._tcgen05_capable_arch()
 
 def _compile_pack_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0255"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0305"}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0257"}, "partial": {"__kernel__": "dispatch_kernel_0256"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0307"}, "partial": {"__kernel__": "dispatch_kernel_0306"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _DYNAMIC_D_K64_KERNELS:

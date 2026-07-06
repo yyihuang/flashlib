@@ -8,7 +8,7 @@ consume that compact prefix. All runtime routes remain Weave-only.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_blind_k64_twotile_portfolio_0614_50cc_v1 as k64_highq
@@ -54,7 +54,7 @@ merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_highq_pre
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_highq_prefix8_partial_0618_c2e0_v1", "arg_keys": ["queries", "database", "partial_distances", "partial_indices"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_PREFIX_", 8]], "cta_group": 1, "threads": 512}'))
 
 def _compile_prefix8_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0374"}, "partial": {"__kernel__": "dispatch_kernel_0373"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0436"}, "partial": {"__kernel__": "dispatch_kernel_0435"}}'))
 
 def _ensure_prefix8_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_EXT_K64_PREFIX8_KERNELS:

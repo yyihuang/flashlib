@@ -10,7 +10,7 @@ All other shapes delegate to the round-25 route.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
@@ -55,7 +55,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_q128split512_twotil
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = parent.K64_THIN_MARGIN_SHAPES
 
 def _compile_q128_split512_twotile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0319"}, "group_merge": {"__kernel__": "dispatch_kernel_0318"}, "partial": {"__kernel__": "dispatch_kernel_0317"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0369"}, "group_merge": {"__kernel__": "dispatch_kernel_0368"}, "partial": {"__kernel__": "dispatch_kernel_0367"}}'))
 
 def _use_q128_k64_split512_twotile(inputs: dict[str, Any]) -> bool:
     return parent._use_q128_k64_split512_indexfast(inputs)

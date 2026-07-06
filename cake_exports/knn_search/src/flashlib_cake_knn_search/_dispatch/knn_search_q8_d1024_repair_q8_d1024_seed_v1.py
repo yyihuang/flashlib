@@ -6,7 +6,7 @@ tcgen05 scan/top-10 implementation and makes the dispatch ABI explicit: a
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_q8_blockm256_8d4fe4ead6cd_v2 as _parent
 ENTRYPOINT = 'loom.examples.weave.knn_search_q8_d1024_repair_q8_d1024_seed_v1:launch_for_eval'

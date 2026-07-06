@@ -25,7 +25,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
+kernel_knn_search_q4096_lowk_k2partial_split9_merge_0613_r46_48e9_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int split_m, int num_q_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,18 +36,20 @@ kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1(float* __restrict_
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int q_global = bid;
+    int q_linear = bid;
+    int batch_id = q_linear / Q;
+    int q_global = q_linear - batch_id * Q;
     int q_tile = q_global / 128;
     int q_local = q_global - q_tile * 128;
     int split_lane = lane;
     int local_head = 0;
-    unsigned long long out_base = (unsigned long long)(q_global * 2);
+    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
     #pragma unroll
     for (int out_k = 0; out_k < K_OUT_MAX_; out_k++) {
         float head_d = LOOM_INF;
         int head_i = -1;
-        if (split_lane < 9) {
-            unsigned long long partial_base = (unsigned long long)(((q_tile * 9 + split_lane) * 128 + q_local) * K_STRIDE_ + local_head);
+        if (split_lane < split_m) {
+            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_lane) * 128 + q_local) * K_STRIDE_ + local_head);
             head_d = partial_distances[partial_base];
             head_i = partial_indices[partial_base];
         }
@@ -115,8 +117,10 @@ kernel_knn_search_q4096_lowk_k2partial_merge_0613_r45_48e9_v1(float* __restrict_
         winner_i = ((take_peer_11 != 0) ? peer_i_9 : winner_i);
         winner_lane = ((take_peer_11 != 0) ? peer_lane_10 : winner_lane);
         if (lane == 0) {
-            out_distances[out_base + (unsigned long long)out_k] = winner_d;
-            out_indices[out_base + (unsigned long long)out_k] = winner_i;
+            if (out_k < K) {
+                out_distances[out_base + (unsigned long long)out_k] = winner_d;
+                out_indices[out_base + (unsigned long long)out_k] = winner_i;
+            }
         }
         if (lane == winner_lane) {
             local_head += 1;

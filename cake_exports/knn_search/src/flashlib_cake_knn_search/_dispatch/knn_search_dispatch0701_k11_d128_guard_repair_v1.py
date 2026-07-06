@@ -9,7 +9,7 @@ inherited exported dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 import torch
 from . import knn_search_dispatch0618_d128_k10_c08b_f828_synth_9d5c_v1 as d128_restored
@@ -46,7 +46,7 @@ SHAPE_DISPATCH_REGISTRY = ({'shape_key': K11_GUARD_ID, 'route': 'k64_prefix_to_k
 knn_search_k64_prefix_to_k11_copy_0705_v1 = _decode_capture(_json_loads('{"__ir__": "knn_search_k64_prefix_to_k11_copy_0705_v1", "arg_keys": ["source_distances", "source_indices", "out_distances", "out_indices", "B", "Q"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["SOURCE_K_", 64], ["OUTPUT_K_", 11]], "cta_group": 1, "threads": 256}'))
 
 def _compile_k11_copy_kernel() -> Any:
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0189"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0568"}'))
 
 def _key(inputs: dict[str, Any]) -> tuple[int, int, int, int, int]:
     return tuple((int(inputs[name]) for name in ('B', 'Q', 'M', 'D', 'K')))

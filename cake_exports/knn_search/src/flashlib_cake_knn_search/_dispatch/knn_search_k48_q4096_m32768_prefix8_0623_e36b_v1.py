@@ -8,7 +8,7 @@ outputs from the compact-prefix merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_blind_k64_twotile_portfolio_0614_50cc_v1 as parent
@@ -54,7 +54,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_k48_q4096_m32768_prefix
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'round147_e36b_q4096_m32768_d128_k48_prefix8', 'guard': 'B == 1 and Q == 4096 and M == 32768 and D == 128 and K == 48 and not self_search and not forced_fallback and tcgen05_capable_arch', 'route': ROUTE_Q4096_K48_PREFIX8, 'entrypoint': 'loom.examples.weave.knn_search_k48_q4096_m32768_prefix8_0623_e36b_v1:launch_for_eval', 'source_task': 'weave-evolve-knn-search-e36b', 'selected_seed': 'weave-evolve-knn-search-e36b-k48-prefix8'}, *k48_parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_prefix8_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0457"}, "partial": {"__kernel__": "dispatch_kernel_0456"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0472"}, "partial": {"__kernel__": "dispatch_kernel_0471"}}'))
 
 def _ensure_prefix8_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_Q4096_M32768_K48_PREFIX8_KERNELS:

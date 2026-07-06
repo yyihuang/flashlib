@@ -9,7 +9,7 @@ to the full-K64 split79 parent.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1 as q4096_rowflag_fusedcert
 from . import knn_search_r55_ffb4_q4096k64_prefixcert_direct_dispatch_0615_922c_v1 as base_dispatcher

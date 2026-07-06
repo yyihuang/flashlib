@@ -8,7 +8,7 @@ production dispatch path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0624_full133_eacf_lowd_cd65_v1 as parent
 from . import knn_search_target0628_d128_q4096_m20000_k3_e8f1_k3partial_v1 as seed104b

@@ -7,7 +7,7 @@ final merge consumes the eight group lists and writes the contract outputs.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -40,7 +40,7 @@ knn_search_d256_groupmerge64_fanin4cta_814e_v1 = _decode_capture(_json_loads('{"
 group_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_d256_groupmerge64_fanin4cta_814e_v1", "arg_keys": ["partial_distances", "partial_indices", "group_distances", "group_indices", "B", "Q", "K", "num_q_tiles"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 128}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0391"}, "group": {"__kernel__": "dispatch_kernel_0390"}, "partial": {"__kernel__": "dispatch_kernel_0389"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0493"}, "group": {"__kernel__": "dispatch_kernel_0492"}, "partial": {"__kernel__": "dispatch_kernel_0491"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     if not _KERNELS:

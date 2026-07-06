@@ -5,7 +5,7 @@ routes and the previously promoted Q1 restore296 and Q8 b3fc exact guards.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0630_split148_variance_v1 as portfolio
 from . import knn_search_target0630_d1024_q8_m65536_k10_floor14_b3fc_v1 as b3fc

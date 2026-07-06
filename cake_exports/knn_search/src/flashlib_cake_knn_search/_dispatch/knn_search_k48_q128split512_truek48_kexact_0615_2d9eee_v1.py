@@ -9,7 +9,7 @@ K64 list capacity on the hot K48 bucket.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -44,7 +44,7 @@ _KNN_SEARCH_K48_TRUEK48_PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int
 _KNN_SEARCH_K48_TRUEK48_GROUP_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_q128_k48_truek48_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0323"}, "group_merge": {"__kernel__": "dispatch_kernel_0322"}, "partial": {"__kernel__": "dispatch_kernel_0321"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0373"}, "group_merge": {"__kernel__": "dispatch_kernel_0372"}, "partial": {"__kernel__": "dispatch_kernel_0371"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

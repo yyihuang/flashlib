@@ -7,7 +7,7 @@ norm-dot tensor-core partial top-K path for Q >= 8 large-M shapes.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -99,7 +99,7 @@ def _select_split_m(q_rows: int, m_rows: int) -> int:
     return 1
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0194"}, "merge_q128_const148": {"__kernel__": "dispatch_kernel_0196"}, "merge_q4096_pairlocal": {"__kernel__": "dispatch_kernel_0197"}, "merge_stream": {"__kernel__": "dispatch_kernel_0195"}, "partial": {"__kernel__": "dispatch_kernel_0190"}, "partial_col4": {"__kernel__": "dispatch_kernel_0191"}, "partial_col4_full": {"__kernel__": "dispatch_kernel_0193"}, "partial_full": {"__kernel__": "dispatch_kernel_0192"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0256"}, "merge_q128_const148": {"__kernel__": "dispatch_kernel_0258"}, "merge_q4096_pairlocal": {"__kernel__": "dispatch_kernel_0259"}, "merge_stream": {"__kernel__": "dispatch_kernel_0257"}, "partial": {"__kernel__": "dispatch_kernel_0252"}, "partial_col4": {"__kernel__": "dispatch_kernel_0253"}, "partial_col4_full": {"__kernel__": "dispatch_kernel_0255"}, "partial_full": {"__kernel__": "dispatch_kernel_0254"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

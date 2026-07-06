@@ -7,7 +7,7 @@ clean-room K32-capacity producer/merge IR compiled with a K64 constexpr.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -29,7 +29,7 @@ _KNN_SEARCH_K64_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K64_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str, int], tuple[Any, Any]] = {}
 
 def _compile_k64_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0230"}, "partial": {"__kernel__": "dispatch_kernel_0229"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0275"}, "partial": {"__kernel__": "dispatch_kernel_0274"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

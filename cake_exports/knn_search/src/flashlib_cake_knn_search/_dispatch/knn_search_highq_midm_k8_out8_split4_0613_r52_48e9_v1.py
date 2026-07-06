@@ -7,7 +7,7 @@ K10 partial producer with a split-4, output-8 merge consumer.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -52,7 +52,7 @@ def _k8_split_m(total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_k8_split4_merge_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k8": {"__kernel__": "dispatch_kernel_0277"}}'))
+    return _decode_capture(_json_loads('{"merge_k8": {"__kernel__": "dispatch_kernel_0327"}}'))
 
 def _launch_q4096_k8_split4(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

@@ -10,7 +10,7 @@ direct in-block top-K32 merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -76,7 +76,7 @@ def _use_padded_k64(inputs: dict[str, Any]) -> bool:
     return _use_dynamic_d130_k64(inputs) or _use_dynamic_d512_k64(inputs)
 
 def _compile_d3_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0369"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0431"}'))
 
 def _ensure_d3_kernel():
     kernel = _D3_DIRECT_KERNEL.get('direct')

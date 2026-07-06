@@ -105,6 +105,13 @@ class ExportedKernel:
         arch: str | None = None,
         options: list[str] | None = None,
     ) -> None:
+        from ._runtime import resolve_launch_defaults
+
+        arch, stream, timeout_ms = resolve_launch_defaults(
+            arch=arch,
+            stream=stream,
+            timeout_ms=timeout_ms,
+        )
         prepared = self.prepare_launch(
             *args,
             grid=grid,
@@ -13254,6 +13261,1231 @@ def launch_dispatch_kernel_0522(
     options: list[str] | None = None,
 ):
     return dispatch_kernel_0522.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0523 = get_kernel('dispatch_kernel_0523')
+
+
+def launch_dispatch_kernel_0523(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0523.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0524 = get_kernel('dispatch_kernel_0524')
+
+
+def launch_dispatch_kernel_0524(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0524.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0525 = get_kernel('dispatch_kernel_0525')
+
+
+def launch_dispatch_kernel_0525(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0525.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0526 = get_kernel('dispatch_kernel_0526')
+
+
+def launch_dispatch_kernel_0526(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0526.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0527 = get_kernel('dispatch_kernel_0527')
+
+
+def launch_dispatch_kernel_0527(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0527.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0528 = get_kernel('dispatch_kernel_0528')
+
+
+def launch_dispatch_kernel_0528(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0528.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0529 = get_kernel('dispatch_kernel_0529')
+
+
+def launch_dispatch_kernel_0529(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0529.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0530 = get_kernel('dispatch_kernel_0530')
+
+
+def launch_dispatch_kernel_0530(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0530.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0531 = get_kernel('dispatch_kernel_0531')
+
+
+def launch_dispatch_kernel_0531(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0531.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0532 = get_kernel('dispatch_kernel_0532')
+
+
+def launch_dispatch_kernel_0532(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0532.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0533 = get_kernel('dispatch_kernel_0533')
+
+
+def launch_dispatch_kernel_0533(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0533.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0534 = get_kernel('dispatch_kernel_0534')
+
+
+def launch_dispatch_kernel_0534(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0534.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0535 = get_kernel('dispatch_kernel_0535')
+
+
+def launch_dispatch_kernel_0535(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0535.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0536 = get_kernel('dispatch_kernel_0536')
+
+
+def launch_dispatch_kernel_0536(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0536.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0537 = get_kernel('dispatch_kernel_0537')
+
+
+def launch_dispatch_kernel_0537(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0537.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0538 = get_kernel('dispatch_kernel_0538')
+
+
+def launch_dispatch_kernel_0538(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0538.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0539 = get_kernel('dispatch_kernel_0539')
+
+
+def launch_dispatch_kernel_0539(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0539.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0540 = get_kernel('dispatch_kernel_0540')
+
+
+def launch_dispatch_kernel_0540(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0540.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0541 = get_kernel('dispatch_kernel_0541')
+
+
+def launch_dispatch_kernel_0541(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0541.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0542 = get_kernel('dispatch_kernel_0542')
+
+
+def launch_dispatch_kernel_0542(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0542.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0543 = get_kernel('dispatch_kernel_0543')
+
+
+def launch_dispatch_kernel_0543(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0543.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0544 = get_kernel('dispatch_kernel_0544')
+
+
+def launch_dispatch_kernel_0544(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0544.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0545 = get_kernel('dispatch_kernel_0545')
+
+
+def launch_dispatch_kernel_0545(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0545.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0546 = get_kernel('dispatch_kernel_0546')
+
+
+def launch_dispatch_kernel_0546(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0546.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0547 = get_kernel('dispatch_kernel_0547')
+
+
+def launch_dispatch_kernel_0547(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0547.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0548 = get_kernel('dispatch_kernel_0548')
+
+
+def launch_dispatch_kernel_0548(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0548.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0549 = get_kernel('dispatch_kernel_0549')
+
+
+def launch_dispatch_kernel_0549(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0549.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0550 = get_kernel('dispatch_kernel_0550')
+
+
+def launch_dispatch_kernel_0550(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0550.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0551 = get_kernel('dispatch_kernel_0551')
+
+
+def launch_dispatch_kernel_0551(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0551.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0552 = get_kernel('dispatch_kernel_0552')
+
+
+def launch_dispatch_kernel_0552(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0552.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0553 = get_kernel('dispatch_kernel_0553')
+
+
+def launch_dispatch_kernel_0553(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0553.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0554 = get_kernel('dispatch_kernel_0554')
+
+
+def launch_dispatch_kernel_0554(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0554.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0555 = get_kernel('dispatch_kernel_0555')
+
+
+def launch_dispatch_kernel_0555(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0555.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0556 = get_kernel('dispatch_kernel_0556')
+
+
+def launch_dispatch_kernel_0556(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0556.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0557 = get_kernel('dispatch_kernel_0557')
+
+
+def launch_dispatch_kernel_0557(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0557.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0558 = get_kernel('dispatch_kernel_0558')
+
+
+def launch_dispatch_kernel_0558(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0558.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0559 = get_kernel('dispatch_kernel_0559')
+
+
+def launch_dispatch_kernel_0559(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0559.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0560 = get_kernel('dispatch_kernel_0560')
+
+
+def launch_dispatch_kernel_0560(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0560.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0561 = get_kernel('dispatch_kernel_0561')
+
+
+def launch_dispatch_kernel_0561(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0561.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0562 = get_kernel('dispatch_kernel_0562')
+
+
+def launch_dispatch_kernel_0562(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0562.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0563 = get_kernel('dispatch_kernel_0563')
+
+
+def launch_dispatch_kernel_0563(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0563.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0564 = get_kernel('dispatch_kernel_0564')
+
+
+def launch_dispatch_kernel_0564(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0564.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0565 = get_kernel('dispatch_kernel_0565')
+
+
+def launch_dispatch_kernel_0565(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0565.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0566 = get_kernel('dispatch_kernel_0566')
+
+
+def launch_dispatch_kernel_0566(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0566.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0567 = get_kernel('dispatch_kernel_0567')
+
+
+def launch_dispatch_kernel_0567(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0567.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0568 = get_kernel('dispatch_kernel_0568')
+
+
+def launch_dispatch_kernel_0568(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0568.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0569 = get_kernel('dispatch_kernel_0569')
+
+
+def launch_dispatch_kernel_0569(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0569.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0570 = get_kernel('dispatch_kernel_0570')
+
+
+def launch_dispatch_kernel_0570(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0570.launch(
+        *args,
+        grid=grid,
+        block=block,
+        shared_mem=shared_mem,
+        stream=stream,
+        timeout_ms=timeout_ms,
+        arch=arch,
+        options=options,
+    )
+
+
+dispatch_kernel_0571 = get_kernel('dispatch_kernel_0571')
+
+
+def launch_dispatch_kernel_0571(
+    *args,
+    grid: tuple[int, int, int],
+    block: tuple[int, int, int] | None = None,
+    shared_mem: int | None = None,
+    stream=None,
+    timeout_ms: float | None = None,
+    arch: str | None = None,
+    options: list[str] | None = None,
+):
+    return dispatch_kernel_0571.launch(
         *args,
         grid=grid,
         block=block,

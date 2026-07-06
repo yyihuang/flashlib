@@ -7,7 +7,7 @@ uses the source-clean round-19 Q-bucket split policy.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_highq_midm_qbucket_0611_r19_4e96_v1 as highq_qbucket
 from . import knn_search_k20_k31_r25_registered_dispatch0610_r73_8386_v1 as parent

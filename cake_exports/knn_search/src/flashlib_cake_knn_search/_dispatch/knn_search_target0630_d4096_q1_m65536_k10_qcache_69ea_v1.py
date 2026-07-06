@@ -6,7 +6,7 @@ the compact-state seed, while removing repeated global Q loads per M tile.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import evaluate
@@ -43,7 +43,7 @@ def _matches(inputs: dict[str, Any]) -> bool:
     return base._matches(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0468"}, "partial": {"__kernel__": "dispatch_kernel_0467"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0502"}, "partial": {"__kernel__": "dispatch_kernel_0501"}}'))
 
 def selected_route(inputs: dict[str, Any]) -> str:
     return ROUTE if _matches(inputs) else 'unsupported_shape'

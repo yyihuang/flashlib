@@ -9,7 +9,7 @@ Weave route and delegates all other shapes to 9afb unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_25f8_plus_2d9eee_dispatch_0615_9afb_v1 as base_9afb
 from . import knn_search_lowq_q2q4_blockm640_r55_dispatch_0614_4aa6_v1 as lowq_4aa6

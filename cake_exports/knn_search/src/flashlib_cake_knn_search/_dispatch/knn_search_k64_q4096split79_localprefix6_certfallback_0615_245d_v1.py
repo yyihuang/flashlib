@@ -8,7 +8,7 @@ emitted top64 threshold.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import dc as dc
 from . import knn_search_k64_q4096split79_localprefix_certfallback_0615_r32_edd7_v1 as parent
@@ -60,7 +60,7 @@ def _cert_flag(inputs: dict[str, Any]):
     return flag
 
 def _compile_k64_q4096_prefix6cert_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"cert": {"__kernel__": "dispatch_kernel_0303"}, "certflag_init": {"__kernel__": "dispatch_kernel_0302"}, "merge": {"__kernel__": "dispatch_kernel_0301"}, "partial": {"__kernel__": "dispatch_kernel_0300"}}'))
+    return _decode_capture(_json_loads('{"cert": {"__kernel__": "dispatch_kernel_0353"}, "certflag_init": {"__kernel__": "dispatch_kernel_0352"}, "merge": {"__kernel__": "dispatch_kernel_0351"}, "partial": {"__kernel__": "dispatch_kernel_0350"}}'))
 
 def _use_q4096_k64_prefix6cert(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and parent.prefix_parent.base._tcgen05_capable_arch()

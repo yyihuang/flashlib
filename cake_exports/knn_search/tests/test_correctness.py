@@ -21,6 +21,14 @@ def _benchmark_module():
 
 
 BENCHMARK = _benchmark_module()
+CORRECTNESS_CASES = [
+    pytest.param(
+        row["label"],
+        marks=() if row.get("runtime_coverage") is True else pytest.mark.export_validation_shape,
+        id=row["label"],
+    )
+    for row in BENCHMARK.SHAPE_RECORDS
+]
 
 K11_CORRECTNESS_ONLY_SHAPE = {
     "B": 1,
@@ -35,9 +43,17 @@ K11_CORRECTNESS_ONLY_SHAPE = {
 }
 
 
-def test_knn_search_prepared_api_is_exported():
-    from flashlib_cake_knn_search import knn_search, knn_search_prepared, prepare_knn_search
+def test_knn_search_runtime_api_is_exported():
+    from flashlib_cake_knn_search import (
+        KNNSearchRuntime,
+        init,
+        knn_search,
+        knn_search_prepared,
+        prepare_knn_search,
+    )
 
+    assert KNNSearchRuntime is not None
+    assert callable(init)
     assert callable(knn_search)
     assert callable(prepare_knn_search)
     assert callable(knn_search_prepared)
@@ -70,18 +86,25 @@ def test_prepared_api_accepts_in_place_dispatcher_outputs() -> None:
     )
 
 
-@pytest.mark.parametrize("name", list(BENCHMARK.SHAPES))
+@pytest.mark.parametrize("name", CORRECTNESS_CASES)
 def test_knn_search_matches_reference(name: str):
     torch = pytest.importorskip("torch")
     if not torch.cuda.is_available():
         pytest.skip("CUDA GPU required for exported-kernel correctness")
-    result = BENCHMARK._run_shape(
-        name,
-        BENCHMARK.SHAPES[name],
-        arch=None,
-        correctness=True,
-        benchmark=False,
-    )
+    from flashlib_cake_knn_search import init
+
+    runtime = init()
+    try:
+        result = BENCHMARK._run_shape(
+            name,
+            BENCHMARK.ALL_SHAPES[name],
+            runtime=runtime,
+            arch=None,
+            correctness=True,
+            benchmark=False,
+        )
+    finally:
+        runtime.clear()
     assert result["route_matches_expected"], result
     assert result["exact_launch_plan"], result
     assert result["correct"], result
@@ -130,3 +153,111 @@ def test_exact_k11_public_and_prepared_outputs_match_reference():
         max_abs_dist_error = float((outputs[0] - exact_distances).abs().max().item())
         assert recall >= float(shape["min_recall"]), (label, recall)
         assert max_abs_dist_error <= 1.0e-2, (label, max_abs_dist_error)
+
+
+def test_exact_k11_runtime_rebinds_fresh_pointers():
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA GPU required for exported-kernel correctness")
+    from flashlib_cake_knn_search import init
+
+    shape = K11_CORRECTNESS_ONLY_SHAPE
+    runtime = init()
+    try:
+        query_a, database_a = BENCHMARK._make_inputs(shape)
+        query_b, database_b = BENCHMARK._make_inputs({**shape, "seed": int(shape["seed"]) + 1})
+        runtime.compute(query_a, database_a, int(shape["K"]))
+        outputs, info = runtime.compute(
+            query_b,
+            database_b,
+            int(shape["K"]),
+            return_info=True,
+        )
+        _, reference_indices = BENCHMARK._reference_topk(query_b, database_b, int(shape["K"]))
+        torch.cuda.synchronize()
+        assert info["runtime_cache_hit"] is True
+        assert BENCHMARK._recall(outputs[1], reference_indices) >= float(shape["min_recall"])
+    finally:
+        runtime.clear()
+
+
+def test_knn_search_runtime_reuses_shape_a_b_a():
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA GPU required for exported-kernel correctness")
+    from flashlib_cake_knn_search import init
+
+    labels = (
+        "ivf_like_q8_m10_d32_k10",
+        "ivf_like_q8_m20_d48_k10",
+        "ivf_like_q8_m10_d32_k10",
+    )
+    runtime = init()
+    try:
+        results = [
+            BENCHMARK._run_shape(
+                label,
+                BENCHMARK.ALL_SHAPES[label],
+                runtime=runtime,
+                arch=None,
+                correctness=True,
+                benchmark=False,
+            )
+            for label in labels
+        ]
+        assert all(result["correct"] and result["route_matches_expected"] for result in results)
+        assert results[-1]["first_shape_lookup_cache_hit"] is True
+        assert runtime.cache_info()["size"] == 2
+    finally:
+        runtime.clear()
+
+
+def test_knn_search_runtime_isolates_hmerge_scratch_across_streams():
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA GPU required for exported-kernel correctness")
+    from flashlib_cake_knn_search import init
+
+    label = "target0627_d64_q256_m131072_k10"
+    shape = BENCHMARK.ALL_SHAPES[label]
+    query_a, database_a = BENCHMARK._make_inputs(shape)
+    query_b, database_b = BENCHMARK._make_inputs({**shape, "seed": int(shape["seed"]) + 1})
+    stream_a = torch.cuda.Stream()
+    stream_b = torch.cuda.Stream()
+    runtime = init()
+    try:
+        with torch.cuda.stream(stream_a):
+            runtime.compute(query_a, database_a, int(shape["K"]), stream=stream_a)
+        with torch.cuda.stream(stream_b):
+            runtime.compute(query_b, database_b, int(shape["K"]), stream=stream_b)
+        stream_a.synchronize()
+        stream_b.synchronize()
+
+        with torch.cuda.stream(stream_a):
+            output_a, info_a = runtime.compute(
+                query_a,
+                database_a,
+                int(shape["K"]),
+                stream=stream_a,
+                return_info=True,
+            )
+        with torch.cuda.stream(stream_b):
+            output_b, info_b = runtime.compute(
+                query_b,
+                database_b,
+                int(shape["K"]),
+                stream=stream_b,
+                return_info=True,
+            )
+        stream_a.synchronize()
+        stream_b.synchronize()
+        _, reference_a = BENCHMARK._reference_topk(query_a, database_a, int(shape["K"]))
+        _, reference_b = BENCHMARK._reference_topk(query_b, database_b, int(shape["K"]))
+        torch.cuda.synchronize()
+        assert info_a["selected_route"] == BENCHMARK.EXPECTED_ROUTES[label]
+        assert info_b["selected_route"] == BENCHMARK.EXPECTED_ROUTES[label]
+        assert BENCHMARK._recall(output_a[1], reference_a) >= float(shape["min_recall"])
+        assert BENCHMARK._recall(output_b[1], reference_b) >= float(shape["min_recall"])
+        assert runtime.cache_info()["stream_count"] == 2
+    finally:
+        runtime.clear()

@@ -14,7 +14,7 @@ on the production eval path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_dispatch0622_dynamicd_prefix4_b2selftail_4201_v1 as parent
@@ -124,7 +124,7 @@ def route_trace_entry(label: str, inputs: dict[str, Any]) -> dict[str, Any]:
     return {'label': label, 'shape_key': label, 'B': int(inputs['B']), 'Q': int(inputs['Q']), 'M': int(inputs['M']), 'D': int(inputs['D']), 'K': int(inputs['K']), 'self_search': bool(inputs.get('self_search', False)), 'force_fallback': bool(inputs.get('force_fallback', False)), **route_info(inputs)}
 
 def _compile_q128_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_q128_k1": {"__kernel__": "dispatch_kernel_0426"}, "partial_k1": {"__kernel__": "dispatch_kernel_0425"}}'))
+    return _decode_capture(_json_loads('{"merge_q128_k1": {"__kernel__": "dispatch_kernel_0414"}, "partial_k1": {"__kernel__": "dispatch_kernel_0413"}}'))
 
 def _scratch_q128_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

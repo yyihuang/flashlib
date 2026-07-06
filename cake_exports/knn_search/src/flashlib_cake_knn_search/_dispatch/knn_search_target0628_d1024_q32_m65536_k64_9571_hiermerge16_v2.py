@@ -7,7 +7,7 @@ the 1024-list single-CTA merge with sixteen 64-list group merges plus a final
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
 from . import knn_search_target0628_d1024_q32_m65536_k64_9571_v1 as parent
@@ -45,7 +45,7 @@ def _use_target(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIGINAL) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and _tcgen05_capable_arch()
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0491"}, "group_merge": {"__kernel__": "dispatch_kernel_0490"}, "partial": {"__kernel__": "dispatch_kernel_0489"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0525"}, "group_merge": {"__kernel__": "dispatch_kernel_0524"}, "partial": {"__kernel__": "dispatch_kernel_0523"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

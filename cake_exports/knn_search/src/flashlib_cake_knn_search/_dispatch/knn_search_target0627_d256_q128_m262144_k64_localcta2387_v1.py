@@ -7,7 +7,7 @@ eight-warp deterministic merge, which owns all 128 output rows in 16 CTAs.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -46,7 +46,7 @@ def _scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) 
     return _SCRATCH[key]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0413"}, "partial": {"__kernel__": "dispatch_kernel_0412"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0235"}, "partial": {"__kernel__": "dispatch_kernel_0234"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

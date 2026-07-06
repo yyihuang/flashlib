@@ -8,7 +8,7 @@ portfolio from available seed modules and inserts only the exact
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_b2_q128_blind_dispatch0616_54ff_v1 as b2_q128
 from . import knn_search_dispatch0616_q4_m262144_blockm896_9971_v1 as q4_m262144

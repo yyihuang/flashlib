@@ -11,7 +11,7 @@ on sm_120a/sm_121a.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0624_full133_d1_warpmerge_e580_v1 as parent
 from . import knn_search_dynamic_lowd_d1_bucket_tile_reduce_0625_7e60_v1 as d1_tile_reduce

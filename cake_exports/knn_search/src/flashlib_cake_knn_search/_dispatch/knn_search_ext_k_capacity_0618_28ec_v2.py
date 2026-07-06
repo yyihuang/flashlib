@@ -10,7 +10,7 @@ certificate fails.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -71,7 +71,7 @@ partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_q4096_m
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k64_q4096_m49152_prefix7_partial_0618_28ec_v2", "arg_keys": ["queries", "database", "partial_distances", "partial_indices", "B", "Q", "M"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 165120, "constants": [["K_MAX_", 64], ["K_STORE_", 7]], "cta_group": 1, "threads": 512}'))
 
 def _compile_ext_k_capacity_v2_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"certflag_init": {"__kernel__": "dispatch_kernel_0382"}, "full_partial": {"__kernel__": "dispatch_kernel_0378"}, "merge": {"__kernel__": "dispatch_kernel_0380"}, "prefix_merge": {"__kernel__": "dispatch_kernel_0381"}, "prefix_partial": {"__kernel__": "dispatch_kernel_0379"}}'))
+    return _decode_capture(_json_loads('{"certflag_init": {"__kernel__": "dispatch_kernel_0444"}, "full_partial": {"__kernel__": "dispatch_kernel_0440"}, "merge": {"__kernel__": "dispatch_kernel_0442"}, "prefix_merge": {"__kernel__": "dispatch_kernel_0443"}, "prefix_partial": {"__kernel__": "dispatch_kernel_0441"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KNN_SEARCH_EXT_K_CAPACITY_28EC_V2_KERNELS:

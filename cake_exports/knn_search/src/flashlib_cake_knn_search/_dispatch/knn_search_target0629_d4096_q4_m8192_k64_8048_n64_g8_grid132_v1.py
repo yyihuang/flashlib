@@ -6,7 +6,7 @@ group merge fanout before the contract-visible final top-64 merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_target0629_d4096_q4_m8192_k64_696a_n64_g16_grid132_v1 as parent
 PRODUCER_GRID = parent.PRODUCER_GRID
@@ -40,7 +40,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return parent.route_info(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0479"}, "group": {"__kernel__": "dispatch_kernel_0478"}, "partial": {"__kernel__": "dispatch_kernel_0477"}}'))
+    return _decode_capture(_json_loads('{"final": {"__kernel__": "dispatch_kernel_0513"}, "group": {"__kernel__": "dispatch_kernel_0512"}, "partial": {"__kernel__": "dispatch_kernel_0511"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

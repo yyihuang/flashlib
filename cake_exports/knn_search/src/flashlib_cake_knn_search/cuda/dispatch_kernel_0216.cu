@@ -17,15 +17,14 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 #define LOOM_INF CUDART_INF_F
 #define NUM_MAIN_STAGES 1
 #define THREADS 256
-#define D_ORIG_ 257
-#define D_PAD_ 512
+#define K_MAX_ 64
 
 #include <math_constants.h>
 
 extern "C" {
 
 __global__ __launch_bounds__(256) void
-kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, __nv_bfloat16* __restrict__ padded_queries, __nv_bfloat16* __restrict__ padded_database, int B, int Q, int M)
+kernel_knn_search_d256_split256_rows8_finalmerge8compact_1056_v1(float* __restrict__ group_distances, int* __restrict__ group_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,28 +35,77 @@ kernel_knn_search_dynamic_d_tiny_pack_bf16_0618_c8b9_v1(__nv_bfloat16* __restric
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int linear = bid * 256 + tid;
-    int total_q = B * Q * D_PAD_;
-    int total_db = B * M * D_PAD_;
-    int total = total_q + total_db;
-    if (linear < total) {
-        if (linear < total_q) {
-            int d_col = linear - linear / D_PAD_ * D_PAD_;
-            int row = linear / D_PAD_;
-            float value = 0.0f;
-            if (d_col < D_ORIG_) {
-                value = queries[row * D_ORIG_ + d_col];
+    int q_linear = bid * 8 + warp;
+    int batch_id = q_linear / Q;
+    int q_global = q_linear - batch_id * Q;
+    int head_k = 0;
+    float head_d = LOOM_INF;
+    int head_i = -1;
+    if (lane < 8) {
+        unsigned long long group_base = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_);
+        head_d = group_distances[group_base];
+        head_i = group_indices[group_base];
+    }
+    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    #pragma unroll
+    for (int out_k = 0; out_k < K_MAX_; out_k++) {
+        float winner_d = head_d;
+        int winner_i = head_i;
+        int winner_lane = lane;
+        float _shfl_xor_0 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 4);
+        float peer_d = _shfl_xor_0;
+        int _shfl_xor_1 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 4);
+        int peer_i = _shfl_xor_1;
+        int _shfl_xor_2 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 4);
+        int peer_lane = _shfl_xor_2;
+        int take_peer = ((peer_d < winner_d) ? 1 : 0);
+        winner_d = ((take_peer != 0) ? peer_d : winner_d);
+        winner_i = ((take_peer != 0) ? peer_i : winner_i);
+        winner_lane = ((take_peer != 0) ? peer_lane : winner_lane);
+        float _shfl_xor_3 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 2);
+        float peer_d_0 = _shfl_xor_3;
+        int _shfl_xor_4 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 2);
+        int peer_i_1 = _shfl_xor_4;
+        int _shfl_xor_5 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 2);
+        int peer_lane_2 = _shfl_xor_5;
+        int take_peer_3 = ((peer_d_0 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_3 != 0) ? peer_d_0 : winner_d);
+        winner_i = ((take_peer_3 != 0) ? peer_i_1 : winner_i);
+        winner_lane = ((take_peer_3 != 0) ? peer_lane_2 : winner_lane);
+        float _shfl_xor_6 = __shfl_xor_sync(0xFFFFFFFF, winner_d, 1);
+        float peer_d_4 = _shfl_xor_6;
+        int _shfl_xor_7 = __shfl_xor_sync(0xFFFFFFFF, winner_i, 1);
+        int peer_i_5 = _shfl_xor_7;
+        int _shfl_xor_8 = __shfl_xor_sync(0xFFFFFFFF, winner_lane, 1);
+        int peer_lane_6 = _shfl_xor_8;
+        int take_peer_7 = ((peer_d_4 < winner_d) ? 1 : 0);
+        winner_d = ((take_peer_7 != 0) ? peer_d_4 : winner_d);
+        winner_i = ((take_peer_7 != 0) ? peer_i_5 : winner_i);
+        winner_lane = ((take_peer_7 != 0) ? peer_lane_6 : winner_lane);
+        float _shfl_0 = __shfl_sync(0xFFFFFFFF, winner_d, 0);
+        float global_winner_d = _shfl_0;
+        int _shfl_1 = __shfl_sync(0xFFFFFFFF, winner_i, 0);
+        int global_winner_i = _shfl_1;
+        int _shfl_2 = __shfl_sync(0xFFFFFFFF, winner_lane, 0);
+        int global_winner_lane = _shfl_2;
+        if (lane == 0) {
+            if (out_k < K) {
+                out_distances[out_base + (unsigned long long)out_k] = global_winner_d;
+                out_indices[out_base + (unsigned long long)out_k] = global_winner_i;
             }
-            *((__nv_bfloat16*)(padded_queries + linear)) = __float2bfloat16_rn(value);
-        } else {
-            int db_linear = linear - total_q;
-            int d_col_1 = db_linear - db_linear / D_PAD_ * D_PAD_;
-            int row_1 = db_linear / D_PAD_;
-            float value_1 = 0.0f;
-            if (d_col_1 < D_ORIG_) {
-                value_1 = database[row_1 * D_ORIG_ + d_col_1];
+        }
+        if (lane == global_winner_lane) {
+            int next_head = head_k + 1;
+            head_k = next_head;
+            head_d = LOOM_INF;
+            head_i = -1;
+            if (lane < 8) {
+                if (next_head < K_MAX_) {
+                    unsigned long long group_base_1 = (unsigned long long)(((batch_id * Q + q_global) * 8 + lane) * K_MAX_ + next_head);
+                    head_d = group_distances[group_base_1];
+                    head_i = group_indices[group_base_1];
+                }
             }
-            *((__nv_bfloat16*)(padded_database + db_linear)) = __float2bfloat16_rn(value_1);
         }
     }
 }

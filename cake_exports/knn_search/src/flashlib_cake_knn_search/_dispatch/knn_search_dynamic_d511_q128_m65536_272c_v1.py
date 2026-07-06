@@ -8,7 +8,7 @@ evidence without inheriting a broader dynamic-D guard.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_dynamic_d_high_q128_directstride_tcgen05_0618_ccef_v1 as highd

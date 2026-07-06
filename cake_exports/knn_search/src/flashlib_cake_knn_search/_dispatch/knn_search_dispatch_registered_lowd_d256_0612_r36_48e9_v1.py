@@ -8,7 +8,7 @@ round-35 D256 K10/K64 composite route.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as registered_parent
 from . import knn_search_lowd_d256_over48e9_0612_r35_k10k64mma_v1 as lowd_d256

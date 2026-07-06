@@ -8,7 +8,7 @@ fallback, delegates to the 1d4c Weave-only dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k64_q128split512_hiermerge32_kexact_0614_r25_k64thin_v1 as q128_kexact
 from . import knn_search_r55_speedup_repair_dispatch_0614_1d4c_v1 as base

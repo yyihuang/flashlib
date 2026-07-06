@@ -7,7 +7,7 @@ a fallback-class route and only handles its explicit ``force_fallback`` input.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0630_d15e_af19_portfolio_floor14_7b75_v1 as parent
 from . import knn_search_coverage_guard_d4096_q4_m32767_q4tail239_v1 as q4_tail

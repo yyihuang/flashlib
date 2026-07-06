@@ -8,7 +8,7 @@ consumes only that local prefix and still emits full K=64 contract outputs.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
@@ -61,7 +61,7 @@ def _scratch_prefix(inputs: dict[str, Any], partial_list_count: int, num_q_tiles
     return cached
 
 def _compile_k64_q4096_localprefix_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0297"}, "partial": {"__kernel__": "dispatch_kernel_0296"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0347"}, "partial": {"__kernel__": "dispatch_kernel_0346"}}'))
 
 def _use_q4096_k64_localprefix(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['K']) == K64_MAX and (int(inputs['Q']) == Q4096_ROWS) and (int(inputs['M']) == Q4096_M_ROWS) and (int(inputs['D']) == D_STATIC) and base._tcgen05_capable_arch()

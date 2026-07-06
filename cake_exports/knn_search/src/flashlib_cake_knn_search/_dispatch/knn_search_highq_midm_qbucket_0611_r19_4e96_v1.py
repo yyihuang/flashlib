@@ -8,7 +8,7 @@ the measured B300 cap retune from this round for the Q256 and Q512 buckets.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_highq_midm_0611_r17_4e96_v1 as parent

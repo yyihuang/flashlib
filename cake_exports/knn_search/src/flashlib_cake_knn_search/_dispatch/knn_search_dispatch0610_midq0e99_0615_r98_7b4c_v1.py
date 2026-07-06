@@ -7,7 +7,7 @@ current ``knn_search_mma_split_v1`` incumbent. The production path is Weave-only
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_blind_midq_mma_split_0614_r97_0e99_v1 as midq_0e99
 from . import knn_search_mma_split_v1 as incumbent

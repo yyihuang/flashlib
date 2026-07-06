@@ -7,7 +7,7 @@ the measured 22d9 v4 seed on top of the 54ff/6912 champion dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0610_highq_midq_q128_qbucket_split4_codex0616_v4 as seed22d9
 from . import knn_search_dispatch0616_seed_bank_6912_v1 as base6912

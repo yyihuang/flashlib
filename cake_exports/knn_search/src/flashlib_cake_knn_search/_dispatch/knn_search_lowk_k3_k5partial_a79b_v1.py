@@ -8,7 +8,7 @@ consumer reads that five-slot layout and writes the contract top-3 outputs.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -39,7 +39,7 @@ _KNN_SEARCH_K3_K5PARTIAL_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K3_K5PARTIAL_SCRATCH: dict[tuple[int, int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k3_k5partial_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0371"}, "partial": {"__kernel__": "dispatch_kernel_0370"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0433"}, "partial": {"__kernel__": "dispatch_kernel_0432"}}'))
 
 def _scratch_k3_k5partial(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

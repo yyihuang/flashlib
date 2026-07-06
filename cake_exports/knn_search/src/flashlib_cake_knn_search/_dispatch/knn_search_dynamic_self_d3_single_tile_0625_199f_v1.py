@@ -8,7 +8,7 @@ generic Weave scalar-capacity route; no external fallback is used.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
@@ -57,7 +57,7 @@ def route_trace_entry(label: str, inputs: dict[str, Any]) -> dict[str, Any]:
     return {'label': label, 'shape_key': label, 'B': int(inputs['B']), 'Q': int(inputs['Q']), 'M': int(inputs['M']), 'D': int(inputs['D']), 'K': int(inputs['K']), 'self_search': bool(inputs.get('self_search', False)), **route_info(inputs)}
 
 def _compile_kernel():
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0462"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0477"}'))
 
 def launch_self_d3_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

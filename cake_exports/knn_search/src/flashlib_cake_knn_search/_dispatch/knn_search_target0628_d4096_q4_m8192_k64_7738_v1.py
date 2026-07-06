@@ -7,7 +7,7 @@ tcgen05 MMA passes feed the existing hierarchical top-64 merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_target_highd_k64_neighbors_0623_26d2_v1 as producer_seed
 from . import knn_search_target_highd_k64_neighbors_0624_f505_hiermerge32_v1 as merge_seed
@@ -55,7 +55,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return merge_seed.route_info(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0488"}, "group_merge": {"__kernel__": "dispatch_kernel_0487"}, "partial": {"__kernel__": "dispatch_kernel_0486"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0522"}, "group_merge": {"__kernel__": "dispatch_kernel_0521"}, "partial": {"__kernel__": "dispatch_kernel_0520"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

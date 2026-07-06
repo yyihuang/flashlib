@@ -8,7 +8,7 @@ remains split-major, cohort-minor top64 lists consumed directly by the merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -49,7 +49,7 @@ def _scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) 
     return cached
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0411"}, "partial": {"__kernel__": "dispatch_kernel_0410"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0233"}, "partial": {"__kernel__": "dispatch_kernel_0232"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

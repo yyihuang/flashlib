@@ -7,7 +7,7 @@ Weave seed; no external implementation is on the eval path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -56,7 +56,7 @@ def _split_m_for_shape(inputs: dict[str, Any], total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_qfull_merge8_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0325"}, "partial_k1": {"__kernel__": "dispatch_kernel_0324"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0375"}, "partial_k1": {"__kernel__": "dispatch_kernel_0374"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

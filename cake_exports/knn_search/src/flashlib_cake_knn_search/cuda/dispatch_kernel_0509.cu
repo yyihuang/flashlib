@@ -8,37 +8,33 @@ typedef short int          int16_t;
 #include <cuda_bf16.h>
 
 #define LOOM_INF CUDART_INF_F
-#define TMEM_NCOLS 64
+#define TMEM_NCOLS 128
 #define TMEM_ACC_OFFSET 0
 #define NUM_MAIN_STAGES 1
 #define SMEM_SMEM_A_OFF 1024
-#define SMEM_SMEM_A_STAGE_BYTES 65536
-#define SMEM_SMEM_A_STRIDE 65536
-#define SMEM_SMEM_B_OFF 66560
+#define SMEM_SMEM_A_STAGE_BYTES 16384
+#define SMEM_SMEM_A_STRIDE 16384
+#define SMEM_SMEM_B_OFF 17408
 #define SMEM_SMEM_B_STAGE_BYTES 32768
 #define SMEM_SMEM_B_STRIDE 32768
-#define SMEM_SMEM_B_NEXT_OFF 99328
-#define SMEM_SMEM_B_NEXT_STAGE_BYTES 32768
-#define SMEM_SMEM_B_NEXT_STRIDE 32768
-#define SMEM_SMEM_DB_NORM_PART_OFF 140288
-#define SMEM_SMEM_DB_NORM_PART_STAGE_BYTES 1024
-#define SMEM_SMEM_DB_NORM_PART_STRIDE 1024
-#define SMEM_SMEM_DB_NORM_PART_NEXT_OFF 141312
-#define SMEM_SMEM_DB_NORM_PART_NEXT_STAGE_BYTES 1024
-#define SMEM_SMEM_DB_NORM_PART_NEXT_STRIDE 1024
-#define SMEM_SMEM_DB_NORM_OFF 142336
-#define SMEM_SMEM_DB_NORM_STAGE_BYTES 256
-#define SMEM_SMEM_DB_NORM_STRIDE 256
-#define SMEM_SMEM_DB_NORM_NEXT_OFF 142592
-#define SMEM_SMEM_DB_NORM_NEXT_STAGE_BYTES 256
-#define SMEM_SMEM_DB_NORM_NEXT_STRIDE 256
-#define SMEM_SMEM_Q_NORM_PART_OFF 132096
-#define SMEM_SMEM_Q_NORM_PART_STAGE_BYTES 8192
-#define SMEM_SMEM_Q_NORM_PART_STRIDE 8192
-#define SMEM_TOTAL 143104
-#define THREADS 256
+#define SMEM_SMEM_Q_NORM_PART_OFF 50176
+#define SMEM_SMEM_Q_NORM_PART_STAGE_BYTES 65536
+#define SMEM_SMEM_Q_NORM_PART_STRIDE 65536
+#define SMEM_SMEM_DB_NORM_PART_OFF 115712
+#define SMEM_SMEM_DB_NORM_PART_STAGE_BYTES 2048
+#define SMEM_SMEM_DB_NORM_PART_STRIDE 2048
+#define SMEM_SMEM_DB_NORM_OFF 117760
+#define SMEM_SMEM_DB_NORM_STAGE_BYTES 512
+#define SMEM_SMEM_DB_NORM_STRIDE 512
+#define SMEM_SMEM_LOCAL_D_OFF 118272
+#define SMEM_SMEM_LOCAL_D_STAGE_BYTES 20480
+#define SMEM_SMEM_LOCAL_D_STRIDE 20480
+#define SMEM_SMEM_LOCAL_I_OFF 138752
+#define SMEM_SMEM_LOCAL_I_STAGE_BYTES 20480
+#define SMEM_SMEM_LOCAL_I_STRIDE 20480
+#define SMEM_TOTAL 159488
+#define THREADS 512
 #define K_MAX_ 10
-#define EXPOSE_COL_COHORTS 1
 
 #include <math_constants.h>
 
@@ -199,75 +195,6 @@ __device__ __forceinline__ float max_noftz(float a, float b) {
 }
 
 
-__device__ __forceinline__ void fma_f32x2_inplace(float2* a, float2 b, float2 c) {
-    unsigned long long r;
-    asm("fma.rn.ftz.f32x2 %0, %1, %2, %3;"
-        : "=l"(r)
-        : "l"(*(unsigned long long*)a), "l"(*(unsigned long long*)&b),
-          "l"(*(unsigned long long*)&c));
-    *(unsigned long long*)a = r;
-}
-
-__device__ __forceinline__ void mul_f32x2_inplace(float2* a, float2 b) {
-    asm("mul.rn.ftz.f32x2 %0, %0, %1;"
-        : "+l"(*(unsigned long long*)a) : "l"(*(unsigned long long*)&b));
-}
-
-__device__ __forceinline__ void add_f32x2_inplace(float2* a, float2 b) {
-    asm("add.rn.ftz.f32x2 %0, %0, %1;"
-        : "+l"(*(unsigned long long*)a) : "l"(*(unsigned long long*)&b));
-}
-
-__device__ __forceinline__ void sub_f32x2_inplace(float2* a, float2 b) {
-    asm("sub.rn.ftz.f32x2 %0, %0, %1;"
-        : "+l"(*(unsigned long long*)a) : "l"(*(unsigned long long*)&b));
-}
-
-__device__ __forceinline__ float2 add_f32x2(float2 a, float2 b) {
-    float2 r;
-    asm("add.rn.ftz.f32x2 %0, %1, %2;"
-        : "=l"(*(unsigned long long*)&r)
-        : "l"(*(unsigned long long*)&a), "l"(*(unsigned long long*)&b));
-    return r;
-}
-
-__device__ __forceinline__ float2 sub_f32x2(float2 a, float2 b) {
-    float2 r;
-    asm("sub.rn.ftz.f32x2 %0, %1, %2;"
-        : "=l"(*(unsigned long long*)&r)
-        : "l"(*(unsigned long long*)&a), "l"(*(unsigned long long*)&b));
-    return r;
-}
-
-__device__ __forceinline__ void fma_scale_x32(
-    float* sv, const float2* scale2, const float2* neg_max2)
-{
-    float2* sv_2 = reinterpret_cast<float2*>(sv);
-    #pragma unroll
-    for (int j = 0; j < 16; j++)
-        fma_f32x2_inplace(&sv_2[j], *scale2, *neg_max2);
-}
-
-__device__ __forceinline__ float2 fma_f32x2(float2 a, float2 b, float2 c) {
-    float2 r;
-    asm("fma.rn.ftz.f32x2 %0, %1, %2, %3;"
-        : "=l"(*(unsigned long long*)&r)
-        : "l"(*(unsigned long long*)&a), "l"(*(unsigned long long*)&b),
-          "l"(*(unsigned long long*)&c));
-    return r;
-}
-
-__device__ __forceinline__ float2 mul_f32x2(float2 a, float2 b) {
-    float2 r;
-    asm("mul.rn.ftz.f32x2 %0, %1, %2;"
-        : "=l"(*(unsigned long long*)&r)
-        : "l"(*(unsigned long long*)&a), "l"(*(unsigned long long*)&b));
-    return r;
-}
-
-// ex2_emulation_f32x2 defined in softmax_frag_exp2_cast helper (or standalone)
-
-
 __device__ __forceinline__ void fence_async_shared() {
     asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
 }
@@ -290,8 +217,8 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 
 extern "C" {
 
-__global__ __launch_bounds__(256) void
-kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split)
+__global__ __launch_bounds__(512) void
+kernel_knn_search_d4096_q4q8_m8192m16384_k10_partial_0623_5ff7_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -307,20 +234,18 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     // Kernel setup ops
     __nv_bfloat16* smem_a = reinterpret_cast<__nv_bfloat16*>(smem_raw + 1024);
     const int smem_a_addr = smem + 1024;
-    __nv_bfloat16* smem_b = reinterpret_cast<__nv_bfloat16*>(smem_raw + 66560);
-    const int smem_b_addr = smem + 66560;
-    __nv_bfloat16* smem_b_next = reinterpret_cast<__nv_bfloat16*>(smem_raw + 99328);
-    const int smem_b_next_addr = smem + 99328;
-    float* smem_db_norm_part = reinterpret_cast<float*>(smem_raw + 140288);
-    const int smem_db_norm_part_addr = smem + 140288;
-    float* smem_db_norm_part_next = reinterpret_cast<float*>(smem_raw + 141312);
-    const int smem_db_norm_part_next_addr = smem + 141312;
-    float* smem_db_norm = reinterpret_cast<float*>(smem_raw + 142336);
-    const int smem_db_norm_addr = smem + 142336;
-    float* smem_db_norm_next = reinterpret_cast<float*>(smem_raw + 142592);
-    const int smem_db_norm_next_addr = smem + 142592;
-    float* smem_q_norm_part = reinterpret_cast<float*>(smem_raw + 132096);
-    const int smem_q_norm_part_addr = smem + 132096;
+    __nv_bfloat16* smem_b = reinterpret_cast<__nv_bfloat16*>(smem_raw + 17408);
+    const int smem_b_addr = smem + 17408;
+    float* smem_q_norm_part = reinterpret_cast<float*>(smem_raw + 50176);
+    const int smem_q_norm_part_addr = smem + 50176;
+    float* smem_db_norm_part = reinterpret_cast<float*>(smem_raw + 115712);
+    const int smem_db_norm_part_addr = smem + 115712;
+    float* smem_db_norm = reinterpret_cast<float*>(smem_raw + 117760);
+    const int smem_db_norm_addr = smem + 117760;
+    float* smem_local_d = reinterpret_cast<float*>(smem_raw + 118272);
+    const int smem_local_d_addr = smem + 118272;
+    int* smem_local_i = reinterpret_cast<int*>(smem_raw + 138752);
+    const int smem_local_i_addr = smem + 138752;
 
     // Mbarrier init (1 groups, 1 barriers)
     // Mbarriers at smem_raw[0..8)
@@ -334,11 +259,11 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
 
     __syncthreads();
 
-    // TMEM alloc (64 columns, 64 used)
+    // TMEM alloc (128 columns, 128 used)
     volatile int* tmem_addr_storage = (volatile int*)(smem_raw + 8);
     if (warp == 0) {
         int _tmem_hold = smem + 8;
-        asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(64) : "memory");
+        asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;" :: "r"(_tmem_hold), "r"(128) : "memory");
     }
 
     __syncthreads();
@@ -357,27 +282,24 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     int q_tile_linear = work_id / split_m;
     int batch_id = q_tile_linear / num_q_tiles;
     int q_tile = q_tile_linear - batch_id * num_q_tiles;
-    int q_start = q_tile * 128;
-    const int col_chunk = warp / 4;
-    const int row_base_tmem = warp % 4 * 32;
-    int q_local = row_base_tmem + lane;
-    int q_global = q_start + q_local;
-    float q_norm = 0.0f;
-    float best_d[K_MAX_];
-    int best_i[K_MAX_];
-    #pragma unroll
-    for (int kk = 0; kk < K_MAX_; kk++) {
-        best_d[kk] = LOOM_INF;
-        best_i[kk] = -1;
-    }
+    int q_start = q_tile * 64;
+    int row_top = 0;
+    int row_bot = 0;
+    int slot = 0;
+    int col_origin = 0;
+    float q_norm_top = 0.0f;
+    float q_norm_bot = 0.0f;
+    float best_top_d[10];
+    float best_bot_d[10];
+    int best_top_i[10];
+    int best_bot_i[10];
     #pragma unroll 1
-    for (int e_vec = tid; e_vec < 2048; e_vec += 256) {
-        int q_elem = e_vec * 16;
-        int q_row = q_elem / 256;
-        int d_col = q_elem - q_row * 256;
+    for (int e_vec = tid; e_vec < 16384; e_vec += 512) {
+        int q_row = e_vec / 256;
+        int q_part = e_vec - q_row * 256;
+        int d_col = q_part * 16;
         int q_abs = q_start + q_row;
         float q_vals[16];
-        unsigned int q_pack[8];
         #pragma unroll
         for (int vi = 0; vi < 16; vi++) {
             q_vals[vi] = 0.0f;
@@ -385,7 +307,7 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
         if (batch_id < B) {
             if (q_abs < Q) {
                 {
-                    const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs) * 256 + d_col) + 0);
+                    const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs) * 4096 + d_col) + 0);
                     uint4 _vld_0[2];
                     #pragma unroll
                     for (int _blk = 0; _blk < 2; _blk++) {
@@ -403,108 +325,148 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
         for (int vi_1 = 0; vi_1 < 16; vi_1++) {
             q_norm_part += q_vals[vi_1] * q_vals[vi_1];
         }
-        int q_norm_part_col = d_col / 16;
-        smem_q_norm_part[q_row * 16 + q_norm_part_col] = q_norm_part;
-        #pragma unroll
-        for (int _lp = 0; _lp < 8; _lp++) {
-            __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(q_vals[_lp*2 + 0], q_vals[_lp*2+1 + 0]));
-            q_pack[_lp] = *(uint32_t*)&_bf2;
-        }
-        int q_store_addr = (smem_a_addr + (unsigned int)(d_col / 64 * 16384 + q_row * 128 + d_col % 64 * 2 ^ (d_col / 64 * 16384 + q_row * 128 + d_col % 64 * 2 >> 7 & 7) << 4));
-        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr), "r"(q_pack[0]), "r"(q_pack[1]), "r"(q_pack[2]), "r"(q_pack[3]) : "memory");
-        int q_store_addr_hi = (smem_a_addr + (unsigned int)((d_col + 8) / 64 * 16384 + q_row * 128 + (d_col + 8) % 64 * 2 ^ ((d_col + 8) / 64 * 16384 + q_row * 128 + (d_col + 8) % 64 * 2 >> 7 & 7) << 4));
-        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr_hi), "r"(q_pack[4]), "r"(q_pack[5]), "r"(q_pack[6]), "r"(q_pack[7]) : "memory");
+        smem_q_norm_part[q_row * 256 + q_part] = q_norm_part;
     }
-    asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
-    if (batch_id < B) {
-        if (col_chunk < 2) {
-            if (q_local < 128) {
-                if (q_global < Q) {
-                    #pragma unroll
-                    for (int part = 0; part < 16; part++) {
-                        q_norm += smem_q_norm_part[q_local * 16 + part];
-                    }
-                }
-            }
+    if (warp < 8) {
+        const int row_group = warp % 4;
+        const int col_block = warp / 4;
+        const int logical_row_origin = row_group * 16;
+        row_top = logical_row_origin + lane / 4;
+        row_bot = row_top + 8;
+        const int lane_col = lane % 4;
+        slot = col_block * 4 + lane_col;
+        col_origin = col_block * 64;
+        #pragma unroll
+        for (int part = 0; part < 256; part++) {
+            q_norm_top += smem_q_norm_part[row_top * 256 + part];
+            q_norm_bot += smem_q_norm_part[row_bot * 256 + part];
         }
+    }
+    #pragma unroll
+    for (int kk = 0; kk < K_MAX_; kk++) {
+        best_top_d[kk] = LOOM_INF;
+        best_bot_d[kk] = LOOM_INF;
+        best_top_i[kk] = -1;
+        best_bot_i[kk] = -1;
     }
     int tile_begin = split_id * total_m_tiles / split_m;
     int next_split = split_id + 1;
     int tile_end = next_split * total_m_tiles / split_m;
-    int first_m_start = tile_begin * 64;
-    int norm_row = tid % 64;
-    int norm_part = tid / 64;
-    int d_base = norm_part * 64;
-    int m_abs_part = first_m_start + norm_row;
-    float acc_part = 0.0f;
-    #pragma unroll 1
-    for (int vv = 0; vv < 4; vv++) {
-        int d_col_1 = d_base + vv * 16;
-        float db_vals[16];
-        unsigned int db_pack[8];
-        #pragma unroll
-        for (int vi_2 = 0; vi_2 < 16; vi_2++) {
-            db_vals[vi_2] = 0.0f;
-        }
-        if (batch_id < B) {
-            if (m_abs_part < M) {
-                {
-                    const uint4* _vptr_1 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part) * 256 + d_col_1) + 0);
-                    uint4 _vld_1[2];
-                    #pragma unroll
-                    for (int _blk = 0; _blk < 2; _blk++) {
-                        _vld_1[_blk] = _vptr_1[_blk];
-                        __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
-                        #pragma unroll
-                        for (int _j = 0; _j < 8; _j++)
-                            db_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
-                    }
-                }
-            }
-        }
-        #pragma unroll
-        for (int _lp = 0; _lp < 8; _lp++) {
-            __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
-            db_pack[_lp] = *(uint32_t*)&_bf2;
-        }
-        int b_store_addr = (smem_b_addr + (unsigned int)(d_col_1 / 64 * 8192 + norm_row * 128 + d_col_1 % 64 * 2 ^ (d_col_1 / 64 * 8192 + norm_row * 128 + d_col_1 % 64 * 2 >> 7 & 7) << 4));
-        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
-        int b_store_addr_hi = (smem_b_addr + (unsigned int)((d_col_1 + 8) / 64 * 8192 + norm_row * 128 + (d_col_1 + 8) % 64 * 2 ^ ((d_col_1 + 8) / 64 * 8192 + norm_row * 128 + (d_col_1 + 8) % 64 * 2 >> 7 & 7) << 4));
-        asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
-        #pragma unroll
-        for (int vi_3 = 0; vi_3 < 16; vi_3++) {
-            acc_part += db_vals[vi_3] * db_vals[vi_3];
-        }
-    }
-    smem_db_norm_part[tid] = acc_part;
-    asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
-    __syncthreads();
-    if (tid < 64) {
-        int m_abs = first_m_start + tid;
-        float db_norm = LOOM_INF;
-        if (batch_id < B) {
-            if (m_abs < M) {
-                db_norm = 0.0f;
-                #pragma unroll
-                for (int part_1 = 0; part_1 < 4; part_1++) {
-                    db_norm += smem_db_norm_part[tid + part_1 * 64];
-                }
-            }
-        }
-        smem_db_norm[tid] = db_norm;
-    }
     unsigned int _phase_mma_done_0 = 0;
     #pragma unroll 1
     for (int m_tile = tile_begin; m_tile < tile_end; m_tile++) {
-        int m_start = m_tile * 64;
-        int rel_tile = m_tile - tile_begin;
-        int db_stage_phase = rel_tile - rel_tile / 2 * 2;
-        if (db_stage_phase == 0) {
-            if (warp == 0) {
-                int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-                int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
-                asm volatile(
+        int m_start = m_tile * 128;
+        #pragma unroll 1
+        for (int e_vec_1 = tid; e_vec_1 < 512; e_vec_1 += 512) {
+            int q_elem = e_vec_1 * 16;
+            int q_row_1 = q_elem / 128;
+            int d_col_1 = q_elem - q_row_1 * 128;
+            int global_d = d_col_1;
+            int q_abs_1 = q_start + q_row_1;
+            float q_vals_1[16];
+            unsigned int q_pack[8];
+            #pragma unroll
+            for (int vi_2 = 0; vi_2 < 16; vi_2++) {
+                q_vals_1[vi_2] = 0.0f;
+            }
+            if (batch_id < B) {
+                if (q_abs_1 < Q) {
+                    {
+                        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs_1) * 4096 + global_d) + 0);
+                        uint4 _vld_1[2];
+                        #pragma unroll
+                        for (int _blk = 0; _blk < 2; _blk++) {
+                            _vld_1[_blk] = _vptr_1[_blk];
+                            __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
+                            #pragma unroll
+                            for (int _j = 0; _j < 8; _j++)
+                                q_vals_1[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
+                        }
+                    }
+                }
+            }
+            #pragma unroll
+            for (int _lp = 0; _lp < 8; _lp++) {
+                __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(q_vals_1[_lp*2 + 0], q_vals_1[_lp*2+1 + 0]));
+                q_pack[_lp] = *(uint32_t*)&_bf2;
+            }
+            int q_store_addr = (smem_a_addr + (unsigned int)(d_col_1 / 64 * 8192 + q_row_1 * 128 + d_col_1 % 64 * 2 ^ (d_col_1 / 64 * 8192 + q_row_1 * 128 + d_col_1 % 64 * 2 >> 7 & 7) << 4));
+            asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr), "r"(q_pack[0]), "r"(q_pack[1]), "r"(q_pack[2]), "r"(q_pack[3]) : "memory");
+            int q_store_addr_hi = (smem_a_addr + (unsigned int)((d_col_1 + 8) / 64 * 8192 + q_row_1 * 128 + (d_col_1 + 8) % 64 * 2 ^ ((d_col_1 + 8) / 64 * 8192 + q_row_1 * 128 + (d_col_1 + 8) % 64 * 2 >> 7 & 7) << 4));
+            asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr_hi), "r"(q_pack[4]), "r"(q_pack[5]), "r"(q_pack[6]), "r"(q_pack[7]) : "memory");
+        }
+        asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
+        __syncthreads();
+        int norm_row = tid % 128;
+        int norm_part = tid / 128;
+        int d_base = norm_part * 32;
+        int m_abs_part = m_start + norm_row;
+        float acc_part = 0.0f;
+        if (tid < 512) {
+            #pragma unroll 1
+            for (int vv = 0; vv < 2; vv++) {
+                int d_col_2 = d_base + vv * 16;
+                int global_d_1 = d_col_2;
+                float db_vals[16];
+                unsigned int db_pack[8];
+                #pragma unroll
+                for (int vi_3 = 0; vi_3 < 16; vi_3++) {
+                    db_vals[vi_3] = 0.0f;
+                }
+                if (batch_id < B) {
+                    if (m_abs_part < M) {
+                        {
+                            const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part) * 4096 + global_d_1) + 0);
+                            uint4 _vld_2[2];
+                            #pragma unroll
+                            for (int _blk = 0; _blk < 2; _blk++) {
+                                _vld_2[_blk] = _vptr_2[_blk];
+                                __nv_bfloat16* _velems_2 = reinterpret_cast<__nv_bfloat16*>(&_vld_2[_blk]);
+                                #pragma unroll
+                                for (int _j = 0; _j < 8; _j++)
+                                    db_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_2[_j]);
+                            }
+                        }
+                    }
+                }
+                #pragma unroll
+                for (int _lp = 0; _lp < 8; _lp++) {
+                    __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals[_lp*2 + 0], db_vals[_lp*2+1 + 0]));
+                    db_pack[_lp] = *(uint32_t*)&_bf2;
+                }
+                int b_store_addr = (smem_b_addr + (unsigned int)(d_col_2 / 64 * 16384 + norm_row * 128 + d_col_2 % 64 * 2 ^ (d_col_2 / 64 * 16384 + norm_row * 128 + d_col_2 % 64 * 2 >> 7 & 7) << 4));
+                asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr), "r"(db_pack[0]), "r"(db_pack[1]), "r"(db_pack[2]), "r"(db_pack[3]) : "memory");
+                int b_store_addr_hi = (smem_b_addr + (unsigned int)((d_col_2 + 8) / 64 * 16384 + norm_row * 128 + (d_col_2 + 8) % 64 * 2 ^ ((d_col_2 + 8) / 64 * 16384 + norm_row * 128 + (d_col_2 + 8) % 64 * 2 >> 7 & 7) << 4));
+                asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi), "r"(db_pack[4]), "r"(db_pack[5]), "r"(db_pack[6]), "r"(db_pack[7]) : "memory");
+                #pragma unroll
+                for (int vi_4 = 0; vi_4 < 16; vi_4++) {
+                    acc_part += db_vals[vi_4] * db_vals[vi_4];
+                }
+            }
+            smem_db_norm_part[tid] = acc_part;
+        }
+        asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
+        __syncthreads();
+        if (tid < 128) {
+            int m_abs = m_start + tid;
+            float pass_norm = LOOM_INF;
+            if (m_abs < M) {
+                pass_norm = 0.0f;
+                #pragma unroll
+                for (int part_1 = 0; part_1 < 4; part_1++) {
+                    pass_norm += smem_db_norm_part[tid + part_1 * 128];
+                }
+            }
+            {
+                smem_db_norm[tid] = pass_norm;
+            }
+        }
+        __syncthreads();
+        if (warp == 0) {
+            int _mma_a_lo_0 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+            int _mma_b_lo_0 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
+            asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
             ".reg .b32 adhi, bdhi, alo, blo, id;\n\t"
@@ -515,7 +477,7 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             ""
             "mov.b32 adhi, 0x40004040;\n\t"
             "mov.b32 bdhi, 0x40004040;\n\t"
-            "mov.b32 id, 135267472;\n\t"
+            "mov.b32 id, 69207184;\n\t"
             "mov.b32 alo, %0;\n\t"
             "mov.b32 blo, %1;\n\t"
             "mov.b64 da, {alo, adhi};\n\t"
@@ -536,48 +498,8 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             "mov.b64 da, {alo, adhi};\n\t"
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
+            "add.u32 alo, alo, 506;\n\t"
+            "add.u32 blo, blo, 1018;\n\t"
             "mov.b64 da, {alo, adhi};\n\t"
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
@@ -598,12 +520,127 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
             :: "r"(_mma_a_lo_0), "r"(_mma_b_lo_0), "r"(tmem_acc), "r"(0));
-                elect_commit(mma_done_addr);
+            elect_commit(mma_done_addr);
+        }
+        mbarrier_wait(mma_done_addr, _phase_mma_done_0);
+        _phase_mma_done_0 ^= 1;
+        #pragma unroll
+        for (int d_pass = 1; d_pass < 32; d_pass++) {
+            const int d_offset = d_pass * 128;
+            #pragma unroll 1
+            for (int e_vec_2 = tid; e_vec_2 < 512; e_vec_2 += 512) {
+                int q_elem_1 = e_vec_2 * 16;
+                int q_row_2 = q_elem_1 / 128;
+                int d_col_3 = q_elem_1 - q_row_2 * 128;
+                int global_d_2 = d_col_3 + d_offset;
+                int q_abs_2 = q_start + q_row_2;
+                float q_vals_2[16];
+                unsigned int q_pack_1[8];
+                #pragma unroll
+                for (int vi_5 = 0; vi_5 < 16; vi_5++) {
+                    q_vals_2[vi_5] = 0.0f;
+                }
+                if (batch_id < B) {
+                    if (q_abs_2 < Q) {
+                        {
+                            const uint4* _vptr_3 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs_2) * 4096 + global_d_2) + 0);
+                            uint4 _vld_3[2];
+                            #pragma unroll
+                            for (int _blk = 0; _blk < 2; _blk++) {
+                                _vld_3[_blk] = _vptr_3[_blk];
+                                __nv_bfloat16* _velems_3 = reinterpret_cast<__nv_bfloat16*>(&_vld_3[_blk]);
+                                #pragma unroll
+                                for (int _j = 0; _j < 8; _j++)
+                                    q_vals_2[0 + _blk * 8 + _j] = __bfloat162float(_velems_3[_j]);
+                            }
+                        }
+                    }
+                }
+                #pragma unroll
+                for (int _lp = 0; _lp < 8; _lp++) {
+                    __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(q_vals_2[_lp*2 + 0], q_vals_2[_lp*2+1 + 0]));
+                    q_pack_1[_lp] = *(uint32_t*)&_bf2;
+                }
+                int q_store_addr_1 = (smem_a_addr + (unsigned int)(d_col_3 / 64 * 8192 + q_row_2 * 128 + d_col_3 % 64 * 2 ^ (d_col_3 / 64 * 8192 + q_row_2 * 128 + d_col_3 % 64 * 2 >> 7 & 7) << 4));
+                asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr_1), "r"(q_pack_1[0]), "r"(q_pack_1[1]), "r"(q_pack_1[2]), "r"(q_pack_1[3]) : "memory");
+                int q_store_addr_hi_1 = (smem_a_addr + (unsigned int)((d_col_3 + 8) / 64 * 8192 + q_row_2 * 128 + (d_col_3 + 8) % 64 * 2 ^ ((d_col_3 + 8) / 64 * 8192 + q_row_2 * 128 + (d_col_3 + 8) % 64 * 2 >> 7 & 7) << 4));
+                asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(q_store_addr_hi_1), "r"(q_pack_1[4]), "r"(q_pack_1[5]), "r"(q_pack_1[6]), "r"(q_pack_1[7]) : "memory");
             }
-        } else if (warp == 0) {
-            int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
-            int _mma_b_lo_1 = make_warp_uniform((smem_b_next_addr >> 4) & 0x3FFF);
-            asm volatile(
+            asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
+            __syncthreads();
+            int norm_row_0 = tid % 128;
+            int norm_part_1 = tid / 128;
+            int d_base_2 = norm_part_1 * 32;
+            int m_abs_part_3 = m_start + norm_row_0;
+            float acc_part_4 = 0.0f;
+            if (tid < 512) {
+                #pragma unroll 1
+                for (int vv_1 = 0; vv_1 < 2; vv_1++) {
+                    int d_col_4 = d_base_2 + vv_1 * 16;
+                    int global_d_3 = d_col_4 + d_offset;
+                    float db_vals_1[16];
+                    unsigned int db_pack_1[8];
+                    #pragma unroll
+                    for (int vi_6 = 0; vi_6 < 16; vi_6++) {
+                        db_vals_1[vi_6] = 0.0f;
+                    }
+                    if (batch_id < B) {
+                        if (m_abs_part_3 < M) {
+                            {
+                                const uint4* _vptr_4 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_3) * 4096 + global_d_3) + 0);
+                                uint4 _vld_4[2];
+                                #pragma unroll
+                                for (int _blk = 0; _blk < 2; _blk++) {
+                                    _vld_4[_blk] = _vptr_4[_blk];
+                                    __nv_bfloat16* _velems_4 = reinterpret_cast<__nv_bfloat16*>(&_vld_4[_blk]);
+                                    #pragma unroll
+                                    for (int _j = 0; _j < 8; _j++)
+                                        db_vals_1[0 + _blk * 8 + _j] = __bfloat162float(_velems_4[_j]);
+                                }
+                            }
+                        }
+                    }
+                    #pragma unroll
+                    for (int _lp = 0; _lp < 8; _lp++) {
+                        __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals_1[_lp*2 + 0], db_vals_1[_lp*2+1 + 0]));
+                        db_pack_1[_lp] = *(uint32_t*)&_bf2;
+                    }
+                    int b_store_addr_1 = (smem_b_addr + (unsigned int)(d_col_4 / 64 * 16384 + norm_row_0 * 128 + d_col_4 % 64 * 2 ^ (d_col_4 / 64 * 16384 + norm_row_0 * 128 + d_col_4 % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_1), "r"(db_pack_1[0]), "r"(db_pack_1[1]), "r"(db_pack_1[2]), "r"(db_pack_1[3]) : "memory");
+                    int b_store_addr_hi_1 = (smem_b_addr + (unsigned int)((d_col_4 + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col_4 + 8) % 64 * 2 ^ ((d_col_4 + 8) / 64 * 16384 + norm_row_0 * 128 + (d_col_4 + 8) % 64 * 2 >> 7 & 7) << 4));
+                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi_1), "r"(db_pack_1[4]), "r"(db_pack_1[5]), "r"(db_pack_1[6]), "r"(db_pack_1[7]) : "memory");
+                    #pragma unroll
+                    for (int vi_7 = 0; vi_7 < 16; vi_7++) {
+                        acc_part_4 += db_vals_1[vi_7] * db_vals_1[vi_7];
+                    }
+                }
+                smem_db_norm_part[tid] = acc_part_4;
+            }
+            asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
+            __syncthreads();
+            if (tid < 128) {
+                int m_abs_1 = m_start + tid;
+                float pass_norm_1 = LOOM_INF;
+                if (m_abs_1 < M) {
+                    pass_norm_1 = 0.0f;
+                    #pragma unroll
+                    for (int part_2 = 0; part_2 < 4; part_2++) {
+                        pass_norm_1 += smem_db_norm_part[tid + part_2 * 128];
+                    }
+                }
+                {
+                    if (m_abs_1 < M) {
+                        smem_db_norm[tid] = smem_db_norm[tid] + pass_norm_1;
+                    } else {
+                        smem_db_norm[tid] = LOOM_INF;
+                    }
+                }
+            }
+            __syncthreads();
+            if (warp == 0) {
+                int _mma_a_lo_1 = make_warp_uniform((smem_a_addr >> 4) & 0x3FFF);
+                int _mma_b_lo_1 = make_warp_uniform((smem_b_addr >> 4) & 0x3FFF);
+                asm volatile(
             "{\n\t"
             ".reg .pred leader, p0, p1;\n\t"
             ".reg .b32 adhi, bdhi, alo, blo, id;\n\t"
@@ -614,7 +651,7 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             ""
             "mov.b32 adhi, 0x40004040;\n\t"
             "mov.b32 bdhi, 0x40004040;\n\t"
-            "mov.b32 id, 135267472;\n\t"
+            "mov.b32 id, 69207184;\n\t"
             "mov.b32 alo, %0;\n\t"
             "mov.b32 blo, %1;\n\t"
             "mov.b64 da, {alo, adhi};\n\t"
@@ -635,48 +672,8 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             "mov.b64 da, {alo, adhi};\n\t"
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 2;\n\t"
-            "add.u32 blo, blo, 2;\n\t"
-            "mov.b64 da, {alo, adhi};\n\t"
-            "mov.b64 db, {blo, bdhi};\n\t"
-            "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
-            "add.u32 alo, alo, 1018;\n\t"
-            "add.u32 blo, blo, 506;\n\t"
+            "add.u32 alo, alo, 506;\n\t"
+            "add.u32 blo, blo, 1018;\n\t"
             "mov.b64 da, {alo, adhi};\n\t"
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
@@ -696,440 +693,173 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
             "mov.b64 db, {blo, bdhi};\n\t"
             "@leader tcgen05.mma.cta_group::1.kind::f16 [%2], da, db, id, p1;\n\t"
             "}\n"
-            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(0));
-            elect_commit(mma_done_addr);
-        }
-        int next_m_tile = m_tile + 1;
-        if (next_m_tile < tile_end) {
-            int next_m_start = next_m_tile * 64;
-            if (db_stage_phase == 0) {
-                int norm_row_0 = tid % 64;
-                int norm_part_1 = tid / 64;
-                int d_base_2 = norm_part_1 * 64;
-                int m_abs_part_3 = next_m_start + norm_row_0;
-                float acc_part_4 = 0.0f;
-                #pragma unroll 1
-                for (int vv_1 = 0; vv_1 < 4; vv_1++) {
-                    int d_col_2 = d_base_2 + vv_1 * 16;
-                    float db_vals_1[16];
-                    unsigned int db_pack_1[8];
-                    #pragma unroll
-                    for (int vi_4 = 0; vi_4 < 16; vi_4++) {
-                        db_vals_1[vi_4] = 0.0f;
-                    }
-                    if (batch_id < B) {
-                        if (m_abs_part_3 < M) {
-                            {
-                                const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_3) * 256 + d_col_2) + 0);
-                                uint4 _vld_2[2];
-                                #pragma unroll
-                                for (int _blk = 0; _blk < 2; _blk++) {
-                                    _vld_2[_blk] = _vptr_2[_blk];
-                                    __nv_bfloat16* _velems_2 = reinterpret_cast<__nv_bfloat16*>(&_vld_2[_blk]);
-                                    #pragma unroll
-                                    for (int _j = 0; _j < 8; _j++)
-                                        db_vals_1[0 + _blk * 8 + _j] = __bfloat162float(_velems_2[_j]);
-                                }
-                            }
-                        }
-                    }
-                    #pragma unroll
-                    for (int _lp = 0; _lp < 8; _lp++) {
-                        __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals_1[_lp*2 + 0], db_vals_1[_lp*2+1 + 0]));
-                        db_pack_1[_lp] = *(uint32_t*)&_bf2;
-                    }
-                    int b_store_addr_1 = (smem_b_next_addr + (unsigned int)(d_col_2 / 64 * 8192 + norm_row_0 * 128 + d_col_2 % 64 * 2 ^ (d_col_2 / 64 * 8192 + norm_row_0 * 128 + d_col_2 % 64 * 2 >> 7 & 7) << 4));
-                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_1), "r"(db_pack_1[0]), "r"(db_pack_1[1]), "r"(db_pack_1[2]), "r"(db_pack_1[3]) : "memory");
-                    int b_store_addr_hi_1 = (smem_b_next_addr + (unsigned int)((d_col_2 + 8) / 64 * 8192 + norm_row_0 * 128 + (d_col_2 + 8) % 64 * 2 ^ ((d_col_2 + 8) / 64 * 8192 + norm_row_0 * 128 + (d_col_2 + 8) % 64 * 2 >> 7 & 7) << 4));
-                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi_1), "r"(db_pack_1[4]), "r"(db_pack_1[5]), "r"(db_pack_1[6]), "r"(db_pack_1[7]) : "memory");
-                    #pragma unroll
-                    for (int vi_5 = 0; vi_5 < 16; vi_5++) {
-                        acc_part_4 += db_vals_1[vi_5] * db_vals_1[vi_5];
-                    }
-                }
-                smem_db_norm_part_next[tid] = acc_part_4;
-                asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
-                __syncthreads();
-                if (tid < 64) {
-                    int m_abs_1 = next_m_start + tid;
-                    float db_norm_1 = LOOM_INF;
-                    if (batch_id < B) {
-                        if (m_abs_1 < M) {
-                            db_norm_1 = 0.0f;
-                            #pragma unroll
-                            for (int part_2 = 0; part_2 < 4; part_2++) {
-                                db_norm_1 += smem_db_norm_part_next[tid + part_2 * 64];
-                            }
-                        }
-                    }
-                    smem_db_norm_next[tid] = db_norm_1;
-                }
-            } else {
-                int norm_row_0_1 = tid % 64;
-                int norm_part_1_1 = tid / 64;
-                int d_base_2_1 = norm_part_1_1 * 64;
-                int m_abs_part_3_1 = next_m_start + norm_row_0_1;
-                float acc_part_4_1 = 0.0f;
-                #pragma unroll 1
-                for (int vv_2 = 0; vv_2 < 4; vv_2++) {
-                    int d_col_3 = d_base_2_1 + vv_2 * 16;
-                    float db_vals_2[16];
-                    unsigned int db_pack_2[8];
-                    #pragma unroll
-                    for (int vi_6 = 0; vi_6 < 16; vi_6++) {
-                        db_vals_2[vi_6] = 0.0f;
-                    }
-                    if (batch_id < B) {
-                        if (m_abs_part_3_1 < M) {
-                            {
-                                const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_3_1) * 256 + d_col_3) + 0);
-                                uint4 _vld_3[2];
-                                #pragma unroll
-                                for (int _blk = 0; _blk < 2; _blk++) {
-                                    _vld_3[_blk] = _vptr_3[_blk];
-                                    __nv_bfloat16* _velems_3 = reinterpret_cast<__nv_bfloat16*>(&_vld_3[_blk]);
-                                    #pragma unroll
-                                    for (int _j = 0; _j < 8; _j++)
-                                        db_vals_2[0 + _blk * 8 + _j] = __bfloat162float(_velems_3[_j]);
-                                }
-                            }
-                        }
-                    }
-                    #pragma unroll
-                    for (int _lp = 0; _lp < 8; _lp++) {
-                        __nv_bfloat162 _bf2 = __float22bfloat162_rn(make_float2(db_vals_2[_lp*2 + 0], db_vals_2[_lp*2+1 + 0]));
-                        db_pack_2[_lp] = *(uint32_t*)&_bf2;
-                    }
-                    int b_store_addr_2 = (smem_b_addr + (unsigned int)(d_col_3 / 64 * 8192 + norm_row_0_1 * 128 + d_col_3 % 64 * 2 ^ (d_col_3 / 64 * 8192 + norm_row_0_1 * 128 + d_col_3 % 64 * 2 >> 7 & 7) << 4));
-                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_2), "r"(db_pack_2[0]), "r"(db_pack_2[1]), "r"(db_pack_2[2]), "r"(db_pack_2[3]) : "memory");
-                    int b_store_addr_hi_2 = (smem_b_addr + (unsigned int)((d_col_3 + 8) / 64 * 8192 + norm_row_0_1 * 128 + (d_col_3 + 8) % 64 * 2 ^ ((d_col_3 + 8) / 64 * 8192 + norm_row_0_1 * 128 + (d_col_3 + 8) % 64 * 2 >> 7 & 7) << 4));
-                    asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr_hi_2), "r"(db_pack_2[4]), "r"(db_pack_2[5]), "r"(db_pack_2[6]), "r"(db_pack_2[7]) : "memory");
-                    #pragma unroll
-                    for (int vi_7 = 0; vi_7 < 16; vi_7++) {
-                        acc_part_4_1 += db_vals_2[vi_7] * db_vals_2[vi_7];
-                    }
-                }
-                smem_db_norm_part[tid] = acc_part_4_1;
-                asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
-                __syncthreads();
-                if (tid < 64) {
-                    int m_abs_2 = next_m_start + tid;
-                    float db_norm_2 = LOOM_INF;
-                    if (batch_id < B) {
-                        if (m_abs_2 < M) {
-                            db_norm_2 = 0.0f;
-                            #pragma unroll
-                            for (int part_3 = 0; part_3 < 4; part_3++) {
-                                db_norm_2 += smem_db_norm_part[tid + part_3 * 64];
-                            }
-                        }
-                    }
-                    smem_db_norm[tid] = db_norm_2;
-                }
+            :: "r"(_mma_a_lo_1), "r"(_mma_b_lo_1), "r"(tmem_acc), "r"(1));
+                elect_commit(mma_done_addr);
             }
+            mbarrier_wait(mma_done_addr, _phase_mma_done_0);
+            _phase_mma_done_0 ^= 1;
         }
-        mbarrier_wait(mma_done_addr, _phase_mma_done_0);
-        _phase_mma_done_0 ^= 1;
-        if (col_chunk < 2) {
-            if (q_local < 128) {
-                const int col_base = col_chunk * 32;
-                float _tmem_load_0[32];
-                tmem_ld_x32(&_tmem_load_0[0], taddr + (unsigned int)(row_base_tmem << 16) + (unsigned int)col_base);
-                asm volatile("tcgen05.wait::ld.sync.aligned;");
-                if (q_global < Q) {
-                    #pragma unroll 4
-                    for (int j_rel = 0; j_rel < 32; j_rel += 8) {
-                        int j_base0 = col_base + j_rel;
-                        float dist_pair0[2];
-                        float norm_pair0[2];
-                        dist_pair0[0] = _tmem_load_0[j_rel];
-                        dist_pair0[1] = _tmem_load_0[j_rel + 1];
-                        const float2 _fma_b2_4 = {-2.0f, -2.0f};
-                        const float2 _fma_c2_5 = {q_norm, q_norm};
+        if (warp < 8) {
+            const int row_group2 = warp % 4;
+            const int tmem_row_origin = row_group2 * 32;
+            float _tmem_load_0[32];
+            asm volatile(
+                "tcgen05.ld.sync.aligned.16x256b.x8.b32"
+                " {%0, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31}, [%32];"
+                : "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[0])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[1])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[2])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[3])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[4])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[5])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[6])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[7])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[8])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[9])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[10])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[11])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[12])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[13])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[14])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[15])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[16])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[17])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[18])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[19])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[20])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[21])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[22])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[23])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[24])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[25])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[26])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[27])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[28])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[29])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[30])), "=r"(*reinterpret_cast<uint32_t*>(&_tmem_load_0[31]))
+                : "r"(taddr + (unsigned int)(tmem_row_origin << 16) + (unsigned int)col_origin)
+                : "memory");
+            asm volatile("tcgen05.wait::ld.sync.aligned;");
+            #pragma unroll
+            for (int repeat = 0; repeat < 8; repeat++) {
+                const int reg_base = repeat * 4;
+                int col_base = col_origin + repeat * 8 + lane % 4 * 2;
+                int m_abs0 = m_start + col_base;
+                int m_abs1 = m_abs0 + 1;
+                float top_d0 = q_norm_top + smem_db_norm[col_base] - 2.0f * _tmem_load_0[reg_base];
+                float top_d1 = q_norm_top + smem_db_norm[col_base + 1] - 2.0f * _tmem_load_0[reg_base + 1];
+                float _max_0 = max_noftz(top_d0, 0.0f);
+                top_d0 = _max_0;
+                float _max_1 = max_noftz(top_d1, 0.0f);
+                top_d1 = _max_1;
+                int top_take1 = ((top_d1 < top_d0) ? 1 : 0);
+                if (best_top_d[9] > ((top_take1 != 0) ? top_d1 : top_d0)) {
+                    best_top_d[9] = ((top_take1 != 0) ? top_d1 : top_d0);
+                    best_top_i[9] = ((top_take1 != 0) ? m_abs1 : m_abs0);
+                    #pragma unroll
+                    for (int kk_1 = 8; kk_1 >= 0; kk_1--) {
+                        float lower0_d = best_top_d[kk_1 + 1];
+                        int lower0_i = best_top_i[kk_1 + 1];
+                        float upper0_d = best_top_d[kk_1];
+                        int upper0_i = best_top_i[kk_1];
+                        int swap0_up = ((lower0_d < upper0_d) ? 1 : 0);
+                        best_top_d[kk_1] = ((swap0_up != 0) ? lower0_d : upper0_d);
+                        best_top_i[kk_1] = ((swap0_up != 0) ? lower0_i : upper0_i);
+                        best_top_d[kk_1 + 1] = ((swap0_up != 0) ? upper0_d : lower0_d);
+                        best_top_i[kk_1 + 1] = ((swap0_up != 0) ? upper0_i : lower0_i);
+                    }
+                    if (best_top_d[9] > ((top_take1 != 0) ? top_d0 : top_d1)) {
+                        best_top_d[9] = ((top_take1 != 0) ? top_d0 : top_d1);
+                        best_top_i[9] = ((top_take1 != 0) ? m_abs0 : m_abs1);
                         #pragma unroll
-                        for (int _lf = 0; _lf < 1; _lf++)
-                            fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_pair0)[_lf], _fma_b2_4, _fma_c2_5);
-                        norm_pair0[0] = ((db_stage_phase == 0) ? smem_db_norm[j_base0] : smem_db_norm_next[j_base0]);
-                        norm_pair0[1] = ((db_stage_phase == 0) ? smem_db_norm[j_base0 + 1] : smem_db_norm_next[j_base0 + 1]);
-                        float _t0[2];
-                        #pragma unroll
-                        for (int _la = 0; _la < 1; _la++)
-                            reinterpret_cast<float2*>(_t0)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_pair0)[_la], reinterpret_cast<const float2*>(norm_pair0)[_la]);
-                        int m_abs00 = m_start + j_base0;
-                        float dist00 = _t0[0];
-                        int m_abs01 = m_abs00 + 1;
-                        float dist01 = _t0[1];
-                        int take01 = ((dist01 < dist00) ? 1 : 0);
-                        float cand00_d = ((take01 != 0) ? dist01 : dist00);
-                        int cand00_i = ((take01 != 0) ? m_abs01 : m_abs00);
-                        float cand01_d = ((take01 != 0) ? dist00 : dist01);
-                        int cand01_i = ((take01 != 0) ? m_abs00 : m_abs01);
-                        int j_base1 = j_base0 + 2;
-                        float dist_pair1[2];
-                        float norm_pair1[2];
-                        dist_pair1[0] = _tmem_load_0[j_rel + 2];
-                        dist_pair1[1] = _tmem_load_0[j_rel + 3];
-                        const float2 _fma_b2_6 = {-2.0f, -2.0f};
-                        const float2 _fma_c2_7 = {q_norm, q_norm};
-                        #pragma unroll
-                        for (int _lf = 0; _lf < 1; _lf++)
-                            fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_pair1)[_lf], _fma_b2_6, _fma_c2_7);
-                        norm_pair1[0] = ((db_stage_phase == 0) ? smem_db_norm[j_base1] : smem_db_norm_next[j_base1]);
-                        norm_pair1[1] = ((db_stage_phase == 0) ? smem_db_norm[j_base1 + 1] : smem_db_norm_next[j_base1 + 1]);
-                        float _t1[2];
-                        #pragma unroll
-                        for (int _la = 0; _la < 1; _la++)
-                            reinterpret_cast<float2*>(_t1)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_pair1)[_la], reinterpret_cast<const float2*>(norm_pair1)[_la]);
-                        int m_abs10 = m_start + j_base1;
-                        float dist10 = _t1[0];
-                        int m_abs11 = m_abs10 + 1;
-                        float dist11 = _t1[1];
-                        int take11 = ((dist11 < dist10) ? 1 : 0);
-                        float cand10_d = ((take11 != 0) ? dist11 : dist10);
-                        int cand10_i = ((take11 != 0) ? m_abs11 : m_abs10);
-                        float cand11_d = ((take11 != 0) ? dist10 : dist11);
-                        int cand11_i = ((take11 != 0) ? m_abs10 : m_abs11);
-                        int j_base2 = j_base0 + 4;
-                        float dist_pair2[2];
-                        float norm_pair2[2];
-                        dist_pair2[0] = _tmem_load_0[j_rel + 4];
-                        dist_pair2[1] = _tmem_load_0[j_rel + 5];
-                        const float2 _fma_b2_8 = {-2.0f, -2.0f};
-                        const float2 _fma_c2_9 = {q_norm, q_norm};
-                        #pragma unroll
-                        for (int _lf = 0; _lf < 1; _lf++)
-                            fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_pair2)[_lf], _fma_b2_8, _fma_c2_9);
-                        norm_pair2[0] = ((db_stage_phase == 0) ? smem_db_norm[j_base2] : smem_db_norm_next[j_base2]);
-                        norm_pair2[1] = ((db_stage_phase == 0) ? smem_db_norm[j_base2 + 1] : smem_db_norm_next[j_base2 + 1]);
-                        float _t2[2];
-                        #pragma unroll
-                        for (int _la = 0; _la < 1; _la++)
-                            reinterpret_cast<float2*>(_t2)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_pair2)[_la], reinterpret_cast<const float2*>(norm_pair2)[_la]);
-                        int m_abs20 = m_start + j_base2;
-                        float dist20 = _t2[0];
-                        int m_abs21 = m_abs20 + 1;
-                        float dist21 = _t2[1];
-                        int take21 = ((dist21 < dist20) ? 1 : 0);
-                        float cand20_d = ((take21 != 0) ? dist21 : dist20);
-                        int cand20_i = ((take21 != 0) ? m_abs21 : m_abs20);
-                        float cand21_d = ((take21 != 0) ? dist20 : dist21);
-                        int cand21_i = ((take21 != 0) ? m_abs20 : m_abs21);
-                        int j_base3 = j_base0 + 6;
-                        float dist_pair3[2];
-                        float norm_pair3[2];
-                        dist_pair3[0] = _tmem_load_0[j_rel + 6];
-                        dist_pair3[1] = _tmem_load_0[j_rel + 7];
-                        const float2 _fma_b2_10 = {-2.0f, -2.0f};
-                        const float2 _fma_c2_11 = {q_norm, q_norm};
-                        #pragma unroll
-                        for (int _lf = 0; _lf < 1; _lf++)
-                            fma_f32x2_inplace(&reinterpret_cast<float2*>(dist_pair3)[_lf], _fma_b2_10, _fma_c2_11);
-                        norm_pair3[0] = ((db_stage_phase == 0) ? smem_db_norm[j_base3] : smem_db_norm_next[j_base3]);
-                        norm_pair3[1] = ((db_stage_phase == 0) ? smem_db_norm[j_base3 + 1] : smem_db_norm_next[j_base3 + 1]);
-                        float _t3[2];
-                        #pragma unroll
-                        for (int _la = 0; _la < 1; _la++)
-                            reinterpret_cast<float2*>(_t3)[_la] = add_f32x2(reinterpret_cast<float2*>(dist_pair3)[_la], reinterpret_cast<const float2*>(norm_pair3)[_la]);
-                        int m_abs30 = m_start + j_base3;
-                        float dist30 = _t3[0];
-                        int m_abs31 = m_abs30 + 1;
-                        float dist31 = _t3[1];
-                        int take31 = ((dist31 < dist30) ? 1 : 0);
-                        float cand30_d = ((take31 != 0) ? dist31 : dist30);
-                        int cand30_i = ((take31 != 0) ? m_abs31 : m_abs30);
-                        float cand31_d = ((take31 != 0) ? dist30 : dist31);
-                        int cand31_i = ((take31 != 0) ? m_abs30 : m_abs31);
-                        float _min_0 = fminf(cand00_d, cand10_d);
-                        float group_min = _min_0;
-                        float _max_0 = max_noftz(cand00_d, cand10_d);
-                        float group_max = _max_0;
-                        if (group_min < best_d[K_MAX_ - 1]) {
-                            int take_pair1 = ((cand10_d < cand00_d) ? 1 : 0);
-                            float old_second_tail = best_d[K_MAX_ - 2];
-                            best_d[K_MAX_ - 1] = group_min;
-                            best_i[K_MAX_ - 1] = ((take_pair1 != 0) ? cand10_i : cand00_i);
-                            if (group_min < old_second_tail) {
-                                #pragma unroll
-                                for (int kk_1 = K_MAX_ - 2; kk_1 >= 0; kk_1--) {
-                                    float lower0_d = best_d[kk_1 + 1];
-                                    int lower0_i = best_i[kk_1 + 1];
-                                    float upper0_d = best_d[kk_1];
-                                    int upper0_i = best_i[kk_1];
-                                    int swap0_up = ((lower0_d < upper0_d) ? 1 : 0);
-                                    best_d[kk_1] = ((swap0_up != 0) ? lower0_d : upper0_d);
-                                    best_i[kk_1] = ((swap0_up != 0) ? lower0_i : upper0_i);
-                                    best_d[kk_1 + 1] = ((swap0_up != 0) ? upper0_d : lower0_d);
-                                    best_i[kk_1 + 1] = ((swap0_up != 0) ? upper0_i : lower0_i);
-                                }
-                                if (old_second_tail > ((take_pair1 != 0) ? cand11_d : cand01_d)) {
-                                    best_d[K_MAX_ - 1] = ((take_pair1 != 0) ? cand11_d : cand01_d);
-                                    best_i[K_MAX_ - 1] = ((take_pair1 != 0) ? cand11_i : cand01_i);
-                                    if (((take_pair1 != 0) ? cand11_d : cand01_d) < best_d[K_MAX_ - 2]) {
-                                        #pragma unroll
-                                        for (int kk_2 = K_MAX_ - 2; kk_2 >= 0; kk_2--) {
-                                            float lower1_d = best_d[kk_2 + 1];
-                                            int lower1_i = best_i[kk_2 + 1];
-                                            float upper1_d = best_d[kk_2];
-                                            int upper1_i = best_i[kk_2];
-                                            int swap1_up = ((lower1_d < upper1_d) ? 1 : 0);
-                                            best_d[kk_2] = ((swap1_up != 0) ? lower1_d : upper1_d);
-                                            best_i[kk_2] = ((swap1_up != 0) ? lower1_i : upper1_i);
-                                            best_d[kk_2 + 1] = ((swap1_up != 0) ? upper1_d : lower1_d);
-                                            best_i[kk_2 + 1] = ((swap1_up != 0) ? upper1_i : lower1_i);
-                                        }
-                                    }
-                                }
-                            }
-                            if (group_max < best_d[K_MAX_ - 1]) {
-                                float old_second_tail_0 = best_d[K_MAX_ - 2];
-                                best_d[K_MAX_ - 1] = group_max;
-                                best_i[K_MAX_ - 1] = ((take_pair1 != 0) ? cand00_i : cand10_i);
-                                if (group_max < old_second_tail_0) {
-                                    #pragma unroll
-                                    for (int kk_3 = K_MAX_ - 2; kk_3 >= 0; kk_3--) {
-                                        float lower0_d_1 = best_d[kk_3 + 1];
-                                        int lower0_i_1 = best_i[kk_3 + 1];
-                                        float upper0_d_1 = best_d[kk_3];
-                                        int upper0_i_1 = best_i[kk_3];
-                                        int swap0_up_1 = ((lower0_d_1 < upper0_d_1) ? 1 : 0);
-                                        best_d[kk_3] = ((swap0_up_1 != 0) ? lower0_d_1 : upper0_d_1);
-                                        best_i[kk_3] = ((swap0_up_1 != 0) ? lower0_i_1 : upper0_i_1);
-                                        best_d[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_d_1 : lower0_d_1);
-                                        best_i[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_i_1 : lower0_i_1);
-                                    }
-                                    if (old_second_tail_0 > ((take_pair1 != 0) ? cand01_d : cand11_d)) {
-                                        best_d[K_MAX_ - 1] = ((take_pair1 != 0) ? cand01_d : cand11_d);
-                                        best_i[K_MAX_ - 1] = ((take_pair1 != 0) ? cand01_i : cand11_i);
-                                        if (((take_pair1 != 0) ? cand01_d : cand11_d) < best_d[K_MAX_ - 2]) {
-                                            #pragma unroll
-                                            for (int kk_4 = K_MAX_ - 2; kk_4 >= 0; kk_4--) {
-                                                float lower1_d_1 = best_d[kk_4 + 1];
-                                                int lower1_i_1 = best_i[kk_4 + 1];
-                                                float upper1_d_1 = best_d[kk_4];
-                                                int upper1_i_1 = best_i[kk_4];
-                                                int swap1_up_1 = ((lower1_d_1 < upper1_d_1) ? 1 : 0);
-                                                best_d[kk_4] = ((swap1_up_1 != 0) ? lower1_d_1 : upper1_d_1);
-                                                best_i[kk_4] = ((swap1_up_1 != 0) ? lower1_i_1 : upper1_i_1);
-                                                best_d[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_d_1 : lower1_d_1);
-                                                best_i[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_i_1 : lower1_i_1);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        for (int kk_2 = 8; kk_2 >= 0; kk_2--) {
+                            float lower1_d = best_top_d[kk_2 + 1];
+                            int lower1_i = best_top_i[kk_2 + 1];
+                            float upper1_d = best_top_d[kk_2];
+                            int upper1_i = best_top_i[kk_2];
+                            int swap1_up = ((lower1_d < upper1_d) ? 1 : 0);
+                            best_top_d[kk_2] = ((swap1_up != 0) ? lower1_d : upper1_d);
+                            best_top_i[kk_2] = ((swap1_up != 0) ? lower1_i : upper1_i);
+                            best_top_d[kk_2 + 1] = ((swap1_up != 0) ? upper1_d : lower1_d);
+                            best_top_i[kk_2 + 1] = ((swap1_up != 0) ? upper1_i : lower1_i);
                         }
-                        float _min_1 = fminf(cand20_d, cand30_d);
-                        float group_min_0 = _min_1;
-                        float _max_1 = max_noftz(cand20_d, cand30_d);
-                        float group_max_1 = _max_1;
-                        if (group_min_0 < best_d[K_MAX_ - 1]) {
-                            int take_pair1_1 = ((cand30_d < cand20_d) ? 1 : 0);
-                            float old_second_tail_1 = best_d[K_MAX_ - 2];
-                            best_d[K_MAX_ - 1] = group_min_0;
-                            best_i[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand30_i : cand20_i);
-                            if (group_min_0 < old_second_tail_1) {
-                                #pragma unroll
-                                for (int kk_5 = K_MAX_ - 2; kk_5 >= 0; kk_5--) {
-                                    float lower0_d_2 = best_d[kk_5 + 1];
-                                    int lower0_i_2 = best_i[kk_5 + 1];
-                                    float upper0_d_2 = best_d[kk_5];
-                                    int upper0_i_2 = best_i[kk_5];
-                                    int swap0_up_2 = ((lower0_d_2 < upper0_d_2) ? 1 : 0);
-                                    best_d[kk_5] = ((swap0_up_2 != 0) ? lower0_d_2 : upper0_d_2);
-                                    best_i[kk_5] = ((swap0_up_2 != 0) ? lower0_i_2 : upper0_i_2);
-                                    best_d[kk_5 + 1] = ((swap0_up_2 != 0) ? upper0_d_2 : lower0_d_2);
-                                    best_i[kk_5 + 1] = ((swap0_up_2 != 0) ? upper0_i_2 : lower0_i_2);
-                                }
-                                if (old_second_tail_1 > ((take_pair1_1 != 0) ? cand31_d : cand21_d)) {
-                                    best_d[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand31_d : cand21_d);
-                                    best_i[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand31_i : cand21_i);
-                                    if (((take_pair1_1 != 0) ? cand31_d : cand21_d) < best_d[K_MAX_ - 2]) {
-                                        #pragma unroll
-                                        for (int kk_6 = K_MAX_ - 2; kk_6 >= 0; kk_6--) {
-                                            float lower1_d_2 = best_d[kk_6 + 1];
-                                            int lower1_i_2 = best_i[kk_6 + 1];
-                                            float upper1_d_2 = best_d[kk_6];
-                                            int upper1_i_2 = best_i[kk_6];
-                                            int swap1_up_2 = ((lower1_d_2 < upper1_d_2) ? 1 : 0);
-                                            best_d[kk_6] = ((swap1_up_2 != 0) ? lower1_d_2 : upper1_d_2);
-                                            best_i[kk_6] = ((swap1_up_2 != 0) ? lower1_i_2 : upper1_i_2);
-                                            best_d[kk_6 + 1] = ((swap1_up_2 != 0) ? upper1_d_2 : lower1_d_2);
-                                            best_i[kk_6 + 1] = ((swap1_up_2 != 0) ? upper1_i_2 : lower1_i_2);
-                                        }
-                                    }
-                                }
-                            }
-                            if (group_max_1 < best_d[K_MAX_ - 1]) {
-                                float old_second_tail_0_1 = best_d[K_MAX_ - 2];
-                                best_d[K_MAX_ - 1] = group_max_1;
-                                best_i[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand20_i : cand30_i);
-                                if (group_max_1 < old_second_tail_0_1) {
-                                    #pragma unroll
-                                    for (int kk_7 = K_MAX_ - 2; kk_7 >= 0; kk_7--) {
-                                        float lower0_d_3 = best_d[kk_7 + 1];
-                                        int lower0_i_3 = best_i[kk_7 + 1];
-                                        float upper0_d_3 = best_d[kk_7];
-                                        int upper0_i_3 = best_i[kk_7];
-                                        int swap0_up_3 = ((lower0_d_3 < upper0_d_3) ? 1 : 0);
-                                        best_d[kk_7] = ((swap0_up_3 != 0) ? lower0_d_3 : upper0_d_3);
-                                        best_i[kk_7] = ((swap0_up_3 != 0) ? lower0_i_3 : upper0_i_3);
-                                        best_d[kk_7 + 1] = ((swap0_up_3 != 0) ? upper0_d_3 : lower0_d_3);
-                                        best_i[kk_7 + 1] = ((swap0_up_3 != 0) ? upper0_i_3 : lower0_i_3);
-                                    }
-                                    if (old_second_tail_0_1 > ((take_pair1_1 != 0) ? cand21_d : cand31_d)) {
-                                        best_d[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand21_d : cand31_d);
-                                        best_i[K_MAX_ - 1] = ((take_pair1_1 != 0) ? cand21_i : cand31_i);
-                                        if (((take_pair1_1 != 0) ? cand21_d : cand31_d) < best_d[K_MAX_ - 2]) {
-                                            #pragma unroll
-                                            for (int kk_8 = K_MAX_ - 2; kk_8 >= 0; kk_8--) {
-                                                float lower1_d_3 = best_d[kk_8 + 1];
-                                                int lower1_i_3 = best_i[kk_8 + 1];
-                                                float upper1_d_3 = best_d[kk_8];
-                                                int upper1_i_3 = best_i[kk_8];
-                                                int swap1_up_3 = ((lower1_d_3 < upper1_d_3) ? 1 : 0);
-                                                best_d[kk_8] = ((swap1_up_3 != 0) ? lower1_d_3 : upper1_d_3);
-                                                best_i[kk_8] = ((swap1_up_3 != 0) ? lower1_i_3 : upper1_i_3);
-                                                best_d[kk_8 + 1] = ((swap1_up_3 != 0) ? upper1_d_3 : lower1_d_3);
-                                                best_i[kk_8 + 1] = ((swap1_up_3 != 0) ? upper1_i_3 : lower1_i_3);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    }
+                }
+                float bot_d0 = q_norm_bot + smem_db_norm[col_base] - 2.0f * _tmem_load_0[reg_base + 2];
+                float bot_d1 = q_norm_bot + smem_db_norm[col_base + 1] - 2.0f * _tmem_load_0[reg_base + 3];
+                float _max_2 = max_noftz(bot_d0, 0.0f);
+                bot_d0 = _max_2;
+                float _max_3 = max_noftz(bot_d1, 0.0f);
+                bot_d1 = _max_3;
+                int bot_take1 = ((bot_d1 < bot_d0) ? 1 : 0);
+                if (best_bot_d[9] > ((bot_take1 != 0) ? bot_d1 : bot_d0)) {
+                    best_bot_d[9] = ((bot_take1 != 0) ? bot_d1 : bot_d0);
+                    best_bot_i[9] = ((bot_take1 != 0) ? m_abs1 : m_abs0);
+                    #pragma unroll
+                    for (int kk_3 = 8; kk_3 >= 0; kk_3--) {
+                        float lower0_d_1 = best_bot_d[kk_3 + 1];
+                        int lower0_i_1 = best_bot_i[kk_3 + 1];
+                        float upper0_d_1 = best_bot_d[kk_3];
+                        int upper0_i_1 = best_bot_i[kk_3];
+                        int swap0_up_1 = ((lower0_d_1 < upper0_d_1) ? 1 : 0);
+                        best_bot_d[kk_3] = ((swap0_up_1 != 0) ? lower0_d_1 : upper0_d_1);
+                        best_bot_i[kk_3] = ((swap0_up_1 != 0) ? lower0_i_1 : upper0_i_1);
+                        best_bot_d[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_d_1 : lower0_d_1);
+                        best_bot_i[kk_3 + 1] = ((swap0_up_1 != 0) ? upper0_i_1 : lower0_i_1);
+                    }
+                    if (best_bot_d[9] > ((bot_take1 != 0) ? bot_d0 : bot_d1)) {
+                        best_bot_d[9] = ((bot_take1 != 0) ? bot_d0 : bot_d1);
+                        best_bot_i[9] = ((bot_take1 != 0) ? m_abs0 : m_abs1);
+                        #pragma unroll
+                        for (int kk_4 = 8; kk_4 >= 0; kk_4--) {
+                            float lower1_d_1 = best_bot_d[kk_4 + 1];
+                            int lower1_i_1 = best_bot_i[kk_4 + 1];
+                            float upper1_d_1 = best_bot_d[kk_4];
+                            int upper1_i_1 = best_bot_i[kk_4];
+                            int swap1_up_1 = ((lower1_d_1 < upper1_d_1) ? 1 : 0);
+                            best_bot_d[kk_4] = ((swap1_up_1 != 0) ? lower1_d_1 : upper1_d_1);
+                            best_bot_i[kk_4] = ((swap1_up_1 != 0) ? lower1_i_1 : upper1_i_1);
+                            best_bot_d[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_d_1 : lower1_d_1);
+                            best_bot_i[kk_4 + 1] = ((swap1_up_1 != 0) ? upper1_i_1 : lower1_i_1);
                         }
                     }
                 }
             }
         }
     }
-    int partial_split_m = split_m * 2;
-    int partial_split_id = split_id * 2 + col_chunk;
-    unsigned long long partial_col_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_split_m + partial_split_id) * 128 + q_local) * K_MAX_);
-    if (col_chunk < 2) {
-        if (q_local < 128) {
-            if (q_global < Q) {
-                {
-                    #pragma unroll
-                    for (int kk_9 = 0; kk_9 < K_MAX_; kk_9 += 2) {
-                        {
-                            float2 _v2 = make_float2(best_d[kk_9 + 0], best_d[kk_9 + 1]);
-                            *reinterpret_cast<float2*>(partial_distances + partial_col_base + (unsigned long long)kk_9) = _v2;
-                        }
-                    }
-                    #pragma unroll
-                    for (int kk_10 = 0; kk_10 < K_MAX_; kk_10 += 2) {
-                        {
-                            int2 _iv2 = make_int2(best_i[kk_10 + 0], best_i[kk_10 + 1]);
-                            *reinterpret_cast<int2*>(partial_indices + partial_col_base + (unsigned long long)kk_10) = _iv2;
-                        }
-                    }
-                }
-            } else {
+    if (warp < 8) {
+        int top_slot_base = (row_top * 8 + slot) * K_MAX_;
+        int bot_slot_base = (row_bot * 8 + slot) * K_MAX_;
+        #pragma unroll
+        for (int kk_5 = 0; kk_5 < K_MAX_; kk_5++) {
+            smem_local_d[top_slot_base + kk_5] = best_top_d[kk_5];
+            smem_local_i[top_slot_base + kk_5] = best_top_i[kk_5];
+            smem_local_d[bot_slot_base + kk_5] = best_bot_d[kk_5];
+            smem_local_i[bot_slot_base + kk_5] = best_bot_i[kk_5];
+        }
+    }
+    __syncthreads();
+    if (tid < 64) {
+        int row = tid;
+        int q_global = q_start + row;
+        if (q_global < Q) {
+            float head_d[8];
+            int head_i[8];
+            int head_k[8];
+            #pragma unroll
+            for (int slot_idx = 0; slot_idx < 8; slot_idx++) {
+                int local_base = (row * 8 + slot_idx) * K_MAX_;
+                head_k[slot_idx] = 0;
+                head_d[slot_idx] = smem_local_d[local_base];
+                head_i[slot_idx] = smem_local_i[local_base];
+            }
+            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + row) * K_MAX_);
+            #pragma unroll
+            for (int out_k = 0; out_k < K_MAX_; out_k++) {
+                float winner_d = head_d[0];
+                int winner_i = head_i[0];
+                int winner_slot = 0;
                 #pragma unroll
-                for (int kk_11 = 0; kk_11 < K_MAX_; kk_11++) {
-                    partial_distances[partial_col_base + (unsigned long long)kk_11] = LOOM_INF;
-                    partial_indices[partial_col_base + (unsigned long long)kk_11] = -1;
+                for (int slot_idx_1 = 1; slot_idx_1 < 8; slot_idx_1++) {
+                    float cand_d = head_d[slot_idx_1];
+                    int take = ((cand_d < winner_d) ? 1 : 0);
+                    winner_d = ((take != 0) ? cand_d : winner_d);
+                    winner_i = ((take != 0) ? head_i[slot_idx_1] : winner_i);
+                    winner_slot = ((take != 0) ? slot_idx_1 : winner_slot);
                 }
+                partial_distances[partial_base + (unsigned long long)out_k] = winner_d;
+                partial_indices[partial_base + (unsigned long long)out_k] = winner_i;
+                #pragma unroll
+                for (int slot_idx_2 = 0; slot_idx_2 < 8; slot_idx_2++) {
+                    if (winner_slot == slot_idx_2) {
+                        int next_head = head_k[slot_idx_2] + 1;
+                        head_k[slot_idx_2] = next_head;
+                        head_d[slot_idx_2] = LOOM_INF;
+                        head_i[slot_idx_2] = -1;
+                        if (next_head < K_MAX_) {
+                            int local_base_1 = (row * 8 + slot_idx_2) * K_MAX_;
+                            head_d[slot_idx_2] = smem_local_d[local_base_1 + next_head];
+                            head_i[slot_idx_2] = smem_local_i[local_base_1 + next_head];
+                        }
+                    }
+                }
+            }
+        } else {
+            unsigned long long partial_base_invalid = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * split_m + split_id) * 128 + row) * K_MAX_);
+            #pragma unroll
+            for (int kk_6 = 0; kk_6 < K_MAX_; kk_6++) {
+                partial_distances[partial_base_invalid + (unsigned long long)kk_6] = LOOM_INF;
+                partial_indices[partial_base_invalid + (unsigned long long)kk_6] = -1;
             }
         }
     }
@@ -1138,7 +868,7 @@ kernel_knn_search_mma_split_partial_v1(__nv_bfloat16* __restrict__ queries, __nv
     __syncthreads();
 
     if (warp == 0) {
-        asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(64));
+        asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;" :: "r"(tmem_addr_storage[0]), "r"(128));
         asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;");
     }
 }

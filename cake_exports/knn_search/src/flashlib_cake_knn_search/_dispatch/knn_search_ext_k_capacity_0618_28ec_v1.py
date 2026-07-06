@@ -9,7 +9,7 @@ high-Q two-tile K64 producer with a shape-specific split.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_blind_k64_twotile_portfolio_0614_50cc_v1 as k64_highq
@@ -60,7 +60,7 @@ q4096_m49152_merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_ext_k_capacity_truncate64_to_k_0618_28ec_v1", "arg_keys": ["temp_distances", "temp_indices", "out_distances", "out_indices", "B", "Q", "K"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 0, "constants": [["K_MAX_", 64]], "cta_group": 1, "threads": 256}'))
 
 def _compile_truncate_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"q4096_m49152_merge": {"__kernel__": "dispatch_kernel_0376"}, "q4096_m49152_partial": {"__kernel__": "dispatch_kernel_0377"}, "truncate": {"__kernel__": "dispatch_kernel_0375"}}'))
+    return _decode_capture(_json_loads('{"q4096_m49152_merge": {"__kernel__": "dispatch_kernel_0438"}, "q4096_m49152_partial": {"__kernel__": "dispatch_kernel_0439"}, "truncate": {"__kernel__": "dispatch_kernel_0437"}}'))
 
 def _ensure_truncate_kernel() -> dict[str, Any]:
     if not _TRUNCATE_KERNELS:

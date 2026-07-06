@@ -8,7 +8,7 @@ delegate to the inherited 375f seed unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -46,7 +46,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return k1_375f.selected_route(inputs)
 
 def _compile_k1_margin_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0327"}, "partial_k1": {"__kernel__": "dispatch_kernel_0326"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0377"}, "partial_k1": {"__kernel__": "dispatch_kernel_0376"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

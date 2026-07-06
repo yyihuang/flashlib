@@ -11,7 +11,7 @@ coordinates are zero in both query and database tensors.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_dispatch_compose_0611_r21_4e96_v1 as parent
@@ -77,7 +77,7 @@ def _vec8_aligned_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     return aligned
 
 def _compile_pad_kernel() -> Any:
-    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0201"}'))
+    return _decode_capture(_json_loads('{"__kernel__": "dispatch_kernel_0242"}'))
 
 def _use_scalar_capacity(inputs: dict[str, Any]) -> bool:
     d = int(inputs['D'])

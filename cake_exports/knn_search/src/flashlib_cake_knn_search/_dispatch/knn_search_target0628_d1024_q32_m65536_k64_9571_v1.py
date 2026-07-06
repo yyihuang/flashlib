@@ -7,7 +7,7 @@ and extends the split-M merge to 1024 partial lists for the larger M row.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_d1024_q32_m32768_k64_0623_67ec_v1 as parent
 from . import knn_search_scalar_capacity_0611_r22_4e96_v1 as scalar_capacity
@@ -46,7 +46,7 @@ def _use_target(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['Q']) == Q_ROWS and (int(inputs['M']) == M_ROWS) and (int(inputs['D']) == D_ORIGINAL) and (int(inputs['K']) == K64_MAX) and (not bool(inputs.get('self_search', False))) and (not bool(inputs.get('force_fallback', False))) and _tcgen05_capable_arch()
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0493"}, "partial": {"__kernel__": "dispatch_kernel_0492"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0527"}, "partial": {"__kernel__": "dispatch_kernel_0526"}}'))
 
 def _ensure_kernels() -> dict[str, Any]:
     if not _KERNELS:

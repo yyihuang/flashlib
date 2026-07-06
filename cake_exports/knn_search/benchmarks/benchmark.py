@@ -24,19 +24,34 @@ from flashlib_cake_knn_search._benchmark import (  # noqa: E402
 
 SHAPE_RECORDS = json.loads((Path(__file__).with_name("shape_records.json")).read_text(encoding="utf-8"))
 ROUTE_MANIFEST = json.loads((Path(__file__).with_name("expected_routes.json")).read_text(encoding="utf-8"))
-EXPECTED_ROUTES = {row["shape"]: row["selected_route"] for row in ROUTE_MANIFEST}
-SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_dispatch0701_k11_d128_guard_repair_v1:launch_for_eval"
-SHAPES: dict[str, dict[str, Any]] = {
+ALL_ROUTE_MANIFEST = json.loads(
+    (Path(__file__).with_name("all_expected_routes.json")).read_text(encoding="utf-8")
+)
+EXPECTED_ROUTES = {row["shape"]: row["selected_route"] for row in ALL_ROUTE_MANIFEST}
+SEMANTIC_ENTRYPOINT = "loom.examples.weave.knn_search_registry_b653_compat0701_v1:launch_for_eval"
+ALL_SHAPES: dict[str, dict[str, Any]] = {
     row["label"]: {**row["params"], "recorded": row["recorded"]} for row in SHAPE_RECORDS
 }
+PERFORMANCE_LABELS = tuple(row["shape"] for row in ROUTE_MANIFEST)
+SHAPES: dict[str, dict[str, Any]] = {label: ALL_SHAPES[label] for label in PERFORMANCE_LABELS}
+if len(SHAPE_RECORDS) != 173 or len(ALL_SHAPES) != 173:
+    raise RuntimeError("KNN-search full correctness/runtime ledger must contain 173 unique shapes")
+if len(ROUTE_MANIFEST) != 11 or len(PERFORMANCE_LABELS) != len(set(PERFORMANCE_LABELS)):
+    raise RuntimeError("KNN-search performance route manifest must contain 11 unique shapes")
+if len(ALL_ROUTE_MANIFEST) != 173 or len(EXPECTED_ROUTES) != 173:
+    raise RuntimeError("KNN-search full route manifest must contain 173 unique shapes")
+if tuple(row["shape"] for row in ALL_ROUTE_MANIFEST) != tuple(ALL_SHAPES):
+    raise RuntimeError("KNN-search full route manifest must follow the full shape ledger")
+if any(label not in ALL_SHAPES for label in PERFORMANCE_LABELS):
+    raise RuntimeError("KNN-search performance route manifest contains an unknown shape")
 BASELINE_NAME = "flashlib.flash_knn"
-MEASUREMENT_ORDER_SEED = "flashlib-knn-search-export-paired-v1"
+MEASUREMENT_ORDER_SEED = "flashlib-knn-search-runtime-compute-paired-v2"
 
 
 def _measurement_order(label: str) -> tuple[str, str, str]:
-    """Choose one stable per-shape order for baseline/public/prepared timing."""
+    """Choose one stable per-shape order for baseline/compute/prepared timing."""
 
-    orders = tuple(permutations(("baseline", "public", "prepared")))
+    orders = tuple(permutations(("baseline", "compute", "prepared")))
     digest = hashlib.sha256(f"{MEASUREMENT_ORDER_SEED}:{label}".encode()).digest()
     return orders[int.from_bytes(digest[:2], "little") % len(orders)]
 
@@ -47,9 +62,9 @@ def _measurement_session_fields(measurement_session_id: str) -> dict[str, Any]:
     return {
         "measurement_session_id": measurement_session_id,
         "baseline_measurement_session_id": measurement_session_id,
-        "public_measurement_session_id": measurement_session_id,
+        "compute_measurement_session_id": measurement_session_id,
         "prepared_measurement_session_id": measurement_session_id,
-        "baseline_public_prepared_same_session": True,
+        "baseline_compute_prepared_same_session": True,
     }
 
 
@@ -140,11 +155,11 @@ def _write_json_atomic(path: Path, text: str) -> None:
     temporary.replace(path)
 
 
-def _make_inputs(shape: dict[str, Any]):
+def _make_inputs(shape: dict[str, Any], *, seed_offset: int = 0):
     import torch
 
     generator = torch.Generator(device="cuda")
-    generator.manual_seed(int(shape["seed"]))
+    generator.manual_seed(int(shape["seed"]) + int(seed_offset))
     database = torch.randn(
         (int(shape["B"]), int(shape["M"]), int(shape["D"])),
         dtype=torch.bfloat16,
@@ -163,6 +178,21 @@ def _make_inputs(shape: dict[str, Any]):
             generator=generator,
         ).contiguous()
     return query, database
+
+
+def _alternating_call(fn: Any, first: tuple[Any, Any], second: tuple[Any, Any]):
+    """Return a call that alternates two equal-shape, different-pointer inputs."""
+
+    pairs = (first, second)
+    iteration = 0
+
+    def call():
+        nonlocal iteration
+        query, database = pairs[iteration & 1]
+        iteration += 1
+        return fn(query, database)
+
+    return call
 
 
 def _reference_topk(query, database, k: int):
@@ -227,46 +257,68 @@ def _run_shape(
     name: str,
     shape: dict[str, Any],
     *,
+    runtime: Any,
+    runtime_init_timing: Any = None,
     arch: str | None,
     correctness: bool,
     benchmark: bool,
     measurement_session_id: str | None = None,
 ) -> dict[str, Any]:
     import torch
-    from flashlib_cake_knn_search import knn_search, knn_search_prepared, prepare_knn_search
+    from flashlib_cake_knn_search import knn_search_prepared, prepare_knn_search
 
     session_id = measurement_session_id or uuid.uuid4().hex
     session_fields = _measurement_session_fields(session_id)
-    query, database = _make_inputs(shape)
+    query_a, database_a = _make_inputs(shape)
+    query_b, database_b = _make_inputs(shape, seed_offset=1_000_003)
+    if database_a.data_ptr() == database_b.data_ptr() or query_a.data_ptr() == query_b.data_ptr():
+        raise RuntimeError("fresh-pointer KNN-search input pair unexpectedly aliases")
     k = int(shape["K"])
 
-    def public_first_call():
-        return knn_search(query, database, k, arch=arch, return_info=True)
+    def compute(query, database, *, return_info: bool = False):
+        return runtime.compute(query, database, k, return_info=return_info)
 
     baseline_out = None
     baseline_cold_first_call = None
-    public_cold_first_call = None
+    first_shape_lookup_timing = None
+    fresh_pointer_hit_timing = None
     prepare_cold_call = None
     prepared_cold_first_call = None
     if benchmark:
         flash_knn = _load_flashlib_baseline()
-        baseline_out, baseline_cold_first_call = measure_host_call(
-            lambda: flash_knn(query, database, k=k)
+        baseline_out, baseline_cold_first_call = measure_host_call(lambda: flash_knn(query_b, database_b, k=k))
+        (first_out, first_route_info), first_shape_lookup_timing = measure_host_call(
+            lambda: compute(query_a, database_a, return_info=True)
         )
-        (_, public_route_info), public_cold_first_call = measure_host_call(public_first_call)
-        prepared, prepare_cold_call = measure_host_call(
-            lambda: prepare_knn_search(query, database, k, arch=arch)
+        (out, route_info), fresh_pointer_hit_timing = measure_host_call(
+            lambda: compute(query_b, database_b, return_info=True)
         )
-        (out, route_info), prepared_cold_first_call = measure_host_call(
+        if not bool(route_info.get("runtime_cache_hit")):
+            raise RuntimeError("fresh-pointer KNN-search call did not hit the runtime shape cache")
+        if first_route_info["selected_route"] != route_info["selected_route"]:
+            raise RuntimeError(
+                "fresh-pointer KNN-search call changed routes: "
+                f"{first_route_info['selected_route']!r} != {route_info['selected_route']!r}"
+            )
+        if any(left.data_ptr() == right.data_ptr() for left, right in zip(first_out, out, strict=True)):
+            raise RuntimeError("fresh-pointer KNN-search call reused the prior default output allocation")
+        prepared, prepare_cold_call = measure_host_call(lambda: prepare_knn_search(query_a, database_a, k, arch=arch))
+        (_, prepared_route_info), prepared_cold_first_call = measure_host_call(
             lambda: knn_search_prepared(prepared, return_info=True)
         )
-        if public_route_info["selected_route"] != route_info["selected_route"]:
+        if first_route_info["selected_route"] != prepared_route_info["selected_route"]:
             raise RuntimeError(
-                "cold public and prepared KNN-search calls selected different routes: "
-                f"{public_route_info['selected_route']!r} != {route_info['selected_route']!r}"
+                "runtime and prepared KNN-search calls selected different routes: "
+                f"{first_route_info['selected_route']!r} != "
+                f"{prepared_route_info['selected_route']!r}"
             )
     else:
-        out, route_info = public_first_call()
+        first_out, first_route_info = compute(query_a, database_a, return_info=True)
+        out, route_info = compute(query_b, database_b, return_info=True)
+        if not bool(route_info.get("runtime_cache_hit")):
+            raise RuntimeError("fresh-pointer KNN-search call did not hit the runtime shape cache")
+        if first_route_info["selected_route"] != route_info["selected_route"]:
+            raise RuntimeError("fresh-pointer KNN-search call changed routes")
         torch.cuda.synchronize()
 
     result: dict[str, Any] = {
@@ -284,6 +336,9 @@ def _run_shape(
         "route_matches_expected": route_info["selected_route"] == EXPECTED_ROUTES[name],
         "baseline_name": BASELINE_NAME,
         "baseline_entrypoint": BASELINE_NAME,
+        "first_shape_lookup_cache_hit": bool(first_route_info.get("runtime_cache_hit")),
+        "fresh_pointer_cache_hit": bool(route_info.get("runtime_cache_hit")),
+        "fresh_pointer_rebind_verified": True,
         **session_fields,
         **_recorded_diagnostics(shape["recorded"]),
     }
@@ -291,34 +346,68 @@ def _run_shape(
         result.update(
             {
                 "prepared_launch_count": route_info["prepared_launch_count"],
+                "cold_runtime_init": _host_call_diagnostics(runtime_init_timing),
                 "cold_baseline_call": _host_call_diagnostics(baseline_cold_first_call),
-                "cold_public_call": _host_call_diagnostics(public_cold_first_call),
-                "prepared_setup_after_cold_public": _host_call_diagnostics(prepare_cold_call),
+                "cold_compute_first_shape_lookup": _host_call_diagnostics(first_shape_lookup_timing),
+                "cold_compute_fresh_pointer_hit": _host_call_diagnostics(fresh_pointer_hit_timing),
+                "prepared_setup_after_runtime_hit": _host_call_diagnostics(prepare_cold_call),
                 "cold_prepared_call": _host_call_diagnostics(prepared_cold_first_call),
+                "runtime_cache_info_after_fresh_pointer_hit": runtime.cache_info(),
             }
         )
 
+    first_reference_indices = None
     reference_indices = None
     if correctness or benchmark:
-        _, reference_indices = _reference_topk(query, database, k)
+        _, reference_indices = _reference_topk(query_b, database_b, k)
+        if correctness:
+            _, first_reference_indices = _reference_topk(query_a, database_a, k)
         torch.cuda.synchronize()
 
     required_recall = float(shape.get("min_recall", 0.999))
     if correctness:
-        result.update(
-            _knn_correctness_diagnostics(
-                query,
-                database,
-                out,
-                reference_indices,
-                required_recall=required_recall,
-            )
+        first_candidate_correctness = _knn_correctness_diagnostics(
+            query_a,
+            database_a,
+            first_out,
+            first_reference_indices,
+            required_recall=required_recall,
         )
+        candidate_correctness = _knn_correctness_diagnostics(
+            query_b,
+            database_b,
+            out,
+            reference_indices,
+            required_recall=required_recall,
+        )
+        result["first_pointer_correctness"] = first_candidate_correctness
+        result["fresh_pointer_correctness"] = candidate_correctness
+        if not first_candidate_correctness["correct"] or not candidate_correctness["correct"]:
+            raise RuntimeError(
+                f"runtime.compute fresh-pointer correctness failed for {name}: "
+                f"first={first_candidate_correctness!r}, fresh={candidate_correctness!r}"
+            )
+        rebound_out, rebound_info = compute(query_a, database_a, return_info=True)
+        torch.cuda.synchronize()
+        rebound_correctness = _knn_correctness_diagnostics(
+            query_a,
+            database_a,
+            rebound_out,
+            first_reference_indices,
+            required_recall=required_recall,
+        )
+        if not rebound_info.get("runtime_cache_hit") or not rebound_correctness["correct"]:
+            raise RuntimeError(
+                f"runtime.compute B-to-A pointer rebound failed for {name}: "
+                f"info={rebound_info!r}, correctness={rebound_correctness!r}"
+            )
+        result["return_pointer_correctness"] = rebound_correctness
+        result.update(candidate_correctness)
 
     if benchmark:
         baseline_correctness = _knn_correctness_diagnostics(
-            query,
-            database,
+            query_b,
+            database_b,
             baseline_out,
             reference_indices,
             required_recall=required_recall,
@@ -327,15 +416,26 @@ def _run_shape(
         _require_correct_baseline(name, baseline_correctness)
 
         baseline_output_holder = [baseline_out]
-        public_output_holder = [out]
+        compute_output_holder = [out]
 
-        def run_baseline():
+        def baseline_for(query, database):
             baseline_output_holder[0] = flash_knn(query, database, k=k)
             return baseline_output_holder[0]
 
-        def run_public():
-            public_output_holder[0] = knn_search(query, database, k, arch=arch)
-            return public_output_holder[0]
+        def compute_for(query, database):
+            compute_output_holder[0] = compute(query, database)
+            return compute_output_holder[0]
+
+        run_baseline = _alternating_call(
+            baseline_for,
+            (query_a, database_a),
+            (query_b, database_b),
+        )
+        run_compute = _alternating_call(
+            compute_for,
+            (query_a, database_a),
+            (query_b, database_b),
+        )
 
         def time_baseline():
             return bench_gpu_time(
@@ -344,11 +444,11 @@ def _run_shape(
                 cold_first_call=baseline_cold_first_call,
             )
 
-        def time_public():
+        def time_compute():
             return bench_gpu_time(
-                run_public,
+                run_compute,
                 cold_l2=True,
-                cold_first_call=public_cold_first_call,
+                cold_first_call=fresh_pointer_hit_timing,
             )
 
         def time_prepared():
@@ -361,22 +461,25 @@ def _run_shape(
         measurement_order = _measurement_order(name)
         timers = {
             "baseline": time_baseline,
-            "public": time_public,
+            "compute": time_compute,
             "prepared": time_prepared,
         }
         timings = {timer_name: timers[timer_name]() for timer_name in measurement_order}
         baseline_timing = timings["baseline"]
-        public_timing = timings["public"]
+        compute_timing = timings["compute"]
         prepared_timing = timings["prepared"]
         timing_backends = {
             baseline_timing.backend,
-            public_timing.backend,
+            compute_timing.backend,
             prepared_timing.backend,
         }
         if timing_backends != {"cupti"}:
-            raise RuntimeError(
-                f"baseline/public/prepared must all use CUPTI, got {sorted(timing_backends)!r}"
-            )
+            raise RuntimeError(f"baseline/compute/prepared must all use CUPTI, got {sorted(timing_backends)!r}")
+
+        baseline_e2e_ms = baseline_timing.median_synchronized_e2e_ms
+        compute_e2e_ms = compute_timing.median_synchronized_e2e_ms
+        if baseline_e2e_ms is None or compute_e2e_ms is None:
+            raise RuntimeError("CUPTI benchmark did not report synchronized E2E timing")
 
         result.update(
             {
@@ -384,42 +487,53 @@ def _run_shape(
                 "measurement_order_policy": "deterministic_sha256_per_shape_permutation",
                 "baseline_ms": baseline_timing.median_ms,
                 "baseline_gpu_span_ms": baseline_timing.median_gpu_span_ms,
+                "baseline_kernel_span_ms": baseline_timing.median_gpu_span_ms,
                 "baseline_kernel_sum_ms": baseline_timing.median_kernel_sum_ms,
                 "baseline_active_union_ms": baseline_timing.median_active_union_ms,
                 "baseline_inter_kernel_gap_ms": baseline_timing.median_inter_kernel_gap_ms,
+                "baseline_synchronized_e2e_ms": baseline_e2e_ms,
                 "baseline_timing_backend": baseline_timing.backend,
                 "baseline_bench_iters": len(baseline_timing.times_ms),
                 "baseline_timing_diagnostics": _timing_diagnostics(baseline_timing),
-                "kernel_ms": public_timing.median_ms,
-                "public_gpu_span_ms": public_timing.median_gpu_span_ms,
-                "public_kernel_sum_ms": public_timing.median_kernel_sum_ms,
-                "public_active_union_ms": public_timing.median_active_union_ms,
-                "public_inter_kernel_gap_ms": public_timing.median_inter_kernel_gap_ms,
-                "public_timing_diagnostics": _timing_diagnostics(public_timing),
+                "kernel_ms": compute_timing.median_gpu_span_ms,
+                "compute_gpu_span_ms": compute_timing.median_gpu_span_ms,
+                "compute_kernel_span_ms": compute_timing.median_gpu_span_ms,
+                "compute_gpu_span_scope": "correlated_kernel_activity_only_excludes_memcpy_and_pre_kernel_host_work",
+                "compute_kernel_sum_ms": compute_timing.median_kernel_sum_ms,
+                "compute_active_union_ms": compute_timing.median_active_union_ms,
+                "compute_inter_kernel_gap_ms": compute_timing.median_inter_kernel_gap_ms,
+                "compute_host_enqueue_ms": compute_timing.median_host_enqueue_ms,
+                "compute_synchronized_e2e_ms": compute_e2e_ms,
+                "compute_timing_diagnostics": _timing_diagnostics(compute_timing),
                 "prepared_gpu_span_ms": prepared_timing.median_gpu_span_ms,
                 "prepared_kernel_sum_ms": prepared_timing.median_kernel_sum_ms,
                 "prepared_active_union_ms": prepared_timing.median_active_union_ms,
                 "prepared_inter_kernel_gap_ms": prepared_timing.median_inter_kernel_gap_ms,
                 "prepared_timing_diagnostics": _timing_diagnostics(prepared_timing),
-                "public_over_prepared": public_timing.median_ms / prepared_timing.median_ms,
-                "timing_backend": public_timing.backend,
-                "bench_iters": len(public_timing.times_ms),
-                "speedup_vs_baseline": baseline_timing.median_ms / public_timing.median_ms,
-                "prepared_speedup_vs_baseline": (
-                    baseline_timing.median_ms / prepared_timing.median_ms
+                "compute_gpu_over_prepared": (compute_timing.median_gpu_span_ms / prepared_timing.median_gpu_span_ms),
+                "timing_backend": compute_timing.backend,
+                "bench_iters": len(compute_timing.times_ms),
+                "compute_gpu_speedup_vs_baseline": (
+                    baseline_timing.median_gpu_span_ms / compute_timing.median_gpu_span_ms
                 ),
+                "compute_speedup_vs_baseline": baseline_e2e_ms / compute_e2e_ms,
+                "speedup_vs_baseline": (
+                    baseline_timing.median_gpu_span_ms / compute_timing.median_gpu_span_ms
+                ),
+                "prepared_speedup_vs_baseline": (baseline_timing.median_ms / prepared_timing.median_ms),
             }
         )
         flops = 2.0 * int(shape["B"]) * int(shape["Q"]) * int(shape["M"]) * int(shape["D"])
-        result["tflops"] = flops / public_timing.median_ms / 1e9
-        result["qps"] = int(shape["B"]) * int(shape["Q"]) / (public_timing.median_ms / 1000.0)
+        result["gpu_tflops"] = flops / compute_timing.median_gpu_span_ms / 1e9
+        result["tflops"] = flops / compute_e2e_ms / 1e9
+        result["qps"] = int(shape["B"]) * int(shape["Q"]) / (compute_e2e_ms / 1000.0)
 
     return result
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Correctness and CUPTI benchmark for flashlib_cake_knn_search.knn_search"
+        description="Correctness and CUPTI benchmark for reusable KNN-search runtime.compute"
     )
     parser.add_argument(
         "--shape",
@@ -452,28 +566,66 @@ def main() -> int:
         args.json.unlink(missing_ok=True)
     selected = selected[args.shard_index :: args.shard_count]
     measurement_session_id = uuid.uuid4().hex
+    unique_signature_count = len(
+        {
+            (
+                int(SHAPES[name]["B"]),
+                int(SHAPES[name]["Q"]),
+                int(SHAPES[name]["M"]),
+                int(SHAPES[name]["D"]),
+                int(SHAPES[name]["K"]),
+                str(SHAPES[name].get("dtype", "bfloat16")),
+                bool(SHAPES[name].get("self_search", False)),
+            )
+            for name in selected
+        }
+    )
     payload: dict[str, Any] = {
-        "api": "flashlib_cake_knn_search.knn_search",
+        "api": "flashlib_cake_knn_search.init().compute",
         "semantic_entrypoint": SEMANTIC_ENTRYPOINT,
         "baseline_name": BASELINE_NAME,
         "baseline_entrypoint": BASELINE_NAME,
-        "speedup_convention": "same_session_flashlib_flash_knn_gpu_span_ms / exported_cake_gpu_span_ms",
+        "publication_speedup_convention": (
+            "compute_speedup_vs_baseline = "
+            "same_session_flashlib_flash_knn_synchronized_e2e_ms / "
+            "exported_runtime_compute_synchronized_e2e_ms"
+        ),
+        "speedup_convention": (
+            "speedup_vs_baseline = same_session_flashlib_flash_knn_gpu_span_ms / "
+            "exported_runtime_compute_gpu_span_ms (legacy GPU-span alias)"
+        ),
+        "gpu_speedup_convention": (
+            "compute_gpu_speedup_vs_baseline = "
+            "same_session_flashlib_flash_knn_gpu_span_ms / "
+            "exported_runtime_compute_gpu_span_ms"
+        ),
         "shapes": {name: _shape_metadata(SHAPES[name]) for name in selected},
         "metadata_only": bool(args.metadata_only),
         "validation_shard": {"index": args.shard_index, "count": args.shard_count},
         "measurement_session": {
             "id": measurement_session_id,
-            "scope": "per_shape_interleaved_baseline_public_prepared",
+            "scope": "shared_runtime_per_shape_deterministic_path_blocks_with_pointer_alternation",
+            "path_timing_mode": "separate_cupti_blocks",
+            "pointer_timing_mode": "alternating_fresh_pointer_sets_within_each_path",
             "baseline_candidate_same_process": True,
-            "baseline_public_prepared_same_session": True,
+            "baseline_compute_prepared_same_session": True,
+            "runtime_initialized_once": True,
+            "runtime_instance_reused_across_shapes": True,
+            "resident_multi_shape_cache_benchmarked": False,
+            "cache_policy": "synchronize_and_clear_after_each_completed_shape",
             "order_policy": "deterministic_sha256_per_shape_permutation",
             "order_seed": MEASUREMENT_ORDER_SEED,
+        },
+        "runtime_cache_summary": {
+            "selected_shape_count": len(selected),
+            "unique_signature_count": unique_signature_count,
         },
     }
     if args.metadata_only:
         payload["results"] = []
     else:
         import torch
+        from flashlib_cake_knn_search import init
 
         payload["hardware"] = {
             "device": torch.cuda.get_device_name(),
@@ -481,17 +633,35 @@ def main() -> int:
         }
         if not args.no_benchmark:
             require_cupti()
-        payload["results"] = [
-            _run_shape(
-                name,
-                SHAPES[name],
-                arch=args.arch,
-                correctness=not args.no_correctness,
-                benchmark=not args.no_benchmark,
-                measurement_session_id=measurement_session_id,
+            runtime, runtime_init_timing = measure_host_call(lambda: init(arch=args.arch))
+        else:
+            runtime = init(arch=args.arch)
+            runtime_init_timing = None
+        results = []
+        for name in selected:
+            results.append(
+                _run_shape(
+                    name,
+                    SHAPES[name],
+                    runtime=runtime,
+                    runtime_init_timing=runtime_init_timing,
+                    arch=args.arch,
+                    correctness=not args.no_correctness,
+                    benchmark=not args.no_benchmark,
+                    measurement_session_id=measurement_session_id,
+                )
             )
-            for name in selected
-        ]
+            runtime.clear()
+        payload["results"] = results
+        payload["cold_runtime_init"] = _host_call_diagnostics(runtime_init_timing)
+        payload["runtime_cache_summary"].update(
+            {
+                "first_lookup_miss_count": sum(not bool(row["first_shape_lookup_cache_hit"]) for row in results),
+                "fresh_pointer_hit_count": sum(bool(row["fresh_pointer_cache_hit"]) for row in results),
+                "final_cache_info": runtime.cache_info(),
+                "workspace_lifecycle": "synchronize_and_clear_after_each_completed_shape",
+            }
+        )
 
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.json is not None:

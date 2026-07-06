@@ -7,7 +7,7 @@ current high-Q/low-K dispatcher in this worktree.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -65,7 +65,7 @@ def _k1_split_m(total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_k1_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0274"}, "partial_k1": {"__kernel__": "dispatch_kernel_0273"}}'))
+    return _decode_capture(_json_loads('{"merge_k1": {"__kernel__": "dispatch_kernel_0324"}, "partial_k1": {"__kernel__": "dispatch_kernel_0323"}}'))
 
 def _scratch_k1(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

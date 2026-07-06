@@ -10,7 +10,7 @@ scalar-capacity parent route.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_blind_lowd_non_d128_tcgen05_dispatch0610_r99_ec7c_v1 as lowd
@@ -73,7 +73,7 @@ def _compile_padded_mma_kernels(padded_d: int) -> dict[str, Any]:
     return lowd._compile_non_d128_mma_kernels(int(padded_d))
 
 def _compile_d3_tile_reduce_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0215"}, "partial": {"__kernel__": "dispatch_kernel_0214"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0293"}, "partial": {"__kernel__": "dispatch_kernel_0292"}}'))
 
 def _padded_buffers(inputs: dict[str, Any], padded_d: int) -> tuple[Any, Any]:
     import torch

@@ -7,7 +7,7 @@ wrapper, which in turn delegates the incumbent K<=10 frontier.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .knn_search_lowd_dbscan_dispatch0610_r1_v1 import launch_for_eval as _round1_launch_for_eval
 THREADS = 32
@@ -22,7 +22,7 @@ knn_search_lowd_ivf_direct_dispatch0610_r2_v1 = _decode_capture(_json_loads('{"_
 ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_ivf_direct_dispatch0610_r2_v1", "arg_keys": ["queries", "database", "out_distances", "out_indices", "B", "Q", "M", "K", "D"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 256, "constants": [["K_MAX_", 10], ["M_MAX_", 32]], "cta_group": 1, "threads": 32}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0221"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0266"}}'))
 
 def _use_ivf_small(inputs: dict[str, Any]) -> bool:
     dim = int(inputs['D'])

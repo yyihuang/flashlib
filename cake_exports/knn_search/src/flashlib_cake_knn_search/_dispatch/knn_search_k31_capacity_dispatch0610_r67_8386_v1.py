@@ -8,7 +8,7 @@ round-60 clean-room producer/merge structure but compiles both phases with
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import dc as dc
@@ -22,7 +22,7 @@ _KNN_SEARCH_K31_KERNELS: dict[str, Any] = {}
 _KNN_SEARCH_K31_SCRATCH: dict[tuple[int, int, int, int, int, int, str], tuple[Any, Any]] = {}
 
 def _compile_k31_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0236"}, "partial": {"__kernel__": "dispatch_kernel_0235"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0281"}, "partial": {"__kernel__": "dispatch_kernel_0280"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

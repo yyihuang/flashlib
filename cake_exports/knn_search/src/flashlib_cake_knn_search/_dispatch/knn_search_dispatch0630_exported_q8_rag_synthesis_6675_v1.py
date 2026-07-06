@@ -7,7 +7,7 @@ independent RAG K10 repair before the inherited global Weave default.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0618_084a_lowd_d256_post_d384_k64_v1 as base
 from . import knn_search_dispatch0630_floor14_expanded_coverage_synthesis_6675_v1 as target_portfolio

@@ -8,7 +8,7 @@ K32 path can use one producer CTA per B200/B300 SM for Q128/M131072.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -98,7 +98,7 @@ def _select_split_m(q_rows: int, m_rows: int) -> int:
     return 1
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0207"}, "partial": {"__kernel__": "dispatch_kernel_0206"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0248"}, "partial": {"__kernel__": "dispatch_kernel_0247"}}'))
 
 def _scratch(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

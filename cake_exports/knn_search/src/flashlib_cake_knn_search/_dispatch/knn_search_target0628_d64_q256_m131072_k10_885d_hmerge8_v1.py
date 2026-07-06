@@ -8,7 +8,7 @@ merge ABI.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k32_mma_capacity_0611_r12_v1 as base
@@ -70,7 +70,7 @@ TARGET0628_D64_Q256_M131072_K10_SHAPE: dict[str, Any] = {'label': 'target0627_d6
 TARGET_SHAPES = [TARGET0628_D64_Q256_M131072_K10_SHAPE]
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0502"}, "group_merge": {"__kernel__": "dispatch_kernel_0501"}, "partial": {"__kernel__": "dispatch_kernel_0500"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0536"}, "group_merge": {"__kernel__": "dispatch_kernel_0535"}, "partial": {"__kernel__": "dispatch_kernel_0534"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

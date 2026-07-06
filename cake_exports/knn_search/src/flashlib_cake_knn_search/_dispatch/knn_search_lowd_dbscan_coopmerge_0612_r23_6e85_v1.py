@@ -7,7 +7,7 @@ round-22 low-D wrapper.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_lowd_dbscan_0611_r22_6e85_v1 as parent
 THREADS = 256
@@ -29,7 +29,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowd_dbscan_d2_coopmerg
 DBSCAN_D2_SHAPES: list[dict[str, Any]] = parent.DBSCAN_D2_SHAPES
 
 def _compile_lowd_coop_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0223"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0268"}}'))
 
 def _use_d2_dbscan_coop(inputs: dict[str, Any]) -> bool:
     return int(inputs['B']) == 1 and int(inputs['D']) == D_STATIC and (int(inputs['Q']) <= M_MAX) and (int(inputs['M']) <= M_MAX) and (int(inputs['K']) <= K_MAX)

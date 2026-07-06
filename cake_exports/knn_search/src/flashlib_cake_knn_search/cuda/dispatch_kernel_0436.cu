@@ -25,7 +25,7 @@ __device__ __forceinline__ int make_warp_uniform(int x) {
 extern "C" {
 
 __global__ __launch_bounds__(32) void
-kernel_knn_search_floor13_k64_prefix8_merge_0622_f3ce_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices, int B, int Q, int K, int partial_list_count, int num_q_tiles)
+kernel_knn_search_ext_k64_highq_prefix8_merge_0618_c2e0_v1(float* __restrict__ partial_distances, int* __restrict__ partial_indices, float* __restrict__ out_distances, int* __restrict__ out_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -36,34 +36,28 @@ kernel_knn_search_floor13_k64_prefix8_merge_0622_f3ce_v1(float* __restrict__ par
     const int num_bids = gridDim.x;
 
     // === Task calls (dependency order) ===
-    int q_linear = bid;
-    int batch_id = q_linear / Q;
-    int q_global = q_linear - batch_id * Q;
+    int q_global = bid;
     int q_tile = q_global / 128;
     int q_local = q_global - q_tile * 128;
-    float head_d[64];
-    int head_i[64];
-    int head_k[64];
+    float head_d[24];
+    int head_i[24];
+    int head_k[24];
     #pragma unroll
-    for (int slot = 0; slot < 64; slot++) {
+    for (int slot = 0; slot < 24; slot++) {
         int split_id = lane + slot * 32;
         head_k[slot] = 0;
-        head_d[slot] = LOOM_INF;
-        head_i[slot] = -1;
-        if (split_id < partial_list_count) {
-            unsigned long long partial_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id) * 128 + q_local) * K_PREFIX_);
-            head_d[slot] = partial_distances[partial_base];
-            head_i[slot] = partial_indices[partial_base];
-        }
+        unsigned long long partial_base = (unsigned long long)(((q_tile * 768 + split_id) * 128 + q_local) * K_PREFIX_);
+        head_d[slot] = partial_distances[partial_base];
+        head_i[slot] = partial_indices[partial_base];
     }
-    unsigned long long out_base = (unsigned long long)((batch_id * Q + q_global) * K);
+    unsigned long long out_base = (unsigned long long)(q_global * K_MAX_);
     #pragma unroll
     for (int out_k = 0; out_k < K_MAX_; out_k++) {
         float local_best_d = head_d[0];
         int local_best_i = head_i[0];
         int local_best_slot = 0;
         #pragma unroll
-        for (int slot_1 = 1; slot_1 < 64; slot_1++) {
+        for (int slot_1 = 1; slot_1 < 24; slot_1++) {
             float cand_d = head_d[slot_1];
             int cand_i = head_i[slot_1];
             int take = ((cand_d < local_best_d) ? 1 : 0);
@@ -155,26 +149,22 @@ kernel_knn_search_floor13_k64_prefix8_merge_0622_f3ce_v1(float* __restrict__ par
         winner_i = ((take_peer_15 != 0) ? peer_i_13 : winner_i);
         winner_lane = ((take_peer_15 != 0) ? peer_lane_14 : winner_lane);
         if (lane == 0) {
-            if (out_k < K) {
-                out_distances[out_base + (unsigned long long)out_k] = winner_d;
-                out_indices[out_base + (unsigned long long)out_k] = winner_i;
-            }
+            out_distances[out_base + (unsigned long long)out_k] = winner_d;
+            out_indices[out_base + (unsigned long long)out_k] = winner_i;
         }
         if (lane == winner_lane) {
             #pragma unroll
-            for (int slot_2 = 0; slot_2 < 64; slot_2++) {
+            for (int slot_2 = 0; slot_2 < 24; slot_2++) {
                 if (local_best_slot == slot_2) {
                     int next_head = head_k[slot_2] + 1;
                     int split_id_1 = lane + slot_2 * 32;
                     head_k[slot_2] = next_head;
                     head_d[slot_2] = LOOM_INF;
                     head_i[slot_2] = -1;
-                    if (split_id_1 < partial_list_count) {
-                        if (next_head < K_PREFIX_) {
-                            unsigned long long partial_base_1 = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + split_id_1) * 128 + q_local) * K_PREFIX_ + next_head);
-                            head_d[slot_2] = partial_distances[partial_base_1];
-                            head_i[slot_2] = partial_indices[partial_base_1];
-                        }
+                    if (next_head < K_PREFIX_) {
+                        unsigned long long partial_base_1 = (unsigned long long)(((q_tile * 768 + split_id_1) * 128 + q_local) * K_PREFIX_ + next_head);
+                        head_d[slot_2] = partial_distances[partial_base_1];
+                        head_i[slot_2] = partial_indices[partial_base_1];
                     }
                 }
             }

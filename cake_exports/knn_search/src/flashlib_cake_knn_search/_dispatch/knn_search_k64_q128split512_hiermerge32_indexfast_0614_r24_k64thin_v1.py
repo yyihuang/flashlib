@@ -10,7 +10,7 @@ shapes delegate to the round-43 K64 dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_dispatch_q128split512hiermerge32_q4096split79_0613_r43_11c1_v1 as parent
@@ -42,7 +42,7 @@ ir = _decode_capture(_json_loads('{"__ir__": "knn_search_mma_split_partial_v1", 
 K64_THIN_MARGIN_SHAPES: list[dict[str, Any]] = q128_parent.K64_Q128_SPLIT512_HIERMERGE_SHAPES
 
 def _compile_q128_split512_indexfast_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0291"}, "group_merge": {"__kernel__": "dispatch_kernel_0290"}, "partial": {"__kernel__": "dispatch_kernel_0289"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0341"}, "group_merge": {"__kernel__": "dispatch_kernel_0340"}, "partial": {"__kernel__": "dispatch_kernel_0339"}}'))
 
 def _use_q128_k64_split512_indexfast(inputs: dict[str, Any]) -> bool:
     return q128_parent._use_q128_k64_split512_hiermerge(inputs)

@@ -6,7 +6,7 @@ all other shapes retain the existing exported Weave-only dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from importlib import import_module
 from typing import Any
 from . import knn_search_r278_q4096_exported_vertical_slice_b4ae378a3287_v1 as seed

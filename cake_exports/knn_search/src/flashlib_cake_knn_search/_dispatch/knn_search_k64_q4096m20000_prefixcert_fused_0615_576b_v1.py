@@ -9,7 +9,7 @@ device synchronization, or host-conditional launch in the production path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1 as prefix6_parent
@@ -66,7 +66,7 @@ def _cert_rows_fused(inputs: dict[str, Any], row_count: int):
     return rows
 
 def _compile_k64_q4096_prefixcert_fused_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0384"}, "partial": {"__kernel__": "dispatch_kernel_0383"}, "repair": {"__kernel__": "dispatch_kernel_0385"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0570"}, "partial": {"__kernel__": "dispatch_kernel_0569"}, "repair": {"__kernel__": "dispatch_kernel_0571"}}'))
 
 def _use_q4096_k64_prefixcert_fused(inputs: dict[str, Any]) -> bool:
     return prefix6_parent._use_q4096_k64_prefix6cert(inputs)

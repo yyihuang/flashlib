@@ -284,7 +284,7 @@ __device__ __forceinline__ uint32_t make_warp_uniform(uint32_t val) {
 extern "C" {
 
 __global__ __launch_bounds__(512) void
-kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices, int B, int Q, int M, int split_m, int num_q_tiles, int total_m_tiles, int tiles_per_split, int partial_list_count)
+kernel_knn_search_ext_k64_highq_prefix8_partial_0618_c2e0_v1(__nv_bfloat16* __restrict__ queries, __nv_bfloat16* __restrict__ database, float* __restrict__ partial_distances, int* __restrict__ partial_indices)
 {
     const int tid = threadIdx.x;
     const int warp = make_warp_uniform(tid / 32);
@@ -349,10 +349,8 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
 
     // === Task calls (dependency order) ===
     int work_id = bid;
-    int split_id = work_id - work_id / split_m * split_m;
-    int q_tile_linear = work_id / split_m;
-    int batch_id = q_tile_linear / num_q_tiles;
-    int q_tile = q_tile_linear - batch_id * num_q_tiles;
+    int split_id = work_id - work_id / 192 * 192;
+    int q_tile = work_id / 192;
     int q_start = q_tile * 128;
     const int col_chunk = warp / 4;
     const int row_base_tmem = warp % 4 * 32;
@@ -373,28 +371,22 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int q_abs = q_start + q_row;
     float q_vals[16];
     unsigned int q_pack[8];
-    #pragma unroll
-    for (int vi = 0; vi < 16; vi++) {
-        q_vals[vi] = 0.0f;
-    }
-    if (q_abs < Q) {
-        {
-            const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs) * 128 + d_col) + 0);
-            uint4 _vld_0[2];
+    {
+        const uint4* _vptr_0 = reinterpret_cast<const uint4*>(queries + (unsigned long long)(q_abs * 128 + d_col) + 0);
+        uint4 _vld_0[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_0[_blk] = _vptr_0[_blk];
+            __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_0[_blk] = _vptr_0[_blk];
-                __nv_bfloat16* _velems_0 = reinterpret_cast<__nv_bfloat16*>(&_vld_0[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    q_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                q_vals[0 + _blk * 8 + _j] = __bfloat162float(_velems_0[_j]);
         }
     }
     float q_norm_part = 0.0f;
     #pragma unroll
-    for (int vi_1 = 0; vi_1 < 16; vi_1++) {
-        q_norm_part += q_vals[vi_1] * q_vals[vi_1];
+    for (int vi = 0; vi < 16; vi++) {
+        q_norm_part += q_vals[vi] * q_vals[vi];
     }
     int q_norm_part_col = d_col / 16;
     smem_q_norm_part[q_row * 8 + q_norm_part_col] = q_norm_part;
@@ -413,28 +405,22 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int q_abs_3 = q_start + q_row_1;
     float q_vals_4[16];
     unsigned int q_pack_5[8];
-    #pragma unroll
-    for (int vi_2 = 0; vi_2 < 16; vi_2++) {
-        q_vals_4[vi_2] = 0.0f;
-    }
-    if (q_abs_3 < Q) {
-        {
-            const uint4* _vptr_1 = reinterpret_cast<const uint4*>(queries + (unsigned long long)((batch_id * Q + q_abs_3) * 128 + d_col_2) + 0);
-            uint4 _vld_1[2];
+    {
+        const uint4* _vptr_1 = reinterpret_cast<const uint4*>(queries + (unsigned long long)(q_abs_3 * 128 + d_col_2) + 0);
+        uint4 _vld_1[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_1[_blk] = _vptr_1[_blk];
+            __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_1[_blk] = _vptr_1[_blk];
-                __nv_bfloat16* _velems_1 = reinterpret_cast<__nv_bfloat16*>(&_vld_1[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    q_vals_4[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                q_vals_4[0 + _blk * 8 + _j] = __bfloat162float(_velems_1[_j]);
         }
     }
     float q_norm_part_6 = 0.0f;
     #pragma unroll
-    for (int vi_3 = 0; vi_3 < 16; vi_3++) {
-        q_norm_part_6 += q_vals_4[vi_3] * q_vals_4[vi_3];
+    for (int vi_1 = 0; vi_1 < 16; vi_1++) {
+        q_norm_part_6 += q_vals_4[vi_1] * q_vals_4[vi_1];
     }
     int q_norm_part_col_7 = d_col_2 / 16;
     smem_q_norm_part[q_row_1 * 8 + q_norm_part_col_7] = q_norm_part_6;
@@ -453,8 +439,7 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     for (int part = 0; part < 8; part++) {
         q_norm += smem_q_norm_part[q_local * 8 + part];
     }
-    int tile_begin = split_id * tiles_per_split;
-    int first_m_start = tile_begin * 128;
+    int first_m_start = split_id * 256;
     int second_m_start = first_m_start + 128;
     int norm_row = tid % 128;
     int norm_part = tid / 128;
@@ -464,22 +449,16 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int d_col0 = d_base;
     float db_vals0[16];
     unsigned int db_pack0[8];
-    #pragma unroll
-    for (int vi_4 = 0; vi_4 < 16; vi_4++) {
-        db_vals0[vi_4] = 0.0f;
-    }
-    if (m_abs_part < M) {
-        {
-            const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part) * 128 + d_col0) + 0);
-            uint4 _vld_2[2];
+    {
+        const uint4* _vptr_2 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part * 128 + d_col0) + 0);
+        uint4 _vld_2[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_2[_blk] = _vptr_2[_blk];
+            __nv_bfloat16* _velems_2 = reinterpret_cast<__nv_bfloat16*>(&_vld_2[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_2[_blk] = _vptr_2[_blk];
-                __nv_bfloat16* _velems_2 = reinterpret_cast<__nv_bfloat16*>(&_vld_2[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    db_vals0[0 + _blk * 8 + _j] = __bfloat162float(_velems_2[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                db_vals0[0 + _blk * 8 + _j] = __bfloat162float(_velems_2[_j]);
         }
     }
     #pragma unroll
@@ -492,28 +471,22 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int b_store_addr0_hi = (smem_b_addr + (unsigned int)((d_col0 + 8) / 64 * 16384 + norm_row * 128 + (d_col0 + 8) % 64 * 2 ^ ((d_col0 + 8) / 64 * 16384 + norm_row * 128 + (d_col0 + 8) % 64 * 2 >> 7 & 7) << 4));
     asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr0_hi), "r"(db_pack0[4]), "r"(db_pack0[5]), "r"(db_pack0[6]), "r"(db_pack0[7]) : "memory");
     #pragma unroll
-    for (int vi_5 = 0; vi_5 < 16; vi_5++) {
-        acc_part += db_vals0[vi_5] * db_vals0[vi_5];
+    for (int vi_2 = 0; vi_2 < 16; vi_2++) {
+        acc_part += db_vals0[vi_2] * db_vals0[vi_2];
     }
     int d_col1 = d_base + 16;
     float db_vals1[16];
     unsigned int db_pack1[8];
-    #pragma unroll
-    for (int vi_6 = 0; vi_6 < 16; vi_6++) {
-        db_vals1[vi_6] = 0.0f;
-    }
-    if (m_abs_part < M) {
-        {
-            const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part) * 128 + d_col1) + 0);
-            uint4 _vld_3[2];
+    {
+        const uint4* _vptr_3 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part * 128 + d_col1) + 0);
+        uint4 _vld_3[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_3[_blk] = _vptr_3[_blk];
+            __nv_bfloat16* _velems_3 = reinterpret_cast<__nv_bfloat16*>(&_vld_3[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_3[_blk] = _vptr_3[_blk];
-                __nv_bfloat16* _velems_3 = reinterpret_cast<__nv_bfloat16*>(&_vld_3[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    db_vals1[0 + _blk * 8 + _j] = __bfloat162float(_velems_3[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                db_vals1[0 + _blk * 8 + _j] = __bfloat162float(_velems_3[_j]);
         }
     }
     #pragma unroll
@@ -526,21 +499,17 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int b_store_addr1_hi = (smem_b_addr + (unsigned int)((d_col1 + 8) / 64 * 16384 + norm_row * 128 + (d_col1 + 8) % 64 * 2 ^ ((d_col1 + 8) / 64 * 16384 + norm_row * 128 + (d_col1 + 8) % 64 * 2 >> 7 & 7) << 4));
     asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr1_hi), "r"(db_pack1[4]), "r"(db_pack1[5]), "r"(db_pack1[6]), "r"(db_pack1[7]) : "memory");
     #pragma unroll
-    for (int vi_7 = 0; vi_7 < 16; vi_7++) {
-        acc_part += db_vals1[vi_7] * db_vals1[vi_7];
+    for (int vi_3 = 0; vi_3 < 16; vi_3++) {
+        acc_part += db_vals1[vi_3] * db_vals1[vi_3];
     }
     smem_db_norm_part[tid] = acc_part;
     asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
     if (tid < 128) {
-        int m_abs = first_m_start + tid;
-        float db_norm = LOOM_INF;
-        if (m_abs < M) {
-            db_norm = 0.0f;
-            #pragma unroll
-            for (int part_1 = 0; part_1 < 4; part_1++) {
-                db_norm += smem_db_norm_part[tid + part_1 * 128];
-            }
+        float db_norm = 0.0f;
+        #pragma unroll
+        for (int part_1 = 0; part_1 < 4; part_1++) {
+            db_norm += smem_db_norm_part[tid + part_1 * 128];
         }
         smem_db_norm[tid] = db_norm;
     }
@@ -611,22 +580,16 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int d_col0_15 = d_base_12;
     float db_vals0_16[16];
     unsigned int db_pack0_17[8];
-    #pragma unroll
-    for (int vi_8 = 0; vi_8 < 16; vi_8++) {
-        db_vals0_16[vi_8] = 0.0f;
-    }
-    if (m_abs_part_13 < M) {
-        {
-            const uint4* _vptr_4 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_13) * 128 + d_col0_15) + 0);
-            uint4 _vld_4[2];
+    {
+        const uint4* _vptr_4 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part_13 * 128 + d_col0_15) + 0);
+        uint4 _vld_4[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_4[_blk] = _vptr_4[_blk];
+            __nv_bfloat16* _velems_4 = reinterpret_cast<__nv_bfloat16*>(&_vld_4[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_4[_blk] = _vptr_4[_blk];
-                __nv_bfloat16* _velems_4 = reinterpret_cast<__nv_bfloat16*>(&_vld_4[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    db_vals0_16[0 + _blk * 8 + _j] = __bfloat162float(_velems_4[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                db_vals0_16[0 + _blk * 8 + _j] = __bfloat162float(_velems_4[_j]);
         }
     }
     #pragma unroll
@@ -639,28 +602,22 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int b_store_addr0_hi_19 = (smem_b_next_addr + (unsigned int)((d_col0_15 + 8) / 64 * 16384 + norm_row_10 * 128 + (d_col0_15 + 8) % 64 * 2 ^ ((d_col0_15 + 8) / 64 * 16384 + norm_row_10 * 128 + (d_col0_15 + 8) % 64 * 2 >> 7 & 7) << 4));
     asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr0_hi_19), "r"(db_pack0_17[4]), "r"(db_pack0_17[5]), "r"(db_pack0_17[6]), "r"(db_pack0_17[7]) : "memory");
     #pragma unroll
-    for (int vi_9 = 0; vi_9 < 16; vi_9++) {
-        acc_part_14 += db_vals0_16[vi_9] * db_vals0_16[vi_9];
+    for (int vi_4 = 0; vi_4 < 16; vi_4++) {
+        acc_part_14 += db_vals0_16[vi_4] * db_vals0_16[vi_4];
     }
     int d_col1_20 = d_base_12 + 16;
     float db_vals1_21[16];
     unsigned int db_pack1_22[8];
-    #pragma unroll
-    for (int vi_10 = 0; vi_10 < 16; vi_10++) {
-        db_vals1_21[vi_10] = 0.0f;
-    }
-    if (m_abs_part_13 < M) {
-        {
-            const uint4* _vptr_5 = reinterpret_cast<const uint4*>(database + (unsigned long long)((batch_id * M + m_abs_part_13) * 128 + d_col1_20) + 0);
-            uint4 _vld_5[2];
+    {
+        const uint4* _vptr_5 = reinterpret_cast<const uint4*>(database + (unsigned long long)(m_abs_part_13 * 128 + d_col1_20) + 0);
+        uint4 _vld_5[2];
+        #pragma unroll
+        for (int _blk = 0; _blk < 2; _blk++) {
+            _vld_5[_blk] = _vptr_5[_blk];
+            __nv_bfloat16* _velems_5 = reinterpret_cast<__nv_bfloat16*>(&_vld_5[_blk]);
             #pragma unroll
-            for (int _blk = 0; _blk < 2; _blk++) {
-                _vld_5[_blk] = _vptr_5[_blk];
-                __nv_bfloat16* _velems_5 = reinterpret_cast<__nv_bfloat16*>(&_vld_5[_blk]);
-                #pragma unroll
-                for (int _j = 0; _j < 8; _j++)
-                    db_vals1_21[0 + _blk * 8 + _j] = __bfloat162float(_velems_5[_j]);
-            }
+            for (int _j = 0; _j < 8; _j++)
+                db_vals1_21[0 + _blk * 8 + _j] = __bfloat162float(_velems_5[_j]);
         }
     }
     #pragma unroll
@@ -673,21 +630,17 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
     int b_store_addr1_hi_24 = (smem_b_next_addr + (unsigned int)((d_col1_20 + 8) / 64 * 16384 + norm_row_10 * 128 + (d_col1_20 + 8) % 64 * 2 ^ ((d_col1_20 + 8) / 64 * 16384 + norm_row_10 * 128 + (d_col1_20 + 8) % 64 * 2 >> 7 & 7) << 4));
     asm volatile("st.shared.v4.b32 [%0], {%1,%2,%3,%4};" :: "r"(b_store_addr1_hi_24), "r"(db_pack1_22[4]), "r"(db_pack1_22[5]), "r"(db_pack1_22[6]), "r"(db_pack1_22[7]) : "memory");
     #pragma unroll
-    for (int vi_11 = 0; vi_11 < 16; vi_11++) {
-        acc_part_14 += db_vals1_21[vi_11] * db_vals1_21[vi_11];
+    for (int vi_5 = 0; vi_5 < 16; vi_5++) {
+        acc_part_14 += db_vals1_21[vi_5] * db_vals1_21[vi_5];
     }
     smem_db_norm_part_next[tid] = acc_part_14;
     asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
     if (tid < 128) {
-        int m_abs_1 = second_m_start + tid;
-        float db_norm_1 = LOOM_INF;
-        if (m_abs_1 < M) {
-            db_norm_1 = 0.0f;
-            #pragma unroll
-            for (int part_2 = 0; part_2 < 4; part_2++) {
-                db_norm_1 += smem_db_norm_part_next[tid + part_2 * 128];
-            }
+        float db_norm_1 = 0.0f;
+        #pragma unroll
+        for (int part_2 = 0; part_2 < 4; part_2++) {
+            db_norm_1 += smem_db_norm_part_next[tid + part_2 * 128];
         }
         smem_db_norm_next[tid] = db_norm_1;
     }
@@ -946,7 +899,7 @@ kernel_knn_search_floor13_k64_prefix8_partial_0622_f3ce_v1(__nv_bfloat16* __rest
         best_i[32 + j_rel_1 + 7] = m_abs31_1;
     }
     int partial_split_id = split_id * 4 + col_chunk;
-    unsigned long long partial_col_base = (unsigned long long)((((batch_id * num_q_tiles + q_tile) * partial_list_count + partial_split_id) * 128 + q_local) * K_PREFIX_);
+    unsigned long long partial_col_base = (unsigned long long)(((q_tile * 768 + partial_split_id) * 128 + q_local) * K_PREFIX_);
     float left_d = best_d[0];
     float right_d = best_d[1];
     int left_i = best_i[0];

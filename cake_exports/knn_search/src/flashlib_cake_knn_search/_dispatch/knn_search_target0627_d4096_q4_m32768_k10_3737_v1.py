@@ -6,7 +6,7 @@ ABI to ``B=1, Q=4, M=32768, D=4096, K=10``.  The eval path is Weave-only.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import evaluate, select_named_shapes
@@ -48,7 +48,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return {'route': ROUTE, 'selected_route': ROUTE, 'selected_entrypoint': ENTRYPOINT, 'route_kind': 'specialized', 'route_source': 'shape-specific-seed', 'coverage_class': 'bucket_seed_target0627_d4096_q4_m32768_k10', 'classification': 'seed-produced', 'coverage_only': False, 'production_policy': 'weave_only', 'external_fallback': None, 'guard_id': 'target0627_d4096_q4_m32768_k10', 'guard_condition': 'B==1,Q==4,M==32768,D==4096,K==10,nonself,sm100a_or_sm103a', 'selected_guard': 'exact_d4096_q4_m32768_k10', 'forced_fallback': False, 'selected_seed': 'weave-evolve-knn-search-3737', 'producer_seed': 'weave-evolve-knn-search-5ff7-d4096-q4q8-targetd', 'padding_tag': 'none', 'uses_materialized_padding': False, 'uses_kernel_padding': False, 'padding_overhead_timed': False, 'padded_D': D_ORIG, 'workspace_reuse': True}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0476"}, "partial": {"__kernel__": "dispatch_kernel_0475"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0510"}, "partial": {"__kernel__": "dispatch_kernel_0509"}}'))
 
 def _launch_exact(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

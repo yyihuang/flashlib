@@ -7,7 +7,7 @@ current Weave default dispatcher.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import os
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -41,7 +41,7 @@ LOWD_DBSCAN_COVERAGE_CATEGORY_SHAPES: dict[str, list[dict[str, Any]]] = {'repres
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = ({'shape_key': 'lowd_dbscan_b1_q1500_m1500_d2_k32_k64_t128_cd72', 'guard': 'B == 1 and Q == 1500 and M == 1500 and D == 2 and K in {32,64}', 'route': ROUTE_LOWD_DBSCAN_T128}, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_lowd_coop_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0258"}}'))
+    return _decode_capture(_json_loads('{"direct": {"__kernel__": "dispatch_kernel_0308"}}'))
 
 def _truthy_env(name: str) -> bool:
     return os.environ.get(name, '0').lower() not in {'', '0', 'false', 'no'}

@@ -10,7 +10,7 @@ entry can beat the emitted top-64 threshold.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_k64_q4096split79_localprefix6_certfallback_0615_245d_v1 as cert_parent
 from . import knn_search_k64_q4096split79_twotile_oddevensort_fastmerge_0612_r34_11c1_v1 as exact_parent
@@ -62,7 +62,7 @@ def _row_flags(inputs: dict[str, Any], row_count: int):
     return flags
 
 def _compile_k64_q4096_rowflag_fusedcert_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0299"}, "partial": {"__kernel__": "dispatch_kernel_0298"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0349"}, "partial": {"__kernel__": "dispatch_kernel_0348"}}'))
 
 def _use_q4096_k64_rowflag_fusedcert(inputs: dict[str, Any]) -> bool:
     return cert_parent._use_q4096_k64_prefix6cert(inputs)

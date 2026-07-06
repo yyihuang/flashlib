@@ -9,7 +9,7 @@ wrapper so this module can be consumed as a shape-specific seed.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_inherited_correctness_0624_3c6e_v1 as parent
@@ -81,7 +81,7 @@ def route_trace_entry(label: str, inputs: dict[str, Any]) -> dict[str, Any]:
     return {'label': label, 'shape_key': label, 'B': int(inputs['B']), 'Q': int(inputs['Q']), 'M': int(inputs['M']), 'D': int(inputs['D']), 'K': int(inputs['K']), 'self_search': bool(inputs.get('self_search', False)), 'force_fallback': bool(inputs.get('force_fallback', False)), **route_info(inputs)}
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"d1": {"__kernel__": "dispatch_kernel_0422"}, "direct": {"__kernel__": "dispatch_kernel_0421"}}'))
+    return _decode_capture(_json_loads('{"d1": {"__kernel__": "dispatch_kernel_0408"}, "direct": {"__kernel__": "dispatch_kernel_0407"}}'))
 
 def launch_parent_for_eval(inputs: dict[str, Any]) -> dict[str, Any]:
     return parent.launch_for_eval(inputs)

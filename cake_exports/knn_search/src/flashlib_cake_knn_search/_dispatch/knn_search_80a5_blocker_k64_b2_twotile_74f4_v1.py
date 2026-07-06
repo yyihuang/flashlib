@@ -7,7 +7,7 @@ the promoted default afe6 dispatcher unchanged.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -63,7 +63,7 @@ _B2_K64_ENTRY: dict[str, str] = {'shape_key': 'round80a5_b2_q128_m65536_d128_k64
 SHAPE_DISPATCH_REGISTRY: tuple[dict[str, str], ...] = (_B2_K64_ENTRY, *parent.SHAPE_DISPATCH_REGISTRY)
 
 def _compile_b2_q128_m65536_k64_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0348"}, "group_merge": {"__kernel__": "dispatch_kernel_0347"}, "partial": {"__kernel__": "dispatch_kernel_0346"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0398"}, "group_merge": {"__kernel__": "dispatch_kernel_0397"}, "partial": {"__kernel__": "dispatch_kernel_0396"}}'))
 
 def _partial_scratch(inputs: dict[str, Any], partial_list_count: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

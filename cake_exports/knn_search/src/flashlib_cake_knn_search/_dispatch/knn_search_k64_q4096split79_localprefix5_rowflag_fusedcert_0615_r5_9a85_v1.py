@@ -8,7 +8,7 @@ partial scratch traffic and merge list work when the prefix5 certificate holds.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import dc as dc
 from . import knn_search_k64_q4096split79_localprefix6_rowflag_fusedcert_0615_r36_e4cb_v1 as e4cb_parent
@@ -59,7 +59,7 @@ def _row_flags(inputs: dict[str, Any], row_count: int):
     return flags
 
 def _compile_k64_q4096_prefix5_rowflag_fusedcert_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0337"}, "partial": {"__kernel__": "dispatch_kernel_0336"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0387"}, "partial": {"__kernel__": "dispatch_kernel_0386"}}'))
 
 def _use_q4096_k64_prefix5_rowflag_fusedcert(inputs: dict[str, Any]) -> bool:
     return e4cb_parent._use_q4096_k64_rowflag_fusedcert(inputs)

@@ -8,7 +8,7 @@ for the scalar D256 GLM/RAG coverage labels.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from . import knn_search_k64_q4096split80_twotile_distanceonly_branchpruned_0612_r30_11c1_v1 as parent

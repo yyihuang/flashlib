@@ -9,7 +9,7 @@ K40/K56 remain on the inherited c2e0/4944 routes.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
 from . import knn_search_dispatch0618_c492_9286_d1d5_d512_kcapacity_c0f6_68da_v1 as parent

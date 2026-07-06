@@ -8,7 +8,7 @@ the physical scratch ABI before exported distances and indices are written.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from importlib import import_module
 from typing import Any
 from . import knn_search_rag_q4096_m20000_d128_k10_repair_q4096_seed3_real_scratch_v1 as d07b

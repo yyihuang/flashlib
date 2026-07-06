@@ -6,7 +6,7 @@ the existing Weave-only portfolio.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0629_2ada_plus_696a_grid132_v1 as parent
 from . import knn_search_target0629_d4096_q4_m8192_k64_8048_n64_g8_grid132_v1 as seed8048

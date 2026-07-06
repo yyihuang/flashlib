@@ -7,7 +7,7 @@ composes measured shape-specific seeds without changing their schedules.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_blind_d384_tcgen05_dispatch0610_r2_f94e_v1 as d384_5d25
 from . import knn_search_dispatch0610_highq_qbucket_split4_codex0616_v2 as highq_94dc

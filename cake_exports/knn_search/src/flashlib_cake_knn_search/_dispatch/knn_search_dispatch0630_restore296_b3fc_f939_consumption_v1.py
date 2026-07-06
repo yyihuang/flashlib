@@ -6,7 +6,7 @@ routes for D1024/Q8/M65536/K10 (b3fc) and D4096/Q4/M8192/K64 (f939).
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0630_restore296_b3fc_consumption_v1 as parent
 from . import knn_search_target0629_d4096_q4_m8192_k64_f939_n64_g8_final8_grid132_v1 as f939

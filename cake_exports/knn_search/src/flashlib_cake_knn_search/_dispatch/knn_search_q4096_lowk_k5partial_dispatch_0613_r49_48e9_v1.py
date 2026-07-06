@@ -8,7 +8,7 @@ list.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -60,7 +60,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k5_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0264"}, "partial_k5": {"__kernel__": "dispatch_kernel_0263"}}'))
+    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0314"}, "partial_k5": {"__kernel__": "dispatch_kernel_0313"}}'))
 
 def _scratch_k5(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

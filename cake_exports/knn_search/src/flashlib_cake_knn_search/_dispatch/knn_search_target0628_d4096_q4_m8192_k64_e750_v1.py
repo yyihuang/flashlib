@@ -6,7 +6,7 @@ the four live Q rows, avoiding the parent 64x256 f32 staging allocation.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_target0628_d4096_q4_m8192_k64_7738_v1 as parent
 THREADS = parent.THREADS
@@ -53,7 +53,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return parent.route_info(inputs)
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0485"}, "group_merge": {"__kernel__": "dispatch_kernel_0484"}, "partial": {"__kernel__": "dispatch_kernel_0483"}}'))
+    return _decode_capture(_json_loads('{"final_merge": {"__kernel__": "dispatch_kernel_0519"}, "group_merge": {"__kernel__": "dispatch_kernel_0518"}, "partial": {"__kernel__": "dispatch_kernel_0517"}}'))
 
 def _launch(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

@@ -10,7 +10,7 @@ tile-local list remains exact for the K=10 contract path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -44,7 +44,7 @@ partial_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduc
 merge_ir = _decode_capture(_json_loads('{"__ir__": "knn_search_lowq_tile_reduce_merge_0614_r10_e864_blockm640_v1", "arg_keys": ["partial_distances", "partial_indices", "out_distances", "out_indices", "B", "Q", "K", "num_m_tiles", "num_groups", "tiles_per_group"], "cluster_dims": [1, 1, 1], "computed_smem_bytes": 640, "constants": [["K_MAX_", 10]], "cta_group": 1, "threads": 256}'))
 
 def _compile_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0333"}, "partial": {"__kernel__": "dispatch_kernel_0332"}}'))
+    return _decode_capture(_json_loads('{"merge": {"__kernel__": "dispatch_kernel_0383"}, "partial": {"__kernel__": "dispatch_kernel_0382"}}'))
 
 def _scratch(inputs: dict[str, Any], num_m_tiles: int) -> tuple[Any, Any]:
     import torch

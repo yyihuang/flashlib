@@ -9,7 +9,7 @@ while reading the producer's stride-10 partial lists.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -54,7 +54,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_k5_merge_kernel() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0265"}}'))
+    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0315"}}'))
 
 def _launch_q4096_k5(inputs: dict[str, Any]) -> dict[str, Any]:
     import torch

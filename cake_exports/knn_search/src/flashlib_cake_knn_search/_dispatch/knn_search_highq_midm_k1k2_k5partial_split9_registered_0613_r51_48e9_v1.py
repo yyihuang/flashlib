@@ -7,7 +7,7 @@ round-50 registered dispatcher behavior for every guard miss.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 import os
 from typing import Any
@@ -65,7 +65,7 @@ def _k5_split_m(total_m_tiles: int) -> int:
     return min(split_m, int(total_m_tiles))
 
 def _compile_k5_split9_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0262"}, "partial_k5": {"__kernel__": "dispatch_kernel_0261"}}'))
+    return _decode_capture(_json_loads('{"merge_k5": {"__kernel__": "dispatch_kernel_0312"}, "partial_k5": {"__kernel__": "dispatch_kernel_0311"}}'))
 
 def _scratch_k5_split9(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

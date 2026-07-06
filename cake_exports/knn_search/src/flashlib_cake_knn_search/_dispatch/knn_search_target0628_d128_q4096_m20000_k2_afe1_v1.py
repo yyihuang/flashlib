@@ -7,7 +7,7 @@ constants into the producer and merge kernels.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -67,7 +67,7 @@ def route_info(inputs: dict[str, Any]) -> dict[str, Any]:
     return {'selected_route': selected_route(inputs), 'selected_seed': 'target0628_d128_q4096_m20000_k2_afe1_v1', 'route_kind': 'shape_specific_seed', 'route_source': 'weave_exact_seed', 'guard_id': 'target0628_d128_q4096_m20000_k2_afe1', 'guard_condition': 'B == 1 and Q == 4096 and M == 20000 and D == 128 and K == 2 and tcgen05', 'padding_tag': 'none', 'uses_materialized_padding': False, 'uses_kernel_padding': False, 'padding_overhead_timed': False, 'padded_D': D_STATIC, 'original_D': D_STATIC, 'workspace_reuse': 'cached_partial_scratch_by_exact_shape_device_dtype', 'split_m': Q4096_LOWK_SPLIT_M, 'producer_change': 'exact_shape_constant_split_tile_ownership'}
 
 def _compile_lowk_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_lowk2": {"__kernel__": "dispatch_kernel_0504"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0503"}}'))
+    return _decode_capture(_json_loads('{"merge_lowk2": {"__kernel__": "dispatch_kernel_0538"}, "partial_lowk": {"__kernel__": "dispatch_kernel_0537"}}'))
 
 def _scratch_lowk(inputs: dict[str, Any], split_m: int, num_q_tiles: int) -> tuple[Any, Any]:
     import torch

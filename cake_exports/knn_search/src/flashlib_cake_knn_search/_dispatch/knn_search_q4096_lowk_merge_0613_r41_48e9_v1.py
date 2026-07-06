@@ -7,7 +7,7 @@ a split-4 producer plus a K-specialized Weave merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import math
 from typing import Any
 from .._dispatch_runtime import select_named_shapes
@@ -46,7 +46,7 @@ def selected_route(inputs: dict[str, Any]) -> str:
     return parent.selected_route(inputs)
 
 def _compile_lowk_merge_kernels() -> dict[str, Any]:
-    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0275"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0276"}}'))
+    return _decode_capture(_json_loads('{"merge_lowk1": {"__kernel__": "dispatch_kernel_0325"}, "merge_lowk2": {"__kernel__": "dispatch_kernel_0326"}}'))
 
 def _launch_q4096_lowk(inputs: dict[str, Any]) -> dict[str, Any]:
     if not mma._KNN_SEARCH_KERNELS:

@@ -10,7 +10,7 @@ the public contract objects.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_search_dispatch0630_d15e_af19_portfolio_floor14_7b75_v1 as parent
 from . import knn_search_target0630_d4096_q4_m32768_k10_profiled_weave_evolve_v1 as d15e
