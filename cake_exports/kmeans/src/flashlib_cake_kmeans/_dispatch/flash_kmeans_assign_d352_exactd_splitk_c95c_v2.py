@@ -7,7 +7,7 @@ sm_120a/sm_121a because those targets reject tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import flash_kmeans_assign_d480_splitk_producer_reducer_d32k256_v1 as _abi
 from . import flash_kmeans_assign_gap_pad_v1 as _gap

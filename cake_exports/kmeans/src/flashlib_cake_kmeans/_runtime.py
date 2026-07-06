@@ -264,21 +264,101 @@ class PreparedCUDAKernelLaunch:
         mode,
         grid,
         block,
+        arg_types,
         packed,
         keepalive,
         shared_mem,
         cu_stream,
+        cluster_dims=None,
         config=None,
     ):
         self._kernel = kernel
         self._mode = mode
-        self._grid = grid
-        self._block = block
+        self._grid = tuple(grid)
+        self._block = tuple(block)
+        self._arg_types = tuple(arg_types)
         self._packed = packed
         self._keepalive = keepalive
         self._shared_mem = shared_mem
         self._cu_stream = cu_stream
+        self._cluster_dims = None if cluster_dims is None else tuple(cluster_dims)
         self._config = config
+
+    def rebind(
+        self,
+        kernel,
+        *,
+        mode,
+        grid,
+        block,
+        args,
+        arg_types,
+        shared_mem,
+        stream=None,
+        cluster_dims=None,
+    ):
+        # Reuse the existing void** and scalar carriers while replacing values.
+
+        candidate_grid = tuple(grid)
+        candidate_block = tuple(block)
+        candidate_arg_types = tuple(arg_types)
+        candidate_cluster_dims = None if cluster_dims is None else tuple(cluster_dims)
+        mismatches = []
+        if kernel is not self._kernel:
+            mismatches.append("kernel")
+        if mode != self._mode:
+            mismatches.append(f"mode ({self._mode!r} != {mode!r})")
+        if candidate_grid != self._grid:
+            mismatches.append(f"grid ({self._grid!r} != {candidate_grid!r})")
+        if candidate_block != self._block:
+            mismatches.append(f"block ({self._block!r} != {candidate_block!r})")
+        if int(shared_mem) != self._shared_mem:
+            mismatches.append(f"shared_mem ({self._shared_mem!r} != {int(shared_mem)!r})")
+        if candidate_cluster_dims != self._cluster_dims:
+            mismatches.append(
+                f"cluster_dims ({self._cluster_dims!r} != {candidate_cluster_dims!r})"
+            )
+        if candidate_arg_types != self._arg_types:
+            mismatches.append("arg_types")
+        if mismatches:
+            raise RuntimeError(
+                "prepared CUDA launch topology mismatch: " + ", ".join(mismatches)
+            )
+
+        if len(args) != len(self._arg_types):
+            raise RuntimeError(
+                f"prepared CUDA launch argument count mismatch: "
+                f"expected {len(self._arg_types)}, got {len(args)}"
+            )
+        return self.rebind_arguments(dict(enumerate(args)), stream=stream)
+
+    def rebind_arguments(self, replacements, *, stream=None):
+        # Update selected ABI carriers without rebuilding or traversing the launch.
+
+        old_c_args = self._packed._prevent_gc
+        if len(old_c_args) != len(self._arg_types):
+            raise RuntimeError("prepared CUDA launch has a corrupt packed argument array")
+        rebound = []
+        for index, arg in replacements.items():
+            if type(index) is not int or index < 0 or index >= len(self._arg_types):
+                raise IndexError(f"prepared CUDA launch argument index is out of range: {index!r}")
+            new_arg = _marshal_arg(arg, self._arg_types[index])
+            old_arg = old_c_args[index]
+            if type(old_arg) is not type(new_arg):
+                raise RuntimeError(
+                    f"prepared CUDA launch ABI mismatch at argument {index}: "
+                    f"{type(old_arg).__name__} != {type(new_arg).__name__}"
+                )
+            rebound.append((index, arg, old_arg, new_arg))
+
+        cu_stream = self._kernel._cu_stream(stream)
+        keepalive = list(self._keepalive)
+        for index, arg, old_arg, new_arg in rebound:
+            old_arg.value = new_arg.value
+            keepalive[index] = arg
+        self._keepalive = tuple(keepalive)
+        self._cu_stream = cu_stream
+        return self
 
     def launch(self, *, stream=None, timeout_ms=None):
         kernel = self._kernel
@@ -440,10 +520,35 @@ class CUDAKernel:
             mode="regular",
             grid=grid,
             block=block,
+            arg_types=arg_types,
             packed=_pack_args(args, arg_types),
             keepalive=tuple(args),
             shared_mem=shared_mem,
             cu_stream=self._cu_stream(stream),
+        )
+
+    def rebind_launch(
+        self,
+        prepared,
+        *,
+        grid,
+        block,
+        args,
+        arg_types,
+        shared_mem=0,
+        stream=None,
+    ):
+        if not isinstance(prepared, PreparedCUDAKernelLaunch):
+            raise TypeError("prepared must be a PreparedCUDAKernelLaunch")
+        return prepared.rebind(
+            self,
+            mode="regular",
+            grid=grid,
+            block=block,
+            args=args,
+            arg_types=arg_types,
+            shared_mem=shared_mem,
+            stream=stream,
         )
 
     def launch_cluster(
@@ -513,11 +618,39 @@ class CUDAKernel:
             mode="cluster",
             grid=grid,
             block=block,
+            arg_types=arg_types,
             packed=packed,
             keepalive=tuple(args),
             shared_mem=shared_mem,
             cu_stream=cu_stream,
+            cluster_dims=cluster_dims,
             config=config,
+        )
+
+    def rebind_launch_cluster(
+        self,
+        prepared,
+        *,
+        grid,
+        block,
+        args,
+        arg_types,
+        cluster_dims,
+        shared_mem=0,
+        stream=None,
+    ):
+        if not isinstance(prepared, PreparedCUDAKernelLaunch):
+            raise TypeError("prepared must be a PreparedCUDAKernelLaunch")
+        return prepared.rebind(
+            self,
+            mode="cluster",
+            grid=grid,
+            block=block,
+            args=args,
+            arg_types=arg_types,
+            cluster_dims=cluster_dims,
+            shared_mem=shared_mem,
+            stream=stream,
         )
 
     def launch_cooperative(
@@ -558,10 +691,35 @@ class CUDAKernel:
             mode="cooperative",
             grid=grid,
             block=block,
+            arg_types=arg_types,
             packed=_pack_args(args, arg_types),
             keepalive=tuple(args),
             shared_mem=shared_mem,
             cu_stream=self._cu_stream(stream),
+        )
+
+    def rebind_launch_cooperative(
+        self,
+        prepared,
+        *,
+        grid,
+        block,
+        args,
+        arg_types,
+        shared_mem=0,
+        stream=None,
+    ):
+        if not isinstance(prepared, PreparedCUDAKernelLaunch):
+            raise TypeError("prepared must be a PreparedCUDAKernelLaunch")
+        return prepared.rebind(
+            self,
+            mode="cooperative",
+            grid=grid,
+            block=block,
+            args=args,
+            arg_types=arg_types,
+            shared_mem=shared_mem,
+            stream=stream,
         )
 
     def close(self) -> None:

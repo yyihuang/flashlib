@@ -7,7 +7,7 @@ rejects tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from collections.abc import Callable
 from dataclasses import dataclass
 from threading import RLock
@@ -137,7 +137,18 @@ class PreparedKMeansLaunchPlan:
             resolved_handle = int(resolved_stream.cuda_stream)
             if resolved_handle != self.stream_handle:
                 raise RuntimeError(''.join(['prepared Flash-KMeans plan is stream-bound: prepared on stream 0x', format(self.stream_handle, ''.join(['x'])), ', requested 0x', format(resolved_handle, ''.join(['x'])), '; prepare a separate plan inside the target torch.cuda.stream(...) context']))
-            return self.direct_launcher(self.inputs, stream=None, timeout_ms=self.timeout_ms if timeout_ms is None else timeout_ms)
+            try:
+                result = self.direct_launcher(self.inputs, stream=None, timeout_ms=self.timeout_ms if timeout_ms is None else timeout_ms)
+            finally:
+                self.direct_launcher.record_stream(resolved_stream)
+                seen: set[int] = set()
+                for value in self.inputs.values():
+                    identity = id(value)
+                    record_stream = getattr(value, 'record_stream', None)
+                    if identity not in seen and callable(record_stream):
+                        seen.add(identity)
+                        record_stream(resolved_stream)
+            return result
 ROUTE_SMALL_V10 = RouteDecision(route_id=SMALL_ROUTE_ID, entrypoint='loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_v10:launch_for_eval', selected_seed=SMALL_SEED_ID, route_kind='specialized', route_source='shape-specific-seed', guard_id='guard_small_grid_single_tile_v10', guard_condition='dtype == bfloat16 and D == 128 and N % 128 == 0 and K % 256 == 0 and num_n_tiles <= 8 and K_tiles <= 2', reason='small-grid anchor uses the v10 single point-tile seed')
 ROUTE_PAIRED_V15 = RouteDecision(route_id=PAIRED_ROUTE_ID, entrypoint='loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_v15:launch_for_eval', selected_seed=PAIRED_SEED_ID, route_kind='specialized', route_source='shape-specific-seed', guard_id='guard_paired_large_v15', guard_condition='dtype == bfloat16 and D == 128 and N % 128 == 0 and K % 256 == 0 and num_n_tiles % 2 == 0 and not (num_n_tiles <= 8 and K_tiles <= 2)', reason='even point-tile grids use the v15 paired point-tile seed')
 ROUTE_ALIGNED_V10_FALLBACK = RouteDecision(route_id=GENERIC_FALLBACK_ID, entrypoint='loom.examples.weave.flash_kmeans_assign_cleanroom_tcgen05_v10:launch_for_eval', selected_seed=SMALL_SEED_ID, route_kind='fallback', route_source='generic-weave-fallback', guard_id='guard_aligned_v10_weave_fallback', guard_condition='dtype == bfloat16 and D == 128 and N % 128 == 0 and K % 256 == 0 and num_n_tiles % 2 == 1 and not (num_n_tiles <= 8 and K_tiles <= 2)', reason='v15 paired kernel requires an even number of point tiles; v10 is the aligned Weave fallback')
@@ -211,7 +222,7 @@ def prepare_launch_plan(inputs: dict[str, Any], *, arch: str | None=None, stream
                 inputs['_flash_kmeans_assign_prepared_stream_key'] = (device_index, stream_handle)
                 inputs['_flash_kmeans_assign_dispatch_route'] = trace
                 route_launcher = _ROUTE_FNS[decision.route_id]
-                with capture_kernel_launches(stream=resolved_stream, arch=resolved_arch) as captured:
+                with capture_kernel_launches(stream=resolved_stream, arch=resolved_arch, inputs=inputs) as captured:
                     prepared_outputs = route_launcher(inputs)
                 prepared_result = _finish_route(inputs, decision, prepared_outputs)
                 direct_launcher = captured.bind(prepared_result)

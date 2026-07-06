@@ -3,76 +3,35 @@
 ## Export Provenance
 
 - Package: `flashlib_cake_kmeans`
-- Source repository: `ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git`
-- Source commit: `c4dae7228441b389d379e47135da23eb22dc96a7`
-- Generated at: `2026-07-05T07:32:37.287580+00:00`
+- Source repository: ``
+- Source commit: ``
+- Generated at: `2026-07-06T03:55:52.462754+00:00`
 
 ## Latest Recorded Results
 
-The production plan was exported and measured on NVIDIA B200 from the exact
-source commit above (NSC Slurm array job `726906`, four GPU shards). The 228
-contract rows represent 225 unique tensor shapes. For each row, the public,
-prepared, and pinned-07cf callables run in one process and one non-empty
-measurement session; a stable SHA-256 permutation chooses their order.
+No semantic correctness or kernel throughput benchmark result was recorded by
+the generic exporter at generation time.
 
-- Candidate correctness: 228/228
-- Exact expected-route parity: 228/228
-- Pinned `07cf2a27928aacf6790c950a265d8b8dc83c87cf` tie-inclusive
-  correctness: 228/228
-- Baseline/public/prepared same-session provenance: 228/228
-- Exact baseline index agreement: 223/228; the other five rows select
-  equal-distance ties, with maximum selected-distance delta `3.0518e-05`
-- Generated package tests: 239/239 passed
-
-| Path vs live 07cf Triton | Min | Geomean | Median | Max | `<1.0x` | `<1.2x` |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Fully prepared GPU span | 0.6711x | 1.5574x | 1.4744x | 12.5338x | 39/228 | 82/228 |
-| Public one-shot GPU span | 0.5925x | 1.5227x | 1.4391x | 12.6269x | 51/228 | 85/228 |
-| Fully prepared kernel sum | 0.6789x | 1.6416x | 1.5074x | 13.6064x | 28/228 | 65/228 |
-
-Prepared totals are 7.5966 ms kernel sum plus 0.2355 ms correlated gaps;
-gaps are 3.01% of the 7.8341 ms total GPU span. Across per-shape medians,
-host enqueue is 9.765 us prepared, 211.414 us public, and 24.865 us for 07cf;
-synchronized end-to-end latency is 32.358 us, 230.471 us, and 57.662 us,
-respectively. Public GPU span is 1.0228x prepared by geometric mean because
-the one-shot path recomputes norms and prepares scratch/launch state.
-
-Two independent same-process B200 A/B sessions selected five exact routes:
-the four B3/N2432 and B4/N1024 D16/D32 rows use the pad-to-D64 direct route,
-and the B4/N1536/K256/D224 row uses the one-launch D224 route. The micro-D
-candidate is 6.15--7.13x faster than the previous route; the D224 candidate is
-1.082--1.085x faster. Three B8 candidates were rejected at 0.992--0.997x and
-continue to use the previous micro-D route.
-
-The final full-portfolio run measures the five retained rows at prepared
-speedups of 0.9387x, 0.9474x, 0.9855x, 1.0027x, and 1.0272x versus live 07cf.
-They remove the severe 0.135--0.146x micro-D regressions without overfitting
-the neutral B8 rows.
-
-The remaining 39 prepared rows below 1x split into 28 true device/kernel-sum
-deficits and 11 gap-only crossings. The worst residuals are the retained
-large-B8 micro-D routes (0.6711x and 0.6931x) and several small gap-pad
-D48/D112/D224/D416/D480 shapes. These are device schedule/occupancy or
-multi-kernel gap residuals, not unresolved Python dispatch: the prepared path
-already holds the direct callable, scratch, kernels, and marshalled arguments.
-
-Reproduce the generated checks with:
+The generated checks are:
 
 ```bash
-PYTHONPATH=src pytest tests -q
-PYTHONPATH=src python benchmarks/benchmark.py --json results/performance.json
+pytest
+python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json
+python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 ```
+
+The shape runner requires a configured `benchmarks/workload.py` adapter. It
+validates candidate output against the reference before running strict
+CUPTI-backed, cold-L2 timing.
 
 ## Result Table
 
 | Test | Hardware | Command | Result |
 | --- | --- | --- | --- |
-| generated package tests | NVIDIA B200 | `PYTHONPATH=src pytest tests -q` | 239/239 passed |
-| candidate correctness / route parity | NVIDIA B200 | four-shard `benchmarks/benchmark.py` | 228/228 / 228/228 |
-| pinned 07cf correctness | NVIDIA B200 | tie-inclusive selected-distance check | 228/228 |
-| public GPU span / 07cf | NVIDIA B200, CUPTI | 0.5925x min; 1.5227x geomean; 12.6269x max |
-| prepared GPU span / 07cf | NVIDIA B200, CUPTI | 0.6711x min; 1.5574x geomean; 12.5338x max |
-| prepared kernel sum / 07cf | NVIDIA B200, CUPTI | 0.6789x min; 1.6416x geomean; 13.6064x max |
+| metadata unit tests | not required | `pytest tests/test_exported_kernels.py tests/test_benchmark_harness.py -q` | pending |
+| NVRTC compile benchmark | CUDA host | `python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json` | pending |
+| semantic correctness | target GPU | `pytest tests/test_correctness.py -q` | pending |
+| kernel performance | target GPU | `python benchmarks/benchmark.py --no-correctness` | pending |
 
 ## Kernel Inventory
 

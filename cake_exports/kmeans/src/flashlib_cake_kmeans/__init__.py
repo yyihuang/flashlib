@@ -1454,8 +1454,10 @@ __all__ = [
 ]
 
 # Semantic exports generated from export_plan.package_exports.
+from .interface import FlashKMeansAssignRuntime as FlashKMeansAssignRuntime
 from .interface import PreparedFlashKMeansAssign as PreparedFlashKMeansAssign
+from .interface import init as init
 from .interface import prepare_flash_kmeans_assign as prepare_flash_kmeans_assign
 from .interface import flash_kmeans_assign_prepared as flash_kmeans_assign_prepared
 from .interface import flash_kmeans_assign as flash_kmeans_assign
-__all__ = [*globals().get('__all__', []), 'PreparedFlashKMeansAssign', 'prepare_flash_kmeans_assign', 'flash_kmeans_assign_prepared', 'flash_kmeans_assign']
+__all__ = [*globals().get('__all__', []), 'FlashKMeansAssignRuntime', 'PreparedFlashKMeansAssign', 'init', 'prepare_flash_kmeans_assign', 'flash_kmeans_assign_prepared', 'flash_kmeans_assign']

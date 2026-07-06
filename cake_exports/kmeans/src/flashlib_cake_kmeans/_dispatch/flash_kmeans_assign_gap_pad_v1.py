@@ -7,7 +7,7 @@ not intended for sm_120a/sm_121a where ptxas rejects tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from functools import lru_cache
 from typing import Any
 from . import flash_kmeans_assign_cleanroom_tcgen05_non128d_splitd_v1 as _non128d

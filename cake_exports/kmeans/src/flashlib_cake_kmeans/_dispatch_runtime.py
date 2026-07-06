@@ -2,12 +2,14 @@ from __future__ import annotations
 _KERNEL_ALIAS_BY_IR_NAME = {'flash_kmeans_assign_lowdim_pack_e50c_v1': 'dispatch_kernel_0000', 'flash_kmeans_assign_lowdim_e50c_v1': 'dispatch_kernel_0001', 'flash_kmeans_assign_cleanroom_tcgen05_v10': 'dispatch_kernel_0002', 'flash_kmeans_assign_d160_pad192_pack_f9b2_v1': 'dispatch_kernel_0004', 'flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1': 'dispatch_kernel_0005', 'flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1': 'dispatch_kernel_0008', 'flash_kmeans_assign_highd_splitd_6fcf_v1': 'dispatch_kernel_0009', 'flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1': 'dispatch_kernel_0011', 'flash_kmeans_assign_highd_splitk_reduce_blockn64_g2r4_b5a6_v1': 'dispatch_kernel_0012', 'flash_kmeans_assign_microdim_pack_6cd2_v1': 'dispatch_kernel_0013', 'flash_kmeans_assign_microdim_6cd2_v1': 'dispatch_kernel_0014', 'flash_kmeans_assign_gap_pad_pack_v1': 'dispatch_kernel_0015', 'flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1': 'dispatch_kernel_0016', 'flash_kmeans_assign_cleanroom_tcgen05_v15': 'dispatch_kernel_0048', 'flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1': 'dispatch_kernel_0059', 'flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1': 'dispatch_kernel_0060', 'flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1': 'dispatch_kernel_0101', 'flash_kmeans_assign_cleanroom_tcgen05_d256_single_v1': 'dispatch_kernel_0109', 'flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1': 'dispatch_kernel_0118', 'flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1': 'dispatch_kernel_0119', 'flash_kmeans_assign_highd_paired_packedpartial_producer_7b3c_v1': 'dispatch_kernel_0121', 'flash_kmeans_assign_highd_paired_packedpartial_reduce_r2_7b3c_v1': 'dispatch_kernel_0122', 'flash_kmeans_assign_d224_tmem_abi_repair_d17c_v4': 'dispatch_kernel_0237', 'flash_kmeans_assign_d288_exactd_a532_v1': 'dispatch_kernel_0244', 'flash_kmeans_assign_d288_splitk_cta_0438_v1_partial': 'dispatch_kernel_0245', 'flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce': 'dispatch_kernel_0246', 'flash_kmeans_assign_d480_splitk_partial_d32k256_v1': 'dispatch_kernel_0266', 'flash_kmeans_assign_d480_splitk_reduce_d32k256_v1': 'dispatch_kernel_0267', 'flash_kmeans_assign_highd_splitk_partial_8de8_v1': 'dispatch_kernel_0285', 'flash_kmeans_assign_highd_splitk_reduce_8de8_v1': 'dispatch_kernel_0286', 'flash_kmeans_assign_microdim_direct_9c0d_v1': 'dispatch_kernel_0338', 'flash_kmeans_assign_d416_exactd_splitd_a4a579d1_v2': 'dispatch_kernel_0353'}
 _KERNEL_ALIAS_BY_REQUEST = {'{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_lowdim_pack_e50c_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0000', '{"computed_smem_bytes":100352,"constants":[],"ir_name":"flash_kmeans_assign_lowdim_e50c_v1","kwargs":{"smem_bytes":100352,"validate":false},"threads":192}': 'dispatch_kernel_0001', '{"computed_smem_bytes":100352,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_v10","kwargs":{"smem_bytes":100352,"validate":false},"threads":192}': 'dispatch_kernel_0002', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_d160_pad192_pack_f9b2_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0004', '{"computed_smem_bytes":149504,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d192_single_v1","kwargs":{"smem_bytes":149504,"validate":false},"threads":192}': 'dispatch_kernel_0005', '{"computed_smem_bytes":198656,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d192_splitd_v1","kwargs":{"smem_bytes":198656,"validate":false},"threads":192}': 'dispatch_kernel_0008', '{"computed_smem_bytes":51200,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitd_6fcf_v1","kwargs":{"smem_bytes":51200,"validate":false},"threads":192}': 'dispatch_kernel_0009', '{"computed_smem_bytes":43008,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_partial_blockn64_g2r4_b5a6_v1","kwargs":{"smem_bytes":43008,"validate":false},"threads":192}': 'dispatch_kernel_0011', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_reduce_blockn64_g2r4_b5a6_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0012', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_microdim_pack_6cd2_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0013', '{"computed_smem_bytes":51200,"constants":[],"ir_name":"flash_kmeans_assign_microdim_6cd2_v1","kwargs":{"smem_bytes":51200,"validate":false},"threads":192}': 'dispatch_kernel_0014', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_gap_pad_pack_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0015', '{"computed_smem_bytes":51200,"constants":[],"ir_name":"flash_kmeans_assign_d64_direct_1p2gap_9f2a_v1","kwargs":{"smem_bytes":51200,"validate":false},"threads":192}': 'dispatch_kernel_0016', '{"computed_smem_bytes":133120,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_v15","kwargs":{"smem_bytes":133120,"validate":false},"threads":192}': 'dispatch_kernel_0048', '{"computed_smem_bytes":43008,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_partial_blockn64_g1r4_streamdep_r63_v1","kwargs":{"smem_bytes":43008,"validate":false},"threads":192}': 'dispatch_kernel_0059', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_reduce_blockn64_g1r4_streamdep_r63_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0060', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d160_pack_padded_b23d_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0101', '{"computed_smem_bytes":198656,"constants":[],"ir_name":"flash_kmeans_assign_cleanroom_tcgen05_d256_single_v1","kwargs":{"smem_bytes":198656,"validate":false},"threads":192}': 'dispatch_kernel_0109', '{"computed_smem_bytes":75776,"constants":[],"ir_name":"flash_kmeans_assign_highd_paired_xreuse_dualtmem_producer_r47_v1","kwargs":{"smem_bytes":75776,"validate":false},"threads":192}': 'dispatch_kernel_0118', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_highd_paired_ownerreduce_r39_reduce1_unroll_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":64}': 'dispatch_kernel_0119', '{"computed_smem_bytes":43008,"constants":[],"ir_name":"flash_kmeans_assign_highd_paired_packedpartial_producer_7b3c_v1","kwargs":{"smem_bytes":43008,"validate":false},"threads":192}': 'dispatch_kernel_0121', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_highd_paired_packedpartial_reduce_r2_7b3c_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":128}': 'dispatch_kernel_0122', '{"computed_smem_bytes":22528,"constants":[],"ir_name":"flash_kmeans_assign_d224_tmem_abi_repair_d17c_v4","kwargs":{"smem_bytes":22528,"validate":false},"threads":192}': 'dispatch_kernel_0237', '{"computed_smem_bytes":26624,"constants":[],"ir_name":"flash_kmeans_assign_d288_exactd_a532_v1","kwargs":{"smem_bytes":26624,"validate":false},"threads":192}': 'dispatch_kernel_0244', '{"computed_smem_bytes":26624,"constants":[],"ir_name":"flash_kmeans_assign_d288_splitk_cta_0438_v1_partial","kwargs":{"smem_bytes":26624,"validate":false},"threads":192}': 'dispatch_kernel_0245', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_d288_splitk_cta_0438_v1_reduce","kwargs":{"smem_bytes":0,"validate":false},"threads":128}': 'dispatch_kernel_0246', '{"computed_smem_bytes":22528,"constants":[],"ir_name":"flash_kmeans_assign_d480_splitk_partial_d32k256_v1","kwargs":{"smem_bytes":22528,"validate":false},"threads":192}': 'dispatch_kernel_0266', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_d480_splitk_reduce_d32k256_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":256}': 'dispatch_kernel_0267', '{"computed_smem_bytes":51200,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_partial_8de8_v1","kwargs":{"smem_bytes":51200,"validate":false},"threads":192}': 'dispatch_kernel_0285', '{"computed_smem_bytes":0,"constants":[],"ir_name":"flash_kmeans_assign_highd_splitk_reduce_8de8_v1","kwargs":{"smem_bytes":0,"validate":false},"threads":128}': 'dispatch_kernel_0286', '{"computed_smem_bytes":51200,"constants":[],"ir_name":"flash_kmeans_assign_microdim_direct_9c0d_v1","kwargs":{"smem_bytes":51200,"validate":false},"threads":192}': 'dispatch_kernel_0338', '{"computed_smem_bytes":26624,"constants":[],"ir_name":"flash_kmeans_assign_d416_exactd_splitd_a4a579d1_v2","kwargs":{"smem_bytes":26624,"validate":false},"threads":192}': 'dispatch_kernel_0353'}
 
-import json
 import ctypes
 import importlib
+import json
+import threading
+import sys
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass, replace as _dataclass_replace
+from dataclasses import dataclass, field, replace as _dataclass_replace
 from importlib import resources
 from types import SimpleNamespace
 
@@ -36,6 +38,8 @@ def _resolved_launch_options(stream, timeout_ms):
 
 
 _active_launch_capture = ContextVar("flashlib_active_launch_capture", default=None)
+_pending_tensor_map_recipe = ContextVar("flashlib_pending_tensor_map_recipe", default=None)
+_launch_capture_prepare_lock = threading.RLock()
 
 
 def _replace(value, /, **changes):
@@ -50,6 +54,70 @@ dc = SimpleNamespace(replace=_replace)
 
 def _import_dispatch_module(short_name):
     return importlib.import_module(f"{__package__}._dispatch.{short_name}")
+
+
+_DISPATCH_OWNED_DICT_SUFFIXES = ("CACHE", "SCRATCH", "INPUTS", "OUTPUTS", "FLAGS")
+
+
+def _cache_value_references_owned_object(value, owned_ids, seen):
+    identity = id(value)
+    if identity in owned_ids:
+        return True
+    if identity in seen:
+        return False
+    seen.add(identity)
+    if isinstance(value, dict):
+        return any(
+            _cache_value_references_owned_object(item, owned_ids, seen)
+            for pair in value.items()
+            for item in pair
+        )
+    if isinstance(value, (tuple, list, set, frozenset)):
+        return any(
+            _cache_value_references_owned_object(item, owned_ids, seen)
+            for item in value
+        )
+    return False
+
+
+def release_dispatch_caches(owned_objects):
+    '''Clear route-owned tensor dictionaries after a prepared sequence binds.
+
+    Generated dispatch modules may temporarily cache tensor-map descriptors and
+    workspaces while a route is prepared.  A bound ``PreparedKernelSequence``
+    retains every CUDA argument, so those module globals are no longer owners.
+    To avoid clearing dispatch registries or scalar statistics, this contract
+    is limited to dict-valued, private, uppercase names with an explicit
+    workspace/cache suffix below this generated package's ``_dispatch``
+    namespace.
+    '''
+
+    prefix = f"{__package__}._dispatch."
+    owned_ids = {
+        id(value)
+        for value in owned_objects
+        if callable(getattr(value, "data_ptr", None))
+    }
+    if not owned_ids:
+        return 0
+    cleared = 0
+    for module_name, module in tuple(sys.modules.items()):
+        if module is None or not module_name.startswith(prefix):
+            continue
+        for name, value in tuple(vars(module).items()):
+            if (
+                name.startswith("_")
+                and name.endswith(_DISPATCH_OWNED_DICT_SUFFIXES)
+                and name.isupper()
+                and isinstance(value, dict)
+            ):
+                removed = False
+                for key, item in tuple(value.items()):
+                    if _cache_value_references_owned_object(item, owned_ids, set()):
+                        value.pop(key, None)
+                        removed = True
+                cleared += int(removed)
+    return cleared
 
 
 def _decode_capture(value):
@@ -131,15 +199,93 @@ def pack_kernel_args(schedule, /, **bindings):
 
 
 class PreparedKernelSequence:
-    def __init__(self, launches, result):
+    def __init__(
+        self,
+        launches,
+        result,
+        input_bindings=(),
+        result_template=None,
+        tensor_map_bindings=(),
+        input_alias_topology=(),
+        stream=None,
+    ):
         if not launches:
             raise RuntimeError("prepared semantic route did not capture a CUDA launch")
         self._launches = tuple(launches)
         self._result = result
+        self._input_bindings = tuple(tuple(bindings) for bindings in input_bindings)
+        if self._input_bindings and len(self._input_bindings) != len(self._launches):
+            raise RuntimeError("prepared semantic route has corrupt input bindings")
+        self._result_template = result_template
+        self._input_alias_topology = tuple(
+            tuple(group) for group in input_alias_topology
+        )
+        self._tensor_map_bindings = _own_tensor_map_bindings(
+            self._launches,
+            tuple(tensor_map_bindings),
+            stream=stream,
+        )
 
     @property
     def launch_count(self):
         return len(self._launches)
+
+    @property
+    def bound_input_keys(self):
+        direct = {key for bindings in self._input_bindings for _, key in bindings}
+        derived = {binding.input_key for binding in self._tensor_map_bindings}
+        return tuple(sorted(direct | derived))
+
+    def rebind_inputs(self, inputs, *, stream=None):
+        if not any(self._input_bindings) and not self._tensor_map_bindings:
+            raise RuntimeError(
+                "prepared semantic route has no input bindings; "
+                "capture it with capture_kernel_launches(inputs=...)"
+            )
+        missing = sorted(set(self.bound_input_keys) - set(inputs))
+        if missing:
+            raise KeyError(f"missing prepared semantic input binding(s): {missing!r}")
+        _validate_public_tensor_alias_topology(inputs, self._input_alias_topology)
+        with launch_stream_context(stream):
+            for binding in self._tensor_map_bindings:
+                binding.refresh(inputs[binding.input_key])
+            for launch, bindings in zip(self._launches, self._input_bindings, strict=True):
+                launch.rebind_arguments(
+                    {index: inputs[key] for index, key in bindings},
+                    stream=stream,
+                )
+        if self._result_template is not None:
+            self._result = _materialize_result_template(self._result_template, inputs)
+        return self
+
+    def release_bound_inputs(self):
+        '''Drop caller tensor references after their launch stream was recorded.'''
+        for launch, bindings in zip(self._launches, self._input_bindings, strict=True):
+            keepalive = list(launch._keepalive)
+            for index, _key in bindings:
+                value = keepalive[index]
+                data_ptr = getattr(value, "data_ptr", None)
+                if callable(data_ptr):
+                    keepalive[index] = int(data_ptr())
+            launch._keepalive = tuple(keepalive)
+        self._result = None
+
+    def record_stream(self, stream):
+        '''Tie every tensor launch argument, including private scratch, to a stream.'''
+        if stream is None:
+            raise ValueError("prepared semantic record_stream requires an explicit stream")
+        seen = set()
+        for launch in self._launches:
+            for value in launch._keepalive:
+                identity = id(value)
+                record_stream = getattr(value, "record_stream", None)
+                if identity not in seen and callable(record_stream):
+                    seen.add(identity)
+                    record_stream(stream)
+
+    def _finish_rebind(self, result):
+        self._result = result
+        return self
 
     def __call__(self, _inputs=None, *, stream=None, timeout_ms=None):
         last = len(self._launches) - 1
@@ -149,34 +295,369 @@ class PreparedKernelSequence:
 
 
 class KernelLaunchCapture:
-    def __init__(self, *, stream=None, arch=None):
+    def __init__(self, *, stream=None, arch=None, inputs=None, rebind=None):
+        if rebind is not None and not isinstance(rebind, PreparedKernelSequence):
+            raise TypeError("rebind must be a PreparedKernelSequence")
+        if inputs is not None and rebind is not None:
+            raise ValueError("inputs and rebind are mutually exclusive capture modes")
+        if rebind is not None:
+            raise RuntimeError(
+                "capture(rebind=...) is unsupported because an in-place topology "
+                "update cannot be transactional; capture a new sequence instead"
+            )
         self.stream = stream
         self.arch = arch
         self._launches = []
+        self._input_bindings = []
+        self._input_key_by_identity = _public_tensor_input_identities(inputs)
+        self._input_key_by_pointer = _public_tensor_input_pointers(inputs)
+        self._input_alias_topology = _public_tensor_alias_topology(inputs)
+        self._tensor_map_bindings = {}
+        self._route_caches_released = False
+        self._rebind = rebind
+        self._rebind_index = 0
+
+    @property
+    def rebinding(self):
+        return self._rebind is not None
 
     def add(self, launch):
+        if self.rebinding:
+            raise RuntimeError("rebind capture requires launch topology, not a newly prepared launch")
         self._launches.append(launch)
+        self._input_bindings.append(
+            ()
+            if not self._input_key_by_identity
+            else tuple(
+                (index, self._input_key_by_identity[id(arg)])
+                for index, arg in enumerate(launch._keepalive)
+                if id(arg) in self._input_key_by_identity
+            )
+        )
+        for arg in launch._keepalive:
+            recipe = getattr(arg, "_loom_tensor_map_recipe", None)
+            if recipe is None:
+                continue
+            source_pointer = int(recipe[2])
+            input_key = self._input_key_by_pointer.get(source_pointer)
+            if input_key is None:
+                continue
+            self._tensor_map_bindings.setdefault(
+                id(arg),
+                _TensorMapBinding(
+                    input_key=input_key,
+                    tensor=arg,
+                    recipe=tuple(recipe),
+                    pointer=source_pointer,
+                ),
+            )
+
+    def add_kernel_launch(
+        self,
+        exported,
+        *,
+        mode,
+        grid,
+        block,
+        args,
+        arg_types,
+        shared_mem,
+        stream,
+        cluster_dims=None,
+    ):
+        resolved_arch, resolved_stream, _ = resolve_launch_defaults(
+            arch=self.arch,
+            stream=self.stream if self.stream is not None else stream,
+            timeout_ms=None,
+        )
+        with launch_stream_context(resolved_stream):
+            kernel = exported.compile(arch=resolved_arch, options=["--use_fast_math"])
+            kwargs = {
+                "grid": grid,
+                "block": block,
+                "args": tuple(args),
+                "arg_types": arg_types,
+                "shared_mem": shared_mem,
+                "stream": resolved_stream,
+            }
+            if self.rebinding:
+                if self._rebind_index >= self._rebind.launch_count:
+                    raise RuntimeError(
+                        "prepared semantic route launch-count mismatch: "
+                        f"expected {self._rebind.launch_count}, captured more launches"
+                    )
+                prepared = self._rebind._launches[self._rebind_index]
+                if mode == "cluster":
+                    kernel.rebind_launch_cluster(
+                        prepared, cluster_dims=cluster_dims, **kwargs
+                    )
+                elif mode == "cooperative":
+                    kernel.rebind_launch_cooperative(prepared, **kwargs)
+                elif mode == "regular":
+                    kernel.rebind_launch(prepared, **kwargs)
+                else:
+                    raise RuntimeError(f"unsupported captured launch mode: {mode!r}")
+                self._rebind_index += 1
+                return
+            if mode == "cluster":
+                prepared = kernel.prepare_launch_cluster(
+                    cluster_dims=cluster_dims, **kwargs
+                )
+            elif mode == "cooperative":
+                prepared = kernel.prepare_launch_cooperative(**kwargs)
+            elif mode == "regular":
+                prepared = kernel.prepare_launch(**kwargs)
+            else:
+                raise RuntimeError(f"unsupported captured launch mode: {mode!r}")
+            self.add(prepared)
 
     def bind(self, result):
-        return PreparedKernelSequence(self._launches, result)
+        if self.rebinding:
+            if self._rebind_index != self._rebind.launch_count:
+                raise RuntimeError(
+                    "prepared semantic route launch-count mismatch: "
+                    f"expected {self._rebind.launch_count}, captured {self._rebind_index}"
+                )
+            return self._rebind._finish_rebind(result)
+        result_template = _capture_result_template(result, self._input_key_by_identity)
+        route_cache_owned_objects = self._route_cache_owned_objects()
+        sequence = PreparedKernelSequence(
+            self._launches,
+            result,
+            self._input_bindings,
+            result_template,
+            tuple(self._tensor_map_bindings.values()),
+            self._input_alias_topology,
+            self.stream,
+        )
+        self.release_route_caches(route_cache_owned_objects)
+        return sequence
+
+    def _route_cache_owned_objects(self):
+        return tuple(arg for launch in self._launches for arg in launch._keepalive)
+
+    def release_route_caches(self, owned_objects=None):
+        if self._route_caches_released:
+            return 0
+        if owned_objects is None:
+            owned_objects = self._route_cache_owned_objects()
+        self._route_caches_released = True
+        return release_dispatch_caches(tuple(owned_objects))
+
+
+@dataclass(frozen=True)
+class _BoundInputResult:
+    key: str
+
+
+@dataclass
+class _TensorMapBinding:
+    input_key: str
+    tensor: object
+    recipe: tuple
+    pointer: int
+    staging_slots: list = field(default_factory=list)
+
+    def _acquire_staging_slot(self, torch):
+        for slot in self.staging_slots:
+            if slot.event.query():
+                return slot
+        slot = _TensorMapStagingSlot(
+            host_buffer=torch.empty(128, dtype=torch.uint8, pin_memory=True),
+            event=torch.cuda.Event(blocking=False, interprocess=False),
+        )
+        self.staging_slots.append(slot)
+        return slot
+
+    def refresh(self, source):
+        pointer = int(source.data_ptr())
+        if pointer == self.pointer:
+            return
+        from cuda.bindings import driver
+        import torch
+
+        arguments = list(self.recipe)
+        arguments[2] = pointer
+        err, tmap = driver.cuTensorMapEncodeTiled(*arguments)
+        if err != 0:
+            raise RuntimeError(f"cuTensorMapEncodeTiled rebind failed: CUresult={err}")
+        raw = bytes((ctypes.c_ubyte * 128).from_address(tmap.getPtr()))
+        slot = self._acquire_staging_slot(torch)
+        source_bytes = torch.frombuffer(bytearray(raw), dtype=torch.uint8)
+        slot.host_buffer.copy_(source_bytes)
+        self.tensor.copy_(slot.host_buffer, non_blocking=True)
+        slot.event.record(torch.cuda.current_stream())
+        self.pointer = pointer
+        self.recipe = tuple(arguments)
+        self.tensor._loom_tensor_map_recipe = self.recipe
+
+
+@dataclass
+class _TensorMapStagingSlot:
+    host_buffer: object
+    event: object
+
+
+def _own_tensor_map_bindings(launches, bindings, *, stream):
+    '''Clone cached descriptors and patch every launch to slot-owned storage.'''
+
+    if not bindings:
+        return ()
+    owned_by_identity = {}
+    owned_bindings = []
+    with launch_stream_context(stream):
+        for binding in bindings:
+            original = binding.tensor
+            owned = original.clone()
+            owned._loom_tensor_map_recipe = binding.recipe
+            metadata = getattr(original, "_loom_tma_metadata", None)
+            if metadata is not None:
+                owned._loom_tma_metadata = metadata
+            owned_by_identity[id(original)] = owned
+            owned_bindings.append(
+                _TensorMapBinding(
+                    input_key=binding.input_key,
+                    tensor=owned,
+                    recipe=binding.recipe,
+                    pointer=binding.pointer,
+                )
+            )
+        for launch in launches:
+            replacements = {
+                index: owned_by_identity[id(arg)]
+                for index, arg in enumerate(launch._keepalive)
+                if id(arg) in owned_by_identity
+            }
+            if replacements:
+                launch.rebind_arguments(replacements, stream=stream)
+    return tuple(owned_bindings)
+
+
+def _public_tensor_input_identities(inputs):
+    if inputs is None:
+        return {}
+    if not hasattr(inputs, "items"):
+        raise TypeError("capture inputs must be a mapping")
+    identities = {}
+    for key, value in inputs.items():
+        if (
+            isinstance(key, str)
+            and not key.startswith("_")
+            and callable(getattr(value, "data_ptr", None))
+        ):
+            identities.setdefault(id(value), key)
+    return identities
+
+
+def _public_tensor_input_pointers(inputs):
+    if inputs is None:
+        return {}
+    pointers = {}
+    for key, value in inputs.items():
+        if (
+            isinstance(key, str)
+            and not key.startswith("_")
+            and callable(getattr(value, "data_ptr", None))
+        ):
+            pointers.setdefault(int(value.data_ptr()), key)
+    return pointers
+
+
+def _public_tensor_alias_topology(inputs, keys=None):
+    '''Return the complete pointer-equality partition of public tensor inputs.'''
+
+    if inputs is None:
+        return ()
+    if not hasattr(inputs, "items"):
+        raise TypeError("capture inputs must be a mapping")
+    if keys is None:
+        selected = [
+            key
+            for key, value in inputs.items()
+            if (
+                isinstance(key, str)
+                and not key.startswith("_")
+                and callable(getattr(value, "data_ptr", None))
+            )
+        ]
+    else:
+        selected = list(keys)
+        missing = sorted(set(selected) - set(inputs))
+        if missing:
+            raise KeyError(f"missing prepared semantic alias binding(s): {missing!r}")
+        invalid = sorted(
+            key
+            for key in selected
+            if not callable(getattr(inputs[key], "data_ptr", None))
+        )
+        if invalid:
+            raise TypeError(
+                f"prepared semantic alias binding(s) must be tensor-like: {invalid!r}"
+            )
+    groups = {}
+    for key in selected:
+        groups.setdefault(int(inputs[key].data_ptr()), []).append(key)
+    return tuple(sorted(tuple(sorted(group)) for group in groups.values()))
+
+
+def _validate_public_tensor_alias_topology(inputs, expected):
+    if not expected:
+        return
+    keys = tuple(key for group in expected for key in group)
+    actual = _public_tensor_alias_topology(inputs, keys)
+    if actual != expected:
+        raise RuntimeError(
+            "prepared semantic public tensor alias topology changed: "
+            f"expected {expected!r}, got {actual!r}; capture a new sequence"
+        )
+
+
+def _capture_result_template(value, input_key_by_identity):
+    key = input_key_by_identity.get(id(value))
+    if key is not None:
+        return _BoundInputResult(key)
+    if isinstance(value, tuple):
+        return tuple(_capture_result_template(item, input_key_by_identity) for item in value)
+    if isinstance(value, list):
+        return [_capture_result_template(item, input_key_by_identity) for item in value]
+    if isinstance(value, dict):
+        return {
+            key: _capture_result_template(item, input_key_by_identity)
+            for key, item in value.items()
+        }
+    return value
+
+
+def _materialize_result_template(value, inputs):
+    if isinstance(value, _BoundInputResult):
+        return inputs[value.key]
+    if isinstance(value, tuple):
+        return tuple(_materialize_result_template(item, inputs) for item in value)
+    if isinstance(value, list):
+        return [_materialize_result_template(item, inputs) for item in value]
+    if isinstance(value, dict):
+        return {key: _materialize_result_template(item, inputs) for key, item in value.items()}
+    return value
 
 
 @contextmanager
-def capture_kernel_launches(*, stream=None, arch=None):
+def capture_kernel_launches(*, stream=None, arch=None, inputs=None, rebind=None):
     import torch
 
-    if _active_launch_capture.get() is not None:
-        raise RuntimeError("nested kernel launch capture is not supported")
-    capture = KernelLaunchCapture(stream=stream, arch=arch)
-    token = _active_launch_capture.set(capture)
-    try:
-        if stream is None:
-            yield capture
-        else:
-            with torch.cuda.stream(stream):
+    with _launch_capture_prepare_lock:
+        if _active_launch_capture.get() is not None:
+            raise RuntimeError("nested kernel launch capture is not supported")
+        capture = KernelLaunchCapture(stream=stream, arch=arch, inputs=inputs, rebind=rebind)
+        token = _active_launch_capture.set(capture)
+        try:
+            if stream is None:
                 yield capture
-    finally:
-        _active_launch_capture.reset(token)
+            else:
+                with torch.cuda.stream(stream):
+                    yield capture
+        finally:
+            capture.release_route_caches()
+            _active_launch_capture.reset(token)
 
 
 class DispatchKernel:
@@ -194,11 +675,16 @@ class DispatchKernel:
         stream, timeout_ms = _resolved_launch_options(stream, timeout_ms)
         capture = _active_launch_capture.get()
         if capture is not None:
-            capture.add(self.exported.prepare_launch(
-                *args, grid=grid, block=block, shared_mem=shared_mem,
-                stream=capture.stream if capture.stream is not None else stream,
-                arch=capture.arch, options=["--use_fast_math"],
-            ))
+            capture.add_kernel_launch(
+                self.exported,
+                mode="regular",
+                grid=grid,
+                block=block,
+                args=args,
+                arg_types=self.exported.arg_types,
+                shared_mem=shared_mem,
+                stream=stream,
+            )
             return
         self.exported.launch(
             *args, grid=grid, block=block, shared_mem=shared_mem, stream=stream,
@@ -210,23 +696,27 @@ class DispatchKernel:
         timeout_ms=None, **kwargs
     ):
         stream, timeout_ms = _resolved_launch_options(stream, timeout_ms)
-        arch, stream, timeout_ms = resolve_launch_defaults(
-            arch=None, stream=stream, timeout_ms=timeout_ms
-        )
         capture = _active_launch_capture.get()
-        kernel = self.exported.compile(
-            arch=capture.arch if capture is not None and capture.arch is not None else arch,
-            options=["--use_fast_math"],
-        )
         if capture is not None:
-            capture.add(kernel.prepare_launch_cluster(
-                grid=grid, block=block, args=tuple(args),
+            capture.add_kernel_launch(
+                self.exported,
+                mode="cluster",
+                grid=grid,
+                block=block,
+                args=args,
                 arg_types=self.exported.arg_types,
-                cluster_dims=cluster_dims, shared_mem=shared_mem,
-                stream=capture.stream if capture.stream is not None else stream,
-            ))
+                cluster_dims=cluster_dims,
+                shared_mem=shared_mem,
+                stream=stream,
+            )
             return
+        arch, stream, timeout_ms = resolve_launch_defaults(
+            arch=None,
+            stream=stream,
+            timeout_ms=timeout_ms,
+        )
         with launch_stream_context(stream):
+            kernel = self.exported.compile(arch=arch, options=["--use_fast_math"])
             kernel.launch_cluster(
                 grid=grid, block=block, args=tuple(args),
                 arg_types=self.exported.arg_types,
@@ -238,23 +728,26 @@ class DispatchKernel:
         self, *, grid, block, args, shared_mem=0, stream=None, timeout_ms=None, **kwargs
     ):
         stream, timeout_ms = _resolved_launch_options(stream, timeout_ms)
-        arch, stream, timeout_ms = resolve_launch_defaults(
-            arch=None, stream=stream, timeout_ms=timeout_ms
-        )
         capture = _active_launch_capture.get()
-        kernel = self.exported.compile(
-            arch=capture.arch if capture is not None and capture.arch is not None else arch,
-            options=["--use_fast_math"],
-        )
         if capture is not None:
-            capture.add(kernel.prepare_launch_cooperative(
-                grid=grid, block=block, args=tuple(args),
+            capture.add_kernel_launch(
+                self.exported,
+                mode="cooperative",
+                grid=grid,
+                block=block,
+                args=args,
                 arg_types=self.exported.arg_types,
                 shared_mem=shared_mem,
-                stream=capture.stream if capture.stream is not None else stream,
-            ))
+                stream=stream,
+            )
             return
+        arch, stream, timeout_ms = resolve_launch_defaults(
+            arch=None,
+            stream=stream,
+            timeout_ms=timeout_ms,
+        )
         with launch_stream_context(stream):
+            kernel = self.exported.compile(arch=arch, options=["--use_fast_math"])
             kernel.launch_cooperative(
                 grid=grid, block=block, args=tuple(args),
                 arg_types=self.exported.arg_types,
@@ -305,14 +798,30 @@ def arch_flag_for_cc(major, minor):
     return f"sm_{sm}a" if sm >= 90 else f"sm_{sm}"
 
 
+def _capture_cuTensorMapEncodeTiled(*arguments):
+    '''Encode a tensor map while retaining a pointer-rebind recipe.'''
+    from cuda.bindings import driver
+
+    result = driver.cuTensorMapEncodeTiled(*arguments)
+    if result[0] == 0:
+        _pending_tensor_map_recipe.set(tuple(arguments))
+    else:
+        _pending_tensor_map_recipe.set(None)
+    return result
+
+
 def _tmap_to_device(tmap, metadata=None):
     import torch
     del metadata
+    recipe = _pending_tensor_map_recipe.get()
+    _pending_tensor_map_recipe.set(None)
     host_ptr = tmap.getPtr()
     raw = bytes((ctypes.c_ubyte * 128).from_address(host_ptr))
     host = torch.frombuffer(bytearray(raw), dtype=torch.uint8)
     device = torch.empty(128, dtype=torch.uint8, device="cuda")
     device.copy_(host)
+    if recipe is not None:
+        device._loom_tensor_map_recipe = recipe
     return device
 
 
@@ -331,7 +840,7 @@ class TensorMapMetadata:
 
 
 def attach_tma_metadata(tensor, metadata):
-    del metadata
+    tensor._loom_tensor_map_metadata = metadata
     return tensor
 
 
@@ -342,7 +851,7 @@ def _create_tensor_map_3d(data_ptr, global_height, shared_height, width, block_w
         driver.CUtensorMapSwizzle.CU_TENSOR_MAP_SWIZZLE_128B
         if swizzle == "128B" else driver.CUtensorMapSwizzle.CU_TENSOR_MAP_SWIZZLE_64B
     )
-    err, tmap = driver.cuTensorMapEncodeTiled(
+    err, tmap = _capture_cuTensorMapEncodeTiled(
         driver.CUtensorMapDataType.CU_TENSOR_MAP_DATA_TYPE_BFLOAT16,
         3,
         data_ptr,
@@ -395,6 +904,22 @@ def _all_shapes():
     package = __package__ or __name__.rpartition(".")[0]
     text = resources.files(package).joinpath("_dispatch_shapes.json").read_text(encoding="utf-8")
     return json.loads(text)
+
+
+class _CanonicalShapes:
+    '''Lazy contract-shape view backed by the exported plan ledger.'''
+
+    def __iter__(self):
+        return iter(_all_shapes())
+
+    def __len__(self):
+        return len(_all_shapes())
+
+    def __getitem__(self, index):
+        return _all_shapes()[index]
+
+
+CANONICAL_SHAPES = _CanonicalShapes()
 
 
 def select_named_shapes(labels):

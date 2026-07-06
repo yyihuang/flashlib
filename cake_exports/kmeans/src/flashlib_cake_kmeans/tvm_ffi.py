@@ -25,13 +25,18 @@ def _manifest() -> dict[str, Any]:
     return json.loads(Path(__file__).with_name("manifest.json").read_text(encoding="utf-8"))
 
 
-def _planned_public_exports() -> dict[str, str]:
-    return dict(_manifest().get("export_plan", {}).get("package_exports", {}))
+def _planned_public_exports() -> dict[str, str] | None:
+    export_plan = _manifest().get("export_plan", {})
+    if "tvm_ffi_exports" in export_plan:
+        return dict(export_plan["tvm_ffi_exports"])
+    if "package_exports" in export_plan:
+        return dict(export_plan["package_exports"])
+    return None
 
 
 def _public_export_names() -> tuple[str, ...]:
     planned = _planned_public_exports()
-    if planned:
+    if planned is not None:
         return tuple(planned)
     package = importlib.import_module(__package__)
     excluded = {
@@ -89,7 +94,7 @@ def _torch_stream_context(stream: tuple[int, int] | None):
 
 def _semantic_target(public_name: str):
     planned = _planned_public_exports()
-    target = planned.get(public_name)
+    target = None if planned is None else planned.get(public_name)
     if target is None:
         return getattr(importlib.import_module(__package__), public_name)
     module_name, separator, attr = target.partition(":")

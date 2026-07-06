@@ -8,7 +8,7 @@ ptxas rejects tcgen05 instructions.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import os
 from typing import Any
 from . import flash_kmeans_assign_highd_splitk_blockn64_g1r4_streamdep_r63_v1 as _g1
