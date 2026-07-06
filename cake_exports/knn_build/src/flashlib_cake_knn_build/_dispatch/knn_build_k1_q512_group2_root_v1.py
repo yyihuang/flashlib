@@ -13,7 +13,7 @@ Benchmark evidence (CUPTI, 2026-06-30): exact BF16 build
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from . import knn_build_lowk_f8c3_q512_q1024_v1 as seed
 TARGET_SHAPE = 'build_k_sweep_qm512_k1'

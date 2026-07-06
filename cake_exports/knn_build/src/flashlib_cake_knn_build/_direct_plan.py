@@ -138,7 +138,38 @@ class PreparedDirectRoute:
                     f"prepared on stream 0x{self.stream_handle:x}, requested 0x{requested_handle:x}; "
                     "prepare a separate plan inside the target torch.cuda.stream(...) context"
                 )
-            return self.direct_launcher(inputs, stream=None, timeout_ms=timeout_ms)
+            try:
+                result = self.direct_launcher(inputs, stream=None, timeout_ms=timeout_ms)
+            finally:
+                # A later launch can fail after an earlier launch was already
+                # enqueued. Keep every captured argument allocator-safe even
+                # on that partial-submission path.
+                self.direct_launcher.record_stream(requested_stream)
+                _record_input_streams(inputs, requested_stream)
+            return result
+
+    def rebind_inputs(
+        self,
+        inputs: dict[str, Any],
+        *,
+        stream: Any = None,
+    ) -> None:
+        """Rebind public tensor arguments without resolving the route again."""
+
+        import torch
+
+        if inputs is not self.inputs:
+            raise ValueError("prepared KNN-build route is bound to its original input dictionary")
+        with torch.cuda.device(self.device_index):
+            requested_stream = self.stream if stream is None else stream
+            requested_handle = int(requested_stream.cuda_stream)
+            if requested_handle != self.stream_handle:
+                raise RuntimeError(
+                    "prepared KNN-build route is stream-bound: "
+                    f"prepared on stream 0x{self.stream_handle:x}, requested 0x{requested_handle:x}; "
+                    "prepare a separate plan inside the target torch.cuda.stream(...) context"
+                )
+            self.direct_launcher.rebind_inputs(inputs, stream=requested_stream)
 
 
 @cache
@@ -151,6 +182,16 @@ def _load_launcher(entrypoint: str) -> Callable[[dict[str, Any]], Any]:
     if not callable(launcher):
         raise RuntimeError(f"direct KNN-build entrypoint is not callable: {entrypoint!r}")
     return launcher
+
+
+def _record_input_streams(inputs: dict[str, Any], stream: Any) -> None:
+    seen: set[int] = set()
+    for value in inputs.values():
+        identity = id(value)
+        record_stream = getattr(value, "record_stream", None)
+        if identity not in seen and callable(record_stream):
+            seen.add(identity)
+            record_stream(stream)
 
 
 @cache
@@ -219,7 +260,11 @@ def prepare_route(
                 )
             decision = resolve_route(inputs)
             inputs["_knn_build_prepared_stream_key"] = (device_index, stream_handle)
-            with capture_kernel_launches(stream=resolved_stream, arch=resolved_arch) as captured:
+            with capture_kernel_launches(
+                stream=resolved_stream,
+                arch=resolved_arch,
+                inputs=inputs,
+            ) as captured:
                 with dispatch_launch_options(stream=resolved_stream, timeout_ms=None):
                     prepared_result = decision.launcher(inputs)
             direct_launcher = captured.bind(prepared_result)

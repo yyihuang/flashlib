@@ -8,7 +8,7 @@ dot-product producer, split-local K10 candidates, and Weave split merge.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import os
 from collections.abc import Callable
 from typing import Any

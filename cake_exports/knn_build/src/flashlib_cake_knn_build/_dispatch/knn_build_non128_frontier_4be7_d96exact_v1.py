@@ -8,7 +8,7 @@ issues a K=96 tcgen05 dot-product tile instead of padding D96 to D128.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 import os
@@ -106,7 +106,7 @@ def _create_tensor_map_3d_oob_zero_swizzle64(data_ptr: int, global_height: int, 
     cached = _TMAP64_CACHE.get(key)
     if cached is not None:
         return cached
-    err, tmap = driver.cuTensorMapEncodeTiled(driver.CUtensorMapDataType.CU_TENSOR_MAP_DATA_TYPE_BFLOAT16, 3, data_ptr, [driver.cuuint64_t(32), driver.cuuint64_t(global_height), driver.cuuint64_t(width // 32)], [driver.cuuint64_t(width * 2), driver.cuuint64_t(64)], [driver.cuuint32_t(32), driver.cuuint32_t(shared_height), driver.cuuint32_t(block_width // 32)], [driver.cuuint32_t(1), driver.cuuint32_t(1), driver.cuuint32_t(1)], driver.CUtensorMapInterleave.CU_TENSOR_MAP_INTERLEAVE_NONE, driver.CUtensorMapSwizzle.CU_TENSOR_MAP_SWIZZLE_64B, driver.CUtensorMapL2promotion.CU_TENSOR_MAP_L2_PROMOTION_NONE, driver.CUtensorMapFloatOOBfill.CU_TENSOR_MAP_FLOAT_OOB_FILL_NAN_REQUEST_ZERO_FMA)
+    err, tmap = _capture_cuTensorMapEncodeTiled(driver.CUtensorMapDataType.CU_TENSOR_MAP_DATA_TYPE_BFLOAT16, 3, data_ptr, [driver.cuuint64_t(32), driver.cuuint64_t(global_height), driver.cuuint64_t(width // 32)], [driver.cuuint64_t(width * 2), driver.cuuint64_t(64)], [driver.cuuint32_t(32), driver.cuuint32_t(shared_height), driver.cuuint32_t(block_width // 32)], [driver.cuuint32_t(1), driver.cuuint32_t(1), driver.cuuint32_t(1)], driver.CUtensorMapInterleave.CU_TENSOR_MAP_INTERLEAVE_NONE, driver.CUtensorMapSwizzle.CU_TENSOR_MAP_SWIZZLE_64B, driver.CUtensorMapL2promotion.CU_TENSOR_MAP_L2_PROMOTION_NONE, driver.CUtensorMapFloatOOBfill.CU_TENSOR_MAP_FLOAT_OOB_FILL_NAN_REQUEST_ZERO_FMA)
     if err != 0:
         raise RuntimeError(''.join(['cuTensorMapEncodeTiled (3D, 64B OOB zero) failed: CUresult=', format(err, '')]))
     cached = attach_tma_metadata(_tmap_to_device(tmap).to(device=torch.device('cuda', device_index)), TensorMapMetadata(ndim=3, dtype='bf16', swizzle=Swizzle.SZ_64B, helper='knn_build_non128_frontier_4be7_d96exact._create_tensor_map_3d_oob_zero_swizzle64'))

@@ -8,7 +8,7 @@ distances and indices.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_rag_stream_exact_weave_evolve_knn_build_6361_v42 as replay

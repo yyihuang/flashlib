@@ -9,7 +9,7 @@ accepted 0cb5 q31tail/q32tail seed.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import argparse
 import json
 from pathlib import Path

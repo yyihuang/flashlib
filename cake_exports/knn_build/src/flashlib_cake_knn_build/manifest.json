@@ -9,19 +9,34 @@
     "kernel_count": 233,
     "metadata": {
       "baseline": "FlashLib",
-      "inventory": "full112_v12 production dispatcher",
-      "launch_resolution": "exact-shape stream-bound fully marshalled direct sequence",
+      "inventory": "canonical112 v10 D320-recurrence production dispatcher",
+      "launch_resolution": "init-once device runtime with lazy per-shape/per-stream pointer-rebindable direct sequences",
+      "registry_correctness_shapes": 112,
+      "registry_performance_shapes": 112,
       "workload": "knn_build"
     },
     "name": "flashlib-knn-build-production",
     "package_exports": {
+      "KNNBuildRuntime": ".interface:KNNBuildRuntime",
       "PreparedKNNBuild": ".interface:PreparedKNNBuild",
+      "init": ".interface:init",
       "knn_build": ".interface:knn_build",
       "knn_build_prepared": ".interface:knn_build_prepared",
       "prepare_knn_build": ".interface:prepare_knn_build"
     },
-    "sha256": "895f17a34aa8945bd459e565dcee7d3885480bc3cc74fef1811abb7b1dcdf7cd",
+    "sha256": "e1836c490f7892ad84686c9d599ed3ea88db5304ae4a967a8a2f2e96d8076fd9",
+    "tvm_ffi_exports": {
+      "knn_build": ".interface:knn_build"
+    },
     "validation": {
+      "benchmark_registry_baseline": null,
+      "benchmark_registry_baseline_key": null,
+      "benchmark_registry_baseline_sha256": null,
+      "benchmark_registry_candidate_entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs",
+      "benchmark_registry_key": "knn_build",
+      "benchmark_registry_shape_labels_sha256": "0ed9c8426d3207eb25e1494c87ad48a000227fd7d2fc952d70d4bbb2591a9a1e",
+      "benchmark_registry_shape_ledger_sha256": "3eb746dc0c5ea741d389f3caec3606b39fce8ca873850b09272d366be1cd74f3",
+      "correctness_shape_count": 112,
       "expected_routes": [
         {
           "selected_route": "loom.examples.weave.knn_build_flashml_k5_bd4a_v1:launch_from_contract_inputs",
@@ -474,12 +489,15 @@
       ],
       "expected_shape_count": 112,
       "minimum_speedup": 1.2,
-      "performance_speedup_metric": "prepared_speedup_vs_baseline",
-      "semantic_entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs"
+      "performance_speedup_denominator_metric": "compute_synchronized_e2e_ms",
+      "performance_speedup_metric": "compute_speedup_vs_baseline",
+      "performance_speedup_numerator_metric": "baseline_synchronized_e2e_ms",
+      "semantic_entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs",
+      "shape_test_marker": "export_validation_shape"
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-05T07:03:42.232967+00:00",
+  "generated_at_utc": "2026-07-06T04:25:41.947491+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -16352,11 +16370,13 @@
   "package": "flashlib_cake_knn_build",
   "semantic_dispatcher": {
     "entrypoint": "loom.examples.weave.knn_build_dispatch_q1m524_v10_d320recurrence_consumption_v1:launch_from_contract_inputs",
+    "exact_route_key_count": 0,
     "kernel_count": 233,
-    "module_count": 267
+    "module_count": 267,
+    "route_decision_count": 0
   },
-  "source_commit": "d524984607b363fb057a835c247e4f40f4de8e47",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
+  "source_commit": "5cd82900442c4c57a45d3af4a90da592d83e619c",
+  "source_repo": "https://gitlab-master.nvidia.com/cake/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_build",

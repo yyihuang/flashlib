@@ -3,59 +3,35 @@
 ## Export Provenance
 
 - Package: `flashlib_cake_knn_build`
-- Source repository: `ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git`
-- Source commit: `d524984607b363fb057a835c247e4f40f4de8e47`
-- Generated at: `2026-07-05T07:03:42.232967+00:00`
+- Source repository: ``
+- Source commit: ``
+- Generated at: `2026-07-06T03:32:00.078543+00:00`
 
 ## Latest Recorded Results
 
-The production plan was exported and measured on an NVIDIA B200 from the exact
-source commit above (NSC Slurm job `725169`, four GPU shards). Each shape uses
-one live `flashlib.flash_knn` baseline and one public/prepared candidate in the
-same process and measurement session. Their order is a deterministic SHA-256
-permutation per shape, so this is not a historical or sequential-sweep
-comparison.
+No semantic correctness or kernel throughput benchmark result was recorded by
+the generic exporter at generation time.
 
-- Contract rows / unique shapes: 112 / 112
-- Candidate correctness: 112 / 112
-- Live FlashLib correctness: 112 / 112
-- Exact expected-route parity: 112 / 112
-- Same-session baseline/public/prepared provenance: 112 / 112
-- Prepared speedup vs live baseline: minimum 1.2299x, geomean 1.8788x,
-  median 1.7191x, maximum 6.1468x
-- Prepared rows below 1.0x / 1.2x: 0 / 0
-- Public one-shot speedup vs live baseline: minimum 0.2261x, geomean 0.5293x,
-  median 0.4813x, maximum 1.9120x
-- Public rows below 1.0x / 1.2x: 92 / 104
-- Generated package tests: 124 / 124 passed in 42.70 seconds
-
-Across the 112 per-shape medians, prepared host enqueue is 0.010462 ms and
-prepared synchronized end-to-end latency is 0.098355 ms. The corresponding
-one-shot public values are 0.258960 ms and 0.347525 ms. Public GPU span is
-3.5499x the prepared GPU span by geometric mean because the public entry point
-recomputes norms and prepares scratch/launch state on every call. The prepared
-entry point reuses the fully marshalled, stream-bound launch sequence.
-
-Timing uses CUPTI-correlated GPU span with cold-L2 flushing. Every result row
-also records kernel sum, active union, inter-kernel gap, distinct correlated
-launch/kernel activity counts, host enqueue, synchronized end-to-end latency,
-and cold-first-call latency for the baseline, public, and prepared paths.
-
-Reproduce the generated checks with:
+The generated checks are:
 
 ```bash
-PYTHONPATH=src pytest tests -q
-PYTHONPATH=src python benchmarks/benchmark.py --json results/performance.json
+pytest
+python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json
+python benchmarks/benchmark_shapes.py --json results/shape_benchmark.json
 ```
+
+The shape runner requires a configured `benchmarks/workload.py` adapter. It
+validates candidate output against the reference before running strict
+CUPTI-backed, cold-L2 timing.
 
 ## Result Table
 
 | Test | Hardware | Command | Result |
 | --- | --- | --- | --- |
-| generated package tests | NVIDIA B200 | `PYTHONPATH=src pytest tests -q` | 124/124 passed |
-| semantic correctness | NVIDIA B200 | four-shard `benchmarks/benchmark.py` | 112/112 candidate and 112/112 live baseline |
-| route parity | NVIDIA B200 | four-shard `benchmarks/benchmark.py` | 112/112 exact routes |
-| prepared performance | NVIDIA B200 | CUPTI GPU span vs live `flashlib.flash_knn` | 1.2299x min, 1.8788x geomean, 6.1468x max |
+| metadata unit tests | not required | `pytest tests/test_exported_kernels.py tests/test_benchmark_harness.py -q` | pending |
+| NVRTC compile benchmark | CUDA host | `python benchmarks/benchmark_exported_kernels.py --arch sm_100a --json results/compile_benchmark.json` | pending |
+| semantic correctness | target GPU | `pytest tests/test_correctness.py -q` | pending |
+| kernel performance | target GPU | `python benchmarks/benchmark.py --no-correctness` | pending |
 
 ## Kernel Inventory
 

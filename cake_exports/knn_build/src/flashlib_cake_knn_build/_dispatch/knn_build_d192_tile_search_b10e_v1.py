@@ -9,7 +9,7 @@ work is on the specialized path.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 from typing import Any, Callable
 from .. import _dispatch_runtime as eval_mod
 from . import knn_build_dispatch_v11_common_d_seed_portfolio_a4ec_v1 as a4ec

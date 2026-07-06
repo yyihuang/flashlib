@@ -9,7 +9,7 @@ fused split merge writes contract-visible distances and indices.
 """
 from __future__ import annotations
 from json import loads as _json_loads
-from .._dispatch_runtime import _decode_capture, _import_dispatch_module, _ir_proxy
+from .._dispatch_runtime import _capture_cuTensorMapEncodeTiled, _decode_capture, _import_dispatch_module, _ir_proxy
 import os
 from collections.abc import Callable
 from functools import cache, lru_cache

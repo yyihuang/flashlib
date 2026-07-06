@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "flashlib-cake-knn-build"
+name = "knn_build"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
@@ -26,8 +26,15 @@ tvm-ffi = [
     "cake-std==0.1.13.dev20260704+g7b8dbc8",
 ]
 
+[tool.pytest.ini_options]
+markers = [
+    "export_validation_shape: one declared contract shape counted by the fail-closed publication gate",
+    "gpu: requires a CUDA GPU",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"flashlib_cake_knn_build" = ["manifest.json", "cuda/*.cu"]
+"flashlib_cake_knn_build" = ["*.json", "*.cu", "cuda/*.cu"]
+
