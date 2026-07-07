@@ -889,7 +889,7 @@
     }
   },
   "format_version": 1,
-  "generated_at_utc": "2026-07-06T10:32:08.651691+00:00",
+  "generated_at_utc": "2026-07-07T10:00:46.112533+00:00",
   "generator": "loom.export.kernel_repo",
   "kernels": [
     {
@@ -40060,7 +40060,7 @@
     "module_count": 383,
     "route_decision_count": 198
   },
-  "source_commit": "09e41277572e2fba576b7a0a565c7bd9aee25546",
+  "source_commit": "f03937f0889a1eb201ee0dc3411726bd697531c9",
   "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
