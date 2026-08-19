@@ -95,5 +95,5 @@
   ],
   "package": "flashlib_cake_knn_build",
   "source_commit": "21b036e2be7cdf77a3dc345e4fc8e4a5b489b143",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
+  "source_repo": "ssh://internal-source-redacted"
 }
