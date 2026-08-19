@@ -34546,7 +34546,7 @@
     "module_count": 366
   },
   "source_commit": "90083f7caff1734b740c24083f944615d7fab15e",
-  "source_repo": "https://gitlab-master.nvidia.com/cake/cake.git",
+  "source_repo": "internal-source-redacted",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_search",
