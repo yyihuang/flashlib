@@ -4,7 +4,7 @@
     "execution": "standalone generated package (no loom import)",
     "package": "knn_search",
     "source_commit": "ff502f39df09ffdb317efc57ebdac3a668bb3aa4",
-    "source_merge_request": "https://gitlab-master.nvidia.com/cake/cake/-/merge_requests/415"
+    "source_merge_request": "internal-source-redacted"
   },
   "hardware": {
     "arch": "sm_100a",
