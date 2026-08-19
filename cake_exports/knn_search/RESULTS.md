@@ -3,7 +3,7 @@
 ## Export Provenance
 
 - Package: `flashlib_cake_knn_search`
-- Source repository: `ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git`
+- Source repository: `ssh://internal-source-redacted
 - Source commit: `0b4375909f78358fd1eb3d1d3a804e31353a18b9`
 - Generated at: `2026-07-08T22:44:52.050870+00:00`
 
