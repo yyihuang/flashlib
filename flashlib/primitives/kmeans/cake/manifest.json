@@ -6,7 +6,7 @@
       ],
       "name": "flash_kmeans_assign",
       "source_commit": "c0b6a9eb79161ae21ab642f3a553a521f3dbdc86",
-      "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git",
+      "source_repo": "ssh://internal-source-redacted",
       "upstream_merge_request": 149
     }
   ],
@@ -1893,5 +1893,5 @@
   ],
   "package": "flashlib.primitives.kmeans.cake",
   "source_commit": "c0b6a9eb79161ae21ab642f3a553a521f3dbdc86",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git"
+  "source_repo": "ssh://internal-source-redacted"
 }
