@@ -4,7 +4,7 @@
     "execution": "standalone generated package (no loom import)",
     "package": "flash_kmeans",
     "source_commit": "9dd3df73eea8632ec145151e6ae5c5a88dd59969",
-    "source_merge_request": "https://gitlab-master.nvidia.com/cake/cake/-/merge_requests/420"
+    "source_merge_request": "internal-source-redacted"
   },
   "hardware": {
     "arch": "sm_100a",
