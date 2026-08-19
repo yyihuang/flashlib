@@ -27910,7 +27910,7 @@
     "module_count": 40
   },
   "source_commit": "59f5fa6bf14dda41623c3bfc3639b3eb7ad4d42d",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/averyh/cake.git",
+  "source_repo": "ssh://internal-source-redacted",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_kmeans",
