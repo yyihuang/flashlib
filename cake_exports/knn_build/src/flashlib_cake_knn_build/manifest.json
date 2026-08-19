@@ -460,7 +460,7 @@
     "translation_unit_count": 25
   },
   "source_commit": "fb87afe3c3159e3d1df19bc23eb4b6a5751152dc",
-  "source_repo": "ssh://git@gitlab-master.nvidia.com:12051/cake/cake.git",
+  "source_repo": "ssh://internal-source-redacted",
   "tvm_ffi": {
     "adapter": "tvm_ffi.py",
     "default_namespace": "flashlib_cake_knn_build",
